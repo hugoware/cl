@@ -47,13 +47,15 @@ export default class Console extends Component {
 		const keys = _.keys(result.all);
 		keys.sort();
 
+		// make sure the recent error is first?
+
 		// start creating each error
 		for (const key of keys) {
 			const error = result.all[key];
 			console.log('display', error);
 
 			// create the message
-			const message = new ConsoleMessage();
+			const message = Component.findOrCreate(ConsoleMessage, this, `console-message:${key}`);
 			message.update(error);
 
 			// place in the correct location

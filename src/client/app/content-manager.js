@@ -5,7 +5,6 @@ import $lfs from './lfs';
 
 const $compiled = { };
 const $errors = { };
-const $timers = { };
 
 /** returns the content for a requested path
  * @param {string} path the path of the file to load

@@ -46,7 +46,8 @@ async function compileFile(file) {
 					line: result.line,
 					column: result.column,
 					message: result.message,
-					file: result.file.replace(/^\/?sass/i, '')
+					file: result.file.replace(/^\/?sass/i, ''),
+					path: file
 				}
 			}]);
 

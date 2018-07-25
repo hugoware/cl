@@ -1,3 +1,13 @@
+$header-background: #118CF8;
+$footer-background: #484D59;
+$primary-background: #2F3238;
+$file-browser-background: #3B3E46;
+$preview-background: #3B3E46;
+$console-background: darken(#2F3238, 5%);
+
+body {
+	background: $primary-background;
+}
 
 #header, #footer, #view {
 	position: absolute;
@@ -10,14 +20,14 @@
 	top: 0;
 	height: $header-height;
 	z-index: $layer-header;
-	background: #f00;
+	background: $header-background;
 }
 
 #footer {
 	bottom: 0;
 	height: $footer-height;
 	z-index: $layer-footer;
-	background: #f00;
+	background: $footer-background;
 }
 
 #view {
@@ -36,10 +46,10 @@
 #file-browser {
 	left: 0;
 	width: $file-browser-width;
+	background: $file-browser-background;
 }
 
 #workspace, #console {
-	background: #ff0;
 	left: $file-browser-width;
 	right: $preview-width;
 
@@ -47,7 +57,7 @@
 }
 
 #preview {
-	background: #0ff;
+	background: $preview-background;
 	width: $preview-width;
 	right: 0;
 
@@ -56,7 +66,7 @@
 
 #console {
 	position: absolute;
-	background: #f0f;
+	background: $console-background;
 	bottom: 0;
 	height: 0;
 

@@ -122,21 +122,21 @@ export default class Component {
 	 * @param {JQuery|HTMLElement|Component} source the container to search within
    * @param {string} key the key of the element to find
    * @param {object} [data] constructor arguments for the instance, if created
-	 * @returns {T} the return type
+	 * @returns {Component} the return type
 	*/
-	static findOrCreate(type, source, key, data) {
+	static findOrCreate(type, source, key, ...ctor) {
 
 		// try and find the instance
 		source = source instanceof Component ? source : $(source);
-		const matching = source.find(`[cl-component="${key}"]`);
+		const matching = source.find(`[cl-key="${key}"]`);
 		let instance = matching.data('instance');
 
 		// if found
 		if (instance) return instance;
 
 		// create a new one
-		instance = new type(data);
-    instance.attr('cl-component', key);
+		instance = new type(...ctor);
+    instance.attr('cl-key', key);
     return instance;
 	}
 
