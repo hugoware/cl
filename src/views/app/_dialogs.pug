@@ -1,0 +1,60 @@
+
+
++template('dialog')
+	.dialog-container
+		.dialog
+
++template('dialog-create-project')
+	.form
+		
+		label
+			span name
+			input.name
+		
+		label
+			span description
+			textarea.description
+
+		ul
+			li.type(data-type='web') Web
+			li.type(data-type='code') Code
+			//- li.type(data-type='web') Game 2D
+			//- li.type(data-type='web') Game 3D
+
+		ul
+			li.language(data-type='javascript') JavaScript
+			li.language(data-type='lua') Lua
+			li.language(data-type='csharp') C#
+			li.language(data-type='python') Python
+			li.language(data-type='typescript') TypeScript
+
+		.actions
+			.action.submit Create Project
+			.action.cancel Cancel
+
++template('dialog-create-file')
+	.content
+		h3 create new file
+		input(name='name')
+
+		.actions
+			.action.submit Create File
+			.action.cancel Cancel
+
++template('dialog-create-folder')
+	.content
+		h3 create new folder
+		input(name='name')
+
+		.actions
+			.action.submit Create Folder
+			.action.cancel Cancel
+
++template('dialog-remove-items')
+	.content
+		h3 Remove Items
+		.items
+
+		.actions
+			.action.submit Remove Items
+			.action.cancel Cancel

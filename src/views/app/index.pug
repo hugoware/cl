@@ -1,0 +1,67 @@
+doctype html
+html
+	head
+		title CodeLab
+
+		meta(charset='UTF-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		
+		link(rel='shortcut icon' href='/site/icons/favicon.ico' type='image/x-icon')
+		link(rel='icon' href='/site/icons/favicon.ico' type='image/x-icon')
+		link(rel='apple-touch-icon' sizes='57x57' href='/site/icons/apple-icon-57x57.png')
+		link(rel='apple-touch-icon' sizes='60x60' href='/site/icons/apple-icon-60x60.png')
+		link(rel='apple-touch-icon' sizes='72x72' href='/site/icons/apple-icon-72x72.png')
+		link(rel='apple-touch-icon' sizes='76x76' href='/site/icons/apple-icon-76x76.png')
+		link(rel='apple-touch-icon' sizes='114x114' href='/site/icons/apple-icon-114x114.png')
+		link(rel='apple-touch-icon' sizes='120x120' href='/site/icons/apple-icon-120x120.png')
+		link(rel='apple-touch-icon' sizes='144x144' href='/site/icons/apple-icon-144x144.png')
+		link(rel='apple-touch-icon' sizes='152x152' href='/site/icons/apple-icon-152x152.png')
+		link(rel='apple-touch-icon' sizes='180x180' href='/site/icons/apple-icon-180x180.png')
+		link(rel='icon' type='image/png' sizes='192x192' href='/site/icons/android-icon-192x192.png')
+		link(rel='icon' type='image/png' sizes='32x32' href='/site/icons/favicon-32x32.png')
+		link(rel='icon' type='image/png' sizes='96x96' href='/site/icons/favicon-96x96.png')
+		link(rel='icon' type='image/png' sizes='16x16' href='/site/icons/favicon-16x16.png')
+		link(rel='manifest' href='/site/icons/manifest.json')
+		meta(name='msapplication-TileColor' content='#e24d49')
+		meta(name='msapplication-TileImage' content='/site/icons/ms-icon-144x144.png')
+		meta(name='theme-color' content='#e24d49')
+
+		//- stylesheets
+		link(rel='stylesheet', type='text/css', href='/app/index.css')
+
+		//- if lt IE 9
+			script(src='http://html5shiv.googlecode.com/svn/trunk/html5.js')
+			script(src='vendor/html5shiv.js')
+			script(src='vendor/respond.js')
+
+	body(style='background: #2f3238;')
+		script(type='text/javascript').
+			document.body.className = 'loading';
+
+		//- main application
+		script(type='text/javascript' src='/app.js')
+
+		//- live reload access
+		if !production
+			script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
+
+		//- handles creating template blocks
+		mixin template(name)
+			script(id='template--' + name type='text/html')
+				div
+					block
+
+		//- templates
+		include _components
+		include _dialogs
+		include _app
+		include _home
+		include _account
+		include _project
+		include _assistant
+		include _file-browser
+		include _preview
+		include _workspace
+		include _tab-bar
+		include _console

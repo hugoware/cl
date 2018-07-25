@@ -1,0 +1,17 @@
++template('file-browser')
+	.actions
+		button.action.create-folder +folder
+		button.action.create-file +file
+		button.action.remove-items -remove
+	.items
+
++template('file-browser-item')
+	.file-browser-item
+		.item
+			.toggle
+				.expand +
+				.collapse -
+			.icon
+			.name
+		.children
+		.empty This folder is empty

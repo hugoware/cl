@@ -1,0 +1,26 @@
+
+.dialog-container {
+	z-index: $layer-dialog;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	background : $dialog-overlay-background-color;
+
+	.dialog {
+		background: $dialog-content-background-color;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 80%;
+		max-width: 800px;
+
+		transform: translate(-50%, -60%);
+	}
+}
+
+.selected {
+	color: #f00;
+}

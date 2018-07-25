@@ -1,0 +1,85 @@
+
+#header, #footer, #view {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+// primary UI containers
+#header {
+	top: 0;
+	height: $header-height;
+	z-index: $layer-header;
+	background: #f00;
+}
+
+#footer {
+	bottom: 0;
+	height: $footer-height;
+	z-index: $layer-footer;
+	background: #f00;
+}
+
+#view {
+	top: $header-height;
+	bottom: $footer-height;
+	z-index: $layer-view;
+}
+
+// sub views
+#file-browser, #preview, #workspace {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+}
+
+#file-browser {
+	left: 0;
+	width: $file-browser-width;
+}
+
+#workspace, #console {
+	background: #ff0;
+	left: $file-browser-width;
+	right: $preview-width;
+
+	@include animate('right, bottom');
+}
+
+#preview {
+	background: #0ff;
+	width: $preview-width;
+	right: 0;
+
+	@include animate('transform');
+}
+
+#console {
+	position: absolute;
+	background: #f0f;
+	bottom: 0;
+	height: 0;
+
+	@include animate('right, height');
+}
+
+.preview-hidden {
+
+	#workspace, #console {
+		right: 0;
+	}
+
+	#preview {
+		transform: translateX(100%);
+	}
+
+}
+
+.console-visible {
+	#workspace {
+		bottom: $console-height;
+	}
+	#console {
+		height: $console-height;
+	}
+}

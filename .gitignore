@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+*.sublime-*
+dist/
+deploy/
+.cache/
+.publish/
+.data/
+npm-debug.log

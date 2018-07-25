@@ -1,0 +1,17 @@
+
++template('project-view')
+	#project.view
+		#file-browser
+		#workspace
+		#preview
+		#console
+
++template('project-item')
+	.project
+		.name
+		.description
+		.modifiedAt ??
+
+		.actions
+			.action.remove Remove
+			.action.publish Publish
