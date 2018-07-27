@@ -1,0 +1,13 @@
+
+#console {
+
+	.message {
+		color: #fff;
+
+		> div {
+			display: inline-block;
+			padding: 5px;
+		}
+	}
+
+}

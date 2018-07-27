@@ -7,28 +7,28 @@ html
 		meta(http-equiv='X-UA-Compatible', content='IE=edge')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
 		
-		link(rel='shortcut icon' href='/site/icons/favicon.ico' type='image/x-icon')
-		link(rel='icon' href='/site/icons/favicon.ico' type='image/x-icon')
-		link(rel='apple-touch-icon' sizes='57x57' href='/site/icons/apple-icon-57x57.png')
-		link(rel='apple-touch-icon' sizes='60x60' href='/site/icons/apple-icon-60x60.png')
-		link(rel='apple-touch-icon' sizes='72x72' href='/site/icons/apple-icon-72x72.png')
-		link(rel='apple-touch-icon' sizes='76x76' href='/site/icons/apple-icon-76x76.png')
-		link(rel='apple-touch-icon' sizes='114x114' href='/site/icons/apple-icon-114x114.png')
-		link(rel='apple-touch-icon' sizes='120x120' href='/site/icons/apple-icon-120x120.png')
-		link(rel='apple-touch-icon' sizes='144x144' href='/site/icons/apple-icon-144x144.png')
-		link(rel='apple-touch-icon' sizes='152x152' href='/site/icons/apple-icon-152x152.png')
-		link(rel='apple-touch-icon' sizes='180x180' href='/site/icons/apple-icon-180x180.png')
-		link(rel='icon' type='image/png' sizes='192x192' href='/site/icons/android-icon-192x192.png')
-		link(rel='icon' type='image/png' sizes='32x32' href='/site/icons/favicon-32x32.png')
-		link(rel='icon' type='image/png' sizes='96x96' href='/site/icons/favicon-96x96.png')
-		link(rel='icon' type='image/png' sizes='16x16' href='/site/icons/favicon-16x16.png')
-		link(rel='manifest' href='/site/icons/manifest.json')
+		link(rel='shortcut icon' href='/__codelab__/site/icons/favicon.ico' type='image/x-icon')
+		link(rel='icon' href='/__codelab__/site/icons/favicon.ico' type='image/x-icon')
+		link(rel='apple-touch-icon' sizes='57x57' href='/__codelab__/site/icons/apple-icon-57x57.png')
+		link(rel='apple-touch-icon' sizes='60x60' href='/__codelab__/site/icons/apple-icon-60x60.png')
+		link(rel='apple-touch-icon' sizes='72x72' href='/__codelab__/site/icons/apple-icon-72x72.png')
+		link(rel='apple-touch-icon' sizes='76x76' href='/__codelab__/site/icons/apple-icon-76x76.png')
+		link(rel='apple-touch-icon' sizes='114x114' href='/__codelab__/site/icons/apple-icon-114x114.png')
+		link(rel='apple-touch-icon' sizes='120x120' href='/__codelab__/site/icons/apple-icon-120x120.png')
+		link(rel='apple-touch-icon' sizes='144x144' href='/__codelab__/site/icons/apple-icon-144x144.png')
+		link(rel='apple-touch-icon' sizes='152x152' href='/__codelab__/site/icons/apple-icon-152x152.png')
+		link(rel='apple-touch-icon' sizes='180x180' href='/__codelab__/site/icons/apple-icon-180x180.png')
+		link(rel='icon' type='image/png' sizes='192x192' href='/__codelab__/site/icons/android-icon-192x192.png')
+		link(rel='icon' type='image/png' sizes='32x32' href='/__codelab__/site/icons/favicon-32x32.png')
+		link(rel='icon' type='image/png' sizes='96x96' href='/__codelab__/site/icons/favicon-96x96.png')
+		link(rel='icon' type='image/png' sizes='16x16' href='/__codelab__/site/icons/favicon-16x16.png')
+		link(rel='manifest' href='/__codelab__/site/icons/manifest.json')
 		meta(name='msapplication-TileColor' content='#e24d49')
-		meta(name='msapplication-TileImage' content='/site/icons/ms-icon-144x144.png')
+		meta(name='msapplication-TileImage' content='/__codelab__/site/icons/ms-icon-144x144.png')
 		meta(name='theme-color' content='#e24d49')
 
 		//- stylesheets
-		link(rel='stylesheet', type='text/css', href='/app/index.css')
+		link(rel='stylesheet', type='text/css', href='/__codelab__/app/index.css')
 
 		//- if lt IE 9
 			script(src='http://html5shiv.googlecode.com/svn/trunk/html5.js')
@@ -40,7 +40,42 @@ html
 			document.body.className = 'loading';
 
 		//- main application
-		script(type='text/javascript' src='/app.js')
+		script(type='text/javascript' src='/__codelab__/app.js')
+
+		//- load the monaco editor
+		script.
+			var require = { paths: { 'vs': '__monaco__/vs' } };
+		script(src="__monaco__/vs/loader.js")
+		script(src="__monaco__/vs/editor/editor.main.nls.js")
+		script(src="__monaco__/vs/editor/editor.main.js")
+
+		//- script.
+		//- 	var editor = monaco.editor.create(document.getElementById('container'), {
+		//- 		value: [
+		//- 			'function x() {',
+		//- 			'\tconsole.log("Hello world!");',
+		//- 			'}'
+		//- 		].join('\n'),
+		//- 		language: 'javascript'
+		//- 	});
+		
+
+		//- //- code editor
+		//- //- script(type='text/javascript' src='/__monaco__/vs/loader.js')
+		//- script(type='text/javascript').
+		//- 	setTimeout(() => {
+		//- 		window.REQUIRE = window.require;
+		//- 		const script = document.createElement('script');
+		//- 		script.src = `/__monaco__/vs/loader.js`;
+		//- 		document.body.appendChild(script);
+		//- 		script.onload = function() {
+		//- 			console.log('loaded');
+		//- 			//- window.require;
+		//- 			window.MONACO = window.require;
+		//- 			window.require = window.REQUIRE;
+		//- 		}
+		//- 	}, 10);
+
 
 		//- live reload access
 		if !production

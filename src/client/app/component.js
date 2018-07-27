@@ -14,7 +14,6 @@ const PROXIED_SELF_METHODS = [
   'toggleClass',
   'remove',
   'empty',
-  'attr',
   'css',
   'hide',
   'show',
@@ -35,7 +34,8 @@ const PROXIED_RETURN_METHODS = [
   'prev',
   'hasClass',
   'is',
-  'find'
+  'find',
+  'attr',
 ];
 
 /** UI B

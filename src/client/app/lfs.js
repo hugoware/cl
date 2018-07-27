@@ -18,8 +18,14 @@ export async function readFile(path) {
 		path = module.exports.adjustPath(path);
 
 	const results = await $db.files.where('path').equals(path).toArray();
-	const data = (results || [])[0];
-	return data.content;
+
+	// if the file is missing
+	if (results.length === 0)
+		return FileNotFoundError(path);
+
+	// return the record
+	const record = results[0] || { };
+	return record.content || '';
 }
 
 /** handles writing file contents 
@@ -75,20 +81,47 @@ export async function pull(extensions, action) {
 	});
 }
 
+/** handles extracting just the file name from a path
+ * @param {string} path the path to check
+ * @returns {string} the file name
+ */
+export function getFileName(path) {
+	path = (path || '').toString();
+	path = path.split('?')[0];
+	const parts = path.split(/\//g);
+	return parts[parts.length - 1];
+}
+
 // quick write function to cache local files
 function writeToSync(item) {
 	$sync[item.path] = item.content
 }
 
+// standard error for missing files
+function FileNotFoundError(path) {
+	const err = new Error(`${path} was not found`);
+	err.name = 'File Not Found';
+	return err;
+}
+
 // immediately try and attach the FS to the context
 var LFS = {
 	readFile: async (path, callback) => {
-		const content = await readFile(path)
-		if (callback) callback(content);
-		return content;
+		try {
+			const content = await readFile(path);
+			if (callback) callback(null, content);
+			else return content;
+		}
+		// handle the errors
+		catch (err) {
+			if (callback) callback(err);
+			else throw err;
+		}
 	},
 
 	readFileSync: path => {
+		if (!$sync[path])
+			throw FileNotFoundError(path);
 		return $sync[path];
 	}
 };
@@ -101,6 +134,7 @@ if (typeof global !== 'undefined') global.LFS = LFS;
 export default {
 	populate,
 	pull,
+	getFileName,
 	read: readFile,
 	write: writeFile,
 	move: moveFile,

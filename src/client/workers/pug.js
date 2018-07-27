@@ -28,14 +28,27 @@ async function compileFile(file) {
 	}
 	// failed to compile
 	catch(err) {
-		
-		// standardize message
-		const error = err.toJSON();
-		error.message = error.msg;
-		error.filename = error.filename.replace(/^\/?/, '/');
-		error.path = file;
-		delete error.msg;
+		let error;
 
+		// detailed message
+		if (err.toJSON) {
+			error = err.toJSON();
+			error.message = error.msg;
+			// error.filename = error.filename.replace(/^\/?/, '/');
+			error.filename = $lfs.getFileName(file),
+			error.path = file;
+			delete error.msg;
+		}
+		// full exception
+		else {
+			error = {
+				name: err.name,
+				message: err.message,
+				filename: $lfs.getFileName(file),
+				path: file
+			};
+		}
+		
 		// send back the failure
 		self.postMessage(['compile:ok', { success: false, error }]);
 	}

@@ -25,18 +25,29 @@ export default class Preview extends Component {
 		// current views
 		this.views = { };
 
-		// show navigation depending on type
-		this.addClass('with-navigation');
-
 		// events
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('compile-file', this.onCompileFile);
-		// this.listen('compile-file', this.onFileCompiled);
 	}
 
 	get output() {
 		return this.ui.output[0].contentWindow.document.body;
+	}
+
+	// changes the display mode for the project
+	setMode = mode => {
+
+		// manually replace all modes
+		let cx = this.attr('class') || '';
+		console.log('is', cx);
+		cx = cx.replace(/mode\-[a-z]+/, '');
+		cx = cx.replace(/ +/, ' ');
+		cx = _.trim(cx);
+		cx += ` mode-${mode}`;
+
+		// update the value
+		this.attr('class', cx);
 	}
 
 	// prepare the preview window
@@ -61,16 +72,21 @@ link(rel='stylesheet' type='text/css' href='/style.scss')`;
 	}
 
 	// handles when files are loaded
-	onActivateFile = file => {
+	onActivateFile = async file => {
+		if (!_.endsWith(file.path, '.pug'))
+			return;
 
-		if (!_.endsWith(file.path, '.pug')) return;
-
+		// find the view to use
 		this.view = this.views[file.path] = this.views[file.path] || new View(file);
-		this.view.refresh();
+		await this.view.refresh();
+
+		// display the result
+		const html = this.view.getHTML();
+		this.output.innerHTML = html;
 	}
 
 	// check for dependencies and update
-	onCompileFile = async (file) => {
+	onCompileFile = async file => {
 		if (!this.view) return;
 
 		// check the dependency
@@ -78,7 +94,6 @@ link(rel='stylesheet' type='text/css' href='/style.scss')`;
 			await this.view.refresh(file);
 
 		// refresh them markup
-		console.log('get heml');
 		const html = this.view.getHTML();
 		this.output.innerHTML = html;
 	}

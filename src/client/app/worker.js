@@ -15,7 +15,7 @@ const $workers = {
 class WorkerHelper {
 
 	constructor(name) {
-		this.worker = new Worker(`./${name}.js`);
+		this.worker = new Worker(`./__codelab__/${name}.js`);
 		this.worker.onmessage = this.handleMessage;
 		this.pending = { };
 	}

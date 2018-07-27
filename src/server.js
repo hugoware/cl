@@ -67,8 +67,9 @@ function createHttpServer(instance) {
 
 // share public resources
 function configureStaticResources(instance) {
-  instance.app.use($express.static('./dist/public'));
-  configureBraceResources(instance);
+  instance.app.use(`/__monaco__`, $express.static('./node_modules/monaco-editor/min'));
+  instance.app.use('/__codelab__', $express.static('./dist/public'));
+  // configureBraceResources(instance);
 }
 
 

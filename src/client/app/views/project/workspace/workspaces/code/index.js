@@ -3,9 +3,10 @@ import _ from 'lodash';
 import $lfs from '../../../../../lfs';
 import Component from '../../../../../component';
 import contentManager from '../../../../../content-manager'
+import $editor from '../../../../../editor';
 
 // the amount of time to wait before compiling
-const COMPILER_DELAY = 500;
+const COMPILER_DELAY = 300;
 
 /** @typedef {Object} PendingUpdate
  * @param {number} next the next required update
@@ -19,12 +20,13 @@ export default class CodeEditor extends Component {
 			template: 'workspace-code-editor',
 
 			ui: {
-				editor: 'textarea'
+				editor: '.editor'
 			}
 		});
 
 		// queued compile timers
 		this.timers = { };
+		this.files = { };
 
 		// handle events
 		this.ui.editor.on('keyup', this.onChange);
@@ -32,6 +34,8 @@ export default class CodeEditor extends Component {
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
 
+		// create the code editor
+		this.editor = $editor.createInstance(this.ui.editor[0]);
 	}
 
 	onActivateProject = () => {
@@ -58,17 +62,35 @@ export default class CodeEditor extends Component {
 
 	// handle shwne the editor has changes made
 	onChange = () => {
-		const data = this.ui.editor.val();
+
+		const data = this.model.getValue();
+		console.log(data);
+
+		// const data = this.ui.editor.val();
 		this.queueUpdate(this.file.path, data);
 	}
 
 	// handles when a file is activated (opened or tab selected)
 	onActivateFile = async (file) => {
 		this.file = file;
-		
+
+		// check if already created
+		let model = this.files[file.path];
+		if (model) {
+			this.model = model;
+			this.editor.setModel(model);
+			return;
+		}
+
 		// set the raw data value
 		const content = await $lfs.read(file.path);
-		this.ui.editor.val(content);
+		const language = $editor.getLanguage(file.path);
+		console.log('using lang', language);
+		
+		// save the model instance
+		this.model = model = $editor.editor.createModel(content, language);
+		this.files[file.path] = model;
+		this.editor.setModel(model);
 	}
 
 	/** adds or updates content for the next compile cycle
@@ -78,7 +100,7 @@ export default class CodeEditor extends Component {
 	queueUpdate = (path, content) => {
 		
 		// get the queued entry
-		const pending = this.timers[path] = this.timers[path] = { 
+		const pending = this.timers[path] = this.timers[path] || { 
 			next: (+new Date) + COMPILER_DELAY
 		};
 

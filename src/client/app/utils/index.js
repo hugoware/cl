@@ -22,7 +22,7 @@ export function cancelEvent(event) {
  * @param {object} options configuration options
  * @param {boolean} options.removeLeadingDot allows the starting dot to be removed
 */
-export function getExtension(path, { removeLeadingDot }) {
+export function getExtension(path, { removeLeadingDot } = { }) {
 	path = _.trim(path).toLowerCase().match(/\.[^\.]*$/)[0];
 
 	if (removeLeadingDot)

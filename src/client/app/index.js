@@ -3,6 +3,7 @@ import _ from 'lodash';
 import $api from './api';
 import $state from './state';
 import nav from './nav';
+import $editor from './editor';
 import Component from "./component";
 import Bluebird from 'bluebird';
 
@@ -24,7 +25,11 @@ Bluebird.config({ warnings: false });
 class App extends Component {
 
 	// handles loading the app for the first time
-	static init() {
+	static async init() {
+		// wait for resources
+		await $editor.init();
+
+		// create the app
 		const app = new App();
 		app.appendTo(document.body);
 		app.start();

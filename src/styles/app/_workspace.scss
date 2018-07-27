@@ -1,9 +1,4 @@
 
-$workspace-action-bar-height: 40px;
-$workspace-action-margin: 10px;
-$workspace-action-padding: 10px;
-$workspace-action-scale: 0.8;
-
 #workspace {
 
 	.actions {
@@ -11,8 +6,6 @@ $workspace-action-scale: 0.8;
 		padding: 0 $workspace-action-padding / 2;
 
 		.action {
-			$workspace-action-height: $workspace-action-bar-height * $workspace-action-scale;
-			$workspace-action-top: ($workspace-action-bar-height * ((1 - $workspace-action-scale) / 2));
 			margin: $workspace-action-top $workspace-action-margin 0 0;
 			padding: 0 $workspace-action-padding;
 			height: $workspace-action-height;
@@ -22,4 +15,20 @@ $workspace-action-scale: 0.8;
 		}
 	}
 
+	.editors {
+		position: absolute;
+		top: $workspace-tab-bar-height;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
+}
+
+.editor {
+	position: absolute;
+	top: $workspace-action-bar-height;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }

@@ -39,6 +39,10 @@ export default class ProjectView extends View {
 		// set the project data
 		$state.updateProject(project);
 		this.broadcast('activate-project', $state.project);
+
+		// update components
+		this.preview.setMode('html');
+
 	}
 
 }

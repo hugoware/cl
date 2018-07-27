@@ -5,4 +5,18 @@ $footer-height: 40px;
 $file-browser-width: 230px;
 $preview-width: 38%;
 $console-height: 230px;
-$preview-navigation-height: 40px;
+
+// preview area
+$preview-separator-width: 3px;
+$preview-navigation-height: 44px;
+$preview-navigation-item-gap: 6px;
+$preview-navigation-item-height: $preview-navigation-height - ($preview-navigation-item-gap * 2);
+
+// workspace
+$workspace-tab-bar-height: 44px;
+$workspace-action-bar-height: 44px;
+$workspace-action-margin: 10px;
+$workspace-action-padding: 10px;
+$workspace-action-item-scale: 0.76;
+$workspace-action-height: $workspace-action-bar-height * $workspace-action-item-scale;
+$workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-item-scale) / 2);
