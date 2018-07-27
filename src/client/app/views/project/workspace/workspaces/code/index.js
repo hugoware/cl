@@ -85,7 +85,6 @@ export default class CodeEditor extends Component {
 		// set the raw data value
 		const content = await $lfs.read(file.path);
 		const language = $editor.getLanguage(file.path);
-		console.log('using lang', language);
 		
 		// save the model instance
 		this.model = model = $editor.editor.createModel(content, language);

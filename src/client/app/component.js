@@ -165,8 +165,7 @@ export default class Component {
     // already providing the target
 		else if (options.$)
       dom = options.$;
-    	
-      
+
     // if there's a context, replace it
     if (options.context) {
       dom.contents().appendTo(options.context);
@@ -174,7 +173,7 @@ export default class Component {
     }
     else {
       /** @type {JQuery} */
-      this.$ = dom.contents();
+      this.$ = dom.is('.cl-template') ? dom.contents() : dom;
     }
 
     // finalize context

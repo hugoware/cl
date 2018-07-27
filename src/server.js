@@ -69,7 +69,6 @@ function createHttpServer(instance) {
 function configureStaticResources(instance) {
   instance.app.use(`/__monaco__`, $express.static('./node_modules/monaco-editor/min'));
   instance.app.use('/__codelab__', $express.static('./dist/public'));
-  // configureBraceResources(instance);
 }
 
 
@@ -230,43 +229,6 @@ function configureSocketRequests(instance, requests) {
 	});
 
 }
-
-
-
-// setup brace resource access
-function configureBraceResources(instance) {
-
-  // handle getting new mappings
-  const TYPE_MAPPING = {
-    pug: 'jade',
-    htm: 'html'
-  };
-  
-  // serving file modes
-  instance.app.get('/__codelab__/brace/mode/:file', (request, response) => {
-    let type = _.trim(request.params.file)
-      .replace(/^mode-/i, '')
-      .replace(/\.js$/i, '');
-
-    // remap, if needed
-    type = TYPE_MAPPING[type] || type;
-
-    // make sure it exists
-    let path = resolveRoot(`./node_modules/brace/mode/${type}.js`);
-    $fs.exists(path, exists => {
-
-      // not real - just use default text
-      if (!exists)
-        path = resolveRoot(`./node_modules/brace/mode/text.js`);
-
-      // send the mode
-      response.type('text/javascript');
-      response.sendFile(path);
-    });
-  });
-
-}
-
 
 // kick off the http server
 function startServer(instance) {

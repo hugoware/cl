@@ -1,12 +1,13 @@
 +template('console')
-	.items
+	table.items
 
-+template('console-message')
-	.message
-		.type
-		.line
-		.column
-		.file
-		.directory
-		.message
-		.hint
++template('console-message', true)
+	tr.message
+		td.type
+		td.line
+		td.column
+		td.name
+		td.file
+		td.directory
+		td.data
+		td.hint

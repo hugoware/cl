@@ -10,3 +10,13 @@
   background-image: linear-gradient($deg, $start-color, $end-color);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0);
 }
+
+@mixin clearfix() {
+  &:after {
+    content: " ";
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+ }
+}

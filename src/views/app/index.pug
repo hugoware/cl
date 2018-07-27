@@ -82,10 +82,13 @@ html
 			script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
 
 		//- handles creating template blocks
-		mixin template(name)
+		mixin template(name, doNotWrap)
 			script(id='template--' + name type='text/html')
-				div
+				if doNotWrap
 					block
+				else
+					div.cl-template
+						block
 
 		//- templates
 		include _components

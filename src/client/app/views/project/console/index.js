@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Component from '../../../component';
-import { getPathInfo } from '../../../utils';
+import ConsoleMessage from './message';
 
 /** @typedef {Object} CompilerError
  * @prop {string} file the file that had the error
@@ -52,7 +52,6 @@ export default class Console extends Component {
 		// start creating each error
 		for (const key of keys) {
 			const error = result.all[key];
-			console.log('display', error);
 
 			// create the message
 			const message = Component.findOrCreate(ConsoleMessage, this, `console-message:${key}`);
@@ -63,34 +62,6 @@ export default class Console extends Component {
 			message[leading ? 'prependTo' : 'appendTo'](this.ui.items);
 		}
 
-	}
-
-}
-
-class ConsoleMessage extends Component {
-
-	constructor() {
-		super({
-			template: 'console-message',
-
-			ui: {
-				line: '.line',
-				column: '.column',
-				message: '.message',
-				directory: '.directory',
-				file: '.file',
-			}
-		});
-
-	}
-
-	update(data) {
-		const info = getPathInfo(data.path);
-		this.ui.file.text(info.file);
-		this.ui.directory.text(info.directory);
-		this.ui.line.text(data.line);
-		this.ui.column.text(data.column);
-		this.ui.message.text(data.message);
 	}
 
 }

@@ -1,13 +1,48 @@
 
 #console {
 
+	.message-block {
+		display: block;
+		float: left;
+		overflow-x: auto;
+	}
+
 	.message {
+		@include clearfix;
 		color: #fff;
+		border-top: 1px solid #fff;
 
 		> div {
-			display: inline-block;
-			padding: 5px;
+			@extend .message-block;
+			padding: 8px 5px;
 		}
+
+		.line, .column {
+			width: 40px;
+			padding-left: 0;
+			padding-right: 0;
+			text-align: center;
+		}
+
+		// normal errors
+		.name {
+			display: none;
+		}
+
+		&.is-exception {
+			.name {
+				@extend .message-block;
+			}
+			
+			.line, .column {
+				display: none;
+			}
+		}
+
+	}
+
+	.data {
+		white-space: pre;
 	}
 
 }

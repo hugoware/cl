@@ -35,7 +35,6 @@ async function compileFile(file) {
 			error = err.toJSON();
 			error.message = error.msg;
 			// error.filename = error.filename.replace(/^\/?/, '/');
-			error.filename = $lfs.getFileName(file),
 			error.path = file;
 			delete error.msg;
 		}
@@ -44,7 +43,6 @@ async function compileFile(file) {
 			error = {
 				name: err.name,
 				message: err.message,
-				filename: $lfs.getFileName(file),
 				path: file
 			};
 		}
