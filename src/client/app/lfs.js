@@ -26,7 +26,6 @@ export function normalizePath(path) {
  * @returns {string} the file content, if any
 */
 export async function readFile(path) {
-	path = normalizePath(path);
 	const results = await $db.files.where('path').equals(path).toArray();
 
 	// if the file is missing
@@ -43,7 +42,6 @@ export async function readFile(path) {
  * @param {string} content the data to write
 */
 export async function writeFile(path, content = '') {
-	path = normalizePath(path);
 	return $db.files.put({ path, content });
 }
 
@@ -53,8 +51,6 @@ export async function writeFile(path, content = '') {
  * @param {string} target the location to change to
  */
 export async function moveFile(source, target) {
-	source = normalizePath(source);
-	target = normalizePath(target);
 	return $db.files.where({ path: source }).modify({ path: target });
 }
 
@@ -86,7 +82,7 @@ export async function pull(extensions, action) {
 	action = action || writeToSync;
 
 	return $db.files.each(item => {
-		const path = normalizePath(item.path);
+		const { path } = item;
 		const len = path.length;
 		for (const ext of extensions)
 			if (path.substr(len - ext.length) === ext)
@@ -107,8 +103,7 @@ export function getFileName(path) {
 
 // quick write function to cache local files
 function writeToSync(item) {
-	const path = normalizePath(item.path);
-	$sync[path] = item.content
+	$sync[item.path] = item.content
 }
 
 // standard error for missing files
@@ -134,7 +129,7 @@ var LFS = {
 	},
 
 	readFileSync: path => {
-		path = normalizePath(path);
+
 		if (!$sync[path])
 			throw FileNotFoundError(path);
 		return $sync[path];

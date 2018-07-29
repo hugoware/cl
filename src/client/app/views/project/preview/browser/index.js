@@ -27,16 +27,18 @@ export default class BrowserMode {
 
 	// sets the default view content
 	onActivateFile = async file => {
+		const { path } = file;
+		console.log('wants to active', path);
 		
 		// determine if activating the file should replace
 		// the view that's in the preview or not
-		const ext = getExtension(file.path, { removeLeadingDot: true });
+		const ext = getExtension(path, { removeLeadingDot: true });
 		if (!_.includes(VIEWABLE_TYPES, ext))
 			return;
 
 		// find the view to use
-		this.view = this.views[file.path] = this.views[file.path] || new View(file);
-		await this.view.refresh();
+		this.view = this.views[path] = this.views[path] || new View(file);
+		await this.view.refresh(path, { forceRefresh: true });
 		this.render();
 	}
 

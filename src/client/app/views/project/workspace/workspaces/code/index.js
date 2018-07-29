@@ -30,6 +30,7 @@ export default class CodeEditor extends Component {
 
 		// handle events
 		this.listen('activate-file', this.onActivateFile);
+		this.listen('deactivate-file', this.onDeactivateFile);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
 
@@ -48,44 +49,51 @@ export default class CodeEditor extends Component {
 
 	// triggers updates for expired timers
 	onProcessTimers = () => {
-		const now = (+new Date);
-		_.each(this.timers, (pending, key) => {
+		if (!this.pending) return;
 
-			// hasn't baked long enough
-			if (pending.next > now) return;
+		// hasn't baked long enough
+		const now = +new Date;
+		if (this.pending.next > now) return;
 
-			// clear the item and trigger the update
-			delete this.timers[key];
-			contentManager.update(pending.key, pending.content);
-		});
+		// appears to be good to go, kick off the compile
+		const { content, path } = this.pending;
+		delete this.pending;
+		contentManager.update(path, content);
 	} 
 
 	// queues up changes to the content manager
 	onContentChange = () => {
-		const data = this.model.getValue();
-		this.queueUpdate(this.file.path, data);
+		const { model, file } = this.activeFile;
+		const data = model.getValue();
+		this.queueUpdate(file.path, data);
 	}
 
 	// handles when a file is activated (opened or tab selected)
-	onActivateFile = async (file) => {
-		this.file = file;
+	onActivateFile = async file => {
+		const { path } = file;
 
-		// check if already created
-		let model = this.files[file.path];
-		if (model) {
-			this.model = model;
-			this.editor.setModel(model);
-			return;
+		// check if creating a new model or not
+		let instance = this.files[path];
+		if (!instance) {
+
+			// read the current content value
+			const content = await $lfs.read(path);
+			const language = $editor.getLanguage(path);
+			const model = $editor.editor.createModel(content, language);
+			instance = { file, content, model };
+
+			// save the file reference
+			this.files[path] = instance;
 		}
 
-		// set the raw data value
-		const content = await $lfs.read(file.path);
-		const language = $editor.getLanguage(file.path);
-		
-		// save the model instance
-		this.model = model = $editor.editor.createModel(content, language);
-		this.key = $lfs.normalizePath(file.path);
-		this.editor.setModel(model);
+		// set the active file
+		this.activeFile = instance;
+		this.editor.setModel(instance.model);
+	}
+
+	// handles deleting an active file instance
+	onDeactivateFile = async file => {
+		delete this.files[file.path];
 	}
 
 	/** adds or updates content for the next compile cycle
@@ -93,15 +101,23 @@ export default class CodeEditor extends Component {
 	 * @param {string} content the content of the file to update
 	 */
 	queueUpdate = (path, content) => {
+		const instance = this.files[path];
+		if (!instance) return;
+
+		// check if something weird happened - in this case
+		// the requested change file is different than the
+		// current pending compile request
+		if (this.pending && this.pending.path !== path)
+			delete this.pending;
 		
 		// get the queued entry
-		const pending = this.timers[path] = this.timers[path] || { 
+		this.pending = this.pending || { 
 			next: (+new Date) + COMPILER_DELAY,
-			key: $lfs.normalizePath(path)
+			path
 		};
 
 		// update the content
-		pending.content = content;
+		this.pending.content = content;
 	}
 
 }

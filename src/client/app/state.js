@@ -50,6 +50,8 @@ const $state = {
 
 		// rebuild the path indexes
 		await syncProject(project.children, null, null);
+
+		window.STATE = $state;
 	},
 
 	/** finds a document item using a path
@@ -57,9 +59,6 @@ const $state = {
 	 */
 	findItemByPath: find => {
 		return $state.paths[find];
-		// for (const path in $state.paths)
-		// 	if (path === find)
-		// 		return $state.paths[path];
 	},
 
 	/** checks if a file path is found in the project
@@ -67,12 +66,50 @@ const $state = {
 	 * @returns {boolean} was this file found or not
 	 */
 	fileExists: path => {
-
-		// remove the leading slash, if any
-		// there's a bit of a battle of using and removing
-		// the slash in different places
-		path = path.replace(/^\//, '');
 		return !!$state.findItemByPath(path);
+	},
+
+	/** marks a file as opened as well as syncs the file
+	 * content with the file system
+	 * @param {string} path the file path to open
+	 * @param {boolean} [forceRefresh] force the sync, even if the file is already "open"
+	 */
+	openFile: async (path, forceRefresh = false) => {
+		const file = $state.findItemByPath(path);
+		if (!file) return;
+
+		// mark the file as open
+		if (!file.isOpen || forceRefresh)
+			await $lfs.write(file.path, file.content);
+
+		// mark the file as open
+		file.isOpen = true;
+	},
+
+	/** handles mapping local file information to
+	 * the project record 
+	 * @param {string} path the file path to save
+	 * @param {string} content the file content to replace, if not provided, the content is loaded from the file system
+	 */
+	saveFile: async (path, content) => {
+		const file = $state.findItemByPath(path);
+		if (!file) return;
+
+		// load the content, if missing
+		if (!_.isString(content))
+			content = await $lfs.read(path);
+
+		// replace the content for this entry
+		file.content = content;
+	},
+
+	/** handles marking a file as closed 
+	 * @param {string} path the file to close
+	*/
+	closeFile: (path) => {
+		const file = $state.findItemByPath(path);
+		if (!file) return;
+		file.isOpen = false;
 	}
 
 };
@@ -81,13 +118,14 @@ const $state = {
 // rebuilds the paths for each file in the project
 async function syncProject(children = [ ], parent, relativeTo) {
 	relativeTo = relativeTo ? `${relativeTo}/` : '';
+	const prefix = parent ? '' : '/';
 
 	// update each child path
 	for (const item of children) {
 
 		// create a unique ID to make tracking easier
 		item.id = _.uniqueId('id:');
-		item.path = relativeTo + item.name;
+		item.path = prefix + relativeTo + item.name;
 		item.parent = parent;
 
 		// save the path info

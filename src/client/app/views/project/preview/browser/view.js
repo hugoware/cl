@@ -2,6 +2,7 @@ import _ from 'lodash';
 import $cheerio from 'cheerio';
 import $contentManager from '../../../../content-manager';
 import $state from '../../../../state'
+import $lfs from '../../../../lfs';
 import { resolvePathFromUrl } from '../../../../utils';
 
 /** handles individual browser views */
@@ -13,13 +14,19 @@ export default class View {
 
 	/** updates the view content
 	 * @param {string} file the path of the file that was changed
+	 * @param {boolean} [forceRefresh] forces the view to refresh even if nothing has directly changed
 	 */
-	async refresh(file) {
-
-		// check if the view itself was file
+	async refresh(file, forceRefresh = false) {
 		const { path } = this.file;
-		if (!this.template || path === file) {
-			await generateTemplate(this);
+
+		// if forcing a refresh, remove the compiled content
+		// for this file - if any
+		if (forceRefresh)
+			await $contentManager.remove(path);
+		
+		// check if the view itself was file
+		if (forceRefresh || !this.template || path === file) {
+			await generateTemplate(this, path);
 		}
 
 		// check if dependencies need to be refreshed
@@ -36,9 +43,9 @@ export default class View {
 }
 
 // handles creating the base for the template view
-async function generateTemplate(view) {
+async function generateTemplate(view, path) {
+
 	// try to get the compiled content
-	const { path } = view.file;
 	const markup = await $contentManager.get(path);
 	view.template = $cheerio.load(markup);
 
@@ -80,6 +87,7 @@ async function generateTemplate(view) {
 
 			// make sure this is a valid file
 			const href = resolvePathFromUrl(item.attribs.href);
+			console.log('lookong for rep', href);
 			if (!$state.fileExists(href)) return;
 
 			// save it for later
