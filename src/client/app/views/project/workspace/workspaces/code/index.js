@@ -56,7 +56,7 @@ export default class CodeEditor extends Component {
 
 			// clear the item and trigger the update
 			delete this.timers[key];
-			contentManager.update(key, pending.content);
+			contentManager.update(pending.key, pending.content);
 		});
 	} 
 
@@ -84,7 +84,7 @@ export default class CodeEditor extends Component {
 		
 		// save the model instance
 		this.model = model = $editor.editor.createModel(content, language);
-		this.files[file.path] = model;
+		this.key = $lfs.normalizePath(file.path);
 		this.editor.setModel(model);
 	}
 
@@ -96,7 +96,8 @@ export default class CodeEditor extends Component {
 		
 		// get the queued entry
 		const pending = this.timers[path] = this.timers[path] || { 
-			next: (+new Date) + COMPILER_DELAY
+			next: (+new Date) + COMPILER_DELAY,
+			key: $lfs.normalizePath(path)
 		};
 
 		// update the content

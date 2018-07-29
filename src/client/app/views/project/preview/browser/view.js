@@ -42,15 +42,15 @@ async function generateTemplate(view) {
 	const markup = await $contentManager.get(path);
 	view.template = $cheerio.load(markup);
 
-	// include a base url that'll make all requests
+	// include a base url that'll make all local requests
 	// for this preview match the project domain
 	const domain = $state.getProjectDomain();
 	view.template.root()
 		.prepend(`<base href="${domain}" />`);
 
 	// storage for external resources
-	view.scripts = {};
-	view.links = {};
+	view.scripts = { };
+	view.links = { };
 
 	// find all scripts
 	view.template('script')
