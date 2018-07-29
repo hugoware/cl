@@ -1,6 +1,7 @@
 import log from '../log';
 import $fsx from 'fs-extra';
 import $path from '../path';
+import { isTextContent } from '../utils';
 
 /**
  * gets all project information
@@ -53,6 +54,12 @@ async function resolveDirectory(children, directory) {
 		if (detail.isDirectory()) {
 			entry.children = [ ];
 			await resolveDirectory(entry.children, path);
+		}
+
+		// since this project might require data
+		if (isTextContent(path)) {
+			const data = await $fsx.readFile(path)
+			entry.content = data.toString();
 		}
 
 	}

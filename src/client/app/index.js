@@ -114,8 +114,6 @@ class App extends Component {
 		const dialog = this.dialogs[key];
 		dialog.options = options;
 
-		console.log('will try and show', key, dialog);
-
 		// show the dialog window
 		dialog.show();
 	}

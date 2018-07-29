@@ -9,14 +9,24 @@ $db.version(1).stores({
 // `pull()` is called in advance
 const $sync = { };
 
+/** converts urls and paths to something more normalized
+ * @param {string} path the path to normalize
+ * @returns {string} a path that's root relative */
+export function normalizePath(path) {
+	path = (path || '').toString()
+		.replace(/^ *| *$/g, '') // trim the whitespace
+		.replace(/^\.?\//, '') // remove the leading slash (relative dot as well)
+		.replace(/\.\.\//g, '') // remove folder relative pathing
+		.replace(/\/+/g, '/'); // make sure there's no double slashes
+	return `/${path}`;
+}
+
 /** handles reading file contents 
  * @param {string} path the path to read
  * @returns {string} the file content, if any
 */
 export async function readFile(path) {
-	if (module.exports.adjustPath)
-		path = module.exports.adjustPath(path);
-
+	path = normalizePath(path);
 	const results = await $db.files.where('path').equals(path).toArray();
 
 	// if the file is missing
@@ -33,6 +43,7 @@ export async function readFile(path) {
  * @param {string} content the data to write
 */
 export async function writeFile(path, content = '') {
+	path = normalizePath(path);
 	return $db.files.put({ path, content });
 }
 
@@ -41,7 +52,9 @@ export async function writeFile(path, content = '') {
  * @param {string} source the path to move
  * @param {string} target the location to change to
  */
-export async function moveFile() {
+export async function moveFile(source, target) {
+	source = normalizePath(source);
+	target = normalizePath(target);
 	return $db.files.where({ path: source }).modify({ path: target });
 }
 
@@ -52,18 +65,18 @@ export async function clear() {
 }
 
 
-/** imports all files and content */
-export async function populate(files) {
+// /** imports all files and content */
+// export async function populate(files) {
 	
-	// remove anything that's there
-	await clear();
+// 	// remove anything that's there
+// 	await clear();
 
-	// create the structure and add files
-	const records = _(files)
-		.filter(file => !file.content)
-		.map(file => ({ path: file.path, content: file.content }));
-	$db.files.bulkAdd(records);
-}
+// 	// create the structure and add files
+// 	const records = _(files)
+// 		.filter(file => !file.content)
+// 		.map(file => ({ path: file.path, content: file.content }));
+// 	$db.files.bulkAdd(records);
+// }
 
 /** pulls a series of files into memory
  * @param {string[]} exts the extensions to use
@@ -73,7 +86,7 @@ export async function pull(extensions, action) {
 	action = action || writeToSync;
 
 	return $db.files.each(item => {
-		const path = item.path;
+		const path = normalizePath(item.path);
 		const len = path.length;
 		for (const ext of extensions)
 			if (path.substr(len - ext.length) === ext)
@@ -94,7 +107,8 @@ export function getFileName(path) {
 
 // quick write function to cache local files
 function writeToSync(item) {
-	$sync[item.path] = item.content
+	const path = normalizePath(item.path);
+	$sync[path] = item.content
 }
 
 // standard error for missing files
@@ -120,6 +134,7 @@ var LFS = {
 	},
 
 	readFileSync: path => {
+		path = normalizePath(path);
 		if (!$sync[path])
 			throw FileNotFoundError(path);
 		return $sync[path];
@@ -132,9 +147,11 @@ if (typeof window !== 'undefined') window.LFS = LFS;
 if (typeof global !== 'undefined') global.LFS = LFS;
 
 export default {
-	populate,
+	// populate,
 	pull,
 	getFileName,
+	normalizePath,
+	clear,
 	read: readFile,
 	write: writeFile,
 	move: moveFile,

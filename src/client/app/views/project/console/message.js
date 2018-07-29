@@ -1,4 +1,4 @@
-/// <reference path="../../../@types/index.js" />
+/// <reference path="../../../types/index.js" />
 import Component from '../../../component';
 import { getPathInfo } from '../../../utils';
 

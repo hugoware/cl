@@ -74,6 +74,8 @@ class EditorManager {
 	createInstance(container) {
 		return this.editor.create(container, {
 			theme: 'vs-dark',
+			fontFamily: 'code',
+			fontSize: 20,
 			minimap: false,
 			automaticLayout: true
 		});

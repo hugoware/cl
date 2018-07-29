@@ -29,13 +29,13 @@ export default class CodeEditor extends Component {
 		this.files = { };
 
 		// handle events
-		this.ui.editor.on('keyup', this.onChange);
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
 
 		// create the code editor
 		this.editor = $editor.createInstance(this.ui.editor[0]);
+		this.editor.onDidChangeModelContent(this.onContentChange);
 	}
 
 	onActivateProject = () => {
@@ -60,13 +60,9 @@ export default class CodeEditor extends Component {
 		});
 	} 
 
-	// handle shwne the editor has changes made
-	onChange = () => {
-
+	// queues up changes to the content manager
+	onContentChange = () => {
 		const data = this.model.getValue();
-		console.log(data);
-
-		// const data = this.ui.editor.val();
 		this.queueUpdate(this.file.path, data);
 	}
 

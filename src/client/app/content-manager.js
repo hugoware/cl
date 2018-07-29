@@ -14,7 +14,6 @@ const $errors = { };
 export function get(path) {
 	return new Promise(async (resolve) => {
 		let data = $compiled[path];
-		console.log('will get', path, data);
 		if (data)
 			return resolve(data);
 		
@@ -87,7 +86,6 @@ export function compile(path, { silent } = { }) {
 		resolve(result);
 	});
 }
-
 
 // share functions
 export default {

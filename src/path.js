@@ -89,14 +89,17 @@ export function extalias(path) {
   return $path.extname(path).toLowerCase().replace(/^\./, '')
 }
 
-// removes any leading slashes for path requests
-function removeLeadingSlash(str) {
+/** removes any leading slashes for path requests 
+ * @param {string} str the path to remove from
+*/
+export function removeLeadingSlash(str) {
 	return _.trim(str).replace(/^\/*/, '');
 }
 
 export default {
 	resolve,
 	extalias,
+	removeLeadingSlash,
 	resolveRoot,
 	resolveModule,
 	resolvePath,

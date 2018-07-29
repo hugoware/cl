@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import $lfs from './lfs';
 
 /** @typedef {Object} Project
  * @prop {string} name
@@ -32,25 +33,33 @@ const $state = {
 	 */
 	items: { },
 
+	/** returns the resource domain for this project
+	 * @returns {string} the root domain to use */
+	getProjectDomain() {
+		const { protocol, host } = window.location;
+		return `${protocol}//${this.project.id}.${host}`;
+	},
+
 	/** syncs the project data
 	 * @param {Project} project the data to replace
 	*/
-	updateProject: project => {
+	updateProject: async project => {
 		$state.project = project;
 		$state.paths = { };
 		$state.items = { };
 
 		// rebuild the path indexes
-		syncProject(project.children, null, null);
+		await syncProject(project.children, null, null);
 	},
 
 	/** finds a document item using a path
 	 * @param {string} path the path to search
 	 */
 	findItemByPath: find => {
-		for (const path in $state.paths)
-			if (path === find)
-				return $state.paths[path];
+		return $state.paths[find];
+		// for (const path in $state.paths)
+		// 	if (path === find)
+		// 		return $state.paths[path];
 	},
 
 	/** checks if a file path is found in the project
@@ -58,18 +67,23 @@ const $state = {
 	 * @returns {boolean} was this file found or not
 	 */
 	fileExists: path => {
-		return !!$state.paths[path];
+
+		// remove the leading slash, if any
+		// there's a bit of a battle of using and removing
+		// the slash in different places
+		path = path.replace(/^\//, '');
+		return !!$state.findItemByPath(path);
 	}
 
 };
 
 
 // rebuilds the paths for each file in the project
-function syncProject(children, parent, relativeTo) {
+async function syncProject(children = [ ], parent, relativeTo) {
 	relativeTo = relativeTo ? `${relativeTo}/` : '';
 
 	// update each child path
-	_.each(children, item => {
+	for (const item of children) {
 
 		// create a unique ID to make tracking easier
 		item.id = _.uniqueId('id:');
@@ -87,9 +101,14 @@ function syncProject(children, parent, relativeTo) {
 
 		// check if this is  
 		if (!item.isEmpty)
-			syncProject(item.children, item, item.path);
+			await syncProject(item.children, item, item.path);
 
-	});
+		// check if this is a content file 
+		if ('content' in item)
+			await $lfs.write(item.path, item.content);
+
+
+	}
 }
 
 export default $state;

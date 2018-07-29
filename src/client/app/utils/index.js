@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import $lfs from '../lfs';
 
 /** cancels an even from firing any further
  * @param {JQuery.Event} event the event to cancel
@@ -47,4 +48,15 @@ export function getPathInfo(path) {
 	let directory = path.substr(0, path.length - file.length);
 	if (!_.some(directory)) directory = '/';
 	return { directory, file };
+}
+
+/** extracts a file path from a url
+ * @param {string} url the url to extract from
+ * @returns {string} the file path found
+ */
+export function resolvePathFromUrl(path) {
+	path = _.trim(_.trim(path).split('?')[0]);
+	// removes a leading dot if it's not followed by a slash
+	if (path[0] === '.' && path[1] !== '/') path = path.substr(1);
+	return $lfs.normalizePath(path);
 }

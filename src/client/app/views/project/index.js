@@ -2,6 +2,7 @@
 import $api from '../../api';
 import $nav from '../../nav';
 import $state from '../../state';
+import $lfs from '../../lfs';
 
 import View from '../';
 import FileBrowser from './file-browser';
@@ -37,12 +38,8 @@ export default class ProjectView extends View {
 		const project = await $api.request('get-project-data', id);
 
 		// set the project data
-		$state.updateProject(project);
+		await $state.updateProject(project);
 		this.broadcast('activate-project', $state.project);
-
-		// update components
-		this.preview.setMode('html');
-
 	}
 
 }
