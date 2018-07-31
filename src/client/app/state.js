@@ -1,22 +1,7 @@
+/// <reference path="./types/index.js" />
+
 import _ from 'lodash';
 import $lfs from './lfs';
-
-/** @typedef {Object} Project
- * @prop {string} name
- * @prop {string} description
- * @prop {ProjectItem[]} children
- */
-
-/** @typedef {Object} ProjectItem 
- * @prop {string} name
- * @prop {string} path
- * @prop {string} id
- * @prop {ProjectItem} parent
- * @prop {ProjectItem[]} [children]
- * @prop {boolean} isFile
- * @prop {boolean} isFolder
- * @prop {boolean} isEmpty
-*/
 
 const $state = { 
 

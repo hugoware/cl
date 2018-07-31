@@ -1,5 +1,8 @@
 
+import _ from 'lodash';
 import Component from '../../../component';
+import ComponentList from '../../../component-list';
+import Tab from './tab';
 
 export default class TabBar extends Component {
 
@@ -10,21 +13,65 @@ export default class TabBar extends Component {
 				items: '.items',
 			}
 		});
+		
+		// the tabs to use
+		this.tabs = new ComponentList({
+			$: this.ui.items
+		});
 
-		this.listen('open-file', this.onOpenFile);
+		// events
+		this.listen('activate-file', this.onActivateFile);
+		this.on('click', '.close', this.onCloseTab);
+		this.on('click', '.tab', this.onSelectTab);
 	}
 
-	onOpenFile = file => {
+	// handles opening or activating new tab
+	onActivateFile = file => {
 
-		// // check if this is already active - if so, move 
-		// // to the front and open it
-		// const tab = this.tabs[file.id];
-		// if (tab)
-		// 	return tab.appendTo(this.ui.items);
+		// create or reuse a tab
+		let tab = this.tabs.findItem(item => item.file.path === file.path);
+		if (!tab) {
+			tab = new Tab(file);
+			this.tabs.appendItem(tab);
+		}
 
-		// // since it's not a tab, create it now
-		// const tab = new TabBarItem();
-		// tab.update(tab);
+		// focus and update
+		tab.refresh();
+		this.setActive(tab);
+		this.tabs.refresh();
+	}
+
+	onSelectTab = event => {
+		const tab = Component.getContext(event.target);
+		if (!tab) return;
+
+		// change the active tab
+		this.setActive(tab);
+		this.broadcast('activate-file', tab.file);
+	}
+
+	// handles closing a tab
+	onCloseTab = event => {
+		const tab = Component.getContext(event.target);
+		
+		// finds the tab to focus instead
+		const replace = this.tabs.itemBefore(tab) || this.tabs.itemAfter(tab);
+
+		// remove the tab first
+		this.tabs.removeItem(tab);
+		this.tabs.refresh();
+		
+		// if there's a new tab selected, update it
+		if (replace) {
+			this.setActive(replace);
+			this.broadcast('activate-file', replace.file);
+		}
+	}
+
+	// sets the actively viewed tab
+	setActive = tab => {
+		this.find('.tab').removeClass('active');
+		if (tab) tab.addClass('active');
 	}
 
 }

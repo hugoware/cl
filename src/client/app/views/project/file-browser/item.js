@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import Component from '../../../component';
 import { ProjectItem } from '../../../state';
+import $icons from '../../../icons';
 
 /** @prop {ProjectItem} data */
 export default class FileBrowserItem extends Component {
@@ -11,8 +12,10 @@ export default class FileBrowserItem extends Component {
 			template: 'file-browser-item',
 
 			ui: {
+				icon: '.icon',
 				name: '.name',
-				children: '.children'
+				toggle: '.toggle',
+				children: '.children .contents'
 			}
 		});
 	}
@@ -57,6 +60,24 @@ export default class FileBrowserItem extends Component {
 		
 		/** @type {ProjectItem} */
 		this.data = data;
+
+		// populate icons
+		if (!this.hasIcons) {
+			this.hasIcons = true;
+			
+			// check for folder state
+			if (data.isFolder) {
+				const folder = $icons.folder();
+				this.ui.icon.append(folder);
+
+				// toggle folders
+				const expand = $icons.arrowRight();
+				this.ui.toggle.append(expand);
+			}
+
+
+		}
+
 
 		// update values
 		this.ui.name.text(data.name);

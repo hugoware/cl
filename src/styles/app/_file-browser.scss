@@ -1,7 +1,16 @@
 
+$file-browser-item-height: 30px;
+$file-browser-item-padding: 2px;
+$file-browser-icon-size: 16px;
+$file-browser-icon-padding: 4px;
+$file-browser-toggle-size: 10px;
+$file-browser-toggle-padding: 2px;
+$file-browser-children-bottom-padding: 5px;
+
 .file-browser-item {
 	color: #fff;
 	cursor: pointer;
+	overflow: hidden;
 
 	// don't allow text selection
 	-moz-user-select: -moz-none;
@@ -11,24 +20,80 @@
 	user-select: none;
 
 	// tree depth - anything deeper is just silly
-	@for $i from 1 through 30 {
+	@for $i from 1 through 25 {
 		&.depth-#{$i} > {
 			.item, .empty {
 				padding-left: 10px * $i;
 			}
+			
+			.children:before {
+				left: 10px * $i;
+			}
+		}
+	}
+
+	.item, .children, .empty {
+		clear: both;
+		padding: 0 $file-browser-item-padding;
+		@include clearfix();
+	}
+
+	.icon {
+		padding: 0 $file-browser-icon-padding;
+		svg {
+			margin-top: ($file-browser-item-height / 2) - ($file-browser-icon-size / 2);
+			width: $file-browser-icon-size;
+			height: $file-browser-icon-size;
 		}
 	}
 
 	.toggle {
 		display: none;
+		padding: 0 $file-browser-toggle-padding;
+		@include animate('transform', 0.2s);
+
+		svg {
+			width: $file-browser-toggle-size;
+			height: $file-browser-toggle-size;
+		}
 	}
 
-	.icon, .name {
-		display: inline-block;
+	.icon, .name, .toggle {
+		height: $file-browser-item-height;
+		line-height: $file-browser-item-height;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+
+		float: left;
 	}
 
 	.empty, .children {
 		display: none;
+	}
+
+	.empty .contents {
+		margin: 5px 5px 8px 8px;
+		padding: 8px;
+		border: 1px dotted rgba(255, 255, 255, 0.2);
+		background: rgba(0,0,0,0.1);
+		color: rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+		font-size: 14px;
+		font-style: italic;
+		text-align: center;
+	}
+
+	.children {
+		position: relative;
+
+		&:before {
+			position: absolute;
+			content: ' ';
+			top: 0;
+			bottom: 0;
+			margin-left: 4px;
+			border-left: 1px dotted rgba(255, 255, 255, 0.4);
+		}
 	}
 
 	&.is-folder {
@@ -38,7 +103,10 @@
 		}
 
 		&.expanded {
-			.children { display: block; }	
+			> .children { 
+				display: block; 
+				padding: 0 0 $file-browser-children-bottom-padding 0;
+			}	
 
 			&.is-empty {
 				.empty { display: block; }
@@ -47,8 +115,7 @@
 
 			& > .item > .toggle {
 				display: inline-block;
-				& > .collapse { display: block; }
-				& > .expand { display: none; }
+				transform: rotate(90deg);
 			}
 
 		}

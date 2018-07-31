@@ -8,6 +8,9 @@ import $api from './api';
 // map of templates/html
 const $templates = { };
 
+// shared context sources
+const $contexts = { };
+
 const PROXIED_SELF_METHODS = [
   'addClass',
   'removeClass',
@@ -82,7 +85,9 @@ export default class Component {
    */
   static getContext(element) {
     if (element instanceof Component) element = element.$[0].parentNode;
-    const context = Component.locate(element, '[cl-context]');
+		const context = Component.locate(element, '[cl-context]');
+		const id = context.attr('cl-context') || '';
+		// return $contexts[id];
     return context.data('instance');
   }
 
@@ -176,8 +181,10 @@ export default class Component {
       this.$ = dom.is('.cl-template') ? dom.contents() : dom;
     }
 
-    // finalize context
-    this.$.attr('cl-context', '');
+		// finalize context
+		const id = _.uniqueId('ctx-');
+		this.$.attr('cl-context', id);
+		// $contexts[id] = this;
 
 		/** @type {Object.<string, JQuery>} */
 		this.ui = { };
@@ -257,7 +264,7 @@ export default class Component {
     this.api = $api;
     this.events = $events;
 
-    // save the local instance
+		// save the local instance
     this.data('instance', this);
   }
 

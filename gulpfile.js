@@ -87,6 +87,7 @@ _.each($config.scripts.client, source => {
       presets: [ 'es2015' ],
       plugins: [
         // 'convert-to-json',
+        'transform-svg-import-to-string',
         'transform-class-properties',
         'async-to-promises'
       ]

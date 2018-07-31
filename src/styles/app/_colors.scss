@@ -1,5 +1,13 @@
-$header-background-color: #f00;
-$footer-background-color: #0f0;
-
 $dialog-overlay-background-color: rgba(#000, 0.7);
 $dialog-content-background-color: #fff;
+
+$header-background: #118CF8;
+$footer-background: #484D59;
+$primary-background: #2F3238;
+$file-browser-background: #3B3E46;
+$preview-background: #3B3E46;
+$console-background: darken(#2F3238, 5%);
+$workspace-tab-bar-background: darken(#2F3238, 5%);
+$workspace-tab-bar-text-color: #484D58;
+$workspace-tab-bar-tab-active-background: $primary-background;
+$workspace-tab-bar-tab-active-text-color: #fff;

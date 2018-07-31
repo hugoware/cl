@@ -1,5 +1,22 @@
 
 .tab-bar {
 	height: $workspace-tab-bar-height;
-	background: #f00;
+	background: $workspace-tab-bar-background;
+	color: $workspace-tab-bar-text-color;
+
+	.tab {
+		display: inline-block;
+		height: $workspace-tab-bar-height;
+		padding: 0 10px;
+
+		&.active {
+			background: $workspace-tab-bar-tab-active-background;
+			color: $workspace-tab-bar-tab-active-text-color;
+		}
+		
+		.name, .close, .modified {
+			display: inline-block;
+			line-height: $workspace-tab-bar-height;
+		}
+	}
 }
