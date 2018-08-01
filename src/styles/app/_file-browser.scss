@@ -1,8 +1,9 @@
 
-$file-browser-item-height: 30px;
+$file-browser-font-size: 17px;
+$file-browser-item-height: 38px;
 $file-browser-item-padding: 2px;
-$file-browser-icon-size: 16px;
-$file-browser-icon-padding: 4px;
+$file-browser-icon-size: 20px;
+$file-browser-icon-padding: 6px;
 $file-browser-toggle-size: 10px;
 $file-browser-toggle-padding: 2px;
 $file-browser-children-bottom-padding: 5px;
@@ -11,6 +12,8 @@ $file-browser-children-bottom-padding: 5px;
 	color: #fff;
 	cursor: pointer;
 	overflow: hidden;
+
+	font-size: $file-browser-font-size;
 
 	// don't allow text selection
 	-moz-user-select: -moz-none;
@@ -91,7 +94,7 @@ $file-browser-children-bottom-padding: 5px;
 			content: ' ';
 			top: 0;
 			bottom: 0;
-			margin-left: 4px;
+			margin-left: 7px;
 			border-left: 1px dotted rgba(255, 255, 255, 0.4);
 		}
 	}
@@ -117,12 +120,11 @@ $file-browser-children-bottom-padding: 5px;
 				display: inline-block;
 				transform: rotate(90deg);
 			}
-
 		}
 	}
 
 	&.selected > .item {
-		background: rgba(#fff, 0.2);
+		background: rgba(rgb(160, 222, 255), 0.2);
 	}
 
 }

@@ -5,6 +5,7 @@ const $source = require('vinyl-source-stream');
 const $buffer = require('vinyl-buffer');
 const $sequence = require('run-sequence');
 const $utils = require('gulp-util');
+const $run = require('gulp-run-command').default;
 
   // ui/styles
 const $sass = require('gulp-sass');
@@ -21,39 +22,43 @@ const $jsonminify = require('gulp-jsonminify');
   // possible server sections
 const $config = {
 
-		styles: { 
-			watch: [
-				'src/styles/**/*.scss',
-				'src/styles/**/*.sass'
-				// 'src/styles/**/*.sass'
-			],
-			src: ['src/styles/**/*', '!src/styles/**/lib/**'],
-			dest: 'dist/public'
-		},
+  icons: {
+    src: 'src/icons/**/*.svg'
+  },
 
-		resources: {
-			src: 'src/resources/**/*',
-			watch: 'src/resources/**/*',
-			dest: 'dist/public'
-		},
+	styles: { 
+		watch: [
+			'src/styles/**/*.scss',
+			'src/styles/**/*.sass'
+			// 'src/styles/**/*.sass'
+		],
+		src: ['src/styles/**/*', '!src/styles/**/lib/**'],
+		dest: 'dist/public'
+	},
 
-		views: {
-			src: 'src/views/**/*',
-			watch: 'src/views/**/*',
-			dest: 'dist/views'
-		},
+	resources: {
+		src: 'src/resources/**/*',
+		watch: 'src/resources/**/*',
+		dest: 'dist/public'
+	},
 
-		scripts: {
-      client: [ 'site', 'app', 'viewer' ],
-			workers: [ 'pug', 'typescript', 'scss' ],
-			server: {
-				watch: ['src/**/*.js', '!src/client', '!src/client/**' ],
-				src: ['src/**/*.js', '!src/client', '!src/client/**'],
-				dest: 'dist'
-			}
+	views: {
+		src: 'src/views/**/*',
+		watch: 'src/views/**/*',
+		dest: 'dist/views'
+	},
+
+	scripts: {
+    client: [ 'site', 'app', 'viewer' ],
+		workers: [ 'pug', 'typescript', 'scss' ],
+		server: {
+			watch: ['src/**/*.js', '!src/client', '!src/client/**' ],
+			src: ['src/**/*.js', '!src/client', '!src/client/**'],
+			dest: 'dist'
 		}
+	}
 
-	};
+};
 
 
 
@@ -143,6 +148,9 @@ _.each($config.scripts.workers, source => {
     $gulp.watch([`src/client/workers/${source}.js`], [ action ]);
   });
 });
+
+// handles svg icon cleanup
+$gulp.task('clean-svg-icons', $run('node ./scripts/clean-svg-icons.js'));
 
 
 $gulp.task('compress-css', () => {
@@ -256,14 +264,18 @@ $gulp.task('watch-server-scripts',() => {
   $gulp.watch($config.scripts.server.watch, ['compile-server-scripts']); 
 });
 
+$gulp.task('watch-svg-icons', () => {
+  $gulp.watch($config.icons.src, ['clean-svg-icons']);
+})
+
 // general tasks
 $gulp.task('compress', [ 'compress-images', 'compress-json', 'compress-css', 'compress-js' ]);
-$gulp.task('compile', ['copy-views', 'compile-styles', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts', 'copy-resources']);
-$gulp.task('watch', ['watch-views', 'watch-styles', 'watch-worker-scripts', 'watch-client-scripts', 'watch-resources', 'watch-server-scripts']);
+$gulp.task('compile', ['clean-svg-icons', 'copy-views', 'compile-styles', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts', 'copy-resources']);
+$gulp.task('watch', ['watch-views', 'watch-styles', 'watch-worker-scripts', 'watch-client-scripts', 'watch-resources', 'watch-server-scripts', 'watch-svg-icons']);
 
 // full deployment task
 $gulp.task('deploy', done => $sequence(
-  [ 'copy-views', 'compile-styles', 'copy-resources', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts' ],
+  [ 'clean-svg-icons', 'copy-views', 'compile-styles', 'copy-resources', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts' ],
   'compress',
   done 
 ));

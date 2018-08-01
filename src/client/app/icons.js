@@ -1,13 +1,33 @@
 import _ from 'lodash';
 
 // all svgs
-import folder from '../../icons/folder.svg';
 import arrowRight from '../../icons/arrow-right.svg';
+import folderIcon from '../../icons/icon-folder.svg';
+import pugIcon from '../../icons/icon-pug.svg';
+import jsIcon from '../../icons/icon-js.svg';
+import htmlIcon from '../../icons/icon-html.svg';
+import scssIcon from '../../icons/icon-scss.svg';
+import tsIcon from '../../icons/icon-ts.svg';
+import txtIcon from '../../icons/icon-txt.svg';
+import cssIcon from '../../icons/icon-css.svg';
+import closeIcon from '../../icons/icon-close.svg';
+import unknownIcon from '../../icons/icon-unknown.svg';
 
 /** @type {Object<string, HTMLElement>} */
 const $icons = {
-	folder,
-	arrowRight
+	arrowRight,
+
+	// icons
+	closeIcon,
+	folderIcon,
+	pugIcon,
+	jsIcon,
+	tsIcon,
+	txtIcon,
+	htmlIcon,
+	scssIcon,
+	cssIcon,
+	unknownIcon
 };
 
 // handles creating icon generators
@@ -26,6 +46,13 @@ export function get(key) {
 }
 
 export default { 
-	folder: () => get('folder'),
-	arrowRight: () => get('arrowRight')
+	arrowRight: () => get('arrowRight'),
+	close: () => get('closeIcon'),
+
+	// file browser
+	folder: open => get('folderIcon'),
+	fileType: type => {
+		const source = $icons[`${type}Icon`] || $icons.unknownIcon;
+		return source.cloneNode(true);
+	}
 };

@@ -74,6 +74,11 @@ export default class FileBrowserItem extends Component {
 				const expand = $icons.arrowRight();
 				this.ui.toggle.append(expand);
 			}
+			// try and find the icon
+			else {
+				const icon = $icons.fileType(data.ext);
+				this.ui.icon.append(icon);
+			}
 
 
 		}

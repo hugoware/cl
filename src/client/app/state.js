@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import $lfs from './lfs';
+import {getExtension} from './utils/index'
 
 const $state = { 
 
@@ -121,6 +122,10 @@ async function syncProject(children = [ ], parent, relativeTo) {
 		item.isFolder = _.isArray(item.children);
 		item.isFile = !item.isFolder;
 		item.isEmpty = item.isFolder && !_.some(item.children);
+
+		// file info
+		if (item.isFile)
+			item.ext = getExtension(item.path, { removeLeadingDot: true });
 
 		// check if this is  
 		if (!item.isEmpty)

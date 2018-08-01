@@ -1,14 +1,23 @@
 
+$workspace-tab-bar-close-button-size: 11px;
+$workspace-tab-bar-close-button-gap: 5px;
+$workspace-tab-bar-tab-padding: 20px;
+$workspace-tab-name-close-gap: 8px;
+$workspace-tab-name-gap: 15px;
+$workspace-tab-close-gap: 10px;
+
 .tab-bar {
+
 	height: $workspace-tab-bar-height;
 	background: $workspace-tab-bar-background;
 	color: $workspace-tab-bar-text-color;
+	cursor: pointer;
 
 	.tab {
 		display: inline-block;
 		height: $workspace-tab-bar-height;
-		padding: 0 10px;
-
+		padding: 0 $workspace-tab-close-gap 0 $workspace-tab-name-gap;
+		
 		&.active {
 			background: $workspace-tab-bar-tab-active-background;
 			color: $workspace-tab-bar-tab-active-text-color;
@@ -18,5 +27,24 @@
 			display: inline-block;
 			line-height: $workspace-tab-bar-height;
 		}
+
+		.name {
+			padding: 0 $workspace-tab-name-close-gap 0 0;
+		}
+
+		.close {
+			@include animate('transform', 0.2s);
+			margin: 0 $workspace-tab-bar-close-button-gap;
+			svg {
+				width: $workspace-tab-bar-close-button-size;
+				height: $workspace-tab-bar-close-button-size;
+			}
+
+			&:hover {
+				transform: scale(1.4, 1.4);
+			}
+		}
+
+
 	}
 }
