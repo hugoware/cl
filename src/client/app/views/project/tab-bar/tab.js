@@ -1,6 +1,5 @@
 /// <reference path="../../../types/index.js" />
 
-import $icons from '../../../icons';
 import Component from '../../../component';
 
 export default class Tab extends Component {
@@ -16,10 +15,6 @@ export default class Tab extends Component {
 			}
 
 		});
-
-		// handle closing
-		const close = $icons.close();
-		this.ui.close.append(close);
 
 		/** the file associated with this tab
 		 * @type {ProjectItem} */

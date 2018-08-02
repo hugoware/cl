@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Component from '../../../component';
+import ComponentList from '../../../component-list';
 import ConsoleMessage from './message';
 
 /** @typedef {Object} CompilerError
@@ -25,7 +26,8 @@ export default class Console extends Component {
 			template: 'console',
 
 			ui: {
-				items: '.items'
+				heading: '.heading',
+				messages: '.messages'
 			}
 		});
 
@@ -41,7 +43,7 @@ export default class Console extends Component {
 	update = result => {
 
 		if (result.success)
-			return this.ui.items.empty();
+			return this.ui.messages.empty();
 
 		// get everything in alphabetical order
 		const keys = _.keys(result.all);
@@ -59,9 +61,11 @@ export default class Console extends Component {
 
 			// place in the correct location
 			const leading = error === result.error;
-			message[leading ? 'prependTo' : 'appendTo'](this.ui.items);
+			message[leading ? 'prependTo' : 'appendTo'](this.ui.messages);
 		}
 
+		// move the heading back to the top
+		this.ui.heading.prependTo(this.ui.messages);
 	}
 
 }

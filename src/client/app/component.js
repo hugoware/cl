@@ -4,6 +4,7 @@ import $ from 'jquery';
 import Promise from 'bluebird';
 import $events from './events';
 import $api from './api';
+import $icons from './icons';
 
 // map of templates/html
 const $templates = { };
@@ -248,6 +249,16 @@ export default class Component {
         // remove and save the mapping
         element.attr('bind', null);
         this.ui[id] = element;
+      });
+
+    // check for icon components
+    this.find('[icon]')
+      .each((index, item) => {
+				const element = $(item);
+				const id = element.attr('icon');
+				const args = element.attr('icon-args');
+				const icon = $icons[id](args);
+				element.append(icon);
       });
 
     // // automatically bind IDs

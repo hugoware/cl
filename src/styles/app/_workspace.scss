@@ -1,4 +1,11 @@
 
+
+$workspace-action-margin: 10px;
+$workspace-action-padding: 10px;
+$workspace-action-item-scale: 0.61;
+$workspace-action-height: $workspace-action-bar-height * $workspace-action-item-scale;
+$workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-item-scale) / 2);
+
 #workspace {
 
 	.actions {
@@ -10,7 +17,10 @@
 			padding: 0 $workspace-action-padding;
 			height: $workspace-action-height;
 			line-height: $workspace-action-height;
-			background: #fff;
+			background: $workspace-action-background-color;
+			color: $workspace-action-text-color;
+			font-size: 14px;
+			border-radius: 3px;
 			display: inline-block;
 		}
 	}

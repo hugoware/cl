@@ -12,10 +12,14 @@ import txtIcon from '../../icons/icon-txt.svg';
 import cssIcon from '../../icons/icon-css.svg';
 import closeIcon from '../../icons/icon-close.svg';
 import unknownIcon from '../../icons/icon-unknown.svg';
+import errorIcon from '../../icons/icon-error.svg';
+import warningIcon from '../../icons/icon-warning.svg';
 
 /** @type {Object<string, HTMLElement>} */
 const $icons = {
 	arrowRight,
+	errorIcon,
+	warningIcon,
 
 	// icons
 	closeIcon,
@@ -48,6 +52,8 @@ export function get(key) {
 export default { 
 	arrowRight: () => get('arrowRight'),
 	close: () => get('closeIcon'),
+	error: () => get('errorIcon'),
+	warning: () => get('warningIcon'),
 
 	// file browser
 	folder: open => get('folderIcon'),

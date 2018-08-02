@@ -5,6 +5,44 @@ $workspace-tab-bar-tab-padding: 20px;
 $workspace-tab-name-close-gap: 8px;
 $workspace-tab-name-gap: 15px;
 $workspace-tab-close-gap: 10px;
+$tab-bar-modified-indicator-size: 9px;
+
+.element {
+  animation: pulse 5s infinite;
+}
+
+@include keyframes(indicator-dot) {
+	0% {
+		transform: scale(1, 1);
+		background-color: $tab-bar-modified-indicator-base-color;
+	}
+	50% {
+		transform: scale(1.2, 1.2);
+		background-color: $tab-bar-modified-indicator-highlight-color;
+	}
+	100% {
+		transform: scale(1, 1);
+		background-color: $tab-bar-modified-indicator-base-color;
+	}
+}
+
+@include keyframes(indicator-ring) {
+	0% {
+		transform: scale(0.9, 0.9);
+		border-color: $tab-bar-modified-indicator-base-color;
+		opacity: 1;
+	}
+	85% {
+		transform: scale(2, 2);
+		border-color: $tab-bar-modified-indicator-highlight-color;
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
+		border-color: $tab-bar-modified-indicator-base-color;
+		transform: scale(0.9, 0.9);
+	}
+}
 
 .tab-bar {
 
@@ -14,9 +52,31 @@ $workspace-tab-close-gap: 10px;
 	cursor: pointer;
 
 	.tab {
+		position: relative;
 		display: inline-block;
 		height: $workspace-tab-bar-height;
 		padding: 0 $workspace-tab-close-gap 0 $workspace-tab-name-gap;
+
+		.modified, .modified:before {
+			position: absolute;
+			width: $tab-bar-modified-indicator-size;
+			height: $tab-bar-modified-indicator-size;
+			border-radius: $tab-bar-modified-indicator-size;
+		}
+
+		.modified {
+			@include animation(indicator-dot 3s infinite);
+			background : $tab-bar-modified-indicator-highlight-color;
+			left: 4px;
+			top: 4px;
+			
+			&:before {
+				@include animation(indicator-ring 3s infinite);
+				margin: -2px 0 0 -2px;
+				content: ' ';
+				border: 2px solid $tab-bar-modified-indicator-highlight-color;
+			}
+		}
 		
 		&.active {
 			background: $workspace-tab-bar-tab-active-background;
@@ -43,6 +103,10 @@ $workspace-tab-close-gap: 10px;
 			&:hover {
 				transform: scale(1.4, 1.4);
 			}
+		}
+
+		&.is-modified .modified {
+			opacity: 1;
 		}
 
 

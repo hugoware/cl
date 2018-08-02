@@ -1,4 +1,6 @@
 
+$console-icon-size: 25px;
+
 #console {
 
 	.message-block {
@@ -7,10 +9,56 @@
 		overflow-x: auto;
 	}
 
+	.messages {
+		width: 100%;
+
+		th {
+			padding: 10px 5px;
+			font-size: 14px;
+			background: rgba(#fff, 0.05);
+			color: rgba(#fff, 0.4);
+			border-bottom: 1px solid rgba(#fff, 0.3);
+		}
+
+		th.error, th.path {
+			text-align: left;
+		}
+
+		td {
+			white-space: nowrap;
+			overflow: hidden;
+			padding: 10px;
+			vertical-align: top;
+			font-size: 17px;
+		}
+
+		tr.is-exception {
+			background: rgba(#f00, 0.125);
+			border-bottom-color: rgba(#f00, 0.33);
+		}
+
+		td .directory {
+			font-size: 14px;
+			opacity: 0.6;
+			padding: 4px 0 0 0;
+		}
+	}
+
+	.icon {
+		width: 30px;
+
+		svg {
+			// position: absolute;
+			margin: -3px 0 0 0;
+			width: $console-icon-size;
+			height: $console-icon-size;
+		}
+	}
+
 	.message {
 		@include clearfix;
 		color: #fff;
-		border-top: 1px solid #fff;
+		border-bottom: 1px solid rgba(#fff, 0.2);
 
 		> div {
 			@extend .message-block;
@@ -29,14 +77,23 @@
 			display: none;
 		}
 
+		.as-exception {
+			display: none;
+		}
+
 		&.is-exception {
 			.name {
 				@extend .message-block;
 			}
-			
-			.line, .column {
+
+			.as-exception {
+				display: block;
+			}
+
+			.as-warning {
 				display: none;
 			}
+
 		}
 
 	}

@@ -1,13 +1,23 @@
 +template('console')
-	table.items
+	table.messages
+		tr.heading
+			th.icon
+			th.line Line
+			th.column Col
+			th.path File
+			th.error Error
+			th.hint
 
 +template('console-message', true)
 	tr.message
-		td.type
+		td.icon
+			.as-exception(icon='error')
+			.as-warning(icon='warning')
+
 		td.line
 		td.column
-		td.name
-		td.file
-		td.directory
+		td.path
+			.file
+			.directory
 		td.data
 		td.hint

@@ -1,4 +1,8 @@
 
+$preview-separator-width: 3px;
+$preview-navigation-item-gap: 6px;
+$preview-navigation-item-height: $preview-navigation-height - ($preview-navigation-item-gap * 2);
+
 #preview {
 
 	.preview-wrapper {

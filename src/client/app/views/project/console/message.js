@@ -1,4 +1,5 @@
 /// <reference path="../../../types/index.js" />
+import $icons from '../../../icons';
 import Component from '../../../component';
 import { getPathInfo } from '../../../utils';
 
@@ -10,6 +11,7 @@ export default class ConsoleMessage extends Component {
 			template: 'console-message',
 
 			ui: {
+				icon: '.icon',
 				line: '.line',
 				name: '.name',
 				column: '.column',
