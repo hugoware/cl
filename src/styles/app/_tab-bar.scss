@@ -93,7 +93,8 @@ $tab-bar-modified-indicator-size: 9px;
 		}
 
 		.close {
-			@include animate('transform', 0.2s);
+			opacity: 0.4;
+			@include animate('transform opacity', 0.2s);
 			margin: 0 $workspace-tab-bar-close-button-gap;
 			svg {
 				width: $workspace-tab-bar-close-button-size;
@@ -101,7 +102,8 @@ $tab-bar-modified-indicator-size: 9px;
 			}
 
 			&:hover {
-				transform: scale(1.4, 1.4);
+				opacity: 1;
+				transform: scale(1.4, 1.4) rotate(90deg);
 			}
 		}
 

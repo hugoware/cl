@@ -4,6 +4,7 @@ import Component from '../../../component';
 import $lfs from '../../../lfs';
 import $state, { ProjectItem } from '../../../state';
 import FileBrowserItem from './item';
+import FileBrowserActions from './actions';
 import { cancelEvent } from '../../../utils'
 
 const DOUBLE_CLICK_DELAY = 250;
@@ -17,12 +18,17 @@ export default class FileBrowser extends Component {
 			ui: {
 				items: '.items',
 
-				// runProject: '.action.run-project',
-				createFolder: '.action.create-folder',
-				createFile: '.action.create-file',
-				removeItems: '.action.remove-items'
+				// meta info
+				data: '.project-data',
+				name: '.project-data .name',
+				description: '.project-data .description',
+
 			}
 		});
+
+		// add the action list
+		this.actions = new FileBrowserActions();
+		this.append(this.actions);
 
 		// events
 		this.listen('activate-project', this.onActivateProject);
@@ -30,10 +36,6 @@ export default class FileBrowser extends Component {
 		// ui events
 		this.on('mouseup', '.toggle', this.onToggleFolder);
 		this.on('mouseup', '.item', this.onReleaseItem);
-		this.ui.createFile.on('click', this.onCreateFile);
-		this.ui.createFolder.on('click', this.onCreateFolder);
-		this.ui.removeItems.on('click', this.onRemoveItems);
-		// this.ui.runProject.on('click', this.onRunProject);
 
 	}
 
@@ -42,11 +44,19 @@ export default class FileBrowser extends Component {
 
 	// activated when changing projects
 	onActivateProject = () => {
+		this.expanded = { };
+		this.selected = { };
 
-		this.states = {
-			expansion: { },
-			selection: { }
-		};
+		// update basic data
+		const { project } = $state;
+		this.ui.name.text(project.name);
+		this.ui.description.text(project.description);
+		
+		// update the project type
+		let className = this.ui.data.attr('class') || '';
+		className = className.replace(/type\-[a-z0-9]+/gi, '');
+		this.ui.data.attr('class', className);
+		this.ui.data.addClass(`type-${project.type}`);
 
 		// rebuild the state
 		this.rebuildStructure();
@@ -62,15 +72,18 @@ export default class FileBrowser extends Component {
 	// changes the toggle state for an item
 	toggleExpansion = item => {
 		const { path } = item.data;
-		this.states.expansion[path] = !this.states.expansion[path];
-		item.expanded = this.states.expansion[path];
+		this.expanded[path] = !this.expanded[path];
+		item.expanded = this.expanded[path];
 	}
 
 	// changes the selection state for an item
 	toggleSelection = item => {
 		const { path } = item.data;
-		this.states.selection[path] = !this.states.selection[path];
-		item.selected = this.states.selection[path];
+		this.selected[path] = !this.selected[path];
+		item.selected = this.selected[path];
+
+		// update allowed actions
+		this.updateActions();
 	}
 
 	/** activates an item depending on the type 
@@ -116,14 +129,6 @@ export default class FileBrowser extends Component {
 		return cancelEvent(event);
 	}
 
-	// dialog boxes
-	onRemoveItems = () => this.broadcast('open-dialog', 'remove-items')
-	onCreateFolder = () => this.broadcast('open-dialog', 'create-folder')
-	onCreateFile = () => {
-		const selectedFolder = '';
-		this.broadcast('open-dialog', 'create-file', { selectedFolder });
-	}
-
 	// handles rebuilding the file browser structure
 	rebuildStructure = () => {
 		this.ui.items.empty();
@@ -132,7 +137,7 @@ export default class FileBrowser extends Component {
 
 	// clears active selections
 	clearSelections = () => {
-		this.states.selection = { };
+		this.selected = { };
 		this.find('.selected').removeClass('selected');
 	}
 
@@ -140,6 +145,13 @@ export default class FileBrowser extends Component {
 	getSelections = () => {
 		const items = this.find('.selected');
 		return _.map(items, this.getItem);
+	}
+
+	/** updates the action list */
+	updateActions() {
+		const paths = _.keys(this.selected);
+		const selections = _.map(paths, $state.findItemByPath);
+		this.actions.update(selections);
 	}
 
 }
@@ -156,8 +168,8 @@ function rebuild(fileBrowser, node, children, depth = 0) {
 			item.appendTo(node);
 
 			// toggle state
-			item.expanded = fileBrowser.states.expansion[data.path];
-			item.selected = fileBrowser.states.selection[data.path];
+			item.expanded = fileBrowser.expanded[data.path];
+			item.selected = fileBrowser.selected[data.path];
 
 			// if this has children, create it as well
 			if ('children' in data)

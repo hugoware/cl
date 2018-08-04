@@ -40,6 +40,14 @@ const $state = {
 		window.STATE = $state;
 	},
 
+	// /** finds a project item using an ID
+	//  * @param {string} id the ID of the item to find
+	//  * @returns {ProjectItem}
+	//  */
+	// getItemById(id) {
+	// 	return $state.items[id];
+	// },
+
 	/** finds a document item using a path
 	 * @param {string} path the path to search
 	 */

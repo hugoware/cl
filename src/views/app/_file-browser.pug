@@ -1,21 +1,14 @@
 +template('file-browser')
-	.actions
-		h3 Available Actions
-		.action.create-folder
-			.icon(icon='error')
-			.label Create new folder
-		.action.create-file
-			.icon(icon='error')
-			.label Create new file
-		.action.rename-item
-			.icon(icon='error')
-			.label Rename selected #[.folder folder] #[.file file]
-		.action.remove-items
-			.icon(icon='error')
-			.label Delete selected #[.single.folder folder] #[.single.file file] #[.multi.folders folders] #[.multi.files files] #[.multi.mixed items]
-		.action.move-items
-			.icon(icon='error')
-			.label Move selected #[.single.folder folder] #[.single.file file] #[.multi.folders folders] #[.multi.files files] #[.multi.mixed items]
+	.project-data
+		.name
+		.type
+		.description
+
+		.options
+			.settings Project Settings
+			.open-in-window Open in new Window
+			.share-project Share project
+
 	.items
 
 +template('file-browser-item')
@@ -28,3 +21,45 @@
 			.contents
 		.empty
 			.contents This folder is empty
+
++template('file-browser-actions')
+	.actions
+		h3 Available Actions
+		.action.create-folder
+			.icon(icon='error')
+			.label Create new folder
+		
+		.action.create-file
+			.icon(icon='error')
+			.label Create new file
+		
+		.action.rename-item
+			.icon(icon='error')
+			.label
+				| Rename selected 
+				.file file
+				.folder folder
+		
+		.action.delete-item
+			.icon(icon='error')
+			.label
+				| Delete selected 
+				.single
+					.folder folder
+					.file file
+				.multi
+					.folder folders
+					.file files
+					.item items
+		
+		.action.move-item
+			.icon(icon='error')
+			.label
+				| Move selected 
+				.single
+					.folder folder
+					.file file
+				.multi
+					.folder folders
+					.file files
+					.item items

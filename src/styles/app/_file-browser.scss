@@ -142,12 +142,14 @@ $file-browser-children-bottom-padding: 5px;
 		left: 0;
 		right: 0;
 		bottom: 0;
+		padding-bottom: 10px;
 
 		h3 {
 			padding: 13px 10px;
 		}
 
 		.action {
+			display: none;
 			height: $action-item-height;
 			@include clearfix;
 			opacity: 0.4;
@@ -177,6 +179,54 @@ $file-browser-children-bottom-padding: 5px;
 				display: none;
 			}
 		}
+
+		// toggle message visibility
+		&.multi-selection .multi,
+		&.single-selection .single,
+		&.only-files .file,
+		&.only-folders .folder,
+		&.is-mixed .item {
+			display: inline-block;
+		}
+
+		// enablement
+		&.allow-create-folder .create-folder,
+		&.allow-create-file .create-file,
+		&.allow-rename-item .rename-item,
+		&.allow-delete-item .delete-item,
+		&.allow-move-item .move-item {
+			display: block;
+		}
+
+	}
+
+	.project-data {
+		background: rgba(#000, 0.1);
+		color: #fff;
+		padding: 15px 10px;
+		margin-bottom: 5px;
+
+		> div {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+
+		.name {
+			font-size: 18px;
+			padding: 0 0 8px 0;
+		}
+
+		.description {
+			font-size: 14px;
+			opacity: 0.3;
+		}
+
+		.options {
+			height: 0;
+			overflow: hidden;
+		}
+
 	}
 
 }
