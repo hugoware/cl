@@ -29,7 +29,6 @@ export default class Tab extends Component {
 
 	// listens when this file is modified or not
 	onModifyFile = file => {
-		console.log('add mod');
 		// if (!isSameFile(this, file)) return;
 		this.addClass('is-modified');
 	}

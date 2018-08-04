@@ -49,6 +49,10 @@ async function generateTemplate(view, path) {
 	const markup = await $contentManager.get(path);
 	view.template = $cheerio.load(markup);
 
+	// include a helper script
+	view.template.root()
+		.prepend('<script type="text/javascript" src="/__codelab__/browser.js" />');
+
 	// include a base url that'll make all local requests
 	// for this preview match the project domain
 	const domain = $state.getProjectDomain();
@@ -65,7 +69,6 @@ async function generateTemplate(view, path) {
 
 			// make sure this is a valid file
 			const src = resolvePathFromUrl(item.attribs.src);
-			console.log('checking src', src);
 			if (!src) return;
 
 			// save it for later
@@ -87,7 +90,6 @@ async function generateTemplate(view, path) {
 
 			// make sure this is a valid file
 			const href = resolvePathFromUrl(item.attribs.href);
-			console.log('lookong for rep', href);
 			if (!$state.fileExists(href)) return;
 
 			// save it for later
@@ -103,10 +105,9 @@ async function replaceDependencies(view, file) {
 
 	// refresh all
 	if (path === view.file.path || !path) {
-		const scripts = _(view.scripts).keys().filter($state.fileExists).value();
+		
+		// replace all linked content
 		const links = _(view.links).keys().filter($state.fileExists).value();
-
-		// check each linked item
 		for (const key of links) {
 
 			// get the content to display
@@ -122,15 +123,28 @@ async function replaceDependencies(view, file) {
 			});
 		}
 
-		// replace each script as required
-	}
-	// targeted
-	else {
-		const script = view.scripts[path];
-		const link = view.links[path];
-		console.log('found', script, link);
-	}
+		// replace each script
+		const scripts = _(view.scripts).keys().filter($state.fileExists).value();
+		for (const key of scripts) {
 
+			// get the content to display
+			const content = await $contentManager.get(key);
+
+			// replace the script
+			_.each(view.scripts[key], item => {
+				item.attribs.type = 'text/javascript';
+				delete item.attribs.src;
+				$cheerio(item).html(content);
+			});
+		}
+
+	}
+	// targeted update?
+	else {
+		// const script = view.scripts[path];
+		// const link = view.links[path];
+		// console.log('found', script, link);
+	}
 
 	// done?
 	return Promise.resolve();

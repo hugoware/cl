@@ -2,7 +2,7 @@
 $file-browser-font-size: 17px;
 $file-browser-item-height: 38px;
 $file-browser-item-padding: 2px;
-$file-browser-icon-size: 20px;
+$file-browser-icon-size: 18px;
 $file-browser-icon-padding: 6px;
 $file-browser-toggle-size: 10px;
 $file-browser-toggle-padding: 2px;
@@ -125,6 +125,58 @@ $file-browser-children-bottom-padding: 5px;
 
 	&.selected > .item {
 		background: rgba(rgb(160, 222, 255), 0.2);
+	}
+
+}
+
+#file-browser {
+
+	.actions {
+		$action-item-height: 40px;
+		$action-item-icon-size: $action-item-height * 0.5;
+		background: darken($file-browser-background, 2%);
+		color: #fff;
+		border-top: 1px solid lighten($file-browser-background, 10%);
+
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		h3 {
+			padding: 13px 10px;
+		}
+
+		.action {
+			height: $action-item-height;
+			@include clearfix;
+			opacity: 0.4;
+		}
+		
+		.icon {
+			display: block;
+			float: left;
+			position: relative;
+			
+			height: $action-item-height;
+			width: $action-item-height;
+			
+			svg {
+				@extend .centered;
+				width: $action-item-icon-size;
+				height: $action-item-icon-size;
+			}
+		}
+		
+		.label {
+			display: block;
+			float: left;
+			@include align_vertical($action-item-height);
+
+			div {
+				display: none;
+			}
+		}
 	}
 
 }

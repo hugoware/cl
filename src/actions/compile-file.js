@@ -25,7 +25,6 @@ export default async function compile(projectId, path) {
 	const destination = $path.resolveProject(projectId, path, true);
 
 	// find the appropriate compiler
-	// console.log('wants to write', source, 'to', destination);
 	return await compiler.compile({
 		source, destination,
 		projectDirectory: root,

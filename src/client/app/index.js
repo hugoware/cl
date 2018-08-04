@@ -21,6 +21,9 @@ import RemoveItemsDialog from './dialogs/remove-items';
 window.Promise = window.Promise || Bluebird;
 Bluebird.config({ warnings: false });
 
+// shared channel for iframe access
+window.__CODELAB__ = { };
+
 // the main app class
 class App extends Component {
 
@@ -62,7 +65,6 @@ class App extends Component {
 		// events
 		this.listen('navigate', this.onNavigate);
 		this.listen('open-dialog', this.onShowDialog);
-		this.listen('compiler-result', this.onCompilerResult);
 	}
 
 	// initialize the app
@@ -75,7 +77,16 @@ class App extends Component {
 			console.log('err');
 		}
 
+		// setup common events
+		// window.addEventListener('resize', this.onWindowResize);
+		window.addEventListener('preview-message', this.onPreviewContentMessage);
+
 		this.setView(nav.view);
+	}
+
+	// handles broadcasted messages
+	onPreviewContentMessage = event => {
+		this.broadcast('preview-message', event.name, ...event.args);
 	}
 
 	// handle general navigation
@@ -116,11 +127,6 @@ class App extends Component {
 
 		// show the dialog window
 		dialog.show();
-	}
-
-	// needs to show error messages or not
-	onCompilerResult = result => {
-		this.toggleClass('console-visible', !result.success);
 	}
 
 }

@@ -1,8 +1,21 @@
 +template('file-browser')
 	.actions
-		button.action.create-folder +folder
-		button.action.create-file +file
-		button.action.remove-items -remove
+		h3 Available Actions
+		.action.create-folder
+			.icon(icon='error')
+			.label Create new folder
+		.action.create-file
+			.icon(icon='error')
+			.label Create new file
+		.action.rename-item
+			.icon(icon='error')
+			.label Rename selected #[.folder folder] #[.file file]
+		.action.remove-items
+			.icon(icon='error')
+			.label Delete selected #[.single.folder folder] #[.single.file file] #[.multi.folders folders] #[.multi.files files] #[.multi.mixed items]
+		.action.move-items
+			.icon(icon='error')
+			.label Move selected #[.single.folder folder] #[.single.file file] #[.multi.folders folders] #[.multi.files files] #[.multi.mixed items]
 	.items
 
 +template('file-browser-item')

@@ -21,14 +21,42 @@ export default class Preview extends Component {
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('compile-file', this.onCompileFile);
+
+		// preview area setup
+		this.ui.output.on('load', event => {
+			const frame = event.target;
+			const root = frame.contentWindow.document.body;
+			root.innerHTML = '';
+			
+			// attach the helper script file
+			const script = document.createElement('script');
+			script.setAttribute('src', '/__codelab__/browser.js');
+			script.setAttribute('type', 'text/javascript');
+			root.appendChild(script);
+		});
 	}
 
 	/** access to the output window
 	 * @type {HTMLElement} the preview DOM element
 	 */
 	get output() {
-		return this.ui.output[0].contentWindow.document.body;
+		return this.context.document.body;
 	}
+
+	/** returns the window context for the preview */
+	get context() {
+		return this.ui.output[0].contentWindow;
+	}
+
+	/** access to helper scripts for the main window */
+	get bridge() {
+		return this.context.__CODELAB__;
+	}
+
+	// /** access to an object to communicate between local */
+	// get previewAPI() {
+	// 	return window.__CODELAB__.preview;
+	// }
 
 	// changes the display mode for the project
 	setMode = mode => {

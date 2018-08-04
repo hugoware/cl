@@ -22,7 +22,7 @@ export default class ConsoleMessage extends Component {
 		});
 	}
 
-	/** @param {CompilerErrorMessage} err */
+	/** @param {ProjectError} err */
 	update(err) {
 
 		// determine if this is an exception message or not

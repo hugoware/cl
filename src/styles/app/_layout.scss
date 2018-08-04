@@ -56,6 +56,7 @@ input, textarea, button {
 }
 
 #preview {
+	z-index: $layer-preview;
 	background: $preview-background;
 	width: $preview-width;
 	right: 0;

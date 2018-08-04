@@ -1,13 +1,9 @@
 
-$console-icon-size: 25px;
+$console-icon-size: 23px;
 
 #console {
-
-	.message-block {
-		display: block;
-		float: left;
-		overflow-x: auto;
-	}
+	z-index: $layer-console;
+	overflow-x: auto;
 
 	.messages {
 		width: 100%;
@@ -25,8 +21,7 @@ $console-icon-size: 25px;
 		}
 
 		td {
-			white-space: nowrap;
-			overflow: hidden;
+			// overflow: hidden;
 			padding: 10px;
 			vertical-align: top;
 			font-size: 17px;
@@ -60,10 +55,10 @@ $console-icon-size: 25px;
 		color: #fff;
 		border-bottom: 1px solid rgba(#fff, 0.2);
 
-		> div {
-			@extend .message-block;
-			padding: 8px 5px;
-		}
+		// > div {
+		// 	// @extend .message-block;
+		// 	// padding: 8px 5px;
+		// }
 
 		.line, .column {
 			width: 40px;
@@ -82,9 +77,9 @@ $console-icon-size: 25px;
 		}
 
 		&.is-exception {
-			.name {
-				@extend .message-block;
-			}
+			// .name {
+			// 	// @extend .message-block;
+			// }
 
 			.as-exception {
 				display: block;

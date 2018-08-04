@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { broadcast } from './events';
+import $errorManager from './error-manager';
 import getWorker from './worker';
 import $lfs from './lfs';
 
@@ -61,46 +62,41 @@ export async function update(path, content) {
 
 // tries to compile a file, if possible
 export function compile(path, { silent } = { }) {
+
+	// create a handler for when the work is ready to use
+	const notifyFinished = !silent 
+		? () => broadcast('compile-file', path)
+		: _.noop;
+
+	// kick off the work
 	return new Promise(async (resolve) => {
 		let data = await $lfs.read(path);
 
 		// check for a worker
 		const worker = await getWorker({ file: path });
-		if (!worker)
+
+		// no compile step required
+		if (!worker) {
+			notifyFinished();
 			return resolve({ success: true, content: data });
+		}
 
 		// run the compile step
 		const lastCompile = +new Date;
 		const result = await worker.request('compile', path);
-		const previouslyHadErrors = _.some($errors);
 
 		// if there's an error, update
 		if (!result.success) {
-			$errors[path] = result.error;
+			$errorManager.add(path, result.error);
 			$compiled[path] = { lastCompile, content: '' };
 		}
 		// the compile worked
 		else {
-			delete $errors[path];
+			$errorManager.remove(path);
 			$compiled[path] = { lastCompile, content: result.content };
 		}
-
-		// check for compiler events
-		const nowHasErrors = _.some($errors);
-		if (previouslyHadErrors && !nowHasErrors)
-			broadcast('compiler-result', { success: true });
-
-		// there's some sort of remaining error
-		else broadcast('compiler-result', {
-			success: false,
-			error: $errors[path],
-			all: $errors
-		});
-
 		// notify this was compiled
-		if (result.success && !silent)
-			broadcast('compile-file', path);
-
+		if (result.success) notifyFinished();
 		resolve(result);
 	});
 }

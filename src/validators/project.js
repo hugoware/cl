@@ -44,7 +44,6 @@ export function validateDescription(description, errors) {
  */
 export function validateType(type, errors) {
 	type = _.toUpper(type);
-	console.log('looking for', type, ProjectTypes[type]);
 	const err = !ProjectTypes[type] ? 'invalid'
 		: null;
 

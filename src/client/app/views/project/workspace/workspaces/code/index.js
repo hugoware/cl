@@ -117,6 +117,7 @@ export default class CodeEditor extends Component {
 		};
 
 		// update the content
+		instance.file.modified = true;
 		this.broadcast('modify-file', instance.file);
 		this.pending.content = content;
 	}

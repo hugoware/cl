@@ -49,7 +49,7 @@ const $config = {
 	},
 
 	scripts: {
-    client: [ 'site', 'app', 'viewer' ],
+    client: [ 'site', 'app', 'viewer', 'browser' ],
 		workers: [ 'pug', 'typescript', 'scss' ],
 		server: {
 			watch: ['src/**/*.js', '!src/client', '!src/client/**' ],

@@ -11,6 +11,19 @@
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}', GradientType=0);
 }
 
+// aligns text content vertically
+@mixin align_vertical($height) {
+	height: $height;
+	line-height: $height;
+}
+
+.centered {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
 @mixin clearfix() {
   &:after {
     content: " ";

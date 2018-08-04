@@ -3,21 +3,6 @@ import Component from '../../../component';
 import ComponentList from '../../../component-list';
 import ConsoleMessage from './message';
 
-/** @typedef {Object} CompilerError
- * @prop {string} file the file that had the error
- * @prop {string} message the full error message
- * @prop {number} line the line number of the error
- * @prop {number} column the column of the error message
- * @prop {string} [code] optional error code info
- * @prop {string} [hint] optional info about the error
- */
-
- /** @typedef {Object} CompilerResult
-	* @prop {boolean} success did this compile successfully
-	* @prop {CompilerError} error the most recent error thrown
-  * @prop {Object<string, CompilerError>} all all pending compiler errors
-  */
-
 export default class Console extends Component {
 
 	constructor(context) {
@@ -31,25 +16,28 @@ export default class Console extends Component {
 			}
 		});
 
-		this.listen('compiler-result', this.onCompileResult);
+		this.listen('project-errors', this.onProjectErrors);
 
 	}
 
-	onCompileResult = result => {
+	onProjectErrors = result => {
 		this.update(result);
 	}
 
-	/** @param {CompilerResult} result */
+	/** @param {ProjectErrorState} result */
 	update = result => {
 
-		if (result.success)
+		// toggle if the console is visible or not
+		const doc = Component.bind(document.body);
+		doc.toggleClass('console-visible', result.hasErrors);
+
+		// handle messages
+		if (!result.hasErrors)
 			return this.ui.messages.empty();
 
 		// get everything in alphabetical order
 		const keys = _.keys(result.all);
 		keys.sort();
-
-		// make sure the recent error is first?
 
 		// start creating each error
 		for (const key of keys) {

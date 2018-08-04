@@ -1,9 +1,6 @@
 
-$preview-separator-width: 3px;
-$preview-navigation-item-gap: 6px;
-$preview-navigation-item-height: $preview-navigation-height - ($preview-navigation-item-gap * 2);
-
 #preview {
+	$preview-separator-width: 3px;
 
 	.preview-wrapper {
 		position: absolute;
@@ -33,23 +30,69 @@ $preview-navigation-item-height: $preview-navigation-height - ($preview-navigati
 
 	&.mode-browser {
 
+		$browser-mode-ui-element-vertical-margin: 7px;
+		$browser-mode-separator-width: 10px;
+		$browser-mode-total-actions: 3;
+		$browser-mode-action-gap: 5px;
+		
+		$browser-mode-ui-element-height: $browser-mode-navigation-bar-height - ($browser-mode-ui-element-vertical-margin * 2);
+		$browser-mode-action-size: $browser-mode-ui-element-height;
+		$browser-mode-action-start: 10px;
+		$browser-mode-action-end: ($browser-mode-total-actions * $browser-mode-action-size); // + (($browser-mode-total-actions - 1) * $browser-mode-action-gap);
+		$browser-mode-title-start: $browser-mode-action-end + $browser-mode-separator-width;
+		$browser-mode-title-end: 60%;
+		$browser-mode-url-start: 40%;
+		$browser-mode-url-end: 10px;
+
 		.navigation {
 			display: block;
 
-			height: $preview-navigation-height;
+			height: $browser-mode-navigation-bar-height;
 			background: #eee;
 
-			.actions {
+			> div {
 				position: absolute;
-				left: 0;
-				right: 0;
+			}
+
+			.actions {
+				left: $browser-mode-action-start;
+				right: $browser-mode-action-end;
+			}
+			
+			.action {
+				position: relative;
+				display: inline-block;
+				margin-right: $browser-mode-action-gap;
+				height: $browser-mode-ui-element-height;
+				width: $browser-mode-ui-element-height;
+				top: $browser-mode-ui-element-vertical-margin;
+				background: #fff;
+				border-radius: 4px;
+				border: 1px solid #999;
+				@include gradient(#fff, #ddd, 180deg);
+				box-shadow: inset 0 0 0 1px #fff;
+
+				svg {
+					width: $browser-mode-ui-element-height * 0.6;
+					height: $browser-mode-ui-element-height * 0.6;
+					@extend .centered;
+				}
+
+			}
+
+			.title {
+				left: $browser-mode-title-start;
+				right: $browser-mode-title-end;
+				height: $browser-mode-navigation-bar-height;
+				line-height: $browser-mode-navigation-bar-height;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 
 			.url {
-				position: absolute;
-				left: 40px;
-				right: 10px;
-				top: $preview-navigation-item-gap;
+				left: $browser-mode-url-start;
+				right: $browser-mode-url-end;
+				top: $browser-mode-ui-element-vertical-margin;
 
 				box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
 				background: rgba(255, 255, 255, 0.7);
@@ -62,7 +105,7 @@ $preview-navigation-item-height: $preview-navigation-height - ($preview-navigati
 					background: none;
 					outline: none;
 					text-indent: 10px;
-					height: $preview-navigation-item-height;
+					height: $browser-mode-ui-element-height;
 					border: 0;
 				}
 			}
@@ -70,7 +113,7 @@ $preview-navigation-item-height: $preview-navigation-height - ($preview-navigati
 		}
 
 		.content {
-			top: $preview-navigation-height;
+			top: $browser-mode-navigation-bar-height;
 			background: #fff;
 		}
 
