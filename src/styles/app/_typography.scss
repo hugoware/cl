@@ -1,0 +1,17 @@
+
+// a file for reused styling elements - meant to be
+// extended as opposed to used directly
+
+.panel, .dialog {
+
+	code {
+		font-family: $code-font;
+		display: inline-block;
+		background: rgba($inline-code-light-background-primary-color, 0.2);
+		box-shadow: inset 0 0 0 1px $inline-code-light-background-primary-color;
+		color: darken($inline-code-light-background-primary-color, 7%);
+		border-radius: 4px;
+		padding: 0 4px;
+	}
+
+}

@@ -87,7 +87,14 @@ export default class FileBrowserActions extends Component {
 	onDeleteItem = () => this.broadcast('open-dialog', 'remove-items')
 	onMoveItem = () => this.broadcast('open-dialog', 'move-items')
 	onRenameItem = () => this.broadcast('open-dialog', 'rename-item')
-	onCreateFolder = () => this.broadcast('open-dialog', 'create-folder')
+	
+	// tries to launch the create folder dialog
+	onCreateFolder = () => {
+		if (!this.allowCreateFolder) return;
+		const folder = _.first(this.selection);
+		this.broadcast('open-dialog', 'create-folder', { folder });
+	}
+
 	onCreateFile = () => {
 		const selectedFolder = '';
 		this.broadcast('open-dialog', 'create-file', { selectedFolder });

@@ -11,14 +11,114 @@
 
 	.dialog {
 		background: $dialog-content-background-color;
+		border-radius: 4px;
+		box-shadow: 0 4px 17px rgba(#000, 0.5);
+
 		position: absolute;
-		top: 50%;
+		top: 15%;
 		left: 50%;
 		width: 80%;
 		max-width: 800px;
+		transform: translate(-50%, 0%);
+		
+		// the main content window
+		> .content {
+			@include animate('opacity');
+			padding: 30px 40px;
 
-		transform: translate(-50%, -60%);
+			&.busy {
+				opacity: 0.5;
+			}
+
+			&.showing, &.hiding {
+				opacity: 1;
+			}
+		}
+
+		// dialog message areas
+		.messages {
+			font-size: 17px;
+			padding: 0 0 25px 0;
+			
+			// each message, by default, is hidden
+			> div, > p {
+				display: none;
+			}
+		}
+		
+		p {
+			line-height: 1.4em;
+			color: $dialog-message-default-text-color;
+		}
+		
+		.title {
+			color: $dialog-default-text-color;
+			font-size: 26px;
+			padding: 0 0 15px 0;
+		}
+
+		.form {
+			padding: 0 0;
+		}
+
+		.actions {
+			padding: 20px 0 0 0;
+
+			.action {
+				@include align_vertical(42px);
+				cursor: pointer;
+				display: inline-block;
+				margin-right: 15px;
+				padding: 0 18px;
+				
+				border-radius: 4px;
+				box-shadow: inset 0 0 0 1px rgba(#000, 0.2);
+
+				color: $dialog-action-default-text-color;
+				background: $dialog-action-default-background;
+				@include animate('background', 0.3s);
+
+				&:hover {
+					color: $dialog-action-default-text-color;
+					background: $dialog-action-default-hover-background;
+				}
+				
+				&.primary {
+					color: $dialog-action-primary-text-color;
+					background: $dialog-action-primary-background; 
+					&:hover {
+						background: $dialog-action-primary-hover-background;
+					}
+				}
+
+				&.secondary {
+					color: $dialog-action-secondary-text-color;
+					background: $dialog-action-secondary-background; 
+					&:hover {
+						background: $dialog-action-secondary-hover-background;
+					}
+				}
+
+				&.cancel {
+					color: $dialog-action-cancel-text-color;
+					background: $dialog-action-cancel-background; 
+					&:hover {
+						background: $dialog-action-cancel-hover-background;
+					}
+				}
+			}
+		}
+
+
+		// custom messages
+		$messages: in-root in-folder;
+		@each $key in $messages {
+			.#{$key} .#{$key} { display: block }
+		}
+
 	}
+
+
 }
 
 .selected {

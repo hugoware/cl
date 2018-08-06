@@ -6,7 +6,6 @@
 
 +template('dialog-create-project')
 	.form
-		
 		label
 			span name
 			input.name
@@ -29,25 +28,30 @@
 			li.language(data-type='typescript') TypeScript
 
 		.actions
-			.action.submit Create Project
+			.action.confirm Create Project
 			.action.cancel Cancel
 
 +template('dialog-create-file')
-	.content
+	.content(dialog-width='500')
 		h3 create new file
 		input(name='name')
 
 		.actions
-			.action.submit Create File
+			.action.confirm.primary Create File
 			.action.cancel Cancel
 
 +template('dialog-create-folder')
-	.content
-		h3 create new folder
+	.content(dialog-width='500')
+		.title Create a New Folder
+
+		.messages
+			p.in-root This will create a new folder in project root folder
+			p.in-folder This will create a new folder in #[code.folder-path]
+
 		input(name='name')
 
 		.actions
-			.action.submit Create Folder
+			.action.confirm.primary Create Folder
 			.action.cancel Cancel
 
 +template('dialog-remove-items')
@@ -56,5 +60,5 @@
 		.items
 
 		.actions
-			.action.submit Remove Items
+			.action.confirm Remove Items
 			.action.cancel Cancel

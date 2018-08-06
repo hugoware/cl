@@ -15,15 +15,19 @@ import unknownIcon from '../../icons/icon-unknown.svg';
 import errorIcon from '../../icons/icon-error.svg';
 import warningIcon from '../../icons/icon-warning.svg';
 import refreshIcon from '../../icons/icon-refresh.svg';
+import addFolderIcon from '../../icons/icon-add-folder.svg';
+import addFileIcon from '../../icons/icon-add-file.svg';
 
 /** @type {Object<string, HTMLElement>} */
 const $icons = {
 	arrowRight,
+	
+	// icons
 	errorIcon,
 	warningIcon,
 	refreshIcon,
-
-	// icons
+	addFolderIcon,
+	addFileIcon,
 	closeIcon,
 	folderIcon,
 	pugIcon,

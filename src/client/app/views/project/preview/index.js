@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import $ from 'jquery';
 import Component from '../../../component';
 
 // different preview modes
@@ -13,7 +14,7 @@ export default class Preview extends Component {
 
 			ui: {
 				output: '.content iframe',
-				url: '.url input'
+				content: '.preview-wrapper'
 			}
 		});
 
@@ -53,6 +54,12 @@ export default class Preview extends Component {
 		return this.context.__CODELAB__;
 	}
 
+	/** handles completely resetting the preview window */
+	reset() {
+		this.output.innerHTML = '';
+		this.output.outerHTML = this.output.outerHTML;
+	}
+
 	// /** access to an object to communicate between local */
 	// get previewAPI() {
 	// 	return window.__CODELAB__.preview;
@@ -74,6 +81,7 @@ export default class Preview extends Component {
 		})[mode];
 
 		// update the value
+		this.handler.appendTo(this.ui.content);
 		this.attr('class', cx);
 	}
 

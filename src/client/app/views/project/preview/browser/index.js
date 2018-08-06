@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import View from './view';
+import Component from '../../../../component';
 import { getExtension } from '../../../../utils/index';
 import { listen } from '../../../../events';
 import $errorManager from '../../../../error-manager';
@@ -14,9 +15,23 @@ const VIEWABLE_TYPES = [
 	'htm'
 ];
 
-export default class BrowserMode {
+// create the preview mode
+export default class BrowserMode extends Component {
 
 	constructor(preview) {
+		super({
+			template: 'preview-browser',
+
+			ui: {
+				url: '.url input',
+				title: '.title',
+
+				// actions
+				runScripts: '.run-scripts'
+			}
+		});
+
+		// save the preview instance
 		this.preview = preview;
 
 		/** the current views cached for the browser
@@ -25,6 +40,7 @@ export default class BrowserMode {
 
 		// listen for the preview window to broadcast changes
 		listen('preview-message', this.onPreviewMessage);
+		this.ui.runScripts.on('click', this.onRunPageScripts);
 	}
 
 	/** checks if a view is visible
@@ -43,6 +59,11 @@ export default class BrowserMode {
 	// handles starting a new project
 	onActivateProject = async project => {
 		this.views = { };
+	}
+
+	// kicks off page scripts
+	onRunPageScripts = () => {
+		this.runScripts();
 	}
 
 	// handles incoming preview messages
@@ -75,10 +96,13 @@ export default class BrowserMode {
 		// if replacing a view, clear the error
 		this.clearPageError();
 
+		// update the url
+		this.ui.url.val(path);
+
 		// find the view to use
 		this.view = this.views[path] = this.views[path] || new View(file);
 		await this.view.refresh(path, { forceRefresh: true });
-		this.render();
+		this.render(true);
 	}
 
 	// handles replacing the content of the view if 
@@ -108,15 +132,44 @@ export default class BrowserMode {
 		delete this.activeError;
 	}
 
-	/** displays the most current template result */
-	render = () => {
-		
+	/** displays the most current template result 
+	 * @param {boolean} shouldRunScripts should the render also eval scripts
+	*/
+	render = shouldRunScripts => {
+
 		// clear any scripting errors
 		this.clearPageError();
 		
 		// generate the file again
 		const html = this.view.getHTML();
+
+		// extra steps are to make sure that the
+		// document body is also cleared of all event
+		// listeners
+		this.preview.reset();
 		this.preview.output.innerHTML = html;
+
+		// populate the title, if possible
+		const title = this.view.title || 'Untitled Page';
+		this.ui.title.text(title);
+
+		// since we're resetting the page, clear any
+		// scripting flags
+		this.hasRunScripts = false;
+		if (shouldRunScripts)
+			this.runScripts();
+
+	}
+
+	// execute scripts
+	runScripts = () => {
+
+		// if the scripts have already run once then
+		// refresh the content before executing
+		if (this.hasRunScripts) this.render();
+
+		// execute the scripts
+		this.hasRunScripts = true;
 		this.preview.bridge.evalScripts();
 	}
 

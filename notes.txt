@@ -1,1 +1,8 @@
+
+browser mode
+  - compile scripts if no script changes
+  - require button if script values changed
+
 throw file not found exception when files missing
+
+url bar - show page options in auto-complete

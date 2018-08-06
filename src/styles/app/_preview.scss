@@ -32,14 +32,13 @@
 
 		$browser-mode-ui-element-vertical-margin: 7px;
 		$browser-mode-separator-width: 10px;
-		$browser-mode-total-actions: 3;
 		$browser-mode-action-gap: 5px;
 		
 		$browser-mode-ui-element-height: $browser-mode-navigation-bar-height - ($browser-mode-ui-element-vertical-margin * 2);
 		$browser-mode-action-size: $browser-mode-ui-element-height;
 		$browser-mode-action-start: 10px;
-		$browser-mode-action-end: ($browser-mode-total-actions * $browser-mode-action-size); // + (($browser-mode-total-actions - 1) * $browser-mode-action-gap);
-		$browser-mode-title-start: $browser-mode-action-end + $browser-mode-separator-width;
+		$browser-mode-action-end: 50px;
+		$browser-mode-title-start: 60px;
 		$browser-mode-title-end: 60%;
 		$browser-mode-url-start: 40%;
 		$browser-mode-url-end: 10px;
@@ -87,6 +86,7 @@
 				line-height: $browser-mode-navigation-bar-height;
 				overflow: hidden;
 				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 
 			.url {

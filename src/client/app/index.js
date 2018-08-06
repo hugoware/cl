@@ -122,11 +122,10 @@ class App extends Component {
 		});
 
 		// find the dialog to display
+		// and then show it with options
 		const dialog = this.dialogs[key];
-		dialog.options = options;
-
-		// show the dialog window
-		dialog.show();
+		if (!dialog) console.warn(`no dialog found for ${key}`);
+		else dialog.show(options);
 	}
 
 }

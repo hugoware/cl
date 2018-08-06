@@ -36,7 +36,7 @@ export default class Tab extends Component {
 	onSaveFile = file => {
 		console.log('remove mod');
 		// if (!isSameFile(this, file)) return;
-		this.removeClass('is-modfied');
+		this.removeClass('is-modified');
 	}
 
 	onCloseFile = file => {

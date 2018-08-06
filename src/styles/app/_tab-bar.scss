@@ -2,10 +2,10 @@
 $workspace-tab-bar-close-button-size: 11px;
 $workspace-tab-bar-close-button-gap: 5px;
 $workspace-tab-bar-tab-padding: 20px;
-$workspace-tab-name-close-gap: 8px;
+$workspace-tab-name-close-gap: 4px;
 $workspace-tab-name-gap: 15px;
-$workspace-tab-close-gap: 10px;
-$tab-bar-modified-indicator-size: 9px;
+$workspace-tab-close-gap: 5px;
+$tab-bar-modified-indicator-size: 7px;
 
 .element {
   animation: pulse 5s infinite;
@@ -58,19 +58,25 @@ $tab-bar-modified-indicator-size: 9px;
 		padding: 0 $workspace-tab-close-gap 0 $workspace-tab-name-gap;
 
 		.modified, .modified:before {
-			position: absolute;
+			display: none;
 			width: $tab-bar-modified-indicator-size;
 			height: $tab-bar-modified-indicator-size;
 			border-radius: $tab-bar-modified-indicator-size;
 		}
-
+		
+		&.is-modified .modified {
+			display: inline-block;
+		}
+		
 		.modified {
+			position: relative;
 			@include animation(indicator-dot 3s infinite);
 			background : $tab-bar-modified-indicator-highlight-color;
-			left: 4px;
-			top: 4px;
+			margin: -3px 7px 0 0;
 			
 			&:before {
+				display: inline-block;
+				position: absolute;
 				@include animation(indicator-ring 3s infinite);
 				margin: -2px 0 0 -2px;
 				content: ' ';
@@ -83,7 +89,7 @@ $tab-bar-modified-indicator-size: 9px;
 			color: $workspace-tab-bar-tab-active-text-color;
 		}
 		
-		.name, .close, .modified {
+		.name, .close {
 			display: inline-block;
 			line-height: $workspace-tab-bar-height;
 		}
@@ -93,9 +99,10 @@ $tab-bar-modified-indicator-size: 9px;
 		}
 
 		.close {
-			opacity: 0.4;
+			opacity: 0.3;
 			@include animate('transform opacity', 0.2s);
 			margin: 0 $workspace-tab-bar-close-button-gap;
+			
 			svg {
 				width: $workspace-tab-bar-close-button-size;
 				height: $workspace-tab-bar-close-button-size;

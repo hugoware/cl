@@ -1,9 +1,14 @@
 (() => {
 	
 	// save some local instances
-	const _alert = window.alert;
-	const _prompt = window.prompt;
-	const _console = window.console;
+	const $alert = window.alert;
+	const $prompt = window.prompt;
+	const $console = window.console;
+	const $addEventListener = window.addEventListener;
+	const $removeEventListener = window.removeEventListener;
+
+	// tracking all events
+	const $events = { };
 
 	// access the notify function
 	function notify(name, ...args) {
@@ -13,14 +18,69 @@
 		window.top.dispatchEvent(event);
 	}
 
+	// remove pending events
+	function clearTrackedEventListeners() {
+		for (const key in $events) {
+
+			// remove each event
+			for (const handler of $events[key])
+				$removeEventListener(key, handler);
+
+			// remove the item
+			delete $events[key];
+		}
+	}
+
+	// tracking added events for the window - the purpose
+	// of this code is to make sure we remove all of these
+	// events before we evaluate new code
+	function addEventListener(event, handler) {
+
+		// save the event to remove
+		$events[event] = $events[event] || [ ];
+		$events[event].push(handler); 
+		
+		// add the event normally
+		$addEventListener(event, handler);
+	}
+
+	// handles loading external script files
+	function createScript(src) {
+		const script = document.createElement('script');
+		script.src = src;
+		return script;
+	}
+
 	// executes each script on the page
 	function evalScripts() {
+
+		// remove any existing handlers on the window
+		// other handlers should be removed by the page
+		// being reloaded
+		clearTrackedEventListeners();
+
+		// load each script on the page
 		const scripts = document.getElementsByTagName('script');
 		const total = scripts.length;
 		for (let i = 0; i < total; i++)
 			(node => {
-				try { eval(node.innerHTML); }
-				catch (ex) { handleError(ex); }
+				try { 
+
+					// check for a source
+					const src = node.getAttribute('src');
+					if (!src) eval(node.innerHTML);
+
+					// replace the script with an external one
+					else {
+						const script = createScript(src);
+						const { parentNode } = node;
+						parentNode.insertBefore(script, node);
+						parentNode.removeChild(node);
+					}
+				}
+				catch (ex) {
+					handleError(ex);
+				}
 			})(scripts[i]);
 	}
 
@@ -60,5 +120,10 @@
 	// capture alert messages
 	window.alert = (...args) => notify('alert', ...args);
 	window.prompt = (...args) => notify('prompt', ...args);
+
+	// capture alert messages
+	window.alert = window.top.alert;
+	window.prompt = window.top.prompt;
+	window.addEventListener = addEventListener;
 
 })();

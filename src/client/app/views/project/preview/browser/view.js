@@ -2,7 +2,6 @@ import _ from 'lodash';
 import $cheerio from 'cheerio';
 import $contentManager from '../../../../content-manager';
 import $state from '../../../../state'
-import $lfs from '../../../../lfs';
 import { resolvePathFromUrl } from '../../../../utils';
 
 /** handles individual browser views */
@@ -49,10 +48,6 @@ async function generateTemplate(view, path) {
 	const markup = await $contentManager.get(path);
 	view.template = $cheerio.load(markup);
 
-	// include a helper script
-	view.template.root()
-		.prepend('<script type="text/javascript" src="/__codelab__/browser.js" />');
-
 	// include a base url that'll make all local requests
 	// for this preview match the project domain
 	const domain = $state.getProjectDomain();
@@ -63,13 +58,21 @@ async function generateTemplate(view, path) {
 	view.scripts = { };
 	view.links = { };
 
+	// check for a title
+	view.title = _.trim(view.template('title').text());
+
 	// find all scripts
 	view.template('script')
 		.map((index, item) => {
 
 			// make sure this is a valid file
-			const src = resolvePathFromUrl(item.attribs.src);
-			if (!src) return;
+			const origin = item.attribs.src;
+			const src = resolvePathFromUrl(origin);
+
+			// no script was present or it's not a
+			// file that's present in the project
+			if (src === '/' || !$state.fileExists(src))
+				return;
 
 			// save it for later
 			const collection = view.scripts[src] = view.scripts[src] || [];

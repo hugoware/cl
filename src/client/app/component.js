@@ -257,7 +257,7 @@ export default class Component {
 				const element = $(item);
 				const id = element.attr('icon');
 				const args = element.attr('icon-args');
-				const icon = $icons[id](args);
+				const icon = $icons[id] ? $icons[id](args) : $icons.icon(id, args);
 				element.append(icon);
       });
 
@@ -283,16 +283,16 @@ export default class Component {
 	 * @returns {boolean} is the component busy
 	*/
   get busy() {
-    return this._busy;
+    return this.is('.busy');
   }
 
 	/** Returns the busy state for this Component 
 	 * @param {boolean} busy sets the busy state
 	*/
   set busy(busy) {
-		if (this._busy === busy) return;
-    this._busy = busy;
-    this[busy ? 'addClass' : 'removeClass']('busy');
+		busy = !!busy;
+		if (this.busy === busy) return;
+		this.toggleClass('busy', busy);
   }
 
 	/** Returns if the component is visible or not
@@ -343,6 +343,14 @@ export default class Component {
    */
   locate = find => {
     return this.is(find) ? this : this.closest(find);
+	}
+
+	/** checks if the component contains the selector
+	 * @param {string} selector the selector to match
+	 * @returns {boolean} was the selector found
+	 */
+	contains = selector => {
+		return this.$.find(selector).length > 0;
 	}
 	
 	/** allows mapping css states using an object map 
@@ -412,8 +420,8 @@ export default class Component {
     });
 
     return this;
-  }
-
+	}
+	
   dispose = () => {
 
     // clean up events

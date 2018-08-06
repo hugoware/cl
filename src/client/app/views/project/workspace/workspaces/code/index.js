@@ -4,6 +4,8 @@ import $lfs from '../../../../../lfs';
 import Component from '../../../../../component';
 import contentManager from '../../../../../content-manager'
 import $editor from '../../../../../editor';
+import $state from '../../../../../state';
+import $api from '../../../../../api';
 
 // the amount of time to wait before compiling
 const COMPILER_DELAY = 300;
@@ -20,7 +22,8 @@ export default class CodeEditor extends Component {
 			template: 'workspace-code-editor',
 
 			ui: {
-				editor: '.editor'
+				editor: '.editor',
+				save: '.save'
 			}
 		});
 
@@ -33,6 +36,7 @@ export default class CodeEditor extends Component {
 		this.listen('deactivate-file', this.onDeactivateFile);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
+		this.ui.save.on('click', this.onSaveChanges);
 
 		// create the code editor
 		this.editor = $editor.createInstance(this.ui.editor[0]);
@@ -94,6 +98,36 @@ export default class CodeEditor extends Component {
 	// handles deleting an active file instance
 	onDeactivateFile = async file => {
 		delete this.files[file.path];
+	}
+
+	// write file content -- might consider waiting for
+	// the next compile event later, but that'll only happen
+	// if someone is being silly and trying to type/click save
+	// in less than a second
+	onSaveChanges = async () => {
+		if (this.busy) return;
+
+		// gather the data
+		const { projectId } = $state;
+		const { model, file } = this.activeFile;
+		const { path } = file;
+		const content = model.getValue();
+
+		// try and update the project data
+		this.busy = true;
+		$api.transaction('write-file', { projectId, path, content }, {
+			success: result => {
+				if (result.success)
+					this.broadcast('save-file', path);
+			},
+			error: ex => {
+				console.log('errr', ex);
+			},
+			always: () => {
+				this.busy = false;
+			}
+		});
+
 	}
 
 	/** adds or updates content for the next compile cycle

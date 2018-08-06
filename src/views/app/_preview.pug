@@ -1,13 +1,13 @@
 
 +template('preview')
 	.preview-wrapper
-		.navigation
-			.actions
-				.action.refresh(icon='refresh')
-				.action.refresh(icon='refresh')
-			.title Untitled Page
-			.url
-				input
-
 		.content
 			iframe
+
++template('preview-browser')
+	.navigation
+		.actions
+			.action.run-scripts(icon='refresh')
+		.title Untitled Page
+		.url
+			input

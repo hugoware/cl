@@ -111,11 +111,37 @@ export async function request(event, ...args) {
   });
 }
 
+/** performs a standard request to the API
+ * @param {string} event the action to invoke
+ * @param {any[]} args the arguments to include
+ */
+export async function transaction(event, ...args) {
+	const options = args.pop();
+
+	// perform the request
+	try {
+		const result = await request(event, ...args);
+		if (_.isFunction(options.success))
+			options.success(result);
+	}
+	// handle errors
+	catch(ex) {
+		// process the error : ex = ''
+		if (_.isFunction(options.error))
+			options.error(ex);
+	}
+	// finalize the request
+	finally {
+		if (_.isFunction(options.always))
+			options.always();
+	}
+}
 
 // share helpers
 export default {
   init,
   // createUpload,
+  transaction,
   request,
   listen,
   ignore

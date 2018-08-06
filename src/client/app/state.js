@@ -35,6 +35,7 @@ const $state = {
 		$state.items = { };
 
 		// rebuild the path indexes
+		$state.projectId = project.id;
 		await syncProject(project.children, null, null);
 
 		window.STATE = $state;
