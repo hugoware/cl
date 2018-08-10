@@ -80,7 +80,6 @@ export default class FileBrowserItem extends Component {
 				this.ui.icon.append(icon);
 			}
 
-
 		}
 
 

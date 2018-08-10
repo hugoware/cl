@@ -36,17 +36,9 @@
 		}
 
 		// dialog message areas
-		.messages {
+		.message {
 			font-size: 17px;
 			padding: 0 0 25px 0;
-			
-			// each message, by default, is hidden
-			> div, > p {
-				display: none;
-			}
-		}
-		
-		p {
 			line-height: 1.4em;
 			color: $dialog-message-default-text-color;
 		}
@@ -106,6 +98,14 @@
 						background: $dialog-action-cancel-hover-background;
 					}
 				}
+
+				&.danger {
+					color: $dialog-action-danger-text-color;
+					background: $dialog-action-danger-background; 
+					&:hover {
+						background: $dialog-action-danger-hover-background;
+					}
+				}
 			}
 		}
 
@@ -113,14 +113,29 @@
 		// custom messages
 		$messages: in-root in-folder;
 		@each $key in $messages {
-			.#{$key} .#{$key} { display: block }
+			.message .#{$key} { display: none; }
+			.message.#{$key} .#{$key} { display: inline-block; }
 		}
 
 	}
 
+	// specific dialogs
+	.dialog .rename-item {
 
-}
+		.extension { visibility: hidden; }
+		&.is-file .extension { visibility: visible; }
 
-.selected {
-	color: #f00;
+	}
+
+	.dialog .create-new-file {
+		.form {
+			display: none;
+		}
+
+		&.has-type-selected .form {
+			display: block;
+		}
+		
+	}
+
 }

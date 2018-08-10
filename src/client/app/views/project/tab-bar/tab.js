@@ -21,29 +21,34 @@ export default class Tab extends Component {
 		this.file = file;
 
 		// setup events
-		const { path } = file;
-		this.listen('modify-file', this.onModifyFile, { path });
-		this.listen('save-file', this.onSaveFile, { path });
-		this.listen('close-file', this.onCloseFile, { path });
+		this.listen('modify-file', this.onModifyFile);
+		this.listen('save-file', this.onSaveFile);
+		this.listen('rename-file', this.onRenameFile);
+	}
+
+	get isActive() {
+		return this.is('.active');
 	}
 
 	// listens when this file is modified or not
 	onModifyFile = file => {
-		// if (!isSameFile(this, file)) return;
+		if (!isSameFile(this, file)) return;
 		this.addClass('is-modified');
 	}
 
+	// handles removing modified state
 	onSaveFile = file => {
-		console.log('remove mod');
-		// if (!isSameFile(this, file)) return;
+		if (!isSameFile(this, file)) return;
 		this.removeClass('is-modified');
 	}
 
-	onCloseFile = file => {
-		console.log('closing the file', file);
-		// if (!this.isSameFile())
+	// handles when a file is renamed
+	onRenameFile = file => {
+		if (!isSameFile(this, file)) return;
+		this.refresh();
 	}
 
+	// update any changes
 	refresh() {
 		this.ui.name.text(this.file.name);
 	}
@@ -52,5 +57,5 @@ export default class Tab extends Component {
 
 // quick check for same files
 function isSameFile(tab, file) {
-	return file && file.path === tab.file.path;
+	return file && (tab.file.path === file || file.path === tab.file.path);
 }

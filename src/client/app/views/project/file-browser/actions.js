@@ -1,7 +1,9 @@
 /// <reference path="../../../types/index.js" />
 
 import _ from 'lodash';
+import $state from '../../../state';
 import Component from '../../../component';
+import { cancelEvent } from '../../../utils/index';
 
 // handles managing actions for the file browser
 export default class FileBrowserActions extends Component {
@@ -25,6 +27,7 @@ export default class FileBrowserActions extends Component {
 		this.ui.deleteItems.on('click', this.onDeleteItems);
 		this.ui.moveItems.on('click', this.onMoveItems);
 		this.ui.renameItem.on('click', this.onRenameItem);
+		this.on('mouseup', cancelEvent);
 
 		// when first created
 		this.update();
@@ -34,11 +37,11 @@ export default class FileBrowserActions extends Component {
 		return this.isSingleItem;
 	}
 
-	get allowMoveItem() {
+	get allowMoveItems() {
 		return this.hasSelection;
 	}
 
-	get allowDeleteItem() {
+	get allowDeleteItems() {
 		return this.hasSelection;
 	}
 
@@ -67,7 +70,7 @@ export default class FileBrowserActions extends Component {
 
 		// update the available options
 		this.toggleClassMap({
-			'is-mixed': this.isMixedSelection,
+			'mixed-selection': this.isMixedSelection,
 			'only-files': this.isOnlyFiles,
 			'only-folders': this.isOnlyFolders,
 			'has-selection': this.hasSelection,
@@ -77,16 +80,28 @@ export default class FileBrowserActions extends Component {
 			// action activation
 			'allow-create-folder': this.allowCreateFolder,
 			'allow-create-file': this.allowCreateFile,
-			'allow-move-item': this.allowMoveItem,
-			'allow-delete-item': this.allowDeleteItem,
+			'allow-move-items': this.allowMoveItems,
+			'allow-delete-items': this.allowDeleteItems,
 			'allow-rename-item': this.allowRenameItem
 		});
 	}
 
 	// showing dialogs
-	onDeleteItem = () => this.broadcast('open-dialog', 'remove-items')
-	onMoveItem = () => this.broadcast('open-dialog', 'move-items')
-	onRenameItem = () => this.broadcast('open-dialog', 'rename-item')
+	onRenameItem = () => {
+		const selection = $state.getSelection();
+		const item = _.first(selection);
+		this.broadcast('open-dialog', 'rename-item', item);
+	}
+
+	onDeleteItems = () => {
+		const selection = $state.getSelection();
+		this.broadcast('open-dialog', 'remove-items', selection);
+	}
+
+	onMoveItems = () => {
+		const selection = $state.getSelection(true);
+		this.broadcast('open-dialog', 'move-items', selection);
+	}
 	
 	// tries to launch the create folder dialog
 	onCreateFolder = () => {

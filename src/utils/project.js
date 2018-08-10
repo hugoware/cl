@@ -1,4 +1,6 @@
+import _ from 'lodash';
 
+/** file types that display in the code editor */
 export const TEXT_FILE_TYPES = [
 	
 	// styling
@@ -28,6 +30,23 @@ export function isTextContent(path) {
 	for (const ext of TEXT_FILE_TYPES)
 		if (ext === find) return true;
 	return false;
+}
+
+/** takes a list of files and simplifies it down to the most root of selections
+ * @param {string[]} paths the file paths to compare
+ * @returns {string[]} the simplified list of files
+ */
+export function simplifyPathCollection(paths) {
+	const items = [].concat(paths);
+
+	// clean up the path list
+	_.each(paths, path => {
+		_.remove(items, item => {
+			return item !== path && _.startsWith(item, path);
+		});
+	});
+
+	return items;
 }
 
 export default {

@@ -39,6 +39,15 @@ export default class View {
 		return this.template.html();
 	}
 
+	/** checks if a view has a dependency on a file
+	 * @param {string} path the file to check
+	 */
+	isDependency(path) {
+		return this.file.path === path
+			|| (this.links && this.links[path])
+			|| (this.scripts && this.scripts[path]);
+	}
+
 }
 
 // handles creating the base for the template view

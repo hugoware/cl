@@ -7,6 +7,12 @@ import { getExtension } from '../../../../utils/index';
 import { listen } from '../../../../events';
 import $errorManager from '../../../../error-manager';
 
+const NO_PREVIEW_LOADED = `
+	<div style="font: 24px sans-serif; opacity: 0.3; text-align: center; position: absolute; top: 20%; left: 0; right: 0;" >
+		No Preview Available
+	</div>
+`;
+
 // checks list of browser view items that
 // can replace the preview window
 const VIEWABLE_TYPES = [
@@ -39,8 +45,20 @@ export default class BrowserMode extends Component {
 		this.views = { };
 
 		// listen for the preview window to broadcast changes
-		listen('preview-message', this.onPreviewMessage);
+		this.listen('preview-message', this.onPreviewMessage);
+		this.listen('delete-items', this.onDeleteItems);
 		this.ui.runScripts.on('click', this.onRunPageScripts);
+
+		// set the default view
+		this.clear();
+	}
+
+	set url(value) {
+		this.ui.url.val(value);
+	}
+
+	set title(value) {
+		this.ui.title.text(value);
 	}
 
 	/** checks if a view is visible
@@ -64,6 +82,27 @@ export default class BrowserMode extends Component {
 	// kicks off page scripts
 	onRunPageScripts = () => {
 		this.runScripts();
+	}
+
+	// checks if a view should refresh because
+	// a file was deleted
+	onDeleteItems = paths => {
+		if (!this.hasActiveView) return;
+		const { view } = this;
+		const { file } = view;
+
+		// check if the view was deleted
+		for (const path of paths) {
+			if (path === file.path)
+				return this.clear();
+		}
+
+		// check if a dependency might have been removed
+		for (const path of paths) {
+			if (view.isDependency(path))
+				return this.recompile();
+		}
+
 	}
 
 	// handles incoming preview messages
@@ -97,7 +136,7 @@ export default class BrowserMode extends Component {
 		this.clearPageError();
 
 		// update the url
-		this.ui.url.val(path);
+		this.url = path;
 
 		// find the view to use
 		this.view = this.views[path] = this.views[path] || new View(file);
@@ -151,7 +190,7 @@ export default class BrowserMode extends Component {
 
 		// populate the title, if possible
 		const title = this.view.title || 'Untitled Page';
-		this.ui.title.text(title);
+		this.title = title;
 
 		// since we're resetting the page, clear any
 		// scripting flags
@@ -159,6 +198,25 @@ export default class BrowserMode extends Component {
 		if (shouldRunScripts)
 			this.runScripts();
 
+	}
+
+	// removes the current view
+	clear = () => {
+		this.clearPageError();
+		this.preview.reset();
+		this.preview.output.innerHTML = NO_PREVIEW_LOADED;
+		this.title = '';
+		this.url = '';
+	}
+
+	// force a recompile of this view
+	recompile = async () => {
+		if (!this.hasActiveView) return;
+
+		// force a compiled refresh
+		const { file } = this.view;
+		await this.view.refresh(file, true);
+		this.render();
 	}
 
 	// execute scripts

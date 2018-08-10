@@ -54,6 +54,21 @@ export async function moveFile(source, target) {
 	return $db.files.where({ path: source }).modify({ path: target });
 }
 
+/** handles removing a file from the system 
+ * @param {string|string[]} path the file or files that should be removed
+*/
+export async function removeFile(path) {
+	let files = $db.files;
+
+	// query depending on the argument
+	const isArray = path instanceof Array || typeof path === 'array';
+	files = isArray
+		? files.where('path').anyOf(path)
+		: files.where({ path });
+
+	// perform the delete
+	files.delete();
+}
 
 /** removes all cached files */
 export async function clear() {
@@ -148,6 +163,7 @@ export default {
 	normalizePath,
 	clear,
 	read: readFile,
+	remove: removeFile,
 	write: writeFile,
 	move: moveFile,
 };

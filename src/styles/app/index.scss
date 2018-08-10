@@ -5,9 +5,10 @@
 @import './_fonts';
 
 // styles
-@import './_typography';
 @import '../_reset';
 @import './_layout';
+@import './_typography';
+@import './_form';
 
 // views
 @import './_home';
@@ -24,6 +25,7 @@
 @import './_workspace';
 @import './_tab-bar';
 @import './_console';
+@import './_file-type-selector';
 
 // should remove for production
 @import './_scratch';

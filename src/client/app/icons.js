@@ -10,6 +10,14 @@ import scssIcon from '../../icons/icon-scss.svg';
 import tsIcon from '../../icons/icon-ts.svg';
 import txtIcon from '../../icons/icon-txt.svg';
 import cssIcon from '../../icons/icon-css.svg';
+import coffeeIcon from '../../icons/icon-coffee.svg';
+import rbIcon from '../../icons/icon-rb.svg';
+import mdIcon from '../../icons/icon-md.svg';
+import pyIcon from '../../icons/icon-py.svg';
+import xmlIcon from '../../icons/icon-xml.svg';
+import csIcon from '../../icons/icon-cs.svg';
+import javaIcon from '../../icons/icon-java.svg';
+import sqlIcon from '../../icons/icon-sql.svg';
 import closeIcon from '../../icons/icon-close.svg';
 import unknownIcon from '../../icons/icon-unknown.svg';
 import errorIcon from '../../icons/icon-error.svg';
@@ -37,6 +45,14 @@ const $icons = {
 	htmlIcon,
 	scssIcon,
 	cssIcon,
+	rbIcon,
+	coffeeIcon,
+	mdIcon,
+	pyIcon,
+	xmlIcon,
+	csIcon,
+	javaIcon,
+	sqlIcon,
 	unknownIcon
 };
 

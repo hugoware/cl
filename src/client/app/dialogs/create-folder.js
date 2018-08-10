@@ -7,7 +7,8 @@ export default class CreateFolderDialog extends Dialog {
 			template: 'dialog-create-folder',
 
 			ui: {
-				folderPath: '.folder-path',
+				message : '.message',
+				folderPath: '.in-folder',
 			}
 		});
 	}
@@ -23,11 +24,9 @@ export default class CreateFolderDialog extends Dialog {
 		const { folder, hasFolder } = this;
 
 		// update the UI as needed
-		this.toggleClassMap({
-			'in-root': !hasFolder,
-			'in-folder': hasFolder
-		});
-
+		this.ui.message.toggleClass('in-root', !hasFolder);
+		this.ui.message.toggleClass('in-folder', hasFolder);
+		
 		// update the name, if needed
 		if (hasFolder) {
 			this.ui.folderPath.text(folder.path);

@@ -1,0 +1,38 @@
+
+$form-input-default-font-size: 18px;
+$form-input-default-height: 38px;
+$form-input-default-border-radius: 4px;
+
+.form {
+	
+	.input {
+		font-size: $form-input-default-font-size;
+		background: #fff;
+		border: 1px solid #ccc;
+		display: inline-block;
+		padding: 0 9px;
+		border-radius: 4px;
+		outline: none;
+		@include align_vertical($form-input-default-height);
+		
+		&.flexible {
+			min-width: 30px;
+		}
+
+		&.with-tail {
+			border-radius: $form-input-default-border-radius 0 0 $form-input-default-border-radius;
+		}
+	}
+	
+	.tail {
+		@include align_vertical($form-input-default-height);
+		font-size: $form-input-default-font-size;
+		background: #eee;
+		display: inline-block;
+		padding: 0 9px 0 5px;
+		border: 1px solid #ccc;
+		border-left: none;
+		border-radius: 0 $form-input-default-border-radius $form-input-default-border-radius 0;
+	}
+
+}

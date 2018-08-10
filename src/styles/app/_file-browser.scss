@@ -185,28 +185,40 @@ $action-item-icon-size: $action-item-height * 0.6;
 			display: block;
 			float: left;
 			@include align_vertical($action-item-height);
-
-			div {
-				display: none;
-			}
-		}
-
-		// toggle message visibility
-		&.multi-selection .multi,
-		&.single-selection .single,
-		&.only-files .file,
-		&.only-folders .folder,
-		&.is-mixed .item {
-			display: inline-block;
 		}
 
 		// enablement
 		&.allow-create-folder .create-folder,
 		&.allow-create-file .create-file,
 		&.allow-rename-item .rename-item,
-		&.allow-delete-item .delete-item,
-		&.allow-move-item .move-item {
+		&.allow-delete-items .delete-items,
+		&.allow-move-items .move-items {
 			display: block;
+		}
+
+		// actions list
+		.multiple,
+		.single,
+		.single .is-file,
+		.single .is-files,
+		.single .is-folder,
+		.single .is-folders,
+		.multiple .is-file,
+		.multiple .is-files,
+		.multiple .is-folder,
+		.multiple .is-folders,
+		.multiple .is-mixed {
+			display: none;
+		}
+
+		&.multi-selection .multiple,
+		&.single-selection .single,
+		&.only-files .is-file,
+		&.only-files .is-files,
+		&.only-folders .is-folder,
+		&.only-folders .is-folders,
+		&.mixed-selection .is-mixed {
+			display: inline-block;
 		}
 
 	}

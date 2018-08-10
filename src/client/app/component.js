@@ -1,3 +1,4 @@
+/// <reference path="./types/index.js" />
 
 import _ from 'lodash';
 import $ from 'jquery';
@@ -24,6 +25,8 @@ const PROXIED_SELF_METHODS = [
   'data',
   'on',
   'off',
+  'text',
+  'html',
 ];
 
 const PROXIED_DOM_METHODS = [
@@ -42,22 +45,6 @@ const PROXIED_RETURN_METHODS = [
   'attr',
 ];
 
-/** UI B
- * @typedef {Object} BindingOptions
- * @prop {Object} attr binds an attribute value
- * @prop {Object} css binds to class name
- */
-
-/** UI binding options for children of a Component
- * @typedef {Object<string,BindingOptions>} UIBindingOptions
- */
-
-/** Options for creating a new component
- * @typedef {Object} ComponentOptions
- * @prop {string} template the name of the template to create
- * @prop {string} selector the selector to match for this component
- * @prop {UIBindingOptions} ui binding options for selecting child layers
- */
 
 export default class Component {
 
@@ -109,7 +96,16 @@ export default class Component {
   static bind(target) {
     if (target instanceof Component) return target;
     return $(_.isString(target) ? `<${target} />` : target);
-  }
+	}
+	
+	/** shortcut to create a simple HTML component
+	 * @returns {Component}
+	 */
+	static create(tag = 'div') {
+		const dom = document.createElement(tag);
+		const instance = $(dom);
+		return new Component({ $: instance });
+	}
 
   /** gets the associated Component instance from a j!uery element */
   static getInstance(selector, context) {
@@ -164,6 +160,10 @@ export default class Component {
 
       dom = $(html);
     }
+    // just create using an HTML tag
+		else if (options.tag)
+			dom = $(document.createElement(options.tag));
+			
     // select the state within
 		else if (options.selector)
       dom = $(options.context || document.body).find(options.selector);
@@ -257,19 +257,24 @@ export default class Component {
 				const element = $(item);
 				const id = element.attr('icon');
 				const args = element.attr('icon-args');
-				const icon = $icons[id] ? $icons[id](args) : $icons.icon(id, args);
-				element.append(icon);
+				try {
+					const icon = $icons[id] ? $icons[id](args) : $icons.icon(id, args);
+					element.append(icon);
+				}
+				catch (err) {
+					console.warn(`could not find icon ${id}`);
+				}
       });
 
-    // // automatically bind IDs
-    // this.find('[id]')
-    //   .each((index, item) => {
-    //     const element = $(item);
-    //     const id = element.attr('id');
+    // automatically bind IDs
+    this.find('[bind-ui]')
+      .each((index, item) => {
+        const element = $(item);
+        const id = element.attr('bind-ui');
 
-    //     // remove and save the mapping
-    //     this.ui[id] = element;
-    //   });
+        // remove and save the mapping
+        this.ui[id] = element;
+      });
 
     // share api access
     this.api = $api;

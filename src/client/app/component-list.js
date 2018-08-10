@@ -39,6 +39,18 @@ export default class ComponentList extends Component {
 		return this.items[this.items.length - 1];
 	}
 
+	/** removes all items from the list */
+	clear() {
+		_.eachRight(this.items, () => this.items.pop());
+	}
+
+	/** handles sorting the list of items
+	 * @param {function|string} filter a function or property name to sort using
+	 */
+	sort(filter) {
+		_.sortBy(this.items, filter);
+	}
+
 	/** finds the index of an item
 	 * @param {Component} item the item to locate
 	 * @returns {number} the position found
@@ -107,6 +119,10 @@ export default class ComponentList extends Component {
 	/** renders the list of items */
 	refresh() {
 
+		// if there's nothing, then it's empty
+		if (this.isEmpty)
+			return this.list.empty();
+
 		// move all items to the top
 		let last;
 		_.eachRight(this.items, item => {
@@ -114,8 +130,10 @@ export default class ComponentList extends Component {
 			if (!last) last = item.$;
 		});
 
-		// remove everything after this point
-		last.nextAll().remove();
+		// remove everything after this point, but
+		// only if there's something found
+		if (!!last)
+			last.nextAll().remove();
 	}
 
 }

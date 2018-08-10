@@ -2,7 +2,10 @@
 
 import _ from 'lodash';
 import $lfs from './lfs';
-import {getExtension} from './utils/index'
+import $api from './api';
+import { getExtension } from './utils/index';
+import { broadcast } from './events';
+import { simplifyPathCollection } from '../../utils/project';
 
 const $state = { 
 
@@ -81,22 +84,22 @@ const $state = {
 		file.isOpen = true;
 	},
 
-	/** handles mapping local file information to
-	 * the project record 
-	 * @param {string} path the file path to save
-	 * @param {string} content the file content to replace, if not provided, the content is loaded from the file system
-	 */
-	saveFile: async (path, content) => {
-		const file = $state.findItemByPath(path);
-		if (!file) return;
+	// /** handles mapping local file information to
+	//  * the project record 
+	//  * @param {string} path the file path to save
+	//  * @param {string} content the file content to replace, if not provided, the content is loaded from the file system
+	//  */
+	// saveFile: async (path, content) => {
+	// 	const file = $state.findItemByPath(path);
+	// 	if (!file) return;
 
-		// load the content, if missing
-		if (!_.isString(content))
-			content = await $lfs.read(path);
+	// 	// load the content, if missing
+	// 	if (!_.isString(content))
+	// 		content = await $lfs.read(path);
 
-		// replace the content for this entry
-		file.content = content;
-	},
+	// 	// replace the content for this entry
+	// 	file.content = content;
+	// },
 
 	/** handles marking a file as closed 
 	 * @param {string} path the file to close
@@ -105,9 +108,101 @@ const $state = {
 		const file = $state.findItemByPath(path);
 		if (!file) return;
 		file.isOpen = false;
+	},
+
+	/** resets the item selection state in the app */
+	clearSelection: () => {
+		$state.selected = {};
+	},
+
+	/** returns a list of all selected items */ 
+	getSelection: () => {
+		const selections = [ ];
+		_.each($state.selected, (selected, path) => {
+			if (selected) selections.push(path);
+		});
+
+		return selections;
+	},
+
+	/** writes file data to the server */
+	saveFile: async (path, content) => {
+		const { projectId } = $state;
+		const result = await $api.request('write-file', { projectId, path, content });
+
+		// returned, but actually failed
+		if (!result.success)
+			throw result;
+
+		// finalize the file changes
+		const file = $state.findItemByPath(path);
+		file.content = content;
+
+		// notify and return
+		broadcast('save-file', path);
+		return result;
+	},
+
+	/** handles removing a series of items from the project
+	 * @param {string[]} selection the path items to remove
+	 */
+	deleteItems: async selection => {
+		const items = simplifyPathCollection(selection);
+		const { projectId } = $state;
+		const result = await $api.request('remove-items', { projectId, items });
+
+		// appears there was some sort of error
+		if (!result.success)
+			throw result;
+
+		// since it was successful, clear out all items
+		const remove = [ ];
+		for (const path of items) {
+			const item = $state.findItemByPath(path);
+			deleteItem(item, remove);
+		}
+
+		// with the list of files to remove, clear the local
+		// stored versions of the file
+		$lfs.remove(remove);
+
+		// share that files have been removed so the
+		// UI can update
+		broadcast('delete-items', items);
+
+		// notify the result
+		return result;
 	}
 
 };
+
+// handles deleting an item and all children
+function deleteItem(item, files) {
+	
+	// make sure it's removed from selection
+	delete $state.selected[item.path];
+	
+	// add the file that needs to be removed
+	if (item.isFile)
+		files.push(item.path);
+
+	// if this item has children, process them as well
+	if (item.children)
+		_.each(item.children, child => {
+			deleteItem(child, files);
+		});
+
+		// remove it entirely from the parent node
+		// maybe this could be handled better
+		const parent = item.parent || $state.project;
+		_.remove(parent.children, child => child.path === item.path);
+
+		// final clean up
+		delete $state.paths[item.path];
+		delete $state.items[item.id];
+		delete item.parent;
+
+}
 
 
 // rebuilds the paths for each file in the project
@@ -143,7 +238,6 @@ async function syncProject(children = [ ], parent, relativeTo) {
 		// check if this is a content file 
 		if ('content' in item)
 			await $lfs.write(item.path, item.content);
-
 
 	}
 }

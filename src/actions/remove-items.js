@@ -1,8 +1,14 @@
 
+import { simplifyPathCollection } from '../utils/project';
+
 /** Handles removing a file at the provided path
  * @param {string|string[]} items The items that should be removed
  */
 export default async function removeItems(items) {
+
+	items = simplifyPathCollection(items);
+	console.log('will remove', items);
+
 	// const target = this.resolvePath(path);
 
 	// // can't remove when it doesn't exist

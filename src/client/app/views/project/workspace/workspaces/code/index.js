@@ -108,25 +108,24 @@ export default class CodeEditor extends Component {
 		if (this.busy) return;
 
 		// gather the data
-		const { projectId } = $state;
 		const { model, file } = this.activeFile;
 		const { path } = file;
 		const content = model.getValue();
 
 		// try and update the project data
 		this.busy = true;
-		$api.transaction('write-file', { projectId, path, content }, {
-			success: result => {
-				if (result.success)
-					this.broadcast('save-file', path);
-			},
-			error: ex => {
-				console.log('errr', ex);
-			},
-			always: () => {
-				this.busy = false;
-			}
-		});
+		try {
+			await $state.saveFile(path, content);
+		}
+		catch(err) {
+			console.log(err);
+			// handleError(err, {
+				
+			// });
+		}
+		finally {
+			this.busy = false;
+		}
 
 	}
 

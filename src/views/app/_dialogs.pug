@@ -31,34 +31,63 @@
 			.action.confirm Create Project
 			.action.cancel Cancel
 
+
++template('dialog-rename-item')
+	.content(dialog-width='600').rename-item
+		.title Rename #[span.type]
+
+		.message
+			p Enter a new name for this file.
+			.note You cannot use the same name as another matching file in the same folder.
+		
+		.error
+		
+		.form
+			.name.flexible.input.with-tail(contenteditable='true')
+			span.extension.tail
+
+		.actions
+			.action.confirm.primary Rename #[span.type]
+			.action.cancel Cancel
+
+
 +template('dialog-create-file')
-	.content(dialog-width='500')
-		h3 create new file
-		input(name='name')
+	.content(dialog-width='650').create-new-file
+		.title Create New File
+
+		include _file-type-selector
+
+		.form
+				.fileName.flexible.input.with-tail(contenteditable='true')
+				span.tail.extension
 
 		.actions
 			.action.confirm.primary Create File
 			.action.cancel Cancel
 
+
 +template('dialog-create-folder')
 	.content(dialog-width='500')
 		.title Create a New Folder
+		.message
+			| This will create a new folder in 
+			.in-root the project root folder
+			code.in-folder
 
-		.messages
-			p.in-root This will create a new folder in project root folder
-			p.in-folder This will create a new folder in #[code.folder-path]
-
-		input(name='name')
+		.form
+			input(name='name')
 
 		.actions
 			.action.confirm.primary Create Folder
 			.action.cancel Cancel
 
 +template('dialog-remove-items')
-	.content
-		h3 Remove Items
-		.items
+	.content(dialog-width='600')
+		.title Remove Items
+		.message This will delete the following #[span.type] from your project.
+
+		.selection
 
 		.actions
-			.action.confirm Remove Items
+			.action.submit.danger Remove Items
 			.action.cancel Cancel

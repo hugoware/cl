@@ -37,29 +37,30 @@
 			.icon(icon='error')
 			.label
 				| Rename selected 
-				.file file
-				.folder folder
+				.single
+					.is-file file
+					.is-folder folder
 		
-		.action.delete-item
+		.action.delete-items
 			.icon(icon='error')
 			.label
 				| Delete selected 
 				.single
-					.folder folder
-					.file file
-				.multi
-					.folder folders
-					.file files
-					.item items
+					.is-folder folder
+					.is-file file
+				.multiple
+					.is-folders folders
+					.is-files files
+					.is-mixed items
 		
-		.action.move-item
+		.action.move-items
 			.icon(icon='error')
 			.label
 				| Move selected 
 				.single
-					.folder folder
-					.file file
-				.multi
-					.folder folders
-					.file files
-					.item items
+					.is-folder folder
+					.is-file file
+				.multiple
+					.is-folders folders
+					.is-file files
+					.is-mixed items

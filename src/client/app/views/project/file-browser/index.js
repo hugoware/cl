@@ -32,10 +32,12 @@ export default class FileBrowser extends Component {
 
 		// events
 		this.listen('activate-project', this.onActivateProject);
+		this.listen('delete-items', this.onDeleteItems);
 		
 		// ui events
 		this.on('mouseup', '.toggle', this.onToggleFolder);
 		this.on('mouseup', '.item', this.onReleaseItem);
+		this.on('mouseup', this.onDeselectItems);
 
 	}
 
@@ -44,8 +46,8 @@ export default class FileBrowser extends Component {
 
 	// activated when changing projects
 	onActivateProject = () => {
+		$state.clearSelection();
 		this.expanded = { };
-		this.selected = { };
 
 		// update basic data
 		const { project } = $state;
@@ -60,6 +62,17 @@ export default class FileBrowser extends Component {
 
 		// rebuild the state
 		this.rebuildStructure();
+	}
+
+	// reset the whole structure
+	onDeleteItems = () => {
+		this.clearSelection();
+		this.rebuildStructure();
+	}
+
+	// handles when clicking outside of the main area
+	onDeselectItems = () => {
+		this.clearSelection();
 	}
 
 	// handles when a folder toggle is selected
@@ -79,8 +92,8 @@ export default class FileBrowser extends Component {
 	// changes the selection state for an item
 	toggleSelection = item => {
 		const { path } = item.data;
-		this.selected[path] = !this.selected[path];
-		item.selected = this.selected[path];
+		$state.selected[path] = !$state.selected[path];
+		item.selected = $state.selected[path];
 
 		// update allowed actions
 		this.updateActions();
@@ -122,7 +135,7 @@ export default class FileBrowser extends Component {
 			item.delay = setTimeout(() => delete item.delay, DOUBLE_CLICK_DELAY);
 
 			// update selection
-			if (!event.shiftKey) this.clearSelections();
+			if (!event.shiftKey) this.clearSelection();
 			this.toggleSelection(item);
 		}
 
@@ -136,20 +149,21 @@ export default class FileBrowser extends Component {
 	}
 
 	// clears active selections
-	clearSelections = () => {
-		this.selected = { };
+	clearSelection = () => {
+		$state.clearSelection();
 		this.find('.selected').removeClass('selected');
+		this.updateActions();
 	}
 
-	/** @returns {FileBrowserItem[]} */
-	getSelections = () => {
-		const items = this.find('.selected');
-		return _.map(items, this.getItem);
-	}
+	// /** @returns {FileBrowserItem[]} */
+	// getSelections = () => {
+	// 	const items = this.find('.selected');
+	// 	return _.map(items, this.getItem);
+	// }
 
 	/** updates the action list */
 	updateActions() {
-		const paths = _.keys(this.selected);
+		const paths = _.keys($state.selected);
 		const selections = _.map(paths, $state.findItemByPath);
 		this.actions.update(selections);
 	}
@@ -169,7 +183,7 @@ function rebuild(fileBrowser, node, children, depth = 0) {
 
 			// toggle state
 			item.expanded = fileBrowser.expanded[data.path];
-			item.selected = fileBrowser.selected[data.path];
+			item.selected = $state.selected[data.path];
 
 			// if this has children, create it as well
 			if ('children' in data)

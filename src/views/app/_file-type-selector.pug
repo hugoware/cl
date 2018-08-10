@@ -1,0 +1,52 @@
+
+mixin file_type(type, name, category, description)
+	div(class='file-type file-type-'+ type + ' file-category-' + category category=category file-type=type)
+		.icon(icon=type)
+		.detail
+			.name= name
+
+mixin file_description(type, name, category, description)
+	div(class='file-type file-type-'+ type + ' file-category-' + category)
+		.icon(icon='html')
+		.detail
+			.name= name
+			.description= description
+
+
+.file-type-selector
+	
+	//- data types
+	.categories
+		.category.category-all(category='all') All
+		.category.category-code(category='code') Code
+		.category.category-markup(category='markup') Markup
+		.category.category-style(category='style') Style
+		.category.category-data(category='data') Data
+
+	//- file types
+	.file-types
+		+file_type('css', 'CSS', 'style')
+		+file_type('coffee', 'CoffeeScript', 'code')
+		+file_type('html', 'HTML', 'markup')
+		+file_type('js', 'JavaScript', 'code')
+		+file_type('md', 'Markdown', 'markup')
+		+file_type('pug', 'Pug', 'markup')
+		+file_type('py', 'Python', 'code')
+		+file_type('rb', 'Ruby', 'code')
+		+file_type('scss', 'SCSS', 'style')
+		+file_type('ts', 'TypeScript', 'code')
+		+file_type('txt', 'Text', 'data')
+		+file_type('xml', 'XML', 'data')
+
+	//- +file_description('scss', 'SCSS', 'style', "SCSS is a type of CSS that allows you to use enhanced features")
+	//- +file_description('css', 'CSS', 'style', "Plain CSS file for visual rules on a web page")
+	//- +file_description('html', 'HTML', 'markup', "Markup page for HTML data")
+	//- +file_description('pug', 'Pug', 'markup', "Special rules for creating HTML pages")
+	//- +file_description('md', 'Markdown', 'markup', "Special rules for creating HTML pages")
+	//- +file_description('coffee', 'CoffeeScript', 'code', "Alternative JavaScript")
+	//- +file_description('js', 'JavaScript', 'code', "Code used by web pages")
+	//- +file_description('ts', 'TypeScript', 'code', "Advanced JavaScript language")
+	//- +file_description('py', 'Python', 'code', "Python language")
+	//- +file_description('rb', 'Ruby', 'code', "Ruby language")
+	//- +file_description('xml', 'XML', 'data', "Data file with a similar format to HTML")
+	//- +file_description('txt', 'Text', 'data', "Empty text file for taking notes")

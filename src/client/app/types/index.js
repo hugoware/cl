@@ -25,8 +25,26 @@
  * @prop {string} [hint] optional info about the error
  */
 
- /** @typedef {Object} ProjectErrorState
-	* @prop {boolean} success did this compile successfully
-	* @prop {ProjectError} error the most recent error thrown
-  * @prop {Object<string, ProjectError>} all all pending compiler errors
-  */
+/** @typedef {Object} ProjectErrorState
+ * @prop {boolean} success did this compile successfully
+ * @prop {ProjectError} error the most recent error thrown
+ * @prop {Object<string, ProjectError>} all all pending compiler errors
+*/
+
+/** complex binding options for components
+ * @typedef {Object} BindingOptions
+ * @prop {Object} attr binds an attribute value
+ * @prop {Object} css binds to class name
+ */
+
+/** UI binding options for children of a Component
+ * @typedef {Object<string,BindingOptions>} UIBindingOptions
+ */
+
+/** Options for creating a new component
+ * @typedef {Object} ComponentOptions
+ * @prop {string} template the name of the template to create
+ * @prop {string} selector the selector to match for this component
+ * @prop {string} tag an HTML tag to use as an option
+ * @prop {UIBindingOptions} ui binding options for selecting child layers
+ */

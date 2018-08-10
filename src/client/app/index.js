@@ -16,6 +16,11 @@ import CreateProjectDialog from './dialogs/create-project';
 import CreateFileDialog from './dialogs/create-file';
 import CreateFolderDialog from './dialogs/create-folder';
 import RemoveItemsDialog from './dialogs/remove-items';
+import RenameItemDialog from './dialogs/rename-item';
+import ConfirmCloseDialog from './dialogs/confirm-close';
+
+// extensions
+import * as __extensions__ from './extensions';
 
 // configurations
 window.Promise = window.Promise || Bluebird;
@@ -60,6 +65,8 @@ class App extends Component {
 			createFile: new CreateFileDialog(),
 			createFolder: new CreateFolderDialog(),
 			removeItems: new RemoveItemsDialog(),
+			renameItem: new RenameItemDialog(),
+			confirmClose: new ConfirmCloseDialog()
 		};
 
 		// events

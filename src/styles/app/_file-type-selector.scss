@@ -1,0 +1,75 @@
+
+.file-type-selector {
+	$file-type-block-size: 90px;
+	$file-type-selector-icon-size: 36px;
+	$file-type-font-size: 13px;
+	$file-type-gap-size: 17px;
+
+	.categories {
+		padding: 10px 0 15px 0;
+		border-bottom: 1px solid #eee;
+	}
+
+	.category {
+		font-size: 19px;
+		color: $dialog-default-text-color;
+		padding: 0 0 7px 0;
+		display: inline-block;
+		padding: 0 15px;
+		opacity: 0.4;
+		cursor: pointer;
+
+		@include animate('transform, opacity');
+		transform: scale(0.9, 0.9);
+		&.selected {
+			transform: scale(1, 1);
+			opacity: 1;
+		}
+	}
+
+	.file-types {
+		padding: 15px 0 0 5px;
+	}
+
+	.file-type {
+		cursor: pointer;
+		position: relative;
+		display: none;
+		width: $file-type-block-size;
+		height: $file-type-block-size;
+		text-align: center;
+		font-size: $file-type-font-size;
+		margin: 0 $file-type-gap-size $file-type-gap-size 0;
+
+		background: #fff;
+		border-radius: 4px;
+		box-shadow: inset 0 0 0 1px #ccc;
+	}
+
+	svg {
+		width: $file-type-selector-icon-size;
+		height: $file-type-selector-icon-size;
+	}
+
+	.name {
+		padding: 0 9px;
+	}
+
+	.icon {
+		padding: ($file-type-block-size * 0.17) 0 ($file-type-block-size * 0.1) 0;
+	}
+
+	&.category-all .file-category-all,
+	&.category-all .file-category-code,
+	&.category-all .file-category-markup,
+	&.category-all .file-category-style,
+	&.category-all .file-category-data,
+	&.category-all .file-category-all,
+	&.category-code .file-category-code,
+	&.category-markup .file-category-markup,
+	&.category-style .file-category-style,
+	&.category-data .file-category-data {
+		display: inline-block;
+	}
+
+}

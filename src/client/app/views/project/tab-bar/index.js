@@ -21,6 +21,7 @@ export default class TabBar extends Component {
 
 		// events
 		this.listen('activate-file', this.onActivateFile);
+		this.listen('delete-items', this.onDeleteItems);
 		this.on('click', '.close', this.onCloseTab);
 		this.on('click', '.tab', this.onSelectTab);
 	}
@@ -41,6 +42,18 @@ export default class TabBar extends Component {
 		this.tabs.refresh();
 	}
 
+	/** remove items that were recently deleted
+	 * @param {string} paths the paths of the deleted items
+	 */
+	onDeleteItems = paths => {
+		const tabs = this.tabs.filterItems(item => _.includes(paths, item.file.path));
+		console.log(tabs);
+		const last = tabs.length - 1;
+		_.each(tabs, (tab, index) => {
+			this.closeTab(tab, index === last);
+		});
+	}
+
 	onSelectTab = event => {
 		const tab = Component.getContext(event.target);
 		if (!tab) return;
@@ -53,16 +66,22 @@ export default class TabBar extends Component {
 	// handles closing a tab
 	onCloseTab = event => {
 		const tab = Component.getContext(event.target);
-		
+		this.closeTab(tab, true);
+	}
+
+	// handle closing the tab view
+	closeTab = (tab, activateNearestTab = false) => {
+
 		// finds the tab to focus instead
-		const replace = this.tabs.itemBefore(tab) || this.tabs.itemAfter(tab);
+		const replace = activateNearestTab && (this.tabs.itemBefore(tab) || this.tabs.itemAfter(tab));
 
 		// remove the tab first
+		this.broadcast('close-file', tab.file);
 		this.tabs.removeItem(tab);
 		this.tabs.refresh();
-		
+
 		// if there's a new tab selected, update it
-		if (replace) {
+		if (!!replace) {
 			this.setActive(replace);
 			this.broadcast('activate-file', replace.file);
 		}

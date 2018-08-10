@@ -19,20 +19,24 @@ $workspace-action-background-color: darken(#9FED5C, 20%);
 $workspace-action-text-color: #fff;
 
 // dialog windows
-$dialog-default-text-color: #2C3F50;
-$dialog-message-default-text-color: #7F8C8D;
-$dialog-action-default-text-color: #ECF0F1;
-$dialog-action-default-background: #95A5A6;
+$dialog-default-text-color: #2c3f50;
+$dialog-message-default-text-color: #7f8c8d;
+$dialog-action-default-text-color: #fff;
+$dialog-action-default-background: #95a5a6;
 $dialog-action-default-hover-background: darken($dialog-action-default-background, 10%);
-$dialog-action-primary-text-color: #ECF0F1;
-$dialog-action-primary-background: #359AD9;
+$dialog-action-primary-text-color: #fff;
+$dialog-action-primary-background: #359ad9;
 $dialog-action-primary-hover-background: darken($dialog-action-primary-background, 10%);
-$dialog-action-secondary-text-color: #ECF0F1;
-$dialog-action-secondary-background: #344A5D;
+$dialog-action-secondary-text-color: #ecf0f1;
+$dialog-action-secondary-background: #344a5d;
 $dialog-action-secondary-hover-background: darken($dialog-action-secondary-background, 10%);
-$dialog-action-cancel-text-color: #95A5A6;
-$dialog-action-cancel-background: #ECF0F1;
+$dialog-action-cancel-text-color: #95a5a6;
+$dialog-action-cancel-background: #ecf0f1;
 $dialog-action-cancel-hover-background: darken($dialog-action-cancel-background, 10%);
+$dialog-action-secondary-hover-background: darken($dialog-action-secondary-background, 10%);
+$dialog-action-danger-text-color: #fff;
+$dialog-action-danger-background: #e64b3f;
+$dialog-action-danger-hover-background: darken($dialog-action-danger-background, 10%);
 
 // formatting
 $inline-code-light-background-primary-color: #00B2FF;
