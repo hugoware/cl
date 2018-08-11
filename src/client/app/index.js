@@ -1,5 +1,9 @@
 import $ from 'jquery';
 import _ from 'lodash';
+
+// extensions
+import * as __extensions__ from './extensions';
+
 import $api from './api';
 import $state from './state';
 import nav from './nav';
@@ -18,9 +22,6 @@ import CreateFolderDialog from './dialogs/create-folder';
 import RemoveItemsDialog from './dialogs/remove-items';
 import RenameItemDialog from './dialogs/rename-item';
 import ConfirmCloseDialog from './dialogs/confirm-close';
-
-// extensions
-import * as __extensions__ from './extensions';
 
 // configurations
 window.Promise = window.Promise || Bluebird;

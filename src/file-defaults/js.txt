@@ -1,0 +1,8 @@
+
+// handle the page loading
+function onLoad() {
+	console.log('ready to go!');
+}
+
+// wait for the page to load
+window.addEventListener('load', onLoad);

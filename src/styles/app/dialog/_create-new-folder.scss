@@ -1,0 +1,11 @@
+
+.dialog .create-new-folder {
+	
+	// custom messages
+	$messages: in-root in-folder;
+	@each $key in $messages {
+		.message .#{$key} { display: none; }
+		.message.#{$key} .#{$key} { display: inline-block; }
+	}
+
+}

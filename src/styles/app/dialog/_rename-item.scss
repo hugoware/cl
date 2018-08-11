@@ -1,0 +1,7 @@
+// specific dialogs
+.dialog .rename-item {
+
+	.extension { visibility: hidden; }
+	&.is-file .extension { visibility: visible; }
+
+}

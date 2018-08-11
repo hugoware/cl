@@ -109,10 +109,10 @@ export default class FileBrowserActions extends Component {
 		const folder = _.first(this.selection);
 		this.broadcast('open-dialog', 'create-folder', { folder });
 	}
-
+	
 	onCreateFile = () => {
-		const selectedFolder = '';
-		this.broadcast('open-dialog', 'create-file', { selectedFolder });
+		const folder = _.first(this.selection);
+		this.broadcast('open-dialog', 'create-file', { folder });
 	}
 
 }

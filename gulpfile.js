@@ -224,6 +224,7 @@ $gulp.task('compile-server-scripts', () => {
     presets: ['es2015'],
     plugins: [
       // 'convert-to-json',
+      ['inline-import', { 'extensions': [ '.txt' ] }],
       'transform-class-properties',
       'async-to-promises'
     ]

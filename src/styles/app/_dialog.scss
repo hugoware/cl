@@ -41,6 +41,10 @@
 			padding: 0 0 25px 0;
 			line-height: 1.4em;
 			color: $dialog-message-default-text-color;
+
+			> * {
+				display: inline-block;
+			}
 		}
 		
 		.title {
@@ -109,33 +113,6 @@
 			}
 		}
 
-
-		// custom messages
-		$messages: in-root in-folder;
-		@each $key in $messages {
-			.message .#{$key} { display: none; }
-			.message.#{$key} .#{$key} { display: inline-block; }
-		}
-
-	}
-
-	// specific dialogs
-	.dialog .rename-item {
-
-		.extension { visibility: hidden; }
-		&.is-file .extension { visibility: visible; }
-
-	}
-
-	.dialog .create-new-file {
-		.form {
-			display: none;
-		}
-
-		&.has-type-selected .form {
-			display: block;
-		}
-		
 	}
 
 }

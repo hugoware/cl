@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import Dialog from './';
 import Component from '../component';
+import $state from '../state';
 
 export default class CreateFileDialog extends Dialog {
 
@@ -13,6 +14,7 @@ export default class CreateFileDialog extends Dialog {
 				fileTypes: '.file-type',
 				categories: '.category',
 
+				folderPath: '.in-folder',
 				fileName: '.fileName',
 				extension: '.extension',
 
@@ -21,14 +23,36 @@ export default class CreateFileDialog extends Dialog {
 			}
 		});
 
+		this.listen('activate-project', this.onActivateProject);
 		this.on('click', '.category', this.onSelectCategory);
 		this.on('click', '.file-type', this.onSelectFileType);
+		this.on('click', '.selected-file-type .cancel', this.clearSelection);
 		this.ui.cancel.on('click', this.onCancel);
 	}
 
-	// changes the file extension for the file
+	// the extension to use for this file
+	get extension() {
+		return this._extension;
+	}
+
 	set extension(value) {
+		this._extension = value;
 		this.ui.extension.text(value);
+	}
+
+	// saving to the root of the project
+	get isRoot() {
+		return _.trim(this.folderPath) === '';
+	}
+
+	// the location to save to
+	get folderPath() {
+		return this._folderPath;
+	}
+
+	set folderPath(value) {
+		this._folderPath = value;
+		this.ui.folderPath.text(value);
 	}
 
 	// changes the file name value
@@ -41,10 +65,34 @@ export default class CreateFileDialog extends Dialog {
 		return this.ui.fileName.text();
 	}
 
-	onActivate = () => {
+	// called when opening a new project
+	onActivateProject = project => {
+		this.changeClass(/allow\-file\-type\-[a-z]+/gi, '');
+
+		// activate each allowed type
+		// TODO: this is project dependent
+		const allowed = ['html', 'css', 'scss', 'pug', 'js', 'ts', 'txt', 'xml'];
+		_.each(allowed, type => {
+			console.log('add', `allow-file-type-${type}`);
+			this.addClass(`allow-file-type-${type}`);
+		});
+
+	}
+
+	// called when opening the dialog
+	onActivate = ({ folder } = { }) => {
+
+		// set the selected folder location
+		const path = folder && folder.path;
+		this.toggleClassMap({
+			'in-root': !path,
+			'in-folder': !!path
+		});
+
 		delete this.fileType;
+		this.folderPath = path;
 		this.selectCategory('all');
-		this.removeClass('has-type-selected');
+		this.clearSelection();
 	}
 	
 	// handle changing the category filter
@@ -70,14 +118,16 @@ export default class CreateFileDialog extends Dialog {
 		}
 
 		// get the replacement category
-		let selection = this.ui.fileSelection.attr('class');
-		selection = selection.replace(/ ?category\-[a-z]+ ?/, '');
-		this.ui.fileSelection.attr('class', selection);
+		this.ui.fileSelection.changeClass(/category\-[a-z]+/, '');
 		this.ui.fileSelection.addClass(`category-${category}`);
 
 		// change the selection
 		this.ui.categories.removeClass('selected');
 		target.addClass('selected');
+
+		// for clarity sake, if the category is changed, but the selected
+		// file type is no longer visible, remove the type selection
+		this.clearSelection();
 	}
 	
 	// handle changing the category filter
@@ -86,29 +136,64 @@ export default class CreateFileDialog extends Dialog {
 		this.selectFileType(target);
 	}
 
+	clearSelection = () => {
+		this.ui.fileTypes.removeClass('selected');
+		this.removeClass('has-type-selected');
+		this.changeClass(/file\-type\-[a-z]+/, '');
+	}
+
 	/** replaces the category selection
 	 * @param {string} type the new category to use
 	 */
 	selectFileType = type => {
 		this.ui.fileTypes.removeClass('selected');
 		this.addClass('has-type-selected');
-
+		
 		// find the selection
 		const target = _.isString(type)
 			? Component.locate(event.target, `[file-type="${type}"]`)
 			: type;
-
-		console.log('target', target);
-
+		
 		// update the visible file extension
 		const category = target.attr('category');
 		type = target.attr('file-type');
 		this.fileName = category;
 		this.extension = `.${type}`;
-
+		
+		// swap the selected file type
+		this.changeClass(/file\-type\-[a-z]+/, '');
+		this.addClass(`file-type-${type}`);
+		
 		// get the target type
 		target.addClass('selected');
 		this.fileType = target.attr('file-type');
+		this.ui.fileName.selectText();
+	}
+
+	// if everything was selected
+	onConfirm = async () => {
+
+		const name = _.trim(this.fileName);
+		const extension = _.trim(this.extension);
+		const location = this.isRoot ? '' : this.folderPath;
+		const path = `${location}/${name + extension}`;
+
+		// console.log('wants to save', path);
+		// try and create the new file
+		this.busy = true;
+		try {
+			await $state.createFile(path);
+		}
+		catch (err) {
+			console.log(err);
+			// handleError(err, {
+
+			// });
+		}
+		finally {
+			this.busy = false;
+		}
+
 	}
 
 }

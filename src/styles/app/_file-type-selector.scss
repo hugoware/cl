@@ -1,8 +1,8 @@
 
 .file-type-selector {
-	$file-type-block-size: 90px;
+	$file-type-block-size: 100px;
 	$file-type-selector-icon-size: 36px;
-	$file-type-font-size: 13px;
+	$file-type-font-size: 15px;
 	$file-type-gap-size: 17px;
 
 	.categories {
@@ -59,17 +59,37 @@
 		padding: ($file-type-block-size * 0.17) 0 ($file-type-block-size * 0.1) 0;
 	}
 
-	&.category-all .file-category-all,
-	&.category-all .file-category-code,
-	&.category-all .file-category-markup,
-	&.category-all .file-category-style,
-	&.category-all .file-category-data,
-	&.category-all .file-category-all,
-	&.category-code .file-category-code,
-	&.category-markup .file-category-markup,
-	&.category-style .file-category-style,
-	&.category-data .file-category-data {
-		display: inline-block;
+}
+
+.create-new-file {
+	
+	$file-types: (css coffee html js md pug py rb scss ts txt xml);
+	@each $type in $file-types {
+		
+		// manage base visibility
+		.allow-file-type-#{$type} { display: none; }
+		&.allow-file-type-#{$type} .allow-file-type-#{$type} {
+			display: inline-block; 
+		}
+
+		// manage specific visiblity
+		&.file-type-#{$type} .file-type-#{$type} { 
+			display: inline-block;
+		}
+	}
+
+	.file-type-selector {
+		&.category-all .file-category-all,
+		&.category-all .file-category-code,
+		&.category-all .file-category-markup,
+		&.category-all .file-category-style,
+		&.category-all .file-category-data,
+		&.category-code .file-category-code,
+		&.category-markup .file-category-markup,
+		&.category-style .file-category-style,
+		&.category-data .file-category-data {
+			display: inline-block;
+		}
 	}
 
 }

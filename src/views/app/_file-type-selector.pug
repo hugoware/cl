@@ -1,27 +1,32 @@
 
 mixin file_type(type, name, category, description)
-	div(class='file-type file-type-'+ type + ' file-category-' + category category=category file-type=type)
-		.icon(icon=type)
-		.detail
-			.name= name
+	div(class='allow-file-type-'+ type)
+		div(class='file-type file-type-'+ type + ' file-category-' + category category=category file-type=type)
+			.icon(icon=type)
+			.detail
+				.name= name
 
-mixin file_description(type, name, category, description)
-	div(class='file-type file-type-'+ type + ' file-category-' + category)
-		.icon(icon='html')
+mixin selected_file_type(type, name, category, description)
+	div(class='file-selection file-type-'+ type)
+		.cancel(icon='close')
+
+		.icon(icon=type)
 		.detail
 			.name= name
 			.description= description
 
+mixin category_type(category, name)
+	div(class='category category-'+ category, category=category)= name
 
 .file-type-selector
 	
 	//- data types
 	.categories
-		.category.category-all(category='all') All
-		.category.category-code(category='code') Code
-		.category.category-markup(category='markup') Markup
-		.category.category-style(category='style') Style
-		.category.category-data(category='data') Data
+		+category_type('all', 'All')
+		+category_type('code', 'Code')
+		+category_type('markup', 'Markup')
+		+category_type('style', 'Style')
+		+category_type('data', 'Data')
 
 	//- file types
 	.file-types
@@ -38,15 +43,17 @@ mixin file_description(type, name, category, description)
 		+file_type('txt', 'Text', 'data')
 		+file_type('xml', 'XML', 'data')
 
-	//- +file_description('scss', 'SCSS', 'style', "SCSS is a type of CSS that allows you to use enhanced features")
-	//- +file_description('css', 'CSS', 'style', "Plain CSS file for visual rules on a web page")
-	//- +file_description('html', 'HTML', 'markup', "Markup page for HTML data")
-	//- +file_description('pug', 'Pug', 'markup', "Special rules for creating HTML pages")
-	//- +file_description('md', 'Markdown', 'markup', "Special rules for creating HTML pages")
-	//- +file_description('coffee', 'CoffeeScript', 'code', "Alternative JavaScript")
-	//- +file_description('js', 'JavaScript', 'code', "Code used by web pages")
-	//- +file_description('ts', 'TypeScript', 'code', "Advanced JavaScript language")
-	//- +file_description('py', 'Python', 'code', "Python language")
-	//- +file_description('rb', 'Ruby', 'code', "Ruby language")
-	//- +file_description('xml', 'XML', 'data', "Data file with a similar format to HTML")
-	//- +file_description('txt', 'Text', 'data', "Empty text file for taking notes")
+//- displaying the selected type
+.selected-file-type
+	+selected_file_type('css', 'CSS', 'Style', 'Creates a new CSS style file')
+	+selected_file_type('coffee', 'CoffeeScript', 'Code', 'Creates a new CoffeeScript code file')
+	+selected_file_type('html', 'HTML', 'Markup', 'Creates a new HTML markup file')
+	+selected_file_type('js', 'JavaScript', 'Code', 'Creates a new JavaScript code file')
+	+selected_file_type('md', 'Markdown', 'Markup', 'Creates a new Markdown markup file')
+	+selected_file_type('pug', 'Pug', 'Markup', 'Creates a new Pug markup file')
+	+selected_file_type('py', 'Python', 'Code', 'Creates a new Python code file')
+	+selected_file_type('rb', 'Ruby', 'Code', 'Creates a new Ruby code file')
+	+selected_file_type('scss', 'SCSS', 'Style', 'Creates a new SCSS style file')
+	+selected_file_type('ts', 'TypeScript', 'Code', 'Creates a new TypeScript code file')
+	+selected_file_type('txt', 'Text', 'Data', 'Creates a new Text data file')
+	+selected_file_type('xml', 'XML', 'Data', 'Creates a new XML data file')

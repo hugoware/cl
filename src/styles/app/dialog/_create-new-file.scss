@@ -1,0 +1,86 @@
+.dialog .create-new-file {
+	min-width: 500px;
+
+	// custom messages
+	$messages: in-root in-folder;
+	@each $key in $messages {
+		.message .#{$key} { display: none; }
+		&.#{$key} .message .#{$key} { display: inline-block; }
+	}
+
+	.form {
+		padding-top: 20px;
+		display: none;
+	}
+
+	.file-selection {
+		@include clearfix();
+
+		padding: 13px 40px 10px 12px;
+		box-shadow: inset 0 0 0 1px #ccc;
+		display: inline-block;
+		border-radius: 4px;
+		position: relative;
+		display: none;
+
+		.cancel {
+			$cancel-button-size: 18px;
+			cursor: pointer;
+
+			position: absolute;
+			right: 10px;
+			top: 7px;
+			background: rgba(0,0,0,0.3);
+			@include uniform_size($cancel-button-size);
+			border-radius: $cancel-button-size;
+
+			@include animate('transform');
+
+			&:hover {
+				transform: rotate(90deg) scale(1.1, 1.1);
+			}
+
+			svg {
+				position: absolute;
+				@include uniform_size(10px);
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+		}
+
+		.icon, .detail {
+			display: block;
+			float: left;
+		}
+		
+		.icon {
+			svg {
+				@include uniform_size(50px);
+			}
+		}
+
+		.detail {
+			padding: 5px 0 0 15px;
+		}
+
+		.name {
+			font-size: 22px;
+			padding: 0 0 5px 0;
+		}
+
+		.description {
+			font-size: 15px;
+			color: $dialog-message-default-text-color;
+		}
+
+	}
+
+	&.has-type-selected .form {
+		display: block;
+	}
+
+	&.has-type-selected .file-type-selector {
+		display: none;
+	}
+}

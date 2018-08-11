@@ -52,14 +52,20 @@
 
 
 +template('dialog-create-file')
-	.content(dialog-width='650').create-new-file
+	.content(dialog-width='700').create-new-file
 		.title Create New File
 
 		include _file-type-selector
 
 		.form
-				.fileName.flexible.input.with-tail(contenteditable='true')
-				span.tail.extension
+			.message
+				| This will create the new file in  
+				.in-root the project root folder
+				code.in-folder
+
+			.label File Name
+			.fileName.flexible.input.with-tail(contenteditable='true')
+			span.tail.extension
 
 		.actions
 			.action.confirm.primary Create File
@@ -67,7 +73,7 @@
 
 
 +template('dialog-create-folder')
-	.content(dialog-width='500')
+	.content(dialog-width='500').create-new-folder
 		.title Create a New Folder
 		.message
 			| This will create a new folder in 

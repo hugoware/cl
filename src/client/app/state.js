@@ -143,6 +143,26 @@ const $state = {
 		return result;
 	},
 
+	/** requests a new file be created */
+	createFile: async path => {
+		const { projectId } = $state;
+		const result = await $api.request('create-file', { projectId, path });
+
+		// returned, but actually failed
+		if (!result.success)
+			throw result;
+
+		// temp
+		window.location.reload();
+		// finalize the file changes
+		// const file = $state.findItemByPath(path);
+		// file.content = content;
+
+		// notify and return
+		// broadcast('save-file', path);
+		return result;
+	},
+
 	/** handles removing a series of items from the project
 	 * @param {string[]} selection the path items to remove
 	 */

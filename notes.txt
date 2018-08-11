@@ -1,4 +1,6 @@
 
+closing a file doesn't clear the errors
+
 browser mode
   - compile scripts if no script changes
   - require button if script values changed

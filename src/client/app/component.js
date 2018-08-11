@@ -16,7 +16,9 @@ const $contexts = { };
 const PROXIED_SELF_METHODS = [
   'addClass',
   'removeClass',
-  'toggleClass',
+	'toggleClass',
+	'toggleClassMap',
+	'changeClass',
   'remove',
   'empty',
   'css',
@@ -358,15 +360,6 @@ export default class Component {
 		return this.$.find(selector).length > 0;
 	}
 	
-	/** allows mapping css states using an object map 
-	 * @param {Object<CSSClassName, boolean>} map the class names and boolean conditions
-	*/
-	toggleClassMap = map => {
-		_.each(map, (state, css) => {
-			this.toggleClass(css, state);
-		})
-	}
-
   /** handles binding data to the component
 	 * @param {Object} data Binding parameters - the key is a selector to use and the value is the value, or an object, to apply
 	 */
