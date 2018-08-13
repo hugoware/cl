@@ -20,8 +20,10 @@ export default class Preview extends Component {
 
 		// events
 		this.listen('activate-project', this.onActivateProject);
+		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('compile-file', this.onCompileFile);
+		this.listen('close-file', this.onCloseFile);
 
 		// preview area setup
 		this.ui.output.on('load', event => {
@@ -89,6 +91,14 @@ export default class Preview extends Component {
 	onActivateProject = async () => {
 		this.setMode('browser');
 		this.handler.onActivateProject();
+	}
+
+	onDeactivateProject = () => {
+		this.handler.onDeactivateProject();
+	}
+
+	onCloseFile = file => {
+		this.handler.onCloseFile(file);
 	}
 
 	// handles when files are loaded

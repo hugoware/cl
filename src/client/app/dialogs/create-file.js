@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import Dialog from './';
 import Component from '../component';
+import ErrorMessage from '../error-message';
 import $state from '../state';
 
 export default class CreateFileDialog extends Dialog {
@@ -14,12 +15,26 @@ export default class CreateFileDialog extends Dialog {
 				fileTypes: '.file-type',
 				categories: '.category',
 
+				errorMessage: '.error',
+
 				folderPath: '.in-folder',
 				fileName: '.fileName',
 				extension: '.extension',
 
 				submit: '.action.submit',
 				cancel: '.action.cancel',
+			}
+		});
+
+		// creates a new error message handler
+		this.errorMessage = new ErrorMessage({
+			$: this.ui.errorMessage,
+			errors: {
+				name_required: `A file name is required`,
+				name_too_long: `A file name cannot be longer than 50 characters`,
+				name_invalid: `A file name cannot contain special characters`,
+				file_already_exists: () => `There is already a file named \`${this.fileDisplayName}\` in ${this.folderPathDisplayName}`,
+				type_invalid: () => `You cannot use a \`${this.extension}\` file type in this project`,
 			}
 		});
 
@@ -55,6 +70,14 @@ export default class CreateFileDialog extends Dialog {
 		this.ui.folderPath.text(value);
 	}
 
+	get folderPathDisplayName() {
+		return this.isRoot ? 'the root of the project' : `\`${this.folderPath}\``;
+	}
+
+	get fileDisplayName() {
+		return this.fileName + this.extension;
+	}
+
 	// changes the file name value
 	set fileName(value) {
 		this.ui.fileName.text(value);
@@ -73,7 +96,6 @@ export default class CreateFileDialog extends Dialog {
 		// TODO: this is project dependent
 		const allowed = ['html', 'css', 'scss', 'pug', 'js', 'ts', 'txt', 'xml'];
 		_.each(allowed, type => {
-			console.log('add', `allow-file-type-${type}`);
 			this.addClass(`allow-file-type-${type}`);
 		});
 
@@ -81,6 +103,7 @@ export default class CreateFileDialog extends Dialog {
 
 	// called when opening the dialog
 	onActivate = ({ folder } = { }) => {
+		this.errorMessage.clear();
 
 		// set the selected folder location
 		const path = folder && folder.path;
@@ -137,6 +160,7 @@ export default class CreateFileDialog extends Dialog {
 	}
 
 	clearSelection = () => {
+		this.errorMessage.clear();
 		this.ui.fileTypes.removeClass('selected');
 		this.removeClass('has-type-selected');
 		this.changeClass(/file\-type\-[a-z]+/, '');
@@ -146,6 +170,7 @@ export default class CreateFileDialog extends Dialog {
 	 * @param {string} type the new category to use
 	 */
 	selectFileType = type => {
+		this.errorMessage.clear();
 		this.ui.fileTypes.removeClass('selected');
 		this.addClass('has-type-selected');
 		
@@ -173,6 +198,9 @@ export default class CreateFileDialog extends Dialog {
 	// if everything was selected
 	onConfirm = async () => {
 
+		// make sure something was selected
+
+		// check the selection
 		const name = _.trim(this.fileName);
 		const extension = _.trim(this.extension);
 		const location = this.isRoot ? '' : this.folderPath;
@@ -182,13 +210,12 @@ export default class CreateFileDialog extends Dialog {
 		// try and create the new file
 		this.busy = true;
 		try {
-			await $state.createFile(path);
+			const result = await $state.createFile(path);
+			if (result.success) this.hide();
+			else this.errorMessage.apply(result);
 		}
 		catch (err) {
-			console.log(err);
-			// handleError(err, {
-
-			// });
+			this.errorMessage.apply(err);
 		}
 		finally {
 			this.busy = false;

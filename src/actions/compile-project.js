@@ -1,5 +1,5 @@
 
-import getProjectType from './get-project-type';
+import getProjectType from '../queries/get-project-type';
 import compileFile, { CompileFileResult } from './compile-file';
 import DependencyResolver from '../dependency-resolver';
 

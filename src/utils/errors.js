@@ -1,16 +1,28 @@
 import _ from 'lodash';
+import log from '../log';
 
 /** Handles finding a string result for an exception
  * @param {string|Error} error The error to resolve 
  */
-export function resolveError(error) {
-	if (_.isError(error)) return error.message;
-	if (_.isString(error)) return error;
+export function resolveError(error, file) {
 	
-	// display the missing error
-	error = (error || 'null').toString();
-	console.log(`[unexpected error] ${error}`);
-	return 'unknown_error';
+	// no error objects should make it through
+	// this is probably bad programming practice, but for
+	// now I'll assume anything using an error is actually
+	// a library or framework
+	if (_.isError(error)) {
+		log.ex(error);
+		error = 'server_error';
+	}
+
+	// return the resolved error
+	if (!_.isString(error)) {
+		const args = JSON.stringify(error, null, 2);
+		log.ex(file, args);
+		error = 'unknown_error';
+	}
+
+	return error;
 }
 
 /** handles and resolves errors 

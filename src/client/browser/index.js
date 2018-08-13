@@ -18,6 +18,16 @@
 		window.top.dispatchEvent(event);
 	}
 
+	// kicks off an event
+	function triggerEvent(name, args) {
+		const event = document.createEvent('Event');
+
+		// manually trigger the event
+		if ($events[name])
+			for (const handler of ($events[name] || [ ]))
+				handler(event);
+	}
+
 	// remove pending events
 	function clearTrackedEventListeners() {
 		for (const key in $events) {
@@ -82,6 +92,9 @@
 					handleError(ex);
 				}
 			})(scripts[i]);
+
+		// after completely evaled, run any onload events
+		triggerEvent('load');
 	}
 
 	// broadcast local script errors

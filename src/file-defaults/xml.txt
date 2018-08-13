@@ -1,0 +1,5 @@
+<data>
+	<item>first</item>
+	<item>second</item>
+	<item>third</item>
+</data>

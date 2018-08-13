@@ -34,10 +34,9 @@ export function getExtension(path, { removeLeadingDot } = { }) {
 
 /** returns the directory and file name of a path
  * @param {string} path the path or file to extract from
- * @returns {object} the path information
  * @returns {{ directory: string, file: string }} 
 */
-export function getPathInfo(path) {
+export function getPathInfo(path, { removeTrailingSlash } = { }) {
 
 	// match at the final slash -- if it's already just the file
 	// name (no slashes, then use the path as is)
@@ -46,6 +45,10 @@ export function getPathInfo(path) {
 	file = file.replace(/^\/?/, '');
 	
 	let directory = path.substr(0, path.length - file.length);
+	if (directory || removeTrailingSlash)
+		directory = directory.replace(/\/*$/g, '');
+
+	// if nothing is there, it's the root directory
 	if (!_.some(directory)) directory = '/';
 	return { directory, file };
 }
@@ -56,6 +59,7 @@ export function getPathInfo(path) {
  */
 export function resolvePathFromUrl(path) {
 	path = _.trim(_.trim(path).split('?')[0]);
+	
 	// removes a leading dot if it's not followed by a slash
 	if (path[0] === '.' && path[1] !== '/') path = path.substr(1);
 	return $lfs.normalizePath(path);

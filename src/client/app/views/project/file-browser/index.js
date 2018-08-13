@@ -32,6 +32,8 @@ export default class FileBrowser extends Component {
 
 		// events
 		this.listen('activate-project', this.onActivateProject);
+		this.listen('update-project', this.onUpdateProject);
+		this.listen('expand-folder', this.onExpandFolder);
 		this.listen('delete-items', this.onDeleteItems);
 		
 		// ui events
@@ -64,6 +66,11 @@ export default class FileBrowser extends Component {
 		this.rebuildStructure();
 	}
 
+	// general file structure updates
+	onUpdateProject = () => {
+		this.rebuildStructure();
+	}
+
 	// reset the whole structure
 	onDeleteItems = () => {
 		this.clearSelection();
@@ -80,6 +87,13 @@ export default class FileBrowser extends Component {
 		const item = this.getItem(event.target);
 		this.toggleExpansion(item);
 		return cancelEvent(event);
+	}
+
+	// handles manually expanding a folder
+	onExpandFolder = path => {
+		const item = $state.findItemByPath(path);
+		if (!this.expanded[path])
+			this.toggleExpansion(item);
 	}
 
 	// changes the toggle state for an item
@@ -182,8 +196,8 @@ function rebuild(fileBrowser, node, children, depth = 0) {
 			item.appendTo(node);
 
 			// toggle state
-			item.expanded = fileBrowser.expanded[data.path];
-			item.selected = $state.selected[data.path];
+			item.expanded = fileBrowser.expanded[data.path] || data.expanded;
+			item.selected = $state.selected[data.path] || data.selected;
 
 			// if this has children, create it as well
 			if ('children' in data)

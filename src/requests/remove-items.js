@@ -12,15 +12,14 @@ export async function handle(socket, session, data) {
 	const { projectId, items } = data;
 
 	try {
-		console.log('wants to remove', items);
 
 		// make sure they can access this project
 		const access = await getProjectAccess(projectId, user);
 		if (!access.write)
 			throw 'access_denied';
 
-		// // try and write the file content
-		// await writeFile(projectId, path, content, { doNotCreateIfMissing });
+		// try and write the file content
+		await removeItems(projectId, items);
 
 		// this was successful
 		socket.ok(event, { success: true });

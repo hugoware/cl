@@ -1,38 +1,56 @@
-
+import _ from 'lodash';
 import log from '../log';
 import $path from '../path';
 import $fsx from 'fs-extra';
 import $fileDefaults from '../file-defaults';
+import fileValidator from '../validators/file';
+import getProjectType from '../queries/get-project-type';
+import { getPathInfo } from '../path';
 
 /** handles creating a new folder
  * @param {string} projectId the project to work with
  * @param {string} path the local path to the folder to create
  * @returns {boolean} was the creation successful
  */
-export default async function createFolder(projectId, path, options = {}) {
-	const target = $path.resolveProject(projectId, path);
-
-	// try and create the file
-	try {
+export default async function createFile(projectId, path, options = {}) {
+	return new Promise(async (resolve, reject) => {
+		const target = $path.resolveProject(projectId, path);
+		
 		// get the file default
-		const ext = $path.extalias(path);
+		const projectType = await getProjectType(projectId);
+		const { fileName, name, ext } = getPathInfo(path);
 
-		// verify this is an allowed content type
-		// note: this isn't verifying it's valid for this
-		// project, which will come later
-		if (!$fileDefaults.exists(ext))
-			throw 'invalid_file_type';
+		// validate the name
+		let error = fileValidator.validateName(name);
+		if (error) return reject(error);
 
-		// write the content
-		const content = $fileDefaults.get(ext);
+		// check the file extension
+		error = fileValidator.validateType(ext, projectType);
+		if (error) return reject(error);
 
-		console.log('wants to write to', target);
-		await $fsx.writeFile(target, content);
-	}
-	catch (err) {
-		log.ex('actions/create-file.js', err);
-		throw 'file_add_error';
-	}
+		// make sure a file with the same name doesn't already exist
+		const alreadyExists = await $fsx.exists(target);
+		if (alreadyExists)
+			return reject('file_already_exists');
 
-	return Promise.resolve(true);
+		// check for default content - if the return value
+		// is null, then that actually means the file type
+		// isn't valid for this project
+		const content = $fileDefaults.get(ext, projectType);
+		if (_.isNil(content))
+			return reject('invalid_file_type');
+
+		// try and create the file
+		try {
+			await $fsx.writeFile(target, content);
+
+			// finally, return the file information
+			resolve({ name: fileName, content });
+		}
+		catch (err) {
+			log.ex('actions/create-file.js', err);
+			reject('file_add_error');
+		}
+
+	});
 }

@@ -53,13 +53,13 @@ export default async function createProject(data) {
 		if (nameExists)
 			return reject('name_already_exists');
 
-		// get a new ID an create ht prject
-		const id = await $database.generateId($database.projects, 6);
-		const project = { id, ownerId, name, description, type };
-		if (!!language) project.language = language;
-
-		// try and save the record
 		try {
+			// get a new ID for this project
+			const id = await $database.generateId($database.projects, 6);
+			const project = { id, ownerId, name, description, type };
+			if (!!language) project.language = language;
+
+			// try and save the record
 			await $database.projects.insertOne(project);
 			return resolve({ success: true, id });
 		}

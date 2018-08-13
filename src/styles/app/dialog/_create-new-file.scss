@@ -76,7 +76,12 @@
 
 	}
 
-	&.has-type-selected .form {
+	.actions {
+		display: none;
+	}
+
+	&.has-type-selected .form,
+	&.has-type-selected .actions {
 		display: block;
 	}
 

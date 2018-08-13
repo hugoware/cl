@@ -122,6 +122,19 @@ export default class BrowserMode extends Component {
 		else console.log('received from preview', name);
 	}
 
+	// handles deactivating a project entirely
+	onDeactivateProject = () => {
+		this.views = { };
+		this.clear();
+	}
+
+	// handles closing a file from preview
+	onCloseFile = file => {
+		if (!this.hasActiveView) return;
+		if (this.activeFile.path === file.path)
+			this.clear();
+	}
+
 	// sets the default view content
 	onActivateFile = async file => {
 		const { path } = file;
@@ -207,6 +220,7 @@ export default class BrowserMode extends Component {
 		this.preview.output.innerHTML = NO_PREVIEW_LOADED;
 		this.title = '';
 		this.url = '';
+		delete this.view;
 	}
 
 	// force a recompile of this view

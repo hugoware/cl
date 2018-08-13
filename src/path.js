@@ -1,3 +1,4 @@
+
 import _ from 'lodash';
 import $path from 'path';
 import $config from './config';
@@ -77,9 +78,14 @@ export function resolveProject(id, path = '', fromCache) {
     path = `.cache/${path}/`;
 
   // sort out the path
-  path = removeLeadingSlash(path);
-  const result = $path.resolve(resolveRoot(`~/.data/projects/${id}`) + `/${path}`);
-  return result;
+	path = removeLeadingSlash(path);
+	const root = resolveRoot(`~/.data/projects/${id}`);
+	const result = $path.resolve(`${root}/${path}`);
+	const head = result.substr(0, root.length);
+	const tail = result.substr(root.length + 1);
+	const startsWith = head === root;
+	const endsWith = tail === path;
+	return startsWith && endsWith ? result : null;
 }
 
 /** Returns a simple alias for a file extension (lowercase, no leading delimeter)
@@ -87,6 +93,19 @@ export function resolveProject(id, path = '', fromCache) {
 */
 export function extalias(path) {
   return $path.extname(path).toLowerCase().replace(/^\./, '')
+}
+
+/** returns full information about a path 
+ * @param {string} path the full path to the file
+ * @returns {PathInfo}
+*/
+export function getPathInfo(path) {
+	const segments = _.trim(path).split(/\/+/g);
+	const fileName = segments.pop();
+	const directory = segments.join('/');
+	const ext = extalias(fileName);
+	const name = fileName.substr(0, (fileName.length - (ext.length + 1)));
+	return { fileName, directory, ext, name };
 }
 
 /** removes any leading slashes for path requests 
@@ -99,6 +118,7 @@ export function removeLeadingSlash(str) {
 export default {
 	resolve,
 	extalias,
+	getPathInfo,
 	removeLeadingSlash,
 	resolveRoot,
 	resolveModule,

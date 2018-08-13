@@ -48,6 +48,10 @@ export default class FileBrowserActions extends Component {
 	get allowCreateFile() {
 		return !this.hasSelection || (this.isSingleItem && this.isOnlyFolders);
 	}
+
+	get allowUploadFile() {
+		return this.allowCreateFile;
+	}
 	
 	get allowCreateFolder() {
 		return !this.hasSelection || (this.isSingleItem && this.isOnlyFolders);
@@ -80,6 +84,7 @@ export default class FileBrowserActions extends Component {
 			// action activation
 			'allow-create-folder': this.allowCreateFolder,
 			'allow-create-file': this.allowCreateFile,
+			'allow-upload-file': this.allowUploadFile,
 			'allow-move-items': this.allowMoveItems,
 			'allow-delete-items': this.allowDeleteItems,
 			'allow-rename-item': this.allowRenameItem

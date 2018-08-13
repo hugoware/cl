@@ -16,7 +16,7 @@ export function validateName(name, errors) {
 	name = stringify(name);
 	const err = name.length < MIN_NAME_LENGTH ? 'too_short'
 		: name.length > MAX_NAME_LENGTH ? 'too_long'
-		: /[^a-z0-9 \-_]+/.test(name) ? 'invalid'
+		: /[^a-z0-9 \-_]+/i.test(name) ? 'invalid'
 		: null;
 
 	return resolveError('name', err, errors);

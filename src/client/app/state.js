@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import $lfs from './lfs';
 import $api from './api';
-import { getExtension } from './utils/index';
+import { getExtension, getPathInfo } from './utils/index';
 import { broadcast } from './events';
 import { simplifyPathCollection } from '../../utils/project';
 
@@ -152,14 +152,32 @@ const $state = {
 		if (!result.success)
 			throw result;
 
-		// temp
-		window.location.reload();
-		// finalize the file changes
-		// const file = $state.findItemByPath(path);
-		// file.content = content;
+		// find the folder this was added into
+		const data = getPathInfo(path, { removeTrailingSlash: true });
+		let parent = $state.findItemByPath(data.directory) || $state.project;
+		parent.children = parent.children || [ ];
+		parent.children.push(result.file);
 
-		// notify and return
-		// broadcast('save-file', path);
+		// select by default
+		$state.clearSelection();
+		result.file.selected = true;
+
+		// also sort the files by their name
+		_.sortBy(parent.children, 'name');
+
+		// if the parent isn't already expanded, do it now
+		while (parent) {
+			parent.expanded = true;
+			parent = parent.parent;
+		}
+
+		// update the project data
+		await $state.updateProject($state.project);
+		broadcast('update-project', $state.project);
+
+		// also, open the new file
+		const file = $state.findItemByPath(path);
+		broadcast('activate-file', file);
 		return result;
 	},
 
@@ -233,33 +251,38 @@ async function syncProject(children = [ ], parent, relativeTo) {
 	// update each child path
 	for (const item of children) {
 
-		// create a unique ID to make tracking easier
-		item.id = _.uniqueId('id:');
-		item.path = prefix + relativeTo + item.name;
-		item.parent = parent;
+		// check if this has been synced yet
+		if (!('id' in item)) {
+
+			// create a unique ID to make tracking easier
+			item.id = _.uniqueId('id:');
+			item.path = prefix + relativeTo + item.name;
+			item.parent = parent;
+
+			// gather extra info about this item
+			item.isFolder = _.isArray(item.children);
+			item.isFile = !item.isFolder;
+	
+			// file info
+			if (item.isFile)
+				item.ext = getExtension(item.path, { removeLeadingDot: true });
+	
+			// check if this is a content file 
+			if ('content' in item)
+				await $lfs.write(item.path, item.content);
+
+		}
 
 		// save the path info
 		$state.paths[item.path] = item;
 		$state.items[item.id] = item;
 
-		// gather extra info about this item
-		item.isFolder = _.isArray(item.children);
-		item.isFile = !item.isFolder;
+		// check for files
 		item.isEmpty = item.isFolder && !_.some(item.children);
-
-		// file info
-		if (item.isFile)
-			item.ext = getExtension(item.path, { removeLeadingDot: true });
-
-		// check if this is  
 		if (!item.isEmpty)
 			await syncProject(item.children, item, item.path);
-
-		// check if this is a content file 
-		if ('content' in item)
-			await $lfs.write(item.path, item.content);
-
 	}
+
 }
 
 export default $state;

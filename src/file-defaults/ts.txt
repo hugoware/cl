@@ -1,0 +1,7 @@
+
+function greet(message: string) {
+	console.log(`Hello, ${message}!`);
+}
+
+window.addEventListener('load', greet);
+

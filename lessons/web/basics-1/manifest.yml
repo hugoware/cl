@@ -1,0 +1,11 @@
+name: Basics 1
+description: Introduction to building Web Pages
+
+config:
+  file_permissions: NONE
+  folder_permissions: NONE
+
+lesson:
+  - intro
+  - using_file_browser
+  - editing_files

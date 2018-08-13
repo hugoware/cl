@@ -1,28 +1,33 @@
 
+import log from '../log';
+import $fsx from 'fs-extra';
+import $path from '../path';
 import { simplifyPathCollection } from '../utils/project';
 
 /** Handles removing a file at the provided path
+ * @param {string} projectId The project that the files should be removed from
  * @param {string|string[]} items The items that should be removed
  */
-export default async function removeItems(items) {
+export default async function removeItems(projectId, items) {
 
+	// get the simple form of objects to remove - this
+	// should clean up nested removals as well
 	items = simplifyPathCollection(items);
-	console.log('will remove', items);
 
-	// const target = this.resolvePath(path);
+	// since it exists, write the content
+	try {
 
-	// // can't remove when it doesn't exist
-	// const exists = await $fsx.pathExists(target);
-	// if (!exists)
-	// 	throw 'remove-not-found';
+		// queue up each item to remove
+		for (const item of items) {
+			const path = $path.resolveProject(projectId, item);
+			if (!path) throw 'invalid_path';
+			await $fsx.remove(path);
+		}
 
-	// // delete the file
-	// try {
-	// 	await $fsx.remove(path);
-	// }
-	// catch (e) {
-	// 	throw 'remove-error';
-	// }
-
-	return Promise.resolve();
+		return { success: true };
+	}
+	catch (err) {
+		log.ex('actions/remove-items.js', err);
+		throw 'item_remove_error';
+	}
 }

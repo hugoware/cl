@@ -27,5 +27,5 @@ export function resolveError(key, err, errors) {
 		errors[`${key}_${err}`] = errors[key] = true;
 	}
 
-	return isError;
+	return isError ? `${key}_${err}` : null;
 }

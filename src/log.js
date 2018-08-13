@@ -11,6 +11,6 @@ log.warn = (...args) => {
 
 /** writes exception messages */
 log.exception = log.ex = (file, ex) => {
-	console.log(file, ex);
+	console.log(`[unexpected error]`, file, '\n', ex);
 };
 

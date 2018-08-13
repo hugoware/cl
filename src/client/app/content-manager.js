@@ -88,7 +88,7 @@ export function compile(path, { silent } = { }) {
 		// if there's an error, update
 		if (!result.success) {
 			$errorManager.add(path, result.error);
-			$compiled[path] = { lastCompile, content: '' };
+			$compiled[path] = { lastCompile, content: result.content || '' };
 		}
 		// the compile worked
 		else {

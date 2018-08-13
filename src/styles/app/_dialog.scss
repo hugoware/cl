@@ -9,6 +9,16 @@
 
 	background : $dialog-overlay-background-color;
 
+	.error {
+		$error-main-color: #A32623;
+		margin: 0 0 25px 0;
+		padding: 10px;
+		background: rgba(#f00, 0.15);
+		color: $error-main-color;
+		border: 1px solid $error-main-color;
+		border-radius: 4px;
+	}
+
 	.dialog {
 		background: $dialog-content-background-color;
 		border-radius: 4px;

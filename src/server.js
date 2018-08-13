@@ -186,15 +186,8 @@ function configureSocketRequests(instance, requests) {
 				
 		// standard rejection
 		socket.err = (event, err, ...args) => {
-
-			// verify the error
-			if (!err || !_.isString(err.err)) {
-				console.log('unhandled error', err);
-				err = { err: 'server_error' };
-			}
-
 			socket.emit(`${event}:err`, err, ...args);
-		}
+		};
 
 		// find standard events
 		const onConnect = _.find(requests, config => config.event === 'connect');

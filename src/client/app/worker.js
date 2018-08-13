@@ -9,6 +9,9 @@ const $workers = {
 	'pug': 'pug',
 	'sass': 'scss',
 	'scss': 'scss',
+	'html': 'html',
+	// 'css': 'css',
+	// 'js': 'js'
 };
 
 // helper class to use async with workers

@@ -192,6 +192,7 @@ $action-item-icon-size: $action-item-height * 0.6;
 		// enablement
 		&.allow-create-folder .create-folder,
 		&.allow-create-file .create-file,
+		&.allow-upload-file .upload-file,
 		&.allow-rename-item .rename-item,
 		&.allow-delete-items .delete-items,
 		&.allow-move-items .move-items {
