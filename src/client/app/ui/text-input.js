@@ -8,6 +8,9 @@ export default class TextInput extends Component {
 	constructor(config) {
 		super(config);
 
+		// save the config
+		this.config = config;
+
 		// configure
 		this.addClass('ui-text-input');
 
@@ -21,6 +24,8 @@ export default class TextInput extends Component {
 		this.input.on('input', this.onInput);
 		this.input.on('keyup', this.onKeyUp);
 
+		// initial sync
+		matchInput(this, '');
 	}
 
 	/** returns the current suffix, if any
@@ -98,7 +103,13 @@ function matchInput(instance, text, { fontSize = '18px', fontFamily = 'sans-seri
 		fontStyle: 'normal',
 	});
 
-	instance.input.width(size.width.value + 2);
+	// determine the width to use
+	let width = size.width.value;
+	if (!isNaN(instance.config.minWidth))
+		width = Math.max(width, 0 | instance.config.minWidth);
+
+	// replace the width
+	instance.input.width(width + 2);
 }
 
 // adds a suffix layer

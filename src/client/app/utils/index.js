@@ -53,6 +53,16 @@ export function getPathInfo(path, { removeTrailingSlash } = { }) {
 	return { directory, file };
 }
 
+/** gets the name and extension for a file
+ * @param {string} fileName the name of the file
+ * @returns {{ name: string, ext: string }}
+ */
+export function getFileInfo(fileName) {
+	const extension = getExtension(fileName, true);
+	const name = fileName.substr(0, fileName.length - extension.length);
+	return { name, extension };
+}
+
 /** extracts a file path from a url
  * @param {string} url the url to extract from
  * @returns {string} the file path found

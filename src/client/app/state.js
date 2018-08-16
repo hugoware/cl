@@ -177,6 +177,43 @@ const $state = {
 		return result;
 	},
 
+	/** attempts to create a new folder in the project
+	 * @param {string} path the path to create
+	 */
+	createFolder: async path => {
+		const { projectId } = $state;
+		const result = await $api.request('create-folder', { projectId, path });
+
+		// check for an error
+		if (!result.success)
+			throw result;
+
+		// add this to the project
+		const data = getPathInfo(path);
+		let parent = $state.findItemByPath(data.directory) || $state.project;
+		parent.children = parent.children || [];
+		parent.children.push(result.folder);
+
+		// select by default
+		$state.clearSelection();
+		result.folder.selected = true;
+
+		// // also sort the files by their name
+		// _.sortBy(parent.children, 'name');
+
+		// if the parent isn't already expanded, do it now
+		while (parent) {
+			parent.expanded = true;
+			parent = parent.parent;
+		}
+
+		// update the project data
+		await $state.updateProject($state.project);
+		broadcast('update-project', $state.project);
+
+		return result;		
+	},
+
 	/** requests a new file be created */
 	createFile: async path => {
 		const { projectId } = $state;

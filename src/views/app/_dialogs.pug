@@ -37,14 +37,13 @@
 		.title Rename #[span.type]
 
 		.message
-			p Enter a new name for this file.
-			.note You cannot use the same name as another matching file in the same folder.
+			| Enter a new name for the selected #[span.type].
 		
 		.error
 		
 		.form
-			.name.flexible.input.with-tail(contenteditable='true')
-			span.extension.tail
+			.label #[span.type] Name
+			.itemName
 
 		.actions
 			.action.confirm.primary Rename #[span.type]
@@ -83,7 +82,10 @@
 			code.in-folder
 
 		.form
-			input(name='name')
+			.error
+			
+			.label Folder Name
+			.folderName
 
 		.actions
 			.action.confirm.primary Create Folder
