@@ -189,7 +189,7 @@ export default class Component {
 		this.$.attr('cl-context', id);
 		// $contexts[id] = this;
 
-		/** @type {Object.<string, JQuery>} */
+		/** @type {Object<string, JQuery>} */
 		this.ui = { };
 
     // wire up, non-complex jquery actions
@@ -419,7 +419,17 @@ export default class Component {
 
     return this;
 	}
+
+	/** raises a standard event that can be listened to by other components
+	 * @param {string} key the name of the event to raise
+	 * @param {object} [args] the arguments to include in the event
+	 */
+	raiseEvent = (key, args) => {
+		const event = $.Event(key, args);
+		this.$.trigger(event);
+	}
 	
+	/** cleans up this element and removes all events */
   dispose = () => {
 
     // clean up events
@@ -439,9 +449,24 @@ export default class Component {
 // maps selectors to an object
 function mapComponentUI(context, target, selectors) {
   _.each(selectors, (selector, key) => {
-      target[key] = _.isObject(selector)
-        ? mapComponentUI(context, { }, selector)
-        : context.find(selector);
+
+			// if including a component
+			if (_.isArray(selector)) {
+				const ctor = selector[2] || { };
+				const type = selector[1];
+				selector = selector[0];
+
+				// get the target to use
+				ctor.$ = context.find(selector);
+				target[key] = new type(ctor);
+			}
+			// normal behavior
+			else {
+				target[key] = _.isObject(selector)
+					? mapComponentUI(context, { }, selector)
+					: context.find(selector);
+			}
+
   });
 
   return target;

@@ -1,5 +1,4 @@
 import { resolveError } from '../utils';
-
 import createFile from '../actions/create-file';
 import getProjectAccess, { ProjectAccess } from '../queries/get-project-access';
 

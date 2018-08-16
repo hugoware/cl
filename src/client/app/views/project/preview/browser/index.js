@@ -31,6 +31,7 @@ export default class BrowserMode extends Component {
 			ui: {
 				url: '.url input',
 				title: '.title',
+				output: '.window iframe',
 
 				// actions
 				runScripts: '.run-scripts'
@@ -47,18 +48,57 @@ export default class BrowserMode extends Component {
 		// listen for the preview window to broadcast changes
 		this.listen('preview-message', this.onPreviewMessage);
 		this.listen('delete-items', this.onDeleteItems);
+		this.ui.output.on('mouseover', this.onAutoExecuteScripts);
 		this.ui.runScripts.on('click', this.onRunPageScripts);
 
+		// preview area setup
+		this.ui.output.on('load', event => {
+			const frame = event.target;
+			const root = frame.contentWindow.document.body;
+			root.innerHTML = '';
+
+			// attach the helper script file
+			const script = document.createElement('script');
+			script.setAttribute('src', '/__codelab__/browser.js');
+			script.setAttribute('type', 'text/javascript');
+			root.appendChild(script);
+		});
+
 		// set the default view
-		this.clear();
+		setTimeout(this.clear);
 	}
 
+	/** changes the browser view URL */
 	set url(value) {
 		this.ui.url.val(value);
 	}
 
+	/** changes the browser view title */
 	set title(value) {
 		this.ui.title.text(value);
+	}
+
+	/** access to the output window
+	 * @type {HTMLElement} the preview DOM element
+	 */
+	get output() {
+		return this.context.document.body;
+	}
+
+	/** returns the window context for the preview */
+	get context() {
+		return this.ui.output[0].contentWindow;
+	}
+
+	/** access to helper scripts for the main window */
+	get bridge() {
+		return this.context.__CODELAB__;
+	}
+
+	/** handles completely resetting the preview window */
+	reset() {
+		this.output.innerHTML = '';
+		this.output.outerHTML = this.output.outerHTML;
 	}
 
 	/** checks if a view is visible
@@ -77,6 +117,12 @@ export default class BrowserMode extends Component {
 	// handles starting a new project
 	onActivateProject = async project => {
 		this.views = { };
+	}
+
+	// automatically refresh scripts when mousing over
+	onAutoExecuteScripts = () => {
+		if (!this.hasRunScripts)
+			this.runScripts();
 	}
 
 	// kicks off page scripts
@@ -198,8 +244,8 @@ export default class BrowserMode extends Component {
 		// extra steps are to make sure that the
 		// document body is also cleared of all event
 		// listeners
-		this.preview.reset();
-		this.preview.output.innerHTML = html;
+		this.reset();
+		this.output.innerHTML = html;
 
 		// populate the title, if possible
 		const title = this.view.title || 'Untitled Page';
@@ -216,8 +262,8 @@ export default class BrowserMode extends Component {
 	// removes the current view
 	clear = () => {
 		this.clearPageError();
-		this.preview.reset();
-		this.preview.output.innerHTML = NO_PREVIEW_LOADED;
+		this.reset();
+		this.output.innerHTML = NO_PREVIEW_LOADED;
 		this.title = '';
 		this.url = '';
 		delete this.view;
@@ -242,7 +288,7 @@ export default class BrowserMode extends Component {
 
 		// execute the scripts
 		this.hasRunScripts = true;
-		this.preview.bridge.evalScripts();
+		this.bridge.evalScripts();
 	}
 
 }

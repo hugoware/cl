@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/fs-extra": "^5.0.4",
     "babel-plugin-async-to-promises": "^1.0.5",
     "babel-plugin-inline-import": "^3.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -56,6 +57,7 @@
     "js-yaml": "^3.12.0",
     "lodash": "^4.17.10",
     "madge": "^3.2.0",
+    "measure-text": "0.0.4",
     "mime-types": "^2.1.18",
     "moment": "^2.22.2",
     "monaco-editor": "^0.13.1",

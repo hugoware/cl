@@ -143,6 +143,40 @@ const $state = {
 		return result;
 	},
 
+	// handles renaming an item
+	renameItem: async (item, name) => {
+		const { projectId } = $state;
+		const source = item.path;
+
+		// get the updated name
+		const parent = item.parent || $state.project;
+		const target = `${parent.path || '/'}${name}`;
+
+		// send the request
+		const result = await $api.request('rename-item', { projectId, source, target });
+
+		// handle the result
+		if (!result.success)
+			throw result;
+	
+		// replace the file name
+		const update = $state.findItemByPath(item.path);
+
+		// update the values
+		delete update.id;
+		update.name = name;
+		update.path = target;
+		
+		// update the data
+		await $state.updateProject($state.project);
+
+		// broadcast relevant events
+		broadcast('rename-item', { item, name, path: target });
+		broadcast('update-project', $state.project);
+
+		return result;
+	},
+
 	/** requests a new file be created */
 	createFile: async path => {
 		const { projectId } = $state;

@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import Dialog from './';
 import Component from '../component';
-import ErrorMessage from '../error-message';
+import TextInput from '../ui/text-input';
+import ErrorMessage from '../ui/error-message';
 import $state from '../state';
 
 export default class CreateFileDialog extends Dialog {
@@ -15,9 +16,9 @@ export default class CreateFileDialog extends Dialog {
 				fileTypes: '.file-type',
 				categories: '.category',
 
-				errorMessage: '.error',
-
+				error: '.error',
 				folderPath: '.in-folder',
+
 				fileName: '.fileName',
 				extension: '.extension',
 
@@ -26,9 +27,8 @@ export default class CreateFileDialog extends Dialog {
 			}
 		});
 
-		// creates a new error message handler
-		this.errorMessage = new ErrorMessage({
-			$: this.ui.errorMessage,
+		this.errorMessage = new ErrorMessage({ 
+			$: this.ui.error,
 			errors: {
 				name_required: `A file name is required`,
 				name_too_long: `A file name cannot be longer than 50 characters`,
@@ -38,6 +38,15 @@ export default class CreateFileDialog extends Dialog {
 			}
 		});
 
+		this.fileName = new TextInput({ 
+			$: this.ui.fileName,
+			includeTail: true
+		});
+
+		// handled when pressing enter
+		this.fileName.on('confirm-entry', this.onConfirm);
+
+		// events
 		this.listen('activate-project', this.onActivateProject);
 		this.on('click', '.category', this.onSelectCategory);
 		this.on('click', '.file-type', this.onSelectFileType);
@@ -52,7 +61,7 @@ export default class CreateFileDialog extends Dialog {
 
 	set extension(value) {
 		this._extension = value;
-		this.ui.extension.text(value);
+		this.fileName.suffix = value;
 	}
 
 	// saving to the root of the project
@@ -75,17 +84,7 @@ export default class CreateFileDialog extends Dialog {
 	}
 
 	get fileDisplayName() {
-		return this.fileName + this.extension;
-	}
-
-	// changes the file name value
-	set fileName(value) {
-		this.ui.fileName.text(value);
-	}
-
-	// gets the name fileName input
-	get fileName() {
-		return this.ui.fileName.text();
+		return this.fileName.value + this.extension;
 	}
 
 	// called when opening a new project
@@ -182,7 +181,7 @@ export default class CreateFileDialog extends Dialog {
 		// update the visible file extension
 		const category = target.attr('category');
 		type = target.attr('file-type');
-		this.fileName = category;
+		this.fileName.value = category;
 		this.extension = `.${type}`;
 		
 		// swap the selected file type
@@ -192,16 +191,19 @@ export default class CreateFileDialog extends Dialog {
 		// get the target type
 		target.addClass('selected');
 		this.fileType = target.attr('file-type');
-		this.ui.fileName.selectText();
+		this.fileName.select();
 	}
 
 	// if everything was selected
 	onConfirm = async () => {
+		if (this.busy) return;
 
-		// make sure something was selected
+		// make sure something was entered
+		if (_.trim(this.fileName.value) === '')
+			return;
 
 		// check the selection
-		const name = _.trim(this.fileName);
+		const name = _.trim(this.fileName.value);
 		const extension = _.trim(this.extension);
 		const location = this.isRoot ? '' : this.folderPath;
 		const path = `${location}/${name + extension}`;

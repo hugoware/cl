@@ -109,6 +109,7 @@
 					color: $dialog-action-cancel-text-color;
 					background: $dialog-action-cancel-background; 
 					&:hover {
+						color: darken($dialog-action-cancel-text-color, 15%);
 						background: $dialog-action-cancel-hover-background;
 					}
 				}

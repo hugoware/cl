@@ -14,20 +14,6 @@
 		display: none;
 	}
 
-	.content {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-
-		iframe {
-			border: none;
-			width: 100%;
-			height: 100%;
-		}
-	}
-
 	&.mode-browser {
 
 		$browser-mode-ui-element-vertical-margin: 7px;
@@ -112,9 +98,19 @@
 
 		}
 
-		.content {
-			top: $browser-mode-navigation-bar-height;
+		.window {
 			background: #fff;
+			position: absolute;
+			top: $browser-mode-navigation-bar-height;
+			bottom: 0;
+			left: 0;
+			right: 0;
+
+			iframe {
+				border: none;
+				width: 100%;
+				height: 100%;
+			}
 		}
 
 	}

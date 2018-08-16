@@ -46,6 +46,7 @@ async function compileFile(file) {
 			self.postMessage(['compile:ok', {
 				success: false,
 				content: html,
+				validationOnly: true,
 				error: {
 					error: true,
 					line: message.line,

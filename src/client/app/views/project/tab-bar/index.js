@@ -22,6 +22,7 @@ export default class TabBar extends Component {
 		// events
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('delete-items', this.onDeleteItems);
+		this.listen('rename-item', this.onRenameItem);
 		this.on('click', '.close', this.onCloseTab);
 		this.on('click', '.tab', this.onSelectTab);
 	}
@@ -54,6 +55,12 @@ export default class TabBar extends Component {
 		});
 	}
 
+	// for now, just update the names
+	onRenameItem = () => {
+		_.each(this.tabs.items, tab => tab.refresh());
+	}
+
+	// handles changing tabs
 	onSelectTab = event => {
 		const tab = Component.getContext(event.target);
 		if (!tab) return;

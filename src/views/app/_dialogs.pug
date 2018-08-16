@@ -54,20 +54,20 @@
 +template('dialog-create-file')
 	.content(dialog-width='700').create-new-file
 		.title Create New File
+		
+		.message
+			| This will create the new file in  
+			.in-root the project root folder
+			code.in-folder
 
 		include _file-type-selector
 
 		.form
-			.message
-				| This will create the new file in  
-				.in-root the project root folder
-				code.in-folder
-
 			.error
 
 			.label File Name
-			.fileName.flexible.input.with-tail(contenteditable='true')
-			span.tail.extension
+			.fileName
+
 
 		.actions
 			.action.confirm.primary Create File
@@ -90,12 +90,18 @@
 			.action.cancel Cancel
 
 +template('dialog-remove-items')
-	.content(dialog-width='600')
+	.content(dialog-width='600').remove-items
 		.title Remove Items
 		.message This will delete the following #[span.type] from your project.
 
 		.selection
+			.items
 
 		.actions
 			.action.confirm.danger Remove Items
 			.action.cancel Cancel
+
++template('dialog-remove-items-item')
+	.item
+		.icon
+		.label

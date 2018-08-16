@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Component from './component';
+import Component from '../component';
 import $showdown from 'showdown';
 
 // shared markdown converter
@@ -27,6 +27,22 @@ export default class ErrorMessage extends Component {
 		this.hide();
 	}
 
+	/** sets the error messages for this display
+	 * @param {Object<string, string>} errors the errors to displau
+	 */
+	setErrors = errors => {
+		_.assign(this.messages, errors);
+		_.assign(this.errors, errors);
+	}
+
+	/** sets the warning messages for this display
+	 * @param {Object<string, string>} warnings the warnings to displau
+	 */
+	setWarnings = warnings => {
+		_.assign(this.messages, warnings);
+		_.assign(this.warnings, warnings);
+	}
+
 	/** changes the style of the error message
 	 * @param {string} type the kind of message
 	 */
@@ -50,6 +66,12 @@ export default class ErrorMessage extends Component {
 		// find the message, if any
 		const template = this.messages[key] || this.messages.default;
 		const message = _.isFunction(template) ? template(args) : template;
+
+		// just in case
+		if (!message) {
+			console.log('[unhandled error]', error);
+			debugger;
+		}
 
 		// set the message and show it
 		const html = $convert.makeHtml(message);

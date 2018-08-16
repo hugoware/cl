@@ -17,8 +17,8 @@ export function resolve(...args) {
  * @returns {string} the resolved path
  */
 export function resolveRoot(path) {
-  path = path.replace(/\/+/, '/')
-    .replace('~', $config.root);
+	path = sanitizePath(path);
+  path = path.replace('~', $config.root);
   return $path.resolve(path);
 }
 
@@ -75,9 +75,10 @@ export function resolveData(path) {
  */
 export function resolveProject(id, path = '', fromCache) {
   if (fromCache)
-    path = `.cache/${path}/`;
-
-  // sort out the path
+		path = `.cache/${path}/`;
+			
+	// sort out the path
+	path = sanitizePath(path);
 	path = removeLeadingSlash(path);
 	const root = resolveRoot(`~/.data/projects/${id}`);
 	const result = $path.resolve(`${root}/${path}`);
@@ -115,6 +116,15 @@ export function removeLeadingSlash(str) {
 	return _.trim(str).replace(/^\/*/, '');
 }
 
+/** handles cleaning up a path to make sure it's usable
+ * @param {string} path the path to clean up
+ * @returns {string} the final path to return
+ */
+export function sanitizePath(path) {
+	path = _.trim(path);
+	return path.replace(/\/+/g, '/')
+}
+
 export default {
 	resolve,
 	extalias,
@@ -126,5 +136,6 @@ export default {
 	resolvePublic,
 	resolveCache,
 	resolveProject,
-	resolveData
+	resolveData,
+	sanitizePath,
 };

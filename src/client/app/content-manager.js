@@ -22,7 +22,7 @@ export function get(path) {
 		
 		// if there's nothing found, compile it now
 		const result = await compile(path, { silent: true });
-		const content = result.success ? result.content : '';
+		const content = (result.success || result.validationOnly) ? result.content : '';
 		return resolve(content);
 	});
 }
@@ -96,7 +96,7 @@ export function compile(path, { silent } = { }) {
 			$compiled[path] = { lastCompile, content: result.content };
 		}
 		// notify this was compiled
-		if (result.success) notifyFinished();
+		if (result.success || result.validationOnly) notifyFinished();
 		resolve(result);
 	});
 }
