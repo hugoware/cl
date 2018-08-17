@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import $lfs from '../lfs';
+import $state from '../state'
 
 /** cancels an even from firing any further
  * @param {JQuery.Event} event the event to cancel
@@ -31,6 +32,75 @@ export function getExtension(path, { removeLeadingDot } = { }) {
 
 	return path;
 }
+
+/** returns detail about what a selection contains
+ * @param {ProjectItem[]} items a list of items to check
+ * @returns {SelectionInfo}
+ */
+export function getSelectionType(items, expand) {
+
+	// extract the layers
+	items = _(items)
+		.map(item => 
+			_.isString(item) ? $state.findItemByPath(item)
+				: 'data' in item ? item.data
+				: 'id' in item ? item
+				: null
+			)
+		.compact()
+		.value();
+
+	// should this include the complete set of items
+	if (expand)
+		items = expandPaths(_.map(items, item => item.path));
+
+	// update styling as requires
+	const totalCount = _.size(items);
+	const isMultiple = _.size(items) > 1;
+	const isNothing = _.size(items) === 0;
+	const files = _.map(items, item => item.isFile);
+	const folders = _.map(items, item => item.isFolder);
+	const fileCount = _.size(files);
+	const folderCount = _.size(folders);
+	const onlyFiles = fileCount > 0 && fileCount === totalCount;
+	const onlyFolders = folderCount > 0 && folderCount === totalCount;
+	const isMixed = !(onlyFiles || onlyFolders);
+	let displayName = onlyFiles ? 'File'
+		: onlyFolders ? 'Folder'
+			: 'Item';
+
+	// plural selection
+	if (isMultiple)
+		displayName += 's';
+
+	return { 
+		displayName,
+		isMultiple, isMixed, isNothing,
+		files, fileCount, onlyFiles, 
+		folders, folderCount, onlyFolders
+	};
+}
+
+
+/** expands a path to include all children
+ * @param {string} path
+ * @returns {ProjectItem[]}
+ */
+export function expandPaths(paths, expanded = []) {
+	for (const path of paths) {
+
+		// add the item first
+		const item = $state.findItemByPath(path.path || path);
+		expanded.push(item);
+
+		// if this is a folder, include the children
+		if (item.isFolder)
+			expandPaths(item.children, expanded);
+	}
+
+	return expanded;
+}
+
 
 /** returns the directory and file name of a path
  * @param {string} path the path or file to extract from

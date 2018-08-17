@@ -47,6 +47,7 @@ export default class BrowserMode extends Component {
 
 		// listen for the preview window to broadcast changes
 		this.listen('preview-message', this.onPreviewMessage);
+		this.listen('rename-item', this.onRenameItem);
 		this.listen('delete-items', this.onDeleteItems);
 		this.ui.output.on('mouseover', this.onAutoExecuteScripts);
 		this.ui.runScripts.on('click', this.onRunPageScripts);
@@ -68,9 +69,18 @@ export default class BrowserMode extends Component {
 		setTimeout(this.clear);
 	}
 
-	/** changes the browser view URL */
+	/** changes the browser view URL 
+	 * @param {string} value the new url to use
+	*/
 	set url(value) {
 		this.ui.url.val(value);
+	}
+
+	/** gets the current address bar url
+	 * @returns {string} the current url
+	 */
+	get url() {
+		return this.ui.url.val();
 	}
 
 	/** changes the browser view title */
@@ -128,6 +138,12 @@ export default class BrowserMode extends Component {
 	// kicks off page scripts
 	onRunPageScripts = () => {
 		this.runScripts();
+	}
+
+	// check for renames to update the URL bar
+	onRenameItem = item => {
+		if (this.url === item.previous.path)
+			this.url = item.path;
 	}
 
 	// checks if a view should refresh because

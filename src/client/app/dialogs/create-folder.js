@@ -20,7 +20,9 @@ export default class CreateFolderDialog extends Dialog {
 		this.errorMessage = new ErrorMessage({
 			$: this.ui.error,
 			errors: {
-
+				folder_invalid: 'error: folder_invalid',
+				folder_already_exists: 'error: folder_already_exists',
+				folder_add_error: 'error: folder_add_error',
 			}
 		});
 
@@ -65,7 +67,8 @@ export default class CreateFolderDialog extends Dialog {
 		this.busy = true;
 		try {
 			const result = await $state.createFolder(name, relativeTo);
-			if (!result.success) throw result;
+			if (!result.success) 
+				throw result;
 			this.hide();
 		}
 		catch (err) {

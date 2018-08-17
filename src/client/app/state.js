@@ -22,6 +22,20 @@ const $state = {
 	 */
 	items: { },
 
+	/** returns all folders found in the project 
+	 * @returns {ProjectItem} found folders
+	 */
+	get folders() {
+		return _($state.paths).values().filter(item => item.isFolder).value();
+	},
+	
+	/** returns all files found in the project 
+	 * @returns {ProjectItem} found folders
+	*/
+	get files() {
+		return _($state.paths).values().filter(item => item.isFile).value();
+	},
+
 	/** returns the resource domain for this project
 	 * @returns {string} the root domain to use */
 	getProjectDomain() {
@@ -59,6 +73,13 @@ const $state = {
 		return $state.paths[find];
 	},
 
+	/** finds a document item using a path
+	 * @param {string|ProjectItem} pathOrItem the object to look up
+	 */
+	findItem: find => {
+		return $state.paths[find.path || find];
+	},
+
 	/** checks if a file path is found in the project
 	 * @param {string} path the path of the file to check
 	 * @returns {boolean} was this file found or not
@@ -84,23 +105,6 @@ const $state = {
 		file.isOpen = true;
 	},
 
-	// /** handles mapping local file information to
-	//  * the project record 
-	//  * @param {string} path the file path to save
-	//  * @param {string} content the file content to replace, if not provided, the content is loaded from the file system
-	//  */
-	// saveFile: async (path, content) => {
-	// 	const file = $state.findItemByPath(path);
-	// 	if (!file) return;
-
-	// 	// load the content, if missing
-	// 	if (!_.isString(content))
-	// 		content = await $lfs.read(path);
-
-	// 	// replace the content for this entry
-	// 	file.content = content;
-	// },
-
 	/** handles marking a file as closed 
 	 * @param {string} path the file to close
 	*/
@@ -110,12 +114,32 @@ const $state = {
 		file.isOpen = false;
 	},
 
-	/** resets the item selection state in the app */
-	clearSelection: () => {
-		$state.selected = {};
+	/** checks if an item is selected or not 
+	 * @param {pathOrItem} pathOrItem the item or path to return selection state for
+	 * @return {boolean} is this item selected or not
+	*/
+	isSelected: pathOrItem => {
+		return !!$state.selected[pathOrItem.path || pathOrItem];
 	},
 
-	/** returns a list of all selected items */ 
+	/** resets the item selection state in the app */
+	clearSelection: () => {
+		$state.selected = { };
+	},
+
+	/** sets an item as selected 
+	 * @param {string|ProjectItem} pathOrItem the item to select
+	 * @param {boolean} selected is the item selected or not
+	 * @param {boolean} [shouldClearSelections] should this keep other selected items
+	*/
+	setSelection: (pathOrItem, selected, shouldClearSelections = true) => {
+		if (!!shouldClearSelections) $state.clearSelection();
+		$state.selected[pathOrItem.path || pathOrItem] = selected;
+	},
+
+	/** returns a list of all selected items 
+	 * @returns {ProjectItem[]} the selected items
+	 * */ 
 	getSelection: () => {
 		const selections = [ ];
 		_.each($state.selected, (selected, path) => {
@@ -161,6 +185,10 @@ const $state = {
 	
 		// replace the file name
 		const update = $state.findItemByPath(item.path);
+		const previous = { 
+			name: item.name,
+			path: item.path
+		};
 
 		// update the values
 		delete update.id;
@@ -171,7 +199,7 @@ const $state = {
 		await $state.updateProject($state.project);
 
 		// broadcast relevant events
-		broadcast('rename-item', { item, name, path: target });
+		broadcast('rename-item', { previous, item, name, path: target });
 		broadcast('update-project', $state.project);
 
 		return result;
@@ -180,23 +208,24 @@ const $state = {
 	/** attempts to create a new folder in the project
 	 * @param {string} path the path to create
 	 */
-	createFolder: async path => {
+	createFolder: async (name, relativeTo) => {
 		const { projectId } = $state;
-		const result = await $api.request('create-folder', { projectId, path });
+		const result = await $api.request('create-folder', { projectId, name, relativeTo });
 
 		// check for an error
 		if (!result.success)
 			throw result;
 
 		// add this to the project
+		const { folder } = result;
+		const { path } = folder;
 		const data = getPathInfo(path);
 		let parent = $state.findItemByPath(data.directory) || $state.project;
 		parent.children = parent.children || [];
 		parent.children.push(result.folder);
 
 		// select by default
-		$state.clearSelection();
-		result.folder.selected = true;
+		$state.setSelection(path, true, true);
 
 		// // also sort the files by their name
 		// _.sortBy(parent.children, 'name');
@@ -230,8 +259,7 @@ const $state = {
 		parent.children.push(result.file);
 
 		// select by default
-		$state.clearSelection();
-		result.file.selected = true;
+		$state.setSelection(path, true, true);
 
 		// also sort the files by their name
 		_.sortBy(parent.children, 'name');
@@ -288,6 +316,12 @@ const $state = {
 // handles deleting an item and all children
 function deleteItem(item, files) {
 	
+	// dont' delete missing items
+	if (!item) {
+		console.warn('tried to delete a null item');
+		return;
+	}
+	
 	// make sure it's removed from selection
 	delete $state.selected[item.path];
 	
@@ -301,18 +335,29 @@ function deleteItem(item, files) {
 			deleteItem(child, files);
 		});
 
-		// remove it entirely from the parent node
-		// maybe this could be handled better
-		const parent = item.parent || $state.project;
-		_.remove(parent.children, child => child.path === item.path);
+	// remove it entirely from the parent node
+	// maybe this could be handled better
+	const parent = item.parent || $state.project;
+	_.remove(parent.children, child => child.path === item.path);
 
-		// final clean up
-		delete $state.paths[item.path];
-		delete $state.items[item.id];
-		delete item.parent;
+	// final clean up
+	delete $state.paths[item.path];
+	delete $state.items[item.id];
+	delete item.parent;
 
 }
 
+// // handles filtering all project data to find matches
+// function filterAll(predicate, source, matches = [ ]) {
+// 	source = source || $source.project.children;
+// 	for (const child of source) {
+// 		if (predicate(child)) matches.push(child);
+// 		if (child.isFolder && !child.isEmpty)
+// 			filterAll(predicate, child.children, matches);
+// 	}
+
+// 	return matches;
+// }
 
 // rebuilds the paths for each file in the project
 async function syncProject(children = [ ], parent, relativeTo) {

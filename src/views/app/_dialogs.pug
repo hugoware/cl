@@ -67,7 +67,6 @@
 			.label File Name
 			.fileName
 
-
 		.actions
 			.action.confirm.primary Create File
 			.action.cancel Cancel
@@ -91,19 +90,34 @@
 			.action.confirm.primary Create Folder
 			.action.cancel Cancel
 
+
 +template('dialog-remove-items')
 	.content(dialog-width='600').remove-items
-		.title Remove Items
-		.message This will delete the following #[span.type] from your project.
+		.title Remove #[span.type]
+		.message This will delete the following #[span.type.lowercase] from your project.
 
 		.selection
-			.items
 
 		.actions
-			.action.confirm.danger Remove Items
+			.action.confirm.danger Remove #[span.type]
 			.action.cancel Cancel
 
-+template('dialog-remove-items-item')
+
++template('dialog-move-items')
+	.content(dialog-width='600').move-items
+		.title Move #[span.type]
+		.message This will move the following #[span.type.lowercase] to the selected folder.
+
+		.selection
+
+		.folder-selection Select a target folder to move the #[span.type.lowercase] to...
+
+		.actions
+			.action.confirm.danger Move #[span.type]
+			.action.cancel Cancel
+
+
++template('dialog-move-items-item')
 	.item
 		.icon
 		.label

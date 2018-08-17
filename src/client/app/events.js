@@ -7,7 +7,8 @@ const actions = [ ];
 export function broadcast(event, ...args) {
 
   // check each of the handlers
-  for (const handler of actions) {
+  for (let i = actions.length; i-- > 0;) {
+		const handler = actions[i];
     if (handler.event === event)
 
       // perform the action -- if there is an

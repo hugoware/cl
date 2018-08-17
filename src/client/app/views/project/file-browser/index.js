@@ -104,13 +104,20 @@ export default class FileBrowser extends Component {
 	}
 
 	// changes the selection state for an item
-	toggleSelection = item => {
-		const { path } = item.data;
-		$state.selected[path] = !$state.selected[path];
-		item.selected = $state.selected[path];
+	toggleSelection = (item, maintainSelection) => {
+		const isSelected = $state.isSelected(item);
+		$state.setSelection(item.data, !isSelected, !maintainSelection);
 
 		// update allowed actions
+		this.refreshSelections();
 		this.updateActions();
+	}
+
+	// updates all selected items
+	refreshSelections = () => {
+		_.each(this.items, item => {
+			item.selected = $state.isSelected(item.data);
+		});
 	}
 
 	/** activates an item depending on the type 
@@ -147,10 +154,7 @@ export default class FileBrowser extends Component {
 		// wait a moment to allow double clicks
 		else {
 			item.delay = setTimeout(() => delete item.delay, DOUBLE_CLICK_DELAY);
-
-			// update selection
-			if (!event.shiftKey) this.clearSelection();
-			this.toggleSelection(item);
+			this.toggleSelection(item, event.shiftKey);
 		}
 
 		return cancelEvent(event);
@@ -159,6 +163,7 @@ export default class FileBrowser extends Component {
 	// handles rebuilding the file browser structure
 	rebuildStructure = () => {
 		this.ui.items.empty();
+		this.items = [ ];
 		rebuild(this, this.ui.items, $state.project.children);
 	}
 
@@ -168,12 +173,6 @@ export default class FileBrowser extends Component {
 		this.find('.selected').removeClass('selected');
 		this.updateActions();
 	}
-
-	// /** @returns {FileBrowserItem[]} */
-	// getSelections = () => {
-	// 	const items = this.find('.selected');
-	// 	return _.map(items, this.getItem);
-	// }
 
 	/** updates the action list */
 	updateActions() {
@@ -189,15 +188,18 @@ function rebuild(fileBrowser, node, children, depth = 0) {
 	_(children)
 		.orderBy(['isFolder', 'name'], ['desc', 'asc'])
 		.each(data => {
-
+			
 			// create each item
 			const item = new FileBrowserItem();
 			item.update(data, depth);
 			item.appendTo(node);
 
+			// include the item
+			fileBrowser.items.push(item);
+
 			// toggle state
 			item.expanded = fileBrowser.expanded[data.path] || data.expanded;
-			item.selected = $state.selected[data.path] || data.selected;
+			item.selected = $state.isSelected(data);
 
 			// if this has children, create it as well
 			if ('children' in data)

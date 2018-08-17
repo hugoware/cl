@@ -123,6 +123,8 @@ export function removeLeadingSlash(str) {
 export function sanitizePath(path) {
 	path = _.trim(path);
 	return path.replace(/\/+/g, '/')
+		.replace(/\.+/g, '.')
+		.replace(/\/\.\//g, '/');
 }
 
 export default {

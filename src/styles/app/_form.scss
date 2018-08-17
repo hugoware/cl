@@ -38,3 +38,139 @@ $form-input-default-border-radius: 4px;
 	}
 }
 
+
+.ui-dropdown-options {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: $layer-dropdown;
+	background: rgba(0,0,0,0.1);
+
+	.items {
+		position: absolute;
+		background: #fff;
+		border: 1px solid #999;
+		box-shadow: 0 2px 5px rgba(#000, 0.4);
+		border-radius: 4px;
+		left: 0;
+		right: 0;
+		max-height: 300px;
+		transform: translate(0, 7px);
+
+		> .ui-dropdown-item {
+			@include align_vertical(36px);
+			cursor: pointer;
+			padding: 0 10px;
+			font-size: $form-input-default-font-size;
+			
+			&:hover {
+				background: rgba(#63DAEE, 0.3);
+			}
+		}
+	}
+
+}
+
+.ui-dropdown {
+	position: relative;
+
+	.ui-dropdown-options {
+		display: none;
+	}
+
+	.current {
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		outline: none;
+		padding: 0;
+		@include align_vertical($form-input-default-height);
+		position: relative;
+		cursor: pointer;
+	}
+	
+	.label {
+		font-size: $form-input-default-font-size;
+		display: inline-block;
+		margin: 0 9px;
+	}
+
+	.toggle {
+		@include align_vertical($form-input-default-height);
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		width: 40px;
+		background: #eee;
+		border-left: 1px solid #ccc;
+		border-radius: 0 $form-input-default-border-radius $form-input-default-border-radius 0;
+		display: block;
+
+		svg {
+			@include uniform_size($form-input-default-height * 0.6);
+			display: block;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+
+}
+
+.ui-selection-list {
+	$ui-selection-list-item-size: 22px;
+	
+	@include clearfix();
+	position: relative;
+
+	.items {
+		min-height: 100px;
+		max-height: 305px;
+		overflow: auto;
+		padding: 20px;
+	}
+	
+	background: #f3f3f3;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+
+	&:before {
+		content: ' ';
+		display: block;
+		position: absolute;
+		bottom: 0;
+		left: 1px;
+		right: 1px;
+		border-radius: 5px;
+		height: 30px;
+		@include gradient(#eee, rgba(#eee, 0), 0deg);
+	}
+
+	.item {
+		clear: both;
+		padding: 5px 0;
+		white-space: nowrap;
+
+		.icon, .label {
+			display: block;
+			float: left;
+			@include align_vertical($ui-selection-list-item-size);
+		}
+
+		.icon svg {
+			@include uniform_size(22px);
+		}
+
+		.label {
+			padding-left: 10px;
+			font-size: 18px;
+			white-space: nowrap;
+		}
+
+	}
+
+}

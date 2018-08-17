@@ -29,7 +29,9 @@ export default class Dialog extends Component {
 
 		// check for custom params
 		if (this.is('[dialog-width]'))
-			this.dialog.ui.content.css({ maxWidth: `${this.attr('dialog-width')}px` });
+			this.dialog.ui.content.css({
+				maxWidth: `${this.attr('dialog-width')}px`
+			});
 
 		// check if auto-closing
 		this.shouldAutoClose = (options || { }).autoClose !== false;
@@ -37,7 +39,7 @@ export default class Dialog extends Component {
 		// check for common items
 		this.on('click', '.actions .confirm', this.handleConfirm);
 		this.on('click', '.actions .cancel', this.handleCancel);
-		this.listen('on-press-escape', this.handleCancel);
+		this.listen('press-esc', this.handleCancel);
 
 		// allow pressing outside of the area to cancel
 		this.on('click', cancelEvent);

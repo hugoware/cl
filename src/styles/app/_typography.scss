@@ -2,6 +2,9 @@
 // a file for reused styling elements - meant to be
 // extended as opposed to used directly
 
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+
 .panel, .dialog {
 
 	code {

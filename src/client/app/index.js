@@ -21,6 +21,7 @@ import CreateFileDialog from './dialogs/create-file';
 import CreateFolderDialog from './dialogs/create-folder';
 import RemoveItemsDialog from './dialogs/remove-items';
 import RenameItemDialog from './dialogs/rename-item';
+import MoveItemsDialog from './dialogs/move-items'
 import ConfirmCloseDialog from './dialogs/confirm-close';
 
 // configurations
@@ -67,8 +68,14 @@ class App extends Component {
 			createFolder: new CreateFolderDialog(),
 			removeItems: new RemoveItemsDialog(),
 			renameItem: new RenameItemDialog(),
-			confirmClose: new ConfirmCloseDialog()
+			confirmClose: new ConfirmCloseDialog(),
+			moveItems: new MoveItemsDialog()
 		};
+
+		// shared events
+		const win = Component.bind(window);
+		win.on('resize', this.onWindowResize);
+		win.on('keyup', this.onKeyUp);
 
 		// events
 		this.listen('navigate', this.onNavigate);
@@ -100,6 +107,20 @@ class App extends Component {
 	// handle general navigation
 	onNavigate = () => {
 		this.setView(nav.view);
+	}
+
+	// checks when the window size has changed
+	onWindowResize = event => {
+		this.broadcast('window-resize', event);
+	}
+
+	// handles when the keyboard is pressed
+	onKeyUp = event => {
+		this.broadcast('keypress', event);
+
+		// check for specific keys
+		if (event.keyCode === 27) // esc
+			this.broadcast('press-esc', event);
 	}
 	
 	/** changes the active view

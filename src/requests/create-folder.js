@@ -7,7 +7,7 @@ export const authenticate = true;
 
 export async function handle(socket, session, data) {
 	const { user } = session;
-	const { projectId, path } = data;
+	const { projectId, name, relativeTo } = data;
 
 	try {
 		// make sure they can access this project
@@ -15,7 +15,7 @@ export async function handle(socket, session, data) {
 		if (!access.write)
 			throw 'access_denied';
 
-		const folder = await createFolder(projectId, path);
+		const folder = await createFolder(projectId, name, relativeTo);
 		socket.ok(event, { success: true, folder });
 	}
 	catch (err) {

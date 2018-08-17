@@ -48,7 +48,6 @@ export default class TabBar extends Component {
 	 */
 	onDeleteItems = paths => {
 		const tabs = this.tabs.filterItems(item => _.includes(paths, item.file.path));
-		console.log(tabs);
 		const last = tabs.length - 1;
 		_.each(tabs, (tab, index) => {
 			this.closeTab(tab, index === last);
