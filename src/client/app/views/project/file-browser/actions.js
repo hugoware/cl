@@ -17,7 +17,8 @@ export default class FileBrowserActions extends Component {
 				createFile: '.action.create-file',
 				deleteItems: '.action.delete-items',
 				moveItems: '.action.move-items',
-				renameItem: '.action.rename-item'
+				renameItem: '.action.rename-item',
+				uploadFile: '.action.upload-file',
 			}
 		});
 
@@ -27,6 +28,7 @@ export default class FileBrowserActions extends Component {
 		this.ui.deleteItems.on('click', this.onDeleteItems);
 		this.ui.moveItems.on('click', this.onMoveItems);
 		this.ui.renameItem.on('click', this.onRenameItem);
+		this.ui.uploadFile.on('click', this.onUploadFile);
 		this.on('mouseup', cancelEvent);
 
 		// when first created
@@ -118,6 +120,11 @@ export default class FileBrowserActions extends Component {
 	onCreateFile = () => {
 		const folder = _.first(this.selection);
 		this.broadcast('open-dialog', 'create-file', { folder });
+	}
+
+	onUploadFile = () => {
+		const folder = _.first(this.selection);
+		this.broadcast('open-dialog', 'upload-file', { folder });
 	}
 
 }

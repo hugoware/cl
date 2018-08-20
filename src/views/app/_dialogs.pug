@@ -38,10 +38,9 @@
 
 		.message
 			| Enter a new name for the selected #[span.type].
-		
-		.error
-		
+
 		.form
+			.error
 			.label #[span.type] Name
 			.itemName
 
@@ -63,7 +62,6 @@
 
 		.form
 			.error
-
 			.label File Name
 			.fileName
 
@@ -82,9 +80,10 @@
 
 		.form
 			.error
-			
 			.label Folder Name
 			.folderName
+
+		.error
 
 		.actions
 			.action.confirm.primary Create Folder
@@ -98,6 +97,8 @@
 
 		.selection
 
+		.error
+
 		.actions
 			.action.confirm.danger Remove #[span.type]
 			.action.cancel Cancel
@@ -106,14 +107,18 @@
 +template('dialog-move-items')
 	.content(dialog-width='600').move-items
 		.title Move #[span.type]
-		.message This will move the following #[span.type.lowercase] to the selected folder.
+		.message This will move the following #[span.type.lowercase]...
 
 		.selection
 
+		.message.alt ... to the folder selected below.
+		.warn.with-icon.has-conflicts
+			.icon(icon='warning')
+			.detail Moving to this target folder will overwrite some files already there.
 		.folder-selection Select a target folder to move the #[span.type.lowercase] to...
 
 		.actions
-			.action.confirm.danger Move #[span.type]
+			.action.confirm.primary Move #[span.type]
 			.action.cancel Cancel
 
 
@@ -121,3 +126,38 @@
 	.item
 		.icon
 		.label
+
+
++template('dialog-upload-files')
+	.content(dialog-width='600').upload-files
+		.title Upload Files
+		.message Drag and drop the file you'd like to upload to this project
+		.error
+
+		.uploads
+
+		.actions
+			.action.cancel Close
+
++template('dialog-upload-file-item')
+	.file-upload-item
+		.info
+			.activity
+				.icon.warning(icon='warning')
+				.icon.success(icon='success')
+				.icon.failed(icon='error')
+				.icon.active(icon='activity')
+
+			.name
+
+		.status
+			.progress
+				.total
+					.current
+
+		.action
+			.error-message
+			.detail There's another file with the same name
+			.options
+				.overwrite Overwrite
+				.clear Cancel

@@ -7,6 +7,8 @@ import { getExtension, getPathInfo } from './utils/index';
 import { broadcast } from './events';
 import { simplifyPathCollection } from '../../utils/project';
 
+const ROOT = { path: '/' };
+
 const $state = { 
 
 	/** @type {Project} */
@@ -43,6 +45,14 @@ const $state = {
 		return `${protocol}//${this.project.id}.${host}`;
 	},
 
+	/** checks if a file type can be uploaded or not
+	 * @param {string} ext the file extension to test
+	 */
+	isValidFileType: ext => {
+		// return _.includes(['html', 'js', 'ts'])
+		return true;
+	},
+
 	/** syncs the project data
 	 * @param {Project} project the data to replace
 	*/
@@ -69,15 +79,16 @@ const $state = {
 	/** finds a document item using a path
 	 * @param {string} path the path to search
 	 */
-	findItemByPath: find => {
-		return $state.paths[find];
+	findItemByPath: path => {
+		return $state.paths[path];
 	},
 
 	/** finds a document item using a path
 	 * @param {string|ProjectItem} pathOrItem the object to look up
 	 */
-	findItem: find => {
-		return $state.paths[find.path || find];
+	findItem: pathOrItem => {
+		const path = _.isObject(pathOrItem) ? pathOrItem.path : pathOrItem;
+		return $state.paths[path];
 	},
 
 	/** checks if a file path is found in the project
@@ -119,7 +130,8 @@ const $state = {
 	 * @return {boolean} is this item selected or not
 	*/
 	isSelected: pathOrItem => {
-		return !!$state.selected[pathOrItem.path || pathOrItem];
+		const path = _.isObject(pathOrItem) ? pathOrItem.path : pathOrItem;
+		return !!$state.selected[path];
 	},
 
 	/** resets the item selection state in the app */
@@ -132,9 +144,13 @@ const $state = {
 	 * @param {boolean} selected is the item selected or not
 	 * @param {boolean} [shouldClearSelections] should this keep other selected items
 	*/
-	setSelection: (pathOrItem, selected, shouldClearSelections = true) => {
+	setSelection: (items, selected = true, shouldClearSelections = true) => {
 		if (!!shouldClearSelections) $state.clearSelection();
-		$state.selected[pathOrItem.path || pathOrItem] = selected;
+		if (!_.isArray(items)) items = [ items ];
+		_.each(items, pathOrItem => {
+			const path = _.isObject(pathOrItem) ? pathOrItem.path : pathOrItem;
+			$state.selected[path] = selected;
+		});
 	},
 
 	/** returns a list of all selected items 
@@ -167,6 +183,112 @@ const $state = {
 		return result;
 	},
 
+	/** handles moving all of the items */
+	moveItems: async (paths, target) => {
+		const { projectId } = $state;
+		const result = await $api.request('move-items', { projectId, paths, target });
+
+		// returned, but actually failed
+		if (!result.success)
+			throw result;
+
+		// since this was successful, reorganize the project
+		const moveTo = $state.findItem(target) || $state.project;
+		const moves = simplifyPathCollection(paths);
+		const renames = [ ];
+		const selected = [ ];
+
+		// start moving each item
+		for (const move of moves) {
+			const item = $state.findItem(move);
+			const parent = item.parent || $state.project;
+
+			// save the rename info
+			const path = `${moveTo.path || ''}/${item.name}`;
+			renames.push({
+				previous: { name: item.name, path: item.path },
+				item,
+				name: item.name,
+				path
+			});
+
+			// remove the existing reference
+			_.remove(parent.children, child => child.path === item.path);
+
+			// also remove any existing items in the same directory with
+			// the same name since they will be overwritten
+			_.remove(moveTo.children, child => child.name === item.name);
+			moveTo.children.push(item);
+
+			// select base on the new names
+			selected.push(path);
+
+			// force the rebuild
+			delete item.id;
+		}
+
+		// make sure to expand the targeted folder
+		expandFolder(moveTo);
+
+		// update the data
+		await $state.updateProject($state.project);
+		$state.setSelection(selected);
+
+		// move each file in the file system as well
+		// for (let i = 0; i < renames.length; i++) {
+		// 	const rename = renames[i];
+		for (const rename of renames) {
+			if (!rename.item.isFile) return;
+			await $lfs.move(rename.previous.path, rename.path);
+		}
+
+		// broadcast relevant events
+		_.each(renames, rename => broadcast('rename-item', rename));
+
+		// notify the project is updated
+		broadcast('update-project', $state.project);
+	},
+
+	/** performs a file upload to the server
+	 * @param {File} file the file info to upload
+	 * @param {string} parent the directory to upload the file to
+	 * @param {function<number>} [onProgress] optional argument to track progress
+	 */
+	uploadFile: async (file, parent, onProgress) => {
+		const { projectId } = $state;
+		const path = `${parent}/${file.name}`;
+		const result = await $api.uploadFile(projectId, path, file, onProgress);
+
+		// make sure this worked
+		if (!result || (result && !result.success))
+			throw result || 'file_upload_error';
+
+		// since it worked, we can add the file to the project
+		const target = parent ? $state.findItem(parent) : $state.project;
+		
+		// if there happens to be another file of the exact same name, replace it
+		const existing = _.find(target.children, { name: file.name });
+		if (existing) {
+			_.remove(target.children, { name: file.name });
+			await $lfs.remove(existing.path);
+		}
+
+		// write the new file
+		const create = { name: file.name };
+		if ('content' in result)
+			create.content = result.content;
+
+		// save the record
+		target.children.push(create);
+
+		// update to project data
+		await $state.updateProject($state.project);
+		broadcast('update-project', $state.project);
+
+		// upload was successful
+		return result;
+	},
+
 	// handles renaming an item
 	renameItem: async (item, name) => {
 		const { projectId } = $state;
@@ -174,7 +296,7 @@ const $state = {
 
 		// get the updated name
 		const parent = item.parent || $state.project;
-		const target = `${parent.path || '/'}${name}`;
+		const target = `${parent.path || ''}/${name}`;
 
 		// send the request
 		const result = await $api.request('rename-item', { projectId, source, target });
@@ -196,7 +318,12 @@ const $state = {
 		update.path = target;
 		
 		// update the data
+		$state.setSelection(target);
 		await $state.updateProject($state.project);
+
+		// update the file system value, if any
+		if (update.isFile);
+			await $lfs.move(previous.path, update.path);
 
 		// broadcast relevant events
 		broadcast('rename-item', { previous, item, name, path: target });
@@ -231,11 +358,8 @@ const $state = {
 		// _.sortBy(parent.children, 'name');
 
 		// if the parent isn't already expanded, do it now
-		while (parent) {
-			parent.expanded = true;
-			parent = parent.parent;
-		}
-
+		expandFolder(parent);
+		
 		// update the project data
 		await $state.updateProject($state.project);
 		broadcast('update-project', $state.project);
@@ -306,12 +430,22 @@ const $state = {
 		// share that files have been removed so the
 		// UI can update
 		broadcast('delete-items', items);
+		$state.clearSelection();
 
 		// notify the result
 		return result;
 	}
 
 };
+
+// handles expanding a folder 
+function expandFolder(parent) {
+	let safety = 100;
+	while (parent && (--safety > 0)) {
+		parent.expanded = true;
+		parent = parent.parent;
+	}
+}
 
 // handles deleting an item and all children
 function deleteItem(item, files) {

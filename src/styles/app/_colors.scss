@@ -40,3 +40,15 @@ $dialog-action-danger-hover-background: darken($dialog-action-danger-background,
 
 // formatting
 $inline-code-light-background-primary-color: #00B2FF;
+
+// file uploads
+$file-upload-success-alternate-color: #39CA74;
+$file-upload-success-main-color: darken(#30AD63, 15%);
+$file-upload-error-alternate-color: #E54D42;
+$file-upload-error-main-color: darken(#BE3A31, 15%);
+$file-upload-warning-alternate-color: #F0C330;
+$file-upload-warning-secondary-color: #F19B2C;
+$file-upload-warning-main-color: darken(#F19B2C, 15%);
+$file-upload-progress-background-color: #eee;
+$file-upload-progress-bar-color: #3A99D8;
+$file-upload-drop-zone-outline-color: #54B7FF;

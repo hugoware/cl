@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import $lfs from '../lfs';
 import $state from '../state'
+import $url from 'url';
 
 /** cancels an even from firing any further
  * @param {JQuery.Event} event the event to cancel
@@ -37,7 +38,7 @@ export function getExtension(path, { removeLeadingDot } = { }) {
  * @param {ProjectItem[]} items a list of items to check
  * @returns {SelectionInfo}
  */
-export function getSelectionType(items, expand) {
+export function getSelectionInfo(items, getExpandedView = true) {
 
 	// extract the layers
 	items = _(items)
@@ -51,15 +52,21 @@ export function getSelectionType(items, expand) {
 		.value();
 
 	// should this include the complete set of items
-	if (expand)
-		items = expandPaths(_.map(items, item => item.path));
+	if (getExpandedView)
+		items = expandPaths(items);
+
+	// just in case
+	items = _(items)
+		.compact()
+		.uniqBy('path')
+		.value();
 
 	// update styling as requires
 	const totalCount = _.size(items);
-	const isMultiple = _.size(items) > 1;
-	const isNothing = _.size(items) === 0;
-	const files = _.map(items, item => item.isFile);
-	const folders = _.map(items, item => item.isFolder);
+	const isMultiple = totalCount > 1;
+	const isNothing = totalCount === 0;
+	const files = _.filter(items, item => item.isFile);
+	const folders = _.filter(items, item => item.isFolder);
 	const fileCount = _.size(files);
 	const folderCount = _.size(folders);
 	const onlyFiles = fileCount > 0 && fileCount === totalCount;
@@ -73,11 +80,14 @@ export function getSelectionType(items, expand) {
 	if (isMultiple)
 		displayName += 's';
 
+	const displayNameWithCount = `${isMultiple ? totalCount : ''} ${displayName}`;
+
 	return { 
-		displayName,
+		displayName, displayNameWithCount,
 		isMultiple, isMixed, isNothing,
 		files, fileCount, onlyFiles, 
-		folders, folderCount, onlyFolders
+		folders, folderCount, onlyFolders,
+		items, totalCount
 	};
 }
 
@@ -87,6 +97,7 @@ export function getSelectionType(items, expand) {
  * @returns {ProjectItem[]}
  */
 export function expandPaths(paths, expanded = []) {
+	// check each path in this collection
 	for (const path of paths) {
 
 		// add the item first
@@ -137,10 +148,7 @@ export function getFileInfo(fileName) {
  * @param {string} url the url to extract from
  * @returns {string} the file path found
  */
-export function resolvePathFromUrl(path) {
-	path = _.trim(_.trim(path).split('?')[0]);
-	
-	// removes a leading dot if it's not followed by a slash
-	if (path[0] === '.' && path[1] !== '/') path = path.substr(1);
+export function resolvePathFromUrl(path, relativeTo) {
+	path = $url.resolve(relativeTo + '/', path);
 	return $lfs.normalizePath(path);
 }

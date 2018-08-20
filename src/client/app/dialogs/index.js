@@ -105,7 +105,8 @@ export default class Dialog extends Component {
 		
 		// check for a cancel function
 		if (_.isFunction(this.onCancel))
-			this.onCancel();
+			if (this.onCancel() === false)
+				return;
 
 		// if autoclosing the dialog (no events)
 		if (this.shouldAutoClose)
@@ -117,7 +118,8 @@ export default class Dialog extends Component {
 		if (this.busy) return;
 
 		if (_.isFunction(this.onConfirm))
-			this.onConfirm();
+			if (this.onConfirm() === false)
+				return;
 	}
 
 }

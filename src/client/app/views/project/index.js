@@ -37,6 +37,9 @@ export default class ProjectView extends View {
 		const id = $nav.segments[1] || '';
 		const project = await $api.request('get-project-data', id);
 
+		// when activating, clean up the database
+		await $lfs.clear();
+
 		// set the project data
 		await $state.updateProject(project);
 		this.broadcast('activate-project', $state.project);

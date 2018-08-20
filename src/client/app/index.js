@@ -23,6 +23,7 @@ import RemoveItemsDialog from './dialogs/remove-items';
 import RenameItemDialog from './dialogs/rename-item';
 import MoveItemsDialog from './dialogs/move-items'
 import ConfirmCloseDialog from './dialogs/confirm-close';
+import UploadFileDialog from './dialogs/upload-file';
 
 // configurations
 window.Promise = window.Promise || Bluebird;
@@ -69,7 +70,8 @@ class App extends Component {
 			removeItems: new RemoveItemsDialog(),
 			renameItem: new RenameItemDialog(),
 			confirmClose: new ConfirmCloseDialog(),
-			moveItems: new MoveItemsDialog()
+			moveItems: new MoveItemsDialog(),
+			uploadFile: new UploadFileDialog()
 		};
 
 		// shared events

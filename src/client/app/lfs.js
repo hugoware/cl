@@ -51,7 +51,12 @@ export async function writeFile(path, content = '') {
  * @param {string} target the location to change to
  */
 export async function moveFile(source, target) {
-	return $db.files.where({ path: source }).modify({ path: target });
+	const content = await readFile(source);
+	if (!content) return;
+
+	// replace the record
+	await removeFile(source);
+	return await writeFile(target, content);
 }
 
 /** handles removing a file from the system 

@@ -44,7 +44,7 @@ $action-item-icon-size: $action-item-height * 0.6;
 		@include clearfix();
 	}
 
-	.item{
+	.item {
 		&:hover {
 			background: rgba($file-browser-item-selection-color, 0.1);
 		}
@@ -71,12 +71,12 @@ $action-item-icon-size: $action-item-height * 0.6;
 	}
 
 	.icon, .name, .toggle {
-		height: $file-browser-item-height;
-		line-height: $file-browser-item-height;
+		@include align_vertical($file-browser-item-height);
 		white-space: nowrap;
 		text-overflow: ellipsis;
-
+		display: block;
 		float: left;
+		
 	}
 
 	.empty, .children {

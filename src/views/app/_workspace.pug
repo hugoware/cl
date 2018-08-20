@@ -3,7 +3,18 @@
 		.editors
 
 +template('workspace-code-editor')
-	.code-editor
+	.code-editor.workspace
 		.actions
 			.action.save Save Changes
 		.editor
+
++template('workspace-image-viewer')
+	.image-viewer.workspace
+		.actions
+			.action.replace Upload New Image
+		.editor
+
++template('workspace-not-supported')
+	.not-supported.workspace
+		h1 Oops!
+		p Seems like this file type is not supported in this project

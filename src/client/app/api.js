@@ -2,7 +2,6 @@
 import _ from 'lodash';
 import io from 'socket.io-client';
 import Promise from 'bluebird';
-// import UploadHelper from '~/common/upload';
 
 // normal time to wait for a request
 const DEFAULT_TIMEOUT = 5000;
@@ -28,10 +27,6 @@ export async function init(namespace, args) {
     });
   })
 }
-
-// export function createUpload() {
-//   return new UploadHelper($socket);
-// }
 
 /** Handles listening for an event
  * @param {string} event The event name to listen for
@@ -137,10 +132,81 @@ export async function transaction(event, ...args) {
 	}
 }
 
+/** handles sending a file to the server
+ * @param {string} projectId the project to add the file to
+ * @param {string} path the full path to write the file to
+ * @param {File} file the file to upload
+ * @param {function<number>} onProgress an optional function to track progress 
+ */
+export async function uploadFile(projectId, path, file, onProgress = _.noop) {
+	return new Promise(async (resolve, reject) => {
+
+		// creat the file upload
+		const data = new FormData();
+		data.append('projectId', projectId);
+		data.append('path', path);
+		data.append('file', file);
+
+		// prepare the url
+		try {
+			let handled;
+			const xhr = new XMLHttpRequest();
+			xhr.open('POST', '/__codelab__/upload', true);
+
+			// listen for progress
+			xhr.onprogress = ({ total, loaded }) => {
+				console.log('progress', loaded, total);
+				onProgress(loaded / total);
+			};
+
+			// simple handler for single pass
+			function attempt(action) {
+				return () => {
+					if (handled) return;
+					handled = true;
+					action();
+				}
+			}
+
+			// handle cancels
+			xhr.onabort = attempt(() => reject('file_upload_abort'));
+			xhr.onerror = attempt(() => reject('file_upload_error'));
+			xhr.ontimeout = attempt(() => reject('file_upload_timeout'));
+			xhr.onreadystatechange = () => {
+				const { status, readyState } = xhr;
+				if (readyState !== 4 || handled) return;
+				handled = true;
+
+				// fully loaded
+				onProgress(1);
+
+				// all finished
+				if (status === 200)
+					resolve({ success: true });
+
+				// something went wrong
+				else {
+					console.log('file upload failed', status)
+					reject('file_upload_error');
+				}
+			};
+
+			// kick off the request
+			xhr.send(data);
+
+		}
+		catch (err) {
+			reject('file_upload_error');
+		}
+
+	});
+
+}
+
 // share helpers
 export default {
-  init,
-  // createUpload,
+	init,
+	uploadFile,
   transaction,
   request,
   listen,

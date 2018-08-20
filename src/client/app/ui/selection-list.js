@@ -3,6 +3,7 @@ import Component from '../component';
 import $icons from '../icons';
 import { expandPaths } from '../utils';
 import $state from '../state'
+import {getSelectionInfo} from '../utils/index'
 
 export default class SelectionList extends Component {
 
@@ -31,22 +32,14 @@ export default class SelectionList extends Component {
 		this.empty();
 
 		// expand out all paths to also include children
-		if (this.expandSelection)
-			items = expandPaths(items);
-
-		// else, make sure they are the items
-		else items = _.map(items, $state.findItem);
-
-		// save the items
-		this.items = items;
+		const selection = getSelectionInfo(items, this.expandSelection);
+		this.items = selection.items;
 
 		// sort so that they show up in alphabetical order
-		_(items)
-			.sortBy('path')
+		_(this.items)
 			.each(item => {
-				console.log(item);
-				const removal = new SelectedItem(item);
-				this.append(removal);
+				const selected = new SelectedItem(item);
+				this.append(selected);
 			});
 	}
 

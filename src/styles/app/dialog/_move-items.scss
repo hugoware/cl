@@ -1,0 +1,9 @@
+.dialog .move-items {
+	.message.alt {
+		padding: 25px 0 10px 0;
+	}
+
+	.has-conflicts { display: none };
+	&.has-conflicts .has-conflicts { display: block };
+
+}

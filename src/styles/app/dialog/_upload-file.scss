@@ -1,0 +1,201 @@
+$file-upload-item-height: 40px;
+$file-upload-progress-height: $file-upload-item-height * 0.55;
+
+@include keyframes(upload-activity-spin) {
+	0% {
+		transform: rotate(0deg);
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 1;
+		transform: rotate(720deg);
+	}
+}
+
+
+.dialog .upload-files {
+
+	.uploads {
+		max-height: 400px;
+		min-height: 50px;
+		padding: 10px;
+		overflow: auto;
+		
+		box-shadow: inset 0 0 0 1px #ccc;
+		border-radius: 5px;
+
+		@include animate('box-shadow');
+	}
+	
+	&.show-drop-target .uploads {
+		box-shadow: inset 0 0 0 2px $file-upload-drop-zone-outline-color;;
+	}
+
+	.icon.success,
+	.icon.warning,
+	.icon.active,
+	.icon.failed {
+		display: none;
+	}
+
+	.success .icon.success,
+	.warning .icon.warning,
+	.active .icon.active,
+	.failed .icon.failed {
+		display: block;
+	}
+
+	.icon.active svg {
+		@include animation(upload-activity-spin 0.7s infinite linear);
+		margin: -10px 0;
+	}
+
+	.file-upload-item {
+		@include clearfix();
+		margin: 0 0 15px 0;
+		border-radius: 4px;
+		box-shadow: inset 0 0 0 1px #ccc;
+
+		&.done {
+			.progress {
+				display: none;
+			}
+		}
+
+		&.success {	
+			box-shadow: inset 0 0 0 1px $file-upload-success-alternate-color;
+			color: $file-upload-success-main-color;
+		}
+
+		&.failed {	
+			background: rgba($file-upload-error-alternate-color, 0.1);
+			box-shadow: inset 0 0 0 1px $file-upload-error-alternate-color;
+			color: $file-upload-error-main-color;
+		}
+
+		&.warning {	
+			background: rgba($file-upload-error-alternate-color, 0.1);
+			box-shadow: inset 0 0 0 1px $file-upload-warning-secondary-color;
+			color: $file-upload-warning-main-color;
+
+			.progress {
+				display: none;
+			}
+		}
+
+		// details about the upload
+		.info {
+			padding: 0 10px;
+			float: left;
+			
+			.activity {
+				float: left;
+				height: $file-upload-item-height;
+				width: $file-upload-item-height * 0.8;
+				position: relative;
+
+				svg {
+					position: absolute;
+					top: 50%;
+					transform: translate(0, -50%);
+					@include uniform_size(22px);
+				}
+			}
+
+			.name {
+				float: left;
+				@include align_vertical($file-upload-item-height);
+			}
+		}
+
+		// upload progress
+		.status {
+			float: right;
+			padding: 0 10px 0 0;
+
+			.progress {
+	
+				.total, .current {
+					display: block;
+					position: relative;
+					border-radius: 4px;
+					height: $file-upload-progress-height;
+				}
+				
+				.total {
+					background: $file-upload-progress-background-color;
+					top: ($file-upload-item-height - $file-upload-progress-height) * 0.5;
+					width: 100px;
+				}
+	
+				.current {
+					background: $file-upload-progress-bar-color;
+					box-shadow: inset 0 0 0 1px rgba(#000, 0.2);
+					width: 10%;
+				}
+			}
+		}
+
+		// helper message
+		.action {
+			clear: both;
+			@include clearfix();
+			padding: 0 8px 8px 8px;
+
+			display: none;
+
+			.detail {
+				float: left;
+				padding: 7px 0 0 8px;
+			}
+
+			.error-message {
+				display: none;
+			}
+
+			.options {
+				float: right;
+
+				> * {
+					float: left;
+					cursor: pointer;	
+					padding: 7px 11px;
+					margin-left: 10px;
+					box-shadow: inset 0 0 0 1px $file-upload-warning-main-color;
+					background: rgba(#fff, 0.6);
+					border-radius: 4px;
+				}
+			}
+
+		}
+
+		.actions {
+			@include animate('opacity');
+		}
+
+		&.is-uploading .actions {
+			opacity: 0.5;
+		}
+
+		&.warning .action {
+			display: block;
+		}
+
+		&.failed {
+			.options, .detail { display: none; }
+			.action {
+				display: block;
+				.error-message {
+					display: block;
+					color: $file-upload-error-alternate-color;
+					padding: 0 10px 5px 5px;
+				}
+			}
+		}
+
+	}
+
+}

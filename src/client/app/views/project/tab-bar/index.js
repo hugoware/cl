@@ -91,6 +91,10 @@ export default class TabBar extends Component {
 			this.setActive(replace);
 			this.broadcast('activate-file', replace.file);
 		}
+		// there's nothing to show -- deactivate the view
+		else {
+			this.broadcast('clear-workspace');
+		}
 	}
 
 	// sets the actively viewed tab

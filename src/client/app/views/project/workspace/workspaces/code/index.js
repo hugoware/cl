@@ -36,6 +36,7 @@ export default class CodeEditor extends Component {
 		this.listen('deactivate-file', this.onDeactivateFile);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
+		this.listen('rename-item', this.onRenameItem);
 		this.ui.save.on('click', this.onSaveChanges);
 
 		// create the code editor
@@ -43,12 +44,27 @@ export default class CodeEditor extends Component {
 		this.editor.onDidChangeModelContent(this.onContentChange);
 	}
 
+	// handles when a project is opened
 	onActivateProject = () => {
 		this.onProcessTimers.interval = setInterval(this.onProcessTimers, 25);
 	}
 
+	// handles when the project is exited
 	onDeactivateProject = () => {
 		clearInterval(this.onProcessTimers.interval);
+	}
+
+	// handles when a file is renamed
+	onRenameItem = rename => {
+		if (!(this.files[rename.previous.path]))
+			return; 
+
+		// swap the two names
+		this.files[rename.path] = this.files[rename.previous.path]
+		delete this.files[rename.previous.path];
+
+		// kick off a new build
+		this.compile();
 	}
 
 	// triggers updates for expired timers
@@ -67,9 +83,7 @@ export default class CodeEditor extends Component {
 
 	// queues up changes to the content manager
 	onContentChange = () => {
-		const { model, file } = this.activeFile;
-		const data = model.getValue();
-		this.queueUpdate(file.path, data);
+		this.compile();
 	}
 
 	// handles when a file is activated (opened or tab selected)
@@ -127,6 +141,13 @@ export default class CodeEditor extends Component {
 			this.busy = false;
 		}
 
+	}
+
+	/** handles compiling the current file */
+	compile() {
+		const { model, file } = this.activeFile;
+		const data = model.getValue();
+		this.queueUpdate(file.path, data);
 	}
 
 	/** adds or updates content for the next compile cycle

@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import Component from '../component';
 import DropDownItem from './dropdown-item';
-import {cancelEvent} from '../utils/index'
+import {cancelEvent} from '../utils/index';
 
 export default class DropDown extends Component {
 
@@ -34,6 +34,11 @@ export default class DropDown extends Component {
 		this.ui.current.on('mouseup', this.onShowOptions);
 		this.ui.options.on('mouseup', '.ui-dropdown-item', this.onSelectOption);
 		this.ui.options.on('mouseup', this.onHideOptions);
+	}
+
+	/** verifies that a dropdown list has a selection of some sort */
+	get hasSelection() {
+		return !!this.selection;
 	}
 
 	// handles when pressing escape out out of the menu

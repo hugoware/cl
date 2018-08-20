@@ -5,7 +5,7 @@ import $express from 'express';
 import $session from 'express-session';
 import $io from 'socket.io';
 import $sioeSession from 'socket.io-express-session';
-import $sioFileUpload from 'socketio-file-upload';
+import $multiparty from 'multiparty';
 import $connect from 'connect-mongo';
 import $bodyParser from 'body-parser';
 import $cookieParser from 'cookie-parser';
@@ -69,6 +69,24 @@ function createHttpServer(instance) {
 function configureStaticResources(instance) {
   instance.app.use(`/__monaco__`, $express.static('./node_modules/monaco-editor/min'));
   instance.app.use('/__codelab__', $express.static('./dist/public'));
+}
+
+// reads parsed form data
+function parseForm(request, response, next) {
+	const form = new $multiparty.Form();
+	form.parse(request, (err, fields, files) => {
+		if (err)
+			request.form = { error: err };
+		
+		// create the form data
+		else request.form = {
+			fields, files,
+			get: (path, fallback) => _.get(request.form, path, fallback)
+		};
+
+		next();;
+	});
+	
 }
 
 
@@ -156,8 +174,12 @@ function configureHttpRequests(instance, requests) {
 		const method = _.trim(config.method || 'all').toLowerCase();
 		const actions = [ ];
 
+		// check for incoming files
+		if (config.acceptForm)
+			actions.push(parseForm);
+
 		// check for incoming data
-		if (config.acceptData)
+		else if (config.acceptData)
 			actions.push($parsers.url, $parsers.json);
 
 		// finally, add the request handler
@@ -175,9 +197,6 @@ function configureSocketRequests(instance, requests) {
 	// handle the connection
 	instance.io.on('connection', socket => {
 		const { session } = socket.handshake;
-
-		// create the file uploader
-		// configureSocketFileUpload(socket);
 
 		// standard success
 		socket.ok = (event, ...args) => {

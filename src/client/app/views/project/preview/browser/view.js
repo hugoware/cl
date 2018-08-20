@@ -11,6 +11,14 @@ export default class View {
 		this.file = file;
 	}
 
+	/** returns the directory this file is within
+	 * @returns {string} the parent directory path
+	 */
+	get parentDirectory() {
+		const { parent } = this.file;
+		return parent ? parent.path : '/';
+	}
+
 	/** updates the view content
 	 * @param {string} file the path of the file that was changed
 	 * @param {boolean} [forceRefresh] forces the view to refresh even if nothing has directly changed
@@ -76,7 +84,7 @@ async function generateTemplate(view, path) {
 
 			// make sure this is a valid file
 			const origin = item.attribs.src;
-			const src = resolvePathFromUrl(origin);
+			const src = resolvePathFromUrl(origin, view.parentDirectory);
 
 			// no script was present or it's not a
 			// file that's present in the project
@@ -101,7 +109,7 @@ async function generateTemplate(view, path) {
 			if (!isStylesheet) return;
 
 			// make sure this is a valid file
-			const href = resolvePathFromUrl(item.attribs.href);
+			const href = resolvePathFromUrl(item.attribs.href, view.parentDirectory);
 			if (!$state.fileExists(href)) return;
 
 			// save it for later
