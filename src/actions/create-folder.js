@@ -4,6 +4,7 @@ import log from '../log';
 import $path from '../path';
 import $npath from 'path';
 import $fsx from 'fs-extra';
+import setProjectModified from './set-project-modified'
 
 /** handles creating a new folder
  * @param {string} projectId the project to work with
@@ -27,8 +28,6 @@ export default async function createFolder(projectId, name, relativeTo) {
 		const targetInProject = _.startsWith(target, root);
 		const parentInProject = _.startsWith(parent, root);
 
-		console.log({ root, target, parent, targetInProject, parentInProject });
-
 		// make sure this doesn't use anything silly
 		if (!(targetInProject && parentInProject))
 			return reject('folder_invalid');
@@ -46,6 +45,9 @@ export default async function createFolder(projectId, name, relativeTo) {
 		// try and create the directory
 		try { 
 			await $fsx.mkdirp(target);
+
+			// since this worked, update the project
+			setProjectModified(projectId);
 
 			// get the name
 			const name = $npath.basename(path);

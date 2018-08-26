@@ -2,6 +2,7 @@ import { resolveError } from '../utils';
 import $path from '../path';
 import $fsx from 'fs-extra';
 import getProjectAccess, { ProjectAccess } from '../queries/get-project-access';
+import setProjectModified from '../actions/set-project-modified'
 
 export const name = 'upload file';
 export const route = '/__codelab__/upload';
@@ -25,7 +26,6 @@ export async function handle(request, response) {
 			throw form.error;
 
 		// get the form data
-		console.log('wat', form);
 		const path = form.get('fields.path[0]');
 		const projectId = form.get('fields.projectId[0]');
 		const file = form.get('files.file[0]');
@@ -65,6 +65,9 @@ export async function handle(request, response) {
 
 		// since it's good to go, write the content
 		await $fsx.move(file.path, target, { overwrite: true });
+
+		// since this worked, update the project
+		setProjectModified(projectId);
 
 		// ready to go
 		response.status(200);

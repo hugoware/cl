@@ -3,7 +3,7 @@ import $database from '../storage/database';
 import format from '../formatters';
 import $fsx from 'fs-extra';
 import projectValidator from '../validators/project';
-import {resolveProject} from '../path'
+import { resolveProject } from '../path';
 
 /** expected params for a project
  * @typedef CreateProjectData
@@ -57,7 +57,8 @@ export default async function createProject(data) {
 		try {
 			// get a new ID for this project
 			const id = await $database.generateId($database.projects, 6);
-			const project = { id, ownerId, name, description, type };
+			const now = +new Date;
+			const project = { id, ownerId, name, description, type, modifiedAt: now };
 			if (!!language) project.language = language;
 
 			// try and save the record

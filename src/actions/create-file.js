@@ -6,6 +6,7 @@ import $fileDefaults from '../file-defaults';
 import fileValidator from '../validators/file';
 import getProjectType from '../queries/get-project-type';
 import { getPathInfo } from '../path';
+import setProjectModified from './set-project-modified';
 
 /** handles creating a new folder
  * @param {string} projectId the project to work with
@@ -43,6 +44,9 @@ export default async function createFile(projectId, path, options = {}) {
 		// try and create the file
 		try {
 			await $fsx.writeFile(target, content);
+			
+			// since this worked, update the project
+			setProjectModified(projectId);
 
 			// finally, return the file information
 			resolve({ name: fileName, content });

@@ -3,6 +3,7 @@ import log from '../log';
 import $fsx from 'fs-extra';
 import $path from '../path';
 import $npath from 'path';
+import setProjectModified from './set-project-modified'
 
 /** Handles removing a file at the provided path
  * @param {string} projectId The project that the files should be removed from
@@ -48,6 +49,9 @@ export default async function renameItem(projectId, source, target) {
 
 			// since it's safe to move, do it now
 			await $fsx.move(source, target);
+
+			// since this worked, update the project
+			setProjectModified(projectId);
 			
 			// since it moved, finalize the info
 			resolve({ success: true });

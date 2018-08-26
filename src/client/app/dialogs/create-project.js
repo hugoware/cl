@@ -4,6 +4,7 @@ import $nav from '../nav';
 
 import Dialog from './';
 import Component from '../component'
+import ErrorMessage from '../ui/error-message';
 
 export default class CreateProjectDialog extends Dialog {
 
@@ -14,9 +15,18 @@ export default class CreateProjectDialog extends Dialog {
 				name: '.name',
 				description: '.description',
 				types: '.type',
+				errorMessage: '.error',
 
 				submit: '.action.confirm',
 				cancel: '.action.cancel'
+			}
+		});
+
+		// handle displaying errors
+		this.errorMessage = new ErrorMessage({
+			$: this.ui.errorMessage,
+			errors: {
+
 			}
 		});
 
@@ -51,23 +61,38 @@ export default class CreateProjectDialog extends Dialog {
 
 	// try and save the changes
 	onSubmit = async () => {
-		const name = _.trim(this.ui.name.val());
-		const description = _.trim(this.ui.description.val());
-		const type = this.ui.types.filter('.selected').attr('data-type');
-		const project = { name, description, type };
+		return new Promise(async resolve => {
 
-		// send the request for the create
-		const result = await $api.request('create-project', project);
+			// already in progress
+			if (this.busy) return resolve();
+			this.busy = true;
 
-		// navigate to the success screen
-		if (!result.success) {
-			console.log('err', result);
-			return;
-		}
+			// get the information to create with
+			const name = _.trim(this.ui.name.val());
+			const description = _.trim(this.ui.description.val());
+			const type = this.ui.types.filter('.selected').attr('data-type');
+			const project = { name, description, type };
 
-		// show the project and close the dialog
-		await this.hide();
-		$nav.go(`project/${result.id}`);
+			// send the request for the create
+			const result = await $api.request('create-project', project);
+				
+			// navigate to the success screen
+			if (!result.success)
+				this.errorMessage.apply(result);
+
+			// show the project and close the dialog
+			else {
+				await this.hide();
+				$nav.go(`project/${result.id}`);
+			}
+
+			resolve();
+		})
+		.catch(err => {
+			this.errorMessage.apply(err);
+		})
+		.finally(() => this.busy = false);
+
 	}
 
 	onCancel = () => {
