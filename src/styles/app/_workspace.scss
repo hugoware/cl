@@ -33,12 +33,52 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 		bottom: 0;
 	}
 
-}
+	.editor {
+		position: absolute;
+		top: $workspace-action-bar-height;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
 
-.editor {
-	position: absolute;
-	top: $workspace-action-bar-height;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
+	.image-viewer {
+		.editor {
+			overflow: scroll;
+		}
+
+		.frame {
+			margin: 20px;
+			display: inline-block;
+			background: #fff repeat;
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAHVJREFUWAnt07ENwCAMRFGTMbz/avYakJL+O1KK7wqKs9DTsapqx+Bk5uC2iGd02wfLfCBFVVBBKkDzdlBBKkDzdlBBKkDzdlBBKkDza79Dl9z57r6v+OwnoYQKKkgFaN4OKkgFaN4OKkgFaN4OKkgFaP73HTw8cQr588bQdwAAAABJRU5ErkJggg==);
+			background-size: 20px 20px;
+
+			img {
+				box-shadow: 0 0 15px #000;
+			}
+		}
+
+		&.fit .frame img {
+			width: 100%;
+		}
+
+	}
+
+	.not-supported {
+		padding: 65px;
+		color: #fff;
+
+		h1 {
+			font-size: 54px;
+			padding: 0 0 15px 0;
+		}
+
+		p {
+			font-size: 18px;
+			padding: 0 0 0 3px;
+			opacity: 0.5;
+		}
+	}
+
+}	
+

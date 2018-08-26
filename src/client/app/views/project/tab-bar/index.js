@@ -23,8 +23,15 @@ export default class TabBar extends Component {
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('delete-items', this.onDeleteItems);
 		this.listen('rename-item', this.onRenameItem);
+		this.listen('activate-project', this.onActivateProject);
 		this.on('click', '.close', this.onCloseTab);
 		this.on('click', '.tab', this.onSelectTab);
+	}
+
+	// clear all tabs
+	onActivateProject = () => {
+		this.tabs.clear();
+		this.tabs.refresh();
 	}
 
 	// handles opening or activating new tab

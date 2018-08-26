@@ -15,7 +15,7 @@ export default class CreateProjectDialog extends Dialog {
 				description: '.description',
 				types: '.type',
 
-				submit: '.action.submit',
+				submit: '.action.confirm',
 				cancel: '.action.cancel'
 			}
 		});

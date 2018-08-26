@@ -1,7 +1,9 @@
 
 import $database from '../storage/database';
 import format from '../formatters';
+import $fsx from 'fs-extra';
 import projectValidator from '../validators/project';
+import {resolveProject} from '../path'
 
 /** expected params for a project
  * @typedef CreateProjectData
@@ -43,7 +45,6 @@ export default async function createProject(data) {
 			return resolve({ success: false, errors });
 
 		// check for the user
-		console.log('ooking for', ownerId);
 		const userExists = await $database.exists($database.users, { id: ownerId });
 		if (!userExists)
 			return reject('user_not_found');
@@ -61,6 +62,12 @@ export default async function createProject(data) {
 
 			// try and save the record
 			await $database.projects.insertOne(project);
+
+			// make sure to create the new project directory
+			const directory = resolveProject(id);
+			await $fsx.ensureDir(directory);
+
+			// ready to go
 			return resolve({ success: true, id });
 		}
 		catch (err) {

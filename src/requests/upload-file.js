@@ -64,7 +64,7 @@ export async function handle(request, response) {
 		}
 
 		// since it's good to go, write the content
-		await $fsx.move(file.path, target);
+		await $fsx.move(file.path, target, { overwrite: true });
 
 		// ready to go
 		response.status(200);

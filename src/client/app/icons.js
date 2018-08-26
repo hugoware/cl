@@ -25,6 +25,10 @@ import gifIcon from '../../icons/icon-gif.svg';
 import jpgIcon from '../../icons/icon-jpg.svg';
 import svgIcon from '../../icons/icon-svg.svg';
 
+import moveItemsIcon from '../../icons/icon-move-items.svg';
+import trashIcon from '../../icons/icon-trash.svg';
+import renameIcon from '../../icons/icon-rename.svg';
+import uploadIcon from '../../icons/icon-upload.svg';
 import closeIcon from '../../icons/icon-close.svg';
 import unknownIcon from '../../icons/icon-unknown.svg';
 import errorIcon from '../../icons/icon-error.svg';
@@ -34,6 +38,7 @@ import refreshIcon from '../../icons/icon-refresh.svg';
 import activityIcon from '../../icons/icon-activity.svg';
 import addFolderIcon from '../../icons/icon-add-folder.svg';
 import addFileIcon from '../../icons/icon-add-file.svg';
+import toggleDropdownIcon from '../../icons/icon-toggle-dropdown.svg';
 
 /** @type {Object<string, HTMLElement>} */
 const $icons = {
@@ -45,6 +50,11 @@ const $icons = {
 	successIcon,
 	refreshIcon,
 	activityIcon,
+	trashIcon,
+	renameIcon,
+	uploadIcon,
+	moveItemsIcon,
+	toggleDropdownIcon,
 
 	addFolderIcon,
 	addFileIcon,
@@ -94,7 +104,11 @@ export default {
 	error: () => get('errorIcon'),
 	warning: () => get('warningIcon'),
 	refresh: () => get('refreshIcon'),
-	icon: key => get(`${key}Icon`),
+	icon: key => {
+		let id = `${key}Icon`;
+		if (!(id in $icons)) id = 'unknownIcon';
+		return get(id);
+	},
 
 	// file browser
 	folder: open => get('folderIcon'),

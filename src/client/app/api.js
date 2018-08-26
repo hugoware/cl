@@ -154,10 +154,11 @@ export async function uploadFile(projectId, path, file, onProgress = _.noop) {
 			xhr.open('POST', '/__codelab__/upload', true);
 
 			// listen for progress
-			xhr.onprogress = ({ total, loaded }) => {
-				console.log('progress', loaded, total);
-				onProgress(loaded / total);
-			};
+			if (xhr.upload)
+				xhr.upload.onprogress = ({ total, loaded }) => {
+					console.log('progress', loaded, total);
+					onProgress(loaded / total);
+				};
 
 			// simple handler for single pass
 			function attempt(action) {

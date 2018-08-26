@@ -138,6 +138,7 @@ async function gatherRequests() {
 			return file.substr(0, file.length - 3);
 		})
 		.map(module => require(`./requests/${module}`))
+		.sortBy(config => 'priority' in config ? 0 | config.priority : 100)
 		.each(config => {
 
 			// notify when a handler was missing (possibly accidental)
@@ -168,26 +169,27 @@ async function gatherRequests() {
 function configureHttpRequests(instance, requests) {
 	const { app } = instance;
 
-	_.each(requests, config => {
+	_(requests)
+		.each(config => {
 
-		// setup the config
-		const method = _.trim(config.method || 'all').toLowerCase();
-		const actions = [ ];
+			// setup the config
+			const method = _.trim(config.method || 'all').toLowerCase();
+			const actions = [ ];
 
-		// check for incoming files
-		if (config.acceptForm)
-			actions.push(parseForm);
+			// check for incoming files
+			if (config.acceptForm)
+				actions.push(parseForm);
 
-		// check for incoming data
-		else if (config.acceptData)
-			actions.push($parsers.url, $parsers.json);
+			// check for incoming data
+			else if (config.acceptData)
+				actions.push($parsers.url, $parsers.json);
 
-		// finally, add the request handler
-		actions.push(config.handle);
+			// finally, add the request handler
+			actions.push(config.handle);
 
-		// assign the action
-		app[method].apply(app, [ config.route, ...actions ]);
-	});
+			// assign the action
+			app[method].apply(app, [ config.route, ...actions ]);
+		});
 }
 
 

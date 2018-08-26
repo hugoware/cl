@@ -118,7 +118,7 @@
 
 	// common helper scripts
 	window.__CODELAB__ = { 
-		evalScripts: () => setTimeout(evalScripts, 0)
+		evalScripts: () => setTimeout(evalScripts, 100)
 	};
 
 	// capture scripting errors

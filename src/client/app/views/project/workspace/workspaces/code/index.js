@@ -42,16 +42,19 @@ export default class CodeEditor extends Component {
 		// create the code editor
 		this.editor = $editor.createInstance(this.ui.editor[0]);
 		this.editor.onDidChangeModelContent(this.onContentChange);
+
+		// handle tracking changes
+		this.onProcessTimers.interval = setInterval(this.onProcessTimers, 25);
 	}
 
 	// handles when a project is opened
 	onActivateProject = () => {
-		this.onProcessTimers.interval = setInterval(this.onProcessTimers, 25);
-	}
+		delete this.activeFile;
 
-	// handles when the project is exited
-	onDeactivateProject = () => {
-		clearInterval(this.onProcessTimers.interval);
+		// clear all files
+		_.each(this.files, (file, key) => {
+			delete this.files[key];
+		});
 	}
 
 	// handles when a file is renamed
@@ -69,7 +72,9 @@ export default class CodeEditor extends Component {
 
 	// triggers updates for expired timers
 	onProcessTimers = () => {
-		if (!this.pending) return;
+		if (!this.pending)
+			return;
+		console.log('try process script');
 
 		// hasn't baked long enough
 		const now = +new Date;
@@ -89,6 +94,10 @@ export default class CodeEditor extends Component {
 	// handles when a file is activated (opened or tab selected)
 	onActivateFile = async file => {
 		const { path } = file;
+
+		// make sure this is appropriate
+		if (file.type !== 'code')
+			return;
 
 		// check if creating a new model or not
 		let instance = this.files[path];
@@ -133,9 +142,6 @@ export default class CodeEditor extends Component {
 		}
 		catch(err) {
 			console.log(err);
-			// handleError(err, {
-				
-			// });
 		}
 		finally {
 			this.busy = false;
@@ -145,6 +151,9 @@ export default class CodeEditor extends Component {
 
 	/** handles compiling the current file */
 	compile() {
+		if (!this.activeFile) return;
+
+		// try and process the file
 		const { model, file } = this.activeFile;
 		const data = model.getValue();
 		this.queueUpdate(file.path, data);

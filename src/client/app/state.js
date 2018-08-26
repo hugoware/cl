@@ -8,6 +8,8 @@ import { broadcast } from './events';
 import { simplifyPathCollection } from '../../utils/project';
 
 const ROOT = { path: '/' };
+const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py'];
+const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 
 const $state = { 
 
@@ -238,7 +240,7 @@ const $state = {
 		// for (let i = 0; i < renames.length; i++) {
 		// 	const rename = renames[i];
 		for (const rename of renames) {
-			if (!rename.item.isFile) return;
+			if (!(rename.item.isFile && rename.item.hasContent)) return;
 			await $lfs.move(rename.previous.path, rename.path);
 		}
 
@@ -322,7 +324,7 @@ const $state = {
 		await $state.updateProject($state.project);
 
 		// update the file system value, if any
-		if (update.isFile);
+		if (update.isFile && update.hasContent)
 			await $lfs.move(previous.path, update.path);
 
 		// broadcast relevant events
@@ -516,9 +518,17 @@ async function syncProject(children = [ ], parent, relativeTo) {
 			// file info
 			if (item.isFile)
 				item.ext = getExtension(item.path, { removeLeadingDot: true });
+
+			// determine the type, if needed
+			const { ext } = item;
+			item.type = item.isFolder ? 'folder'
+				: _.includes(CODE_FILES, ext) ? 'code'
+				: _.includes(IMAGE_FILES, ext) ? 'image'
+				: 'not-supported';
 	
 			// check if this is a content file 
-			if ('content' in item)
+			item.hasContent = 'content' in item;
+			if (item.hasContent)
 				await $lfs.write(item.path, item.content);
 
 		}

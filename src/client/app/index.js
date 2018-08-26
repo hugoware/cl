@@ -11,6 +11,10 @@ import $editor from './editor';
 import Component from "./component";
 import Bluebird from 'bluebird';
 
+// page components
+import Header from './header';
+// import Footer from './footer';
+
 // sub views
 import HomeView from './views/home'
 import ProjectView from './views/project'
@@ -55,6 +59,9 @@ class App extends Component {
 				footer: '#footer'
 			}
 		});
+
+		this.header = new Header({ $: this.ui.header });
+		// this.footer = new Footer({ $: this.ui.footer });
 
 		// sub views
 		this.views = {
@@ -129,18 +136,36 @@ class App extends Component {
 	 * @param {Component} view The new view to use
 	 */
 	setView = async (view) => {
+
+		// prevents view switching while already in progress
+		if (this.transitioning) return;
+		this.transitioning = true;
+
+		// find the view to show
 		view = this.views[view] || this.views.missing;
 
 		// hide the current view
 		const active = this.activeView;
-		if (active) await active.hide();
+		if (active)
+			await active.hide();
 
 		// save this for deactivation steps
 		this.activeView = view;
 		
 		// now that it's ready, show and activate it
-		view.appendTo(this.ui.view);
-		await view.show();
+		try {
+			view.appendTo(this.ui.view);
+			await view.show();
+		}
+		// not sure yet
+		catch (err) {
+			throw err;
+		}
+		// allow views to switch again
+		finally {
+			this.transitioning = false;
+		}
+
 	}
 
 	// handles showing a dialog window

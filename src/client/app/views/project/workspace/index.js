@@ -38,20 +38,25 @@ export default class Workspace extends Component {
 		});
 
 		// events
+		this.listen('activate-project', this.onActivateProject);
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('clear-workspace', this.onClearWorkspace);
 	}
 
 	// clears all workspaces
 	onClearWorkspace = () => {
-		console.log('wants to clear');
 		this.setWorkspace(null);
+	}
+
+	// handles when first loading the view
+	onActivateProject = () => {
+		this.clearWorkspace();
 	}
 
 	// activates the correct workspace
 	onActivateFile = file => {
-		const workspace = getWorkspace(this, file);
-		this.setWorkspace(workspace);
+		const type = file.type || 'not-supported';
+		this.setWorkspace(type);
 	}
 
 	// sets the workspace to display
@@ -75,11 +80,4 @@ export default class Workspace extends Component {
 		_.each(this.workspaces, workspace => workspace.hide());
 	}
 
-}
-
-function getWorkspace(instance, file) {
-
-	console.log('find workspace', file);
-
-	return 'code';
 }

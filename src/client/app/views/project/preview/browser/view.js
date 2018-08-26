@@ -65,12 +65,6 @@ async function generateTemplate(view, path) {
 	const markup = await $contentManager.get(path);
 	view.template = $cheerio.load(markup);
 
-	// include a base url that'll make all local requests
-	// for this preview match the project domain
-	const domain = $state.getProjectDomain();
-	view.template.root()
-		.prepend(`<base href="${domain}" />`);
-
 	// storage for external resources
 	view.scripts = { };
 	view.links = { };
@@ -116,6 +110,16 @@ async function generateTemplate(view, path) {
 			const collection = view.links[href] = view.links[href] || [];
 			collection.push(item);
 		});
+
+	// include a base url that'll make all local requests
+	// for this preview match the project domain
+	const domain = $state.getProjectDomain();
+	view.template.root()
+		.prepend(`
+			<base href="${domain}" />
+			<script browser-tools src="/__codelab__/browser.js" type="text/javascript" ></script>
+		`);
+
 }
 
 

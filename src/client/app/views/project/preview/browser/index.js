@@ -52,19 +52,6 @@ export default class BrowserMode extends Component {
 		this.ui.output.on('mouseover', this.onAutoExecuteScripts);
 		this.ui.runScripts.on('click', this.onRunPageScripts);
 
-		// preview area setup
-		this.ui.output.on('load', event => {
-			const frame = event.target;
-			const root = frame.contentWindow.document.body;
-			root.innerHTML = '';
-
-			// attach the helper script file
-			const script = document.createElement('script');
-			script.setAttribute('src', '/__codelab__/browser.js');
-			script.setAttribute('type', 'text/javascript');
-			root.appendChild(script);
-		});
-
 		// set the default view
 		setTimeout(this.clear);
 	}
@@ -246,6 +233,16 @@ export default class BrowserMode extends Component {
 		delete this.activeError;
 	}
 
+	/** replaces the page content with new HTML
+	 * @param {string} html the content to write
+	 */
+	writeContent = html => {
+		const doc = this.context.document;
+		doc.open();
+		doc.write(html);
+		setTimeout(() => { doc.close(); }, 10);
+	}
+
 	/** displays the most current template result 
 	 * @param {boolean} shouldRunScripts should the render also eval scripts
 	*/
@@ -261,7 +258,7 @@ export default class BrowserMode extends Component {
 		// document body is also cleared of all event
 		// listeners
 		this.reset();
-		this.output.innerHTML = html;
+		this.writeContent(html);
 
 		// populate the title, if possible
 		const title = this.view.title || 'Untitled Page';
@@ -279,7 +276,7 @@ export default class BrowserMode extends Component {
 	clear = () => {
 		this.clearPageError();
 		this.reset();
-		this.output.innerHTML = NO_PREVIEW_LOADED;
+		this.writeContent(NO_PREVIEW_LOADED);
 		this.title = '';
 		this.url = '';
 		delete this.view;
@@ -297,6 +294,9 @@ export default class BrowserMode extends Component {
 
 	// execute scripts
 	runScripts = () => {
+
+		// TODO: figure out why this is null when creating
+		if (!this.bridge) return;
 
 		// if the scripts have already run once then
 		// refresh the content before executing

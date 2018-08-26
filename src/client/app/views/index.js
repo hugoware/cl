@@ -1,12 +1,12 @@
 import Component from '../component'
 
-const DEFAULT_ANIMATION_TIME = 300;
+const DEFAULT_ANIMATION_TIME = 500;
 
 export default class View extends Component {
 
 	constructor(...args) {
 		super(...args);
-		this.css({ opacity: 0 });
+		// this.css({ opacity: 0 });
 
 		// don't use the animated hide
 		this.$.hide();
@@ -14,35 +14,58 @@ export default class View extends Component {
 
 	/** handles showing and activating a view */
 	async show() {
-		this.busy = true;
-		this.css({ opacity: 0 });
-		
-		// use the UI element hide (don't use the overriden hide function)
-		this.$.show();
+		return new Promise(async resolve => {
 
-		// fade out
-		await this.animate({ opacity: 1 }, { duration: DEFAULT_ANIMATION_TIME });
-		this.busy = false;
+			// already visible or showing
+			if (this.hasClass('show'))
+				return resolve();
 
-		// check for an activation function
-		if (this.onActivate)
-			await this.onActivate();
+			// disable the view
+			this.busy = true;
+			
+			// use the UI element hide (don't use the overriden hide function)
+			setTimeout(() => this.addClass('show'));
+			this.$.show();
+
+			// check for an activation function
+			if (this.onActivate)
+				await this.onActivate();
+
+			// wait a moment
+			setTimeout(() => {
+				this.busy = false;
+				resolve();
+			}, DEFAULT_ANIMATION_TIME);
+
+		});
 
 	}
 
 	/** handles hiding and deactivating a view */
 	async hide() {
-		this.busy = true;
-		
-		// check for canceling
-		if (this.onDeactivate)
-			await this.onDeactivate();
-		
-		// perform the fadeout
-		await this.animate({ opacity: 0 }, { duration: DEFAULT_ANIMATION_TIME });
+		return new Promise(async resolve => {
+			
+			// already hidden or hiding
+			if (!this.hasClass('show'))
+				return resolve();
 
-		// use the UI element hide (don't recursively call hide)
-		this.$.hide();
+			// disable the view
+			this.busy = true;
+			this.removeClass('show');
+			
+			// check for canceling
+			if (this.onDeactivate)
+				await this.onDeactivate();
+
+			// wait a moment
+			setTimeout(() => {
+				// use the UI element hide (don't recursively call hide)
+				this.$.hide();
+				resolve();
+			}, DEFAULT_ANIMATION_TIME);
+
+		});
+
 	}
 
 }

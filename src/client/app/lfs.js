@@ -15,9 +15,9 @@ const $sync = { };
 export function normalizePath(path) {
 	path = (path || '').toString()
 		.replace(/^ *| *$/g, '') // trim the whitespace
+		.replace(/\/+/g, '/') // make sure there's no double slashes
 		.replace(/^\.?\//, '') // remove the leading slash (relative dot as well)
-		.replace(/\.\.\//g, '') // remove folder relative pathing
-		.replace(/\/+/g, '/'); // make sure there's no double slashes
+		.replace(/\.\.\//g, ''); // remove folder relative pathing
 	return `/${path}`;
 }
 

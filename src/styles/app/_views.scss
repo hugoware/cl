@@ -1,0 +1,29 @@
+
+#view > .view {
+	opacity: 0;
+	@include animate('opacity', 0.4s);
+}
+
+#view > .view.show {
+	opacity: 1;
+}
+
+#view #project {
+	
+	#file-browser, #preview {
+		@include animate('transform', 0.4s);
+	}
+
+	#file-browser {
+		transform: translate(-200px, 0);
+	}
+
+	#preview {
+		transform: translate(200px, 0);
+	}
+
+	&.show #file-browser, &.show #preview {
+		transform: translate(0, 0);
+	}
+
+}

@@ -1,0 +1,50 @@
+.project-list {
+	.project {
+		width: 30%;
+		float: left;
+		margin: 0 1.5% 30px 1.5%;
+		// // margin: 0 1%;
+		background: #fff;
+		box-shadow: 0 1px 6px #000;
+		// display: inline-block;
+
+		.project-item {
+			padding: 20px;
+		}
+
+		.name, .description {
+			text-overflow: ellipsis;
+			max-width: 100%;
+			white-space: nowrap;
+		}
+
+		.name {
+			font-size: 22px;
+			padding: 0 0 10px 0;
+		}
+
+		.description {
+			font-size: 16px;
+			opacity: 0.5;
+			padding: 0 0 22px 0;
+		}
+
+		&:nth-child(4n) {
+			clear: both;
+		}
+
+		.actions {
+			@include clearfix();
+
+			.action {
+				@include uniform_size(30px);
+				float: left;
+				color: transparent;
+				background: #ccc;
+				margin: 0 15px 0 0;
+			}
+		}
+
+	}
+
+}

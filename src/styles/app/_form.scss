@@ -110,7 +110,7 @@ $form-input-default-border-radius: 4px;
 		display: block;
 
 		svg {
-			@include uniform_size($form-input-default-height * 0.6);
+			@include uniform_size($form-input-default-height * 0.4);
 			display: block;
 			position: absolute;
 			top: 50%;

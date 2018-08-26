@@ -80,6 +80,7 @@ export function resolveProject(id, path = '', fromCache) {
 	// sort out the path
 	path = sanitizePath(path);
 	path = removeLeadingSlash(path);
+	path = removeTrailingSlash(path);
 	const root = resolveRoot(`~/.data/projects/${id}`);
 	const result = $path.resolve(`${root}/${path}`);
 	const head = result.substr(0, root.length);
@@ -114,6 +115,13 @@ export function getPathInfo(path) {
 */
 export function removeLeadingSlash(str) {
 	return _.trim(str).replace(/^\/*/, '');
+}
+
+/** removes any trailing slashes for path requests 
+ * @param {string} str the path to remove from
+*/
+export function removeTrailingSlash(str) {
+	return _.trim(str).replace(/\/*$/, '');
 }
 
 /** handles cleaning up a path to make sure it's usable

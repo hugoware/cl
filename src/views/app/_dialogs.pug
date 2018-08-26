@@ -5,31 +5,34 @@
 		.dialog
 
 +template('dialog-create-project')
-	.form
-		label
-			span name
-			input.name
-		
-		label
-			span description
-			textarea.description
+	.content(dialog-width='600').create-new-project
+		.form
+			label
+				span name
+				input.name
+			
+			label
+				span description
+				textarea.description
 
-		ul
-			li.type(data-type='web') Web
-			li.type(data-type='code') Code
-			//- li.type(data-type='web') Game 2D
-			//- li.type(data-type='web') Game 3D
+			ul
+				li.type(data-type='web') Web
+				li.type(data-type='code') Code
+				//- li.type(data-type='web') Game 2D
+				//- li.type(data-type='web') Game 3D
 
-		ul
-			li.language(data-type='javascript') JavaScript
-			li.language(data-type='lua') Lua
-			li.language(data-type='csharp') C#
-			li.language(data-type='python') Python
-			li.language(data-type='typescript') TypeScript
+			ul
+				li.language(data-type='javascript') JavaScript
+				li.language(data-type='lua') Lua
+				li.language(data-type='csharp') C#
+				li.language(data-type='python') Python
+				li.language(data-type='typescript') TypeScript
 
-		.actions
-			.action.confirm Create Project
-			.action.cancel Cancel
+			.error
+
+			.actions
+				.action.confirm Create Project
+				.action.cancel Cancel
 
 
 +template('dialog-rename-item')
