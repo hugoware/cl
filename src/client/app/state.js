@@ -43,8 +43,9 @@ const $state = {
 	/** returns the resource domain for this project
 	 * @returns {string} the root domain to use */
 	getProjectDomain() {
+		const { id } = this.project;
 		const { protocol, host } = window.location;
-		return `${protocol}//${this.project.id}.${host}`;
+		return `${protocol}//${id}.${host}`;
 	},
 
 	/** checks if a file type can be uploaded or not

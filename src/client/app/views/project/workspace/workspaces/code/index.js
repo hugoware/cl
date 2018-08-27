@@ -74,7 +74,6 @@ export default class CodeEditor extends Component {
 	onProcessTimers = () => {
 		if (!this.pending)
 			return;
-		console.log('try process script');
 
 		// hasn't baked long enough
 		const now = +new Date;

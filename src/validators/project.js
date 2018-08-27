@@ -1,6 +1,14 @@
 import _ from 'lodash';
 import { stringify, resolveError } from './utils';
-import { ProjectTypes } from '../models/project';
+// import { ProjectTypes } from '../models/project';
+
+const ProjectTypes = {
+  'web': true,
+  'game2d': true,
+  'game3d': true,
+  'mobile': true,
+  'console': true
+};
 
 // list of allowed project types
 const MIN_NAME_LENGTH = 3;
@@ -43,7 +51,7 @@ export function validateDescription(description, errors) {
  * @returns {boolean} did this validate successfully
  */
 export function validateType(type, errors) {
-	type = _.toUpper(type);
+	type = _.toLower(type);
 	const err = !ProjectTypes[type] ? 'invalid'
 		: null;
 

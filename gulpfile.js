@@ -49,7 +49,7 @@ const $config = {
 	},
 
 	scripts: {
-    client: [ 'site', 'app', 'viewer', 'browser' ],
+    client: [ 'site', 'app', /* 'viewer', */ 'browser' ],
 		workers: [ 'pug', 'typescript', 'scss', 'html' ],
 		server: {
 			watch: ['src/**/*.js', '!src/client', '!src/client/**' ],
@@ -164,15 +164,16 @@ $gulp.task('compress-css', () => {
 });
 
 
-$gulp.task('compress-js', cb => {
-  $pump([
-    $gulp.src('dist/public/*.js'),
-    $uglify({
-      compress: true
-    }),
-    $gulp.dest('dist/public')
-  ], cb);
-});
+// handle externally
+// $gulp.task('compress-js', cb => {
+//   $pump([
+//     $gulp.src('dist/public/*.js'),
+//     $uglify({
+//       compress: true
+//     }),
+//     $gulp.dest('dist/public')
+//   ], cb);
+// });
 
 
 $gulp.task('compress-json', () => {
@@ -270,8 +271,8 @@ $gulp.task('watch-svg-icons', () => {
 })
 
 // general tasks
-$gulp.task('compress', [ 'compress-images', 'compress-json', 'compress-css', 'compress-js' ]);
-$gulp.task('compile', ['clean-svg-icons', 'copy-views', 'compile-styles', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts', 'copy-resources']);
+$gulp.task('compress', [ 'compress-images', 'compress-json', 'compress-css' ]);
+$gulp.task('compile', ['clean-svg-icons', 'copy-views', 'compile-styles', 'compile-client-scripts', 'compile-server-scripts', 'copy-resources']);
 $gulp.task('watch', ['watch-views', 'watch-styles', 'watch-worker-scripts', 'watch-client-scripts', 'watch-resources', 'watch-server-scripts', 'watch-svg-icons']);
 
 // full deployment task

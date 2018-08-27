@@ -10,54 +10,46 @@ export const priority = 0;
 
 // determines the correct home view
 export async function handle(request, response, next) {
-	new Promise(async (resolve, reject) => {
 	
-		// get the sub domain
-		const parts = _.trim(request.hostname).split('.');
-		let id = parts.shift();
+	// no need to do this
+	if (/^\/?__(codelab|monaco)__/i.test(request.path))
+		return next();
 
-		// if fo some reason this has the www
-		if (/www/i.test(id))
-			id = parts.shift();
+	// determine if this is requesting a project
+	const parts = _.trim(request.hostname).split('.');
+	let id = parts.shift();
 
-		// check if this is a project request -- could possibly
-		// just check for domain name
-		let type;
-		try { 
-			type = await getProjectType(id);
-		}
-		// not a real project type
-		catch (ex) { 
-			return reject();	
-		}
-			
-		// check the file request -- modify as needed
-		let resource = _.trim(request.params[0]);
-		if (type === 'web') {
-			// ??
-		}
+	// if for some reason this has the www
+	if (/www/i.test(id))
+		id = parts.shift();
 
-		// find the file to send
-		const path = $path.resolveProject(id, resource);
+	// check for reserved words
+	const root = $path.resolveProject(id);
+	const isProject = await $fsx.exists(root);
 
-		// make sure it exists first
+	// no need to finish
+	if (!isProject)
+		return next();
+
+	// find the file to send
+	const path = $path.resolveProject(id, request.path);
+
+	// make sure it exists first
+	try {
 		const exists = await $fsx.exists(path);
-		if (!exists)
-			return reject('404');
+		if (!exists) throw '404';
 
 		// make sure it's a file
 		const stats = await $fsx.stat(path);
-		if (!(stats && stats.isFile))
-			return reject('404');
+		if (!(stats && stats.isFile)) throw '404';
 
 		// file is okay to send
 		response.sendFile(path);
-		resolve();
-	})
-	// handle any failures
-	.catch(err => {
-		if (err) response.send('404');
-		else next();
-	})
+	}
+	// failed to read the file
+	catch (err) {
+		response.send('404');
+	}
+
 
 }
