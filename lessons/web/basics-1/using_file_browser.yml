@@ -1,0 +1,60 @@
+
+- 
+  definition:
+    id: html
+    name: HTML
+    aka: HTML
+    define: This is the full def
+
+- snippet:
+    id: html_tag_example
+    zones:
+      front_tag: 0 5
+      end_tag: 18 24
+    content: |
+      <div>this is a tag</div>
+
+-
+  slide:
+    style: overlay
+    content: |
+
+      This is just some general content
+
+      <speak>
+        This is a part of the code where we talk about <define html/> and what it can do to create a website.
+      </speak>
+
+      <snippet type="html_tag_example" highlight="front_tag end_tag" />
+
+      <speak>
+        This part is the opening tag element
+      </speak>
+
+      <speak hidden delay="500" >
+        This part it spoken, but not shown
+      </speak>
+
+      This is a final part that's not read
+      
+
+    focus:
+      point: #filebrowser
+      gesture: #filebrowser :center
+      highlight: #selector
+
+    permissions: +create_file
+
+    waitFor: #file-browser ::hover(2s)
+
+- 
+  question:
+    show: 4
+    choices:
+      - this is correct
+      - This is incorrect
+      - This is also wrong
+      - This shouldn't work
+      - This is another mix
+      - This is failed
+

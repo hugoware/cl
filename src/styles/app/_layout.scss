@@ -2,6 +2,7 @@
 body {
 	background: $primary-background;
 	font-family: $default-font;
+	overflow: hidden;
 }
 
 input, textarea, button {
