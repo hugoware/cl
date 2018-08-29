@@ -27,6 +27,7 @@ then
 fi
 
 gulp deploy
+cp -r ./lessons/output ./dist/lessons
 
 
 echo

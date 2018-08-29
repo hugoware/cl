@@ -9,5 +9,6 @@ function onAfterSlideChange() {
 }
 
 function verifyHtmlEditResult() {
-	console.log('got this');
+  this.state.hello = true
+	console.log('got this', this.state);
 }

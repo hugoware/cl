@@ -39,13 +39,13 @@
       
 
     focus:
-      point: #filebrowser
-      gesture: #filebrowser :center
-      highlight: #selector
+      point: \#filebrowser ::center
+      gesture: \#filebrowser ::center
+      highlight: \#selector
 
     permissions: +create_file
 
-    waitFor: #file-browser ::hover(2s)
+    waitFor: \#file-browser ::hover(2s)
 
 - 
   question:

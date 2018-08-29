@@ -1,0 +1,52 @@
+
+#assistant {
+	position: fixed;
+	bottom: $footer-height;
+	right: 0;
+	z-index: $layer-assistant;
+
+	.avatar {
+		position: absolute;
+		border-radius: 100%;
+	}
+
+	.panel {
+		font-size: 18px;
+		line-height: 1.4em;
+	}
+
+	.actions {
+		@include clearfix();
+		
+		div {
+			font-size: 18px;
+			cursor: pointer;
+			padding: 6px 22px;
+			border-radius: 100px;
+		}
+		
+		// navigate previous button
+		.previous {
+			float: left;
+			box-shadow: inset 0 0 0 2px #fff;
+			opacity: 0.5;
+			
+			&:hover {
+				opacity: 0.85;
+				@include animate('opacity', 0.3s);
+			}
+		}
+		
+		// navigate next button
+		.next {
+			float: right;
+			background: $assistant-next-button-color;
+			
+			&:hover {
+				background: $assistant-next-button-hover-color;
+				@include animate('background', 0.3s);
+			}
+		}
+	}
+
+}

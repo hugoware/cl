@@ -8,16 +8,16 @@
 
 		// shared library access
 		var _ = $LESSON_TYPE$Lesson.lodash;
-		var html = $LESSON_TYPE$Lesson.cheerio;
+		var $html = $LESSON_TYPE$Lesson.cheerio;
 
 		// default function for calling
 		this.invoke = function() {
 			var args = [].slice.call(arguments);
-			var action = args.shift();
+			var action = eval(args.shift());
 
 			// calls the function, if it exists
 			if (typeof action === 'function')
-				eval(action).apply(this.state, args);	
+				action.apply(this, args);	
 		}
 
 		// attach required scripts

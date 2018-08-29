@@ -67,7 +67,8 @@ function createHttpServer(instance) {
 
 // share public resources
 function configureStaticResources(instance) {
-  instance.app.use(`/__monaco__`, $express.static('./node_modules/monaco-editor/min'));
+  instance.app.use(`/__codelab__/monaco`, $express.static('./node_modules/monaco-editor/min'));
+  instance.app.use('/__codelab__/lessons', $express.static('./dist/lessons'));
   instance.app.use('/__codelab__', $express.static('./dist/public'));
 }
 
@@ -84,7 +85,7 @@ function parseForm(request, response, next) {
 			get: (path, fallback) => _.get(request.form, path, fallback)
 		};
 
-		next();;
+		next();
 	});
 	
 }

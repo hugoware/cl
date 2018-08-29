@@ -6,6 +6,7 @@ import $api from './api';
 import { getExtension, getPathInfo } from './utils/index';
 import { broadcast } from './events';
 import { simplifyPathCollection } from '../../utils/project';
+import Lesson from './lesson';
 
 const ROOT = { path: '/' };
 const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py'];
@@ -69,6 +70,24 @@ const $state = {
 		await syncProject(project.children, null, null);
 
 		window.STATE = $state;
+	},
+
+	/** activates a lesson for a user */
+	updateLesson: async project => {
+
+		project.lesson = 'web_basics_1';
+
+		return new Promise(async resolve => { 
+			if ('lesson' in project) {
+				$state.lesson = await Lesson.load(project.lesson);
+				resolve();
+			}
+			// no lesson to perform
+			else {
+				delete $state.lesson;
+				resolve();
+			}
+		});
 	},
 
 	// /** finds a project item using an ID

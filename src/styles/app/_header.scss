@@ -1,13 +1,17 @@
 
 #header .logo {
 
-	width: 182px;
-	height: 40px;
+	$logo-height: $header-height * 0.75;
+	$logo-scale-ratio: $logo-height / 40;
+	$logo-width: 182 * $logo-scale-ratio;
+
+	width: $logo-width;
+	height: $logo-height;
 
 	background: url(/__codelab__/app/header-logo.png);
-	background-size: 182px 40px;
+	background-size: $logo-width $logo-height;
 
-	margin: 5px 0 0 10px;
+	margin: (($header-height - $logo-height) / 2) 0 0 10px;
 
 	cursor: pointer;
 

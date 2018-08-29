@@ -31,7 +31,8 @@ function readFile(name) {
 const source = process.argv[2];
 const id = _.snakeCase(source);
 const root = $path.resolve(`./lessons/${source}`);
-const output = $path.resolve(`./src/lessons/${id}`);
+const output = $path.resolve(`./lessons/output/${id}`);
+const dist = $path.resolve(`./dist/lessons/${id}`);
 const manifest = readYml('manifest.yml');
 const state = { dictionary: $dictionary };
 const type = _.camelCase(source);
@@ -84,6 +85,10 @@ $fsx.writeFileSync(`${output}/index.js`, result);
 // copy resources, if possible
 if ($fsx.existsSync(`${root}/resources`))
 	$fsx.copySync(`${root}/resources`, `${output}/resources`);
+
+// also copy this to the dist directory
+$fsx.ensureDirSync(dist);
+$fsx.copySync(output, dist)
 	
 // notify this is done
 console.log('generated', id);

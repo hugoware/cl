@@ -30,9 +30,7 @@ export default class FileBrowserActions extends Component {
 		this.ui.renameItem.on('click', this.onRenameItem);
 		this.ui.uploadFile.on('click', this.onUploadFile);
 		this.on('mouseup', cancelEvent);
-
-		// when first created
-		this.update();
+		this.listen('activate-project', this.onActivateProject);
 	}
 
 	get allowRenameItem() {
@@ -91,6 +89,11 @@ export default class FileBrowserActions extends Component {
 			'allow-delete-items': this.allowDeleteItems,
 			'allow-rename-item': this.allowRenameItem
 		});
+	}
+
+	// clear the selection when loading
+	onActivateProject = () => {
+		this.update();
 	}
 
 	// showing dialogs

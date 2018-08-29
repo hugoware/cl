@@ -44,37 +44,10 @@ html
 
 		//- load the monaco editor
 		script.
-			var require = { paths: { 'vs': '__monaco__/vs' } };
-		script(src="__monaco__/vs/loader.js")
-		script(src="__monaco__/vs/editor/editor.main.nls.js")
-		script(src="__monaco__/vs/editor/editor.main.js")
-
-		//- script.
-		//- 	var editor = monaco.editor.create(document.getElementById('container'), {
-		//- 		value: [
-		//- 			'function x() {',
-		//- 			'\tconsole.log("Hello world!");',
-		//- 			'}'
-		//- 		].join('\n'),
-		//- 		language: 'javascript'
-		//- 	});
-		
-
-		//- //- code editor
-		//- //- script(type='text/javascript' src='/__monaco__/vs/loader.js')
-		//- script(type='text/javascript').
-		//- 	setTimeout(() => {
-		//- 		window.REQUIRE = window.require;
-		//- 		const script = document.createElement('script');
-		//- 		script.src = `/__monaco__/vs/loader.js`;
-		//- 		document.body.appendChild(script);
-		//- 		script.onload = function() {
-		//- 			console.log('loaded');
-		//- 			//- window.require;
-		//- 			window.MONACO = window.require;
-		//- 			window.require = window.REQUIRE;
-		//- 		}
-		//- 	}, 10);
+			var require = { paths: { 'vs': '__codelab__/monaco/vs' } };
+		script(src='__codelab__/monaco/vs/loader.js')
+		script(src='__codelab__/monaco/vs/editor/editor.main.nls.js')
+		script(src='__codelab__/monaco/vs/editor/editor.main.js')
 
 
 		//- live reload access

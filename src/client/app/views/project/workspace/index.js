@@ -38,8 +38,9 @@ export default class Workspace extends Component {
 		});
 
 		// events
-		this.listen('activate-project', this.onActivateProject);
 		this.listen('activate-file', this.onActivateFile);
+		this.listen('activate-project', this.onActivateProject);
+		this.listen('deactivate-project', this.onClearWorkspace);
 		this.listen('clear-workspace', this.onClearWorkspace);
 	}
 
