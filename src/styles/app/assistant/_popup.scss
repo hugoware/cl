@@ -17,12 +17,35 @@
 		right: 0;
 	}
 
+	.title {
+		padding: $popup-message-padding;
+		padding-bottom: 20px;
+	}
+
+	.subtitle {
+		padding: 0 $popup-message-padding;
+		padding-bottom: 20px;
+	}
+
+	.has-subtitle .title {
+		padding-bottom: 10px;
+
+	}
+
 	.message {
 		padding: $popup-message-padding;
+	}
+	
+	.has-title .message, .has-subtitle .message {
+		padding-top: 0;
 	}
 
 	.actions {
 		padding: 0 $popup-message-padding $popup-message-padding $popup-message-padding;
+
+		> div {
+			padding: 6px 22px;
+		}
 	}
 
 	.panel {

@@ -84,6 +84,7 @@ class App extends Component {
 		// shared events
 		const win = Component.bind(window);
 		win.on('resize', this.onWindowResize);
+		win.on('unload', this.onWindowUnload);
 		win.on('keyup', this.onKeyUp);
 
 		// events
@@ -121,6 +122,11 @@ class App extends Component {
 	// checks when the window size has changed
 	onWindowResize = event => {
 		this.broadcast('window-resize', event);
+	}
+
+	// window is exiting
+	onWindowUnload = event => {
+		this.broadcast('window-unload', event);
 	}
 
 	// handles when the keyboard is pressed

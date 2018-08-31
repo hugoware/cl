@@ -5,6 +5,22 @@
 	right: 0;
 	z-index: $layer-assistant;
 
+	.title, .subtitle {
+		display: none;
+	}
+
+	.has-title .title {
+		display: block;
+	}
+
+	.has-subtitle .subtitle {
+		display: block;
+	}
+
+	&.is-first .previous {
+		display: none;
+	}
+
 	.avatar {
 		position: absolute;
 		border-radius: 100%;
@@ -15,13 +31,104 @@
 		line-height: 1.4em;
 	}
 
+	$assistant-speech-button-height: 40px;
+	$assistant-speech-button-font-size: 16px;
+	$assistant-speech-button-vertical-offset: 30px;
+	$assistant-speech-button-horizontal-offset: 10px;
+	$assistant-speech-disable-button-color: #E64B3F;
+	$assistant-speech-enable-button-color: #359AD9;
+
+	.toggle {
+		@include align_vertical($assistant-speech-button-height);
+		@include clearfix();
+		
+		position: absolute;
+		bottom: 0px;
+		right: $assistant-speech-button-horizontal-offset;
+		z-index: 2;
+
+		opacity: 0;
+		transform: scale(0.8, 0.8) translate(0, $assistant-speech-button-vertical-offset);
+		@include animate('background, opacity, transform', 0.3s);
+
+		cursor: pointer;
+		border-radius: 100px;
+		padding: 0 20px 0 10px;
+
+		// default styles
+		color: #fff;
+		text-shadow: 0 1px 3px #000;
+		font-size: $assistant-speech-button-font-size;
+		box-shadow: inset 0 0 0 2px rgba(#fff, 0.1), 0 1px 4px rgba(#000, 0.3);
+
+		&.enabled {
+			background-color: $assistant-speech-disable-button-color;
+
+			.enable {
+				display: none;
+			}
+		}
+
+		// toggle disabling
+		&.disabled {
+			background-color: $assistant-speech-enable-button-color;
+			.disable {
+				display: none;
+			}
+		}
+
+		.icon, .label {
+			float: left;
+		}
+
+		.icon {
+			margin-right: 10px;
+			width: 30px;
+			text-align: center;
+			border-radius: 100px;
+		}
+	}
+
+	.avatar:hover .toggle {
+		opacity: 1;
+		transform: scale(1, 1) translate(0, $assistant-speech-button-vertical-offset);
+	}
+
+	.title {
+		font-size: 30px;
+		padding-bottom: 25px;
+	}
+
+	.has-subtitle .title {
+		padding-bottom: 12px;
+	}
+
+	.subtitle {
+		font-size: 21px;
+		opacity: 0.6;
+		padding-bottom: 25px;
+		font-style: italic;
+	}
+
+	.message {
+		p {
+			padding-bottom: 15px;
+			line-height: 1.2em;
+			font-size: 17px;
+		}
+
+		p:last-child {
+			padding-bottom: 0;
+		}
+	}
+
 	.actions {
 		@include clearfix();
 		
 		div {
 			font-size: 18px;
 			cursor: pointer;
-			padding: 6px 22px;
+			padding: 0 22px;
 			border-radius: 100px;
 		}
 		

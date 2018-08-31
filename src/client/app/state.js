@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import $lfs from './lfs';
 import $api from './api';
+import $speech from './speech';
 import { getExtension, getPathInfo } from './utils/index';
 import { broadcast } from './events';
 import { simplifyPathCollection } from '../../utils/project';
@@ -12,7 +13,10 @@ const ROOT = { path: '/' };
 const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py'];
 const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 
-const $state = { 
+const $state = {
+
+	/** @type {Lesson} */
+	lesson: null,
 
 	/** @type {Project} */
 	project: null,
@@ -74,11 +78,23 @@ const $state = {
 
 	/** activates a lesson for a user */
 	updateLesson: async project => {
-
-		project.lesson = 'web_basics_1';
-
 		return new Promise(async resolve => { 
+
+			// then load the project data
 			if ('lesson' in project) {
+
+				// since lessons depend on speech, make sure
+				// the speech engine is loaded
+				try {
+					await $speech.init();
+				}
+				// failed to load
+				catch (err) {
+					console.log('tried for speech', err);
+					// hide speech options
+				}
+
+				// load the lesson info
 				$state.lesson = await Lesson.load(project.lesson);
 				resolve();
 			}

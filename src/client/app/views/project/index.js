@@ -51,6 +51,9 @@ export default class ProjectView extends View {
 		// load the new project
 		const id = $nav.segments[1] || '';
 		const project = await $api.request('get-project-data', id);
+
+		// TODO: lesson programming
+		project.lesson = 'web_basics_1';
 		
 		// set the project data
 		await $state.updateProject(project);

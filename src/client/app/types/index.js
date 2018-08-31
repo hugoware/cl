@@ -48,3 +48,14 @@
  * @prop {string} tag an HTML tag to use as an option
  * @prop {UIBindingOptions} ui binding options for selecting child layers
  */
+
+/** @typedef {Object} LessonSlide
+ * @prop {string} title a title to show, if any
+ * @prop {string} subtitle a sub title to show, if any
+ * @prop {string} type the kind of slide this is
+ * @prop {boolean} isSlide is this a slide type
+ * @prop {boolean} isQuestion is this a question type
+ * @prop {boolean} isFirst is this the last slide in the deck
+ * @prop {boolean} isLast is this the last slide in the deck
+ * @prop {string} content the content for the slide
+ */

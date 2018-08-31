@@ -16,36 +16,48 @@
 
 -
   slide:
-    style: overlay
+    mode: popup
+    title: Creating Web Pages - Part 1
+    subtitle: More About Tags
     content: |
 
-      This is just some general content
+      This part has an inline *define* [define html] and this is the `>` sign -- it can do to create a website.
 
-      <speak>
-        This is a part of the code where we talk about <define html/> and what it can do to create a website.
-      </speak>
+      [snippet html_tag_example highlight:front_tag end_tag]
 
-      <snippet type="html_tag_example" highlight="front_tag end_tag" />
+      [hidden] speak, but don't show
+      [silent delay:500] show, but don't speak -- and delay
 
-      <speak>
-        This part is the opening tag element
-      </speak>
+      Wait for dramatic effect
 
-      <speak hidden delay="500" >
-        This part it spoken, but not shown
-      </speak>
+      [delay: 2000] Dramatic!
 
       This is a final part that's not read
       
 
-    focus:
-      point: \#filebrowser ::center
-      gesture: \#filebrowser ::center
-      highlight: \#selector
+    gesture: .file-browser ::center
 
-    permissions: +create_file
+    markers: .file-browser ::center(-40,-20) ::hover(2s) ::lead
+    highlights: .selector
 
-    waitFor: \#file-browser ::hover(2s)
+    config: +create_file -delete_project
+
+    waitFor: .file-browser ::hover(2s)
+
+-
+  slide:
+    mode: popup
+    content: |
+
+      More blocks of content and the things it should say
+
+      this is another paragraph
+
+      [hidden once] you should be able to now unlock folders
+      
+
+    config: +create_folder
+
 
 - 
   question:

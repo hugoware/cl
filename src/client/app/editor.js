@@ -75,10 +75,17 @@ class EditorManager {
 		return this.editor.create(container, {
 			theme: 'vs-dark',
 			fontFamily: 'code',
-			fontSize: 20,
+			fontSize: 17,
 			minimap: false,
 			automaticLayout: true
 		});
+	}
+
+	/** colorizes a snippet of code 
+	 * @param {HTMLElement} element the element to colorize
+	*/
+	colorize(element) {
+		this.editor.colorizeElement(element);
 	}
 
 }
