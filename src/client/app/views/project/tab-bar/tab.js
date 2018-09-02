@@ -1,5 +1,6 @@
 /// <reference path="../../../types/index.js" />
 
+import $state from '../../../state';
 import Component from '../../../component';
 
 export default class Tab extends Component {

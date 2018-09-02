@@ -35,6 +35,7 @@ class WebServer {
 
 		// setup server
 		createHttpServer(this);
+		configureBraceResources(this);
 		configureStaticResources(this);
 		configureSessions(this);
 		configureHttpRequests(this, requests.http);
@@ -67,10 +68,19 @@ function createHttpServer(instance) {
 
 // share public resources
 function configureStaticResources(instance) {
-  instance.app.use(`/__codelab__/monaco`, $express.static('./node_modules/monaco-editor/min'));
   instance.app.use('/__codelab__/lessons', $express.static('./dist/lessons'));
   instance.app.use('/__codelab__', $express.static('./dist/public'));
 }
+
+// accessing resources for the brace editor
+function configureBraceResources(instance) {
+	const modes = $path.resolveModule(`brace/mode`);
+	instance.app.get(`/__codelab__/ace/mode-*.js`, (request, response) => {
+		const type = _.trim(request.params[0]).replace(/[^a-z0-9]/g, '');
+		response.sendFile(`${modes}/${type}.js`);
+	});
+}
+
 
 // reads parsed form data
 function parseForm(request, response, next) {

@@ -3,17 +3,11 @@ import { getExtension } from "../utils";
 import $brace from 'brace';
 import ManagedEditor from './managed';
 
-// import required stuff?
-require('brace/mode/html');
-require('brace/mode/css');
+// configure Brace
 require('brace/theme/monokai');
-
-// reused 
-const Range = $brace.acequire('ace/range').Range;
-
-// const SNIPPET_FONT_SIZE = 23;
-// const EDITOR_FONT_SIZE = 18;
-// const SNIPPET_LINE_HEIGHT = 1.5;
+$brace.config.set('basePath', '/__codelab__/ace');
+$brace.config.set('modePath', '/__codelab__/ace');
+$brace.config.set('themePath', '/__codelab__/ace');
 
 // default options for the code editor
 const DEFAULT_OPTIONS = {
@@ -25,6 +19,7 @@ const DEFAULT_OPTIONS = {
 	enableSnippets: false,
 	enableLiveAutocompletion: true,
 	showFoldWidgets: false,
+	showInvisibles: false,
 	copyWithEmptySelection: false,
 	scrollPastEnd: false,
 	printMarginColumn: -1
@@ -66,14 +61,14 @@ class EditorManager {
 		});
 	}
 
-	/** determines the language to use for an editor based on a path
-	 * @param {string} path the path or file name to use
-	 * @returns {string} the language to use
-	 */
-	getLanguage(path) {
-		const ext = getExtension(path, { removeLeadingDot: true });
-		return $languages[ext] || $languages.plain;
-	}
+	// /** determines the language to use for an editor based on a path
+	//  * @param {string} path the path or file name to use
+	//  * @returns {string} the language to use
+	//  */
+	// getLanguage(path) {
+	// 	const ext = getExtension(path, { removeLeadingDot: true });
+	// 	return $languages[ext] || $languages.plain;
+	// }
 
 	/** creates a new code editor instance
 	 * @param {HTMLElement} container the element to hold for the code editor
@@ -82,7 +77,7 @@ class EditorManager {
 
 		// setup the code editor area
 		const editor = $brace.edit(container);
-		editor.setTheme("ace/theme/monokai");
+		editor.setTheme('ace/theme/monokai');
 
 		// set the theme options
 		editor.setOptions(DEFAULT_OPTIONS);
@@ -98,16 +93,6 @@ class EditorManager {
 
 		// create the editor instance
 		return new ManagedEditor(editor);
-
-		// return this.editor.create(container, {
-		// 	theme: 'vs-dark',
-		// 	fontFamily: 'code',
-		// 	fontSize: EDITOR_FONT_SIZE,
-		// 	formatOnPaste: true,
-		// 	formatOnType: true,
-		// 	automaticLayout: true,
-		// 	renderWhitespace: true
-		// });
 	}
 
 	/** colorizes a snippet of code 

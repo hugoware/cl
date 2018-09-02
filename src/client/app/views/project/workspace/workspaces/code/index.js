@@ -100,13 +100,16 @@ export default class CodeEditor extends Component {
 			return;
 
 		// make sure to activate the file
-		await this.editor.activateFile(file);
+		const instance = await this.editor.activateFile(file);
+
+		// update the view
+		if (instance.selection)
+			this.editor.setSelection(instance.selection);
 	}
 
 	// handles deleting an active file instance
 	onDeactivateFile = async file => {
-		this.editor.deactivateFile(file.path);
-		// delete this.files[file.path];
+		await this.editor.deactivateFile(file.path);
 	}
 
 	// write file content -- might consider waiting for
@@ -117,9 +120,8 @@ export default class CodeEditor extends Component {
 		if (this.busy) return;
 
 		// gather the data
-		const { model, file } = this.activeFile;
+		const { content, file } = this.editor.activeInstance;
 		const { path } = file;
-		const content = model.getValue();
 
 		// try and update the project data
 		this.busy = true;
