@@ -1,11 +1,12 @@
 
 import _ from 'lodash';
-import $lfs from '../../../../../lfs';
+
 import Component from '../../../../../component';
 import contentManager from '../../../../../content-manager'
 import $editor from '../../../../../editor';
 import $state from '../../../../../state';
 import $api from '../../../../../api';
+import ManagedEditor from '../../../../../editor/managed';
 
 // the amount of time to wait before compiling
 const COMPILER_DELAY = 300;
@@ -39,9 +40,9 @@ export default class CodeEditor extends Component {
 		this.listen('rename-item', this.onRenameItem);
 		this.ui.save.on('click', this.onSaveChanges);
 
-		// create the code editor
+		/** @type {ManagedEditor} */
 		this.editor = $editor.createInstance(this.ui.editor[0]);
-		this.editor.onDidChangeModelContent(this.onContentChange);
+		this.editor.onChanged = this.onContentChange;
 
 		// handle tracking changes
 		this.onProcessTimers.interval = setInterval(this.onProcessTimers, 25);
@@ -87,39 +88,25 @@ export default class CodeEditor extends Component {
 
 	// queues up changes to the content manager
 	onContentChange = () => {
+		console.log('did get a change');
 		this.compile();
 	}
 
 	// handles when a file is activated (opened or tab selected)
 	onActivateFile = async file => {
-		const { path } = file;
-
+		
 		// make sure this is appropriate
 		if (file.type !== 'code')
 			return;
 
-		// check if creating a new model or not
-		let instance = this.files[path];
-		if (!instance) {
-
-			// read the current content value
-			const content = await $lfs.read(path);
-			const language = $editor.getLanguage(path);
-			const model = $editor.editor.createModel(content, language);
-			instance = { file, content, model };
-
-			// save the file reference
-			this.files[path] = instance;
-		}
-
-		// set the active file
-		this.activeFile = instance;
-		this.editor.setModel(instance.model);
+		// make sure to activate the file
+		await this.editor.activateFile(file);
 	}
 
 	// handles deleting an active file instance
 	onDeactivateFile = async file => {
-		delete this.files[file.path];
+		this.editor.deactivateFile(file.path);
+		// delete this.files[file.path];
 	}
 
 	// write file content -- might consider waiting for
@@ -150,12 +137,11 @@ export default class CodeEditor extends Component {
 
 	/** handles compiling the current file */
 	compile() {
-		if (!this.activeFile) return;
+		if (!this.editor.activeInstance) return;
 
 		// try and process the file
-		const { model, file } = this.activeFile;
-		const data = model.getValue();
-		this.queueUpdate(file.path, data);
+		const { file, content } = this.editor.activeInstance;
+		this.queueUpdate(file.path, content);
 	}
 
 	/** adds or updates content for the next compile cycle
@@ -163,7 +149,7 @@ export default class CodeEditor extends Component {
 	 * @param {string} content the content of the file to update
 	 */
 	queueUpdate = (path, content) => {
-		const instance = this.files[path];
+		const instance = this.editor.getInstance(path);
 		if (!instance) return;
 
 		// check if something weird happened - in this case

@@ -10,6 +10,7 @@ import Workspace from './workspace';
 import Console from './console';
 import Preview from './preview';
 import Assistant from './assistant';
+import Definition from './definition';
 
 export default class ProjectView extends View {
 
@@ -35,6 +36,9 @@ export default class ProjectView extends View {
 		// add the assistant layer separate
 		this.assistant = new Assistant();
 		this.assistant.appendTo(document.body);
+
+		this.definition = new Definition(this.assistant);
+		this.definition.appendTo(document.body);
 	}
 
 	// loads the data for this project view
@@ -53,7 +57,7 @@ export default class ProjectView extends View {
 		const project = await $api.request('get-project-data', id);
 
 		// TODO: lesson programming
-		project.lesson = 'web_basics_1';
+		// project.lesson = 'web_basics_1';
 		
 		// set the project data
 		await $state.updateProject(project);

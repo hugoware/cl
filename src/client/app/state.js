@@ -8,12 +8,19 @@ import { getExtension, getPathInfo } from './utils/index';
 import { broadcast } from './events';
 import { simplifyPathCollection } from '../../utils/project';
 import Lesson from './lesson';
+import setupPermissionMap from './permissions';
 
 const ROOT = { path: '/' };
 const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py'];
 const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 
 const $state = {
+
+	/** @type {Object<string, boolean>} map of lesson permissions */
+	permissions: null,
+
+	/** tracks the config flags in a project */
+	flags: { },
 
 	/** @type {Lesson} */
 	lesson: null,
@@ -68,6 +75,7 @@ const $state = {
 		$state.project = project;
 		$state.paths = { };
 		$state.items = { };
+		$state.config = { };
 
 		// rebuild the path indexes
 		$state.projectId = project.id;
@@ -580,5 +588,8 @@ async function syncProject(children = [ ], parent, relativeTo) {
 	}
 
 }
+
+// creates a map of config options to properties
+setupPermissionMap($state);
 
 export default $state;

@@ -2,11 +2,12 @@
 
 	$popup-speech-size: 30px;
 	$popup-message-corner-size: 10px;
-	$popup-bottom-margin: 40px;
+	$popup-bottom-margin: 20px;
 	$popup-right-margin: 190px;
 	$popup-container-width: 660px;
 	$popup-message-padding: 25px;
 	$popup-avatar-size: 200px;
+	$popup-speech-offset: 0;
 
 	.avatar {
 		img {
@@ -41,10 +42,11 @@
 	}
 
 	.actions {
-		padding: 0 $popup-message-padding $popup-message-padding $popup-message-padding;
+		padding: 0 $popup-message-padding;
 
 		> div {
 			padding: 6px 22px;
+			margin-bottom: $popup-message-padding;
 		}
 	}
 
@@ -53,6 +55,8 @@
 		left: 0;
 		right: $popup-right-margin;
 		bottom: $popup-bottom-margin;
+		// bottom: 0px;
+		// transform: translate(0, 50%);
 
 		border-radius: $popup-message-corner-size $popup-message-corner-size 0 $popup-message-corner-size;
 		background: rgba(#000, $assistant-popup-background-opacity);
@@ -65,7 +69,7 @@
 			display: block;
 			position: absolute;
 			right: -$popup-speech-size;
-			bottom: 0;
+			bottom: $popup-speech-offset;
 			
 			@include uniform_size($popup-speech-size);
 			background-repeat: no-repeat;

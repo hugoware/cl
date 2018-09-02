@@ -42,14 +42,6 @@ html
 		//- main application
 		script(type='text/javascript' src='/__codelab__/app.js')
 
-		//- load the monaco editor
-		script.
-			var require = { paths: { 'vs': '__codelab__/monaco/vs' } };
-		script(src='__codelab__/monaco/vs/loader.js')
-		script(src='__codelab__/monaco/vs/editor/editor.main.nls.js')
-		script(src='__codelab__/monaco/vs/editor/editor.main.js')
-
-
 		//- live reload access
 		if !production
 			script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')

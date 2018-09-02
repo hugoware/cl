@@ -98,34 +98,45 @@ export default class FileBrowserActions extends Component {
 
 	// showing dialogs
 	onRenameItem = () => {
+		if (!$state.permissions.RENAME_ITEMS) return;
 		const selection = $state.getSelection();
 		const item = _.first(selection);
 		this.broadcast('open-dialog', 'rename-item', item);
 	}
 
 	onDeleteItems = () => {
+		if (
+			!$state.permissions.DELETE_ITEMS &&
+			!(this.isOnlyFiles && $state.permissions.DELETE_FILE) &&
+			!(this.isOnlyFolders && $state.permissions.DELETE_FOLDER)
+		) return;
+		
 		const selection = $state.getSelection();
 		this.broadcast('open-dialog', 'remove-items', selection);
 	}
 
 	onMoveItems = () => {
+		if (!$state.permissions.MOVE_ITEMS) return;
 		const selection = $state.getSelection(true);
 		this.broadcast('open-dialog', 'move-items', selection);
 	}
 	
 	// tries to launch the create folder dialog
 	onCreateFolder = () => {
+		if (!$state.permissions.CREATE_FOLDER) return;
 		if (!this.allowCreateFolder) return;
 		const folder = _.first(this.selection);
 		this.broadcast('open-dialog', 'create-folder', { folder });
 	}
 	
 	onCreateFile = () => {
+		if (!$state.permissions.CREATE_FILE) return;
 		const folder = _.first(this.selection);
 		this.broadcast('open-dialog', 'create-file', { folder });
 	}
-
+	
 	onUploadFile = () => {
+		if (!$state.permissions.UPLOAD_FILE) return;
 		const folder = _.first(this.selection);
 		this.broadcast('open-dialog', 'upload-file', { folder });
 	}

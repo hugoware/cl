@@ -10,10 +10,10 @@ export default function processSlide(state, manifest, slide) {
 	slide.type = 'slide';
 
 	// get the content to use
-	const { content, config } = slide;
+	const { content, flags } = slide;
 
 	// apply other tests
-	applyConfigChanges(slide, config);
+	applyFlagChanges(slide, flags);
 
 	// create containers for content
 	slide.speak = [ ];
@@ -33,10 +33,10 @@ export default function processSlide(state, manifest, slide) {
 			let value = _.trim(match.substr(7));
 			value = value.replace(/\]$/g, '');
 			const parts = value.split(/ /);
-			const key = parts[0];
+			const key = parts.shift();
 
 			// find the value to display
-			let display = _.trim(parts[1] || '');
+			let display = _.trim(parts.join(' ') || '');
 
 			// make sure this is real
 			const definition = state.dictionary[key];
@@ -46,7 +46,7 @@ export default function processSlide(state, manifest, slide) {
 			if (!display)
 				display = definition.name;
 
-			return `<span class="definition" type="${key}" >${display}</span>`;
+			return `<span class="define" type="${key}" >${display}</span>`;
 		});
 
 		// extract instructions, if any
@@ -127,8 +127,6 @@ export default function processSlide(state, manifest, slide) {
 	slide.speak = _.compact(slide.speak);
 	slide.speak = _.map(slide.speak, val => fixSpeech(state, val));
 	slide.content = slide.content.join('');
-
-	console.log('gen', slide);
 }
 
 // fixes phrases to make them read easier
@@ -154,14 +152,14 @@ function fixSpeech(state, phrase) {
 }
 
 // checks for changes to the configuration
-function applyConfigChanges(slide, config) {
-	if (!config) return;
+function applyFlagChanges(slide, flags) {
+	if (!flags) return;
 
 	const add = [ ];
 	const remove = [ ];
 
-	// modifies the config
-	const options = config.split(/ +/g);
+	// modifies the flags
+	const options = flags.split(/ +/g);
 	for (const option of options) {
 		const method = option[0];
 		const param = option.substr(1);
@@ -176,8 +174,12 @@ function applyConfigChanges(slide, config) {
 
 	// save the value
 	if (hasConfig) {
-		slide.config = { };
-		if (hasAdd) slide.config.add = add;
-		if (hasRemove) slide.config.remove = remove;
+		slide.flags = { };
+		if (hasAdd) slide.flags.add = add;
+		if (hasRemove) slide.flags.remove = remove;
 	}
+}
+
+function convertSelector(str) {
+  return _.trim(str).replace(/\$/g, '#');
 }

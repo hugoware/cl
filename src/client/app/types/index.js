@@ -59,3 +59,14 @@
  * @prop {boolean} isLast is this the last slide in the deck
  * @prop {string} content the content for the slide
  */
+
+ /** @typedef {Object} SelectorReference
+	* @prop {string} selector the selector used to target the element
+	* @prop {JQuery} element the targeted element
+	* @prop {Object<string, string[]>} commands special commands for this selector
+	* @prop {function} refresh updates the selector reference
+	* @prop {boolean} isMissing does the element still exist
+	* @prop {boolean} hasCommands are tehre any special commands present
+	* @prop {boolean} hasSelector does this have a target element selected
+	* @prop {function} getBounds gets the current bounds of the item
+  */

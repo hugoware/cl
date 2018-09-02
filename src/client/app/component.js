@@ -118,7 +118,12 @@ export default class Component {
         : selector;
 
     return element.data('instance');
-  }
+	}
+	
+	/** creates a simple template from an HTML string */
+	static template(html) {
+		return $(html);
+	}
 
 
 	/** checks to find an existing key before instantiating a component 

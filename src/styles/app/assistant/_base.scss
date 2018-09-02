@@ -1,3 +1,6 @@
+#definition {
+	position: absolute;
+}
 
 #assistant {
 	position: fixed;
@@ -17,7 +20,13 @@
 		display: block;
 	}
 
-	&.is-first .previous {
+	&.is-first .previous,
+	&.is-checkpoint .previous,
+	&.is-question .previous {
+		display: none;
+	}
+
+	&.is-waiting .next {
 		display: none;
 	}
 
@@ -29,6 +38,21 @@
 	.panel {
 		font-size: 18px;
 		line-height: 1.4em;
+	}
+
+	.snippet {
+		margin: 5px 0 15px 0;
+
+		.snippet-highlight {
+			background: rgba(#fff, 0.5);
+			text-shadow: none !important;
+			color: #fff !important;
+		}
+	}
+
+	.define {
+		border-bottom: 1px dotted #fff;
+		cursor: help;
 	}
 
 	$assistant-speech-button-height: 40px;

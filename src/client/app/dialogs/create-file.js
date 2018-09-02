@@ -225,4 +225,9 @@ export default class CreateFileDialog extends Dialog {
 
 	}
 
+	onCancel = () => {
+		if (!$state.permissions.DISMISS_CREATE_FOLDER_DIALOG)
+			return false;
+	}
+
 }

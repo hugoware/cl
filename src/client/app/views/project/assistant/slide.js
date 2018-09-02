@@ -1,6 +1,9 @@
 /// <reference path="../../../types/index.js" />
 
-import focus from '../focus';
+import _ from 'lodash';
+import $state from '../../../state';
+import $editor from '../../../editor';
+import $highlight from 'highlightjs';
 import Component from '../../../component';
 
 export default class Slide extends Component {
@@ -38,14 +41,24 @@ export default class Slide extends Component {
 		this.ui.title.text(slide.title);
 		this.ui.subtitle.text(slide.subtitle);
 
-		// check for markers
-		const markers = slide.markers || slide.marker;
-		if (markers) focus.setMarker(markers);
-
-		// check for any highlights
-		const highlights = slide.highlights || slide.highlight;
-		if (highlights) focus.setHighlight(highlights);
-
+		// check for hover definitions
+		applySnippets(this, $state.lesson);
 	}
 
+}
+
+
+
+// attach each snippet
+function applySnippets(slide ,lesson) {
+
+	// replace all snippets
+	const snippets = slide.find('.snippet');
+	snippets.each((index, element) => {
+		// const type = element.getAttribute('type');
+		// const highlight = _.trim(element.getAttribute('highlight')).split(/ +/g);
+		// const snippet = lesson.snippets[type];
+		// $editor.colorize(element, { snippet, highlight });
+	});
+	
 }

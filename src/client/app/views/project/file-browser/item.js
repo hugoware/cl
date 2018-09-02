@@ -15,6 +15,7 @@ export default class FileBrowserItem extends Component {
 				icon: '.icon',
 				name: '.name',
 				toggle: '.toggle',
+				item: '.item',
 				children: '.children .contents'
 			}
 		});
@@ -84,7 +85,9 @@ export default class FileBrowserItem extends Component {
 
 
 		// update values
+		const type = data.isFolder ? 'folder' : 'file';
 		this.ui.name.text(data.name);
+		this.ui.item.attr(type, data.path)
 		this.attr('class', `file-browser-item depth-${depth}`);
 		this.toggleClass('is-empty', data.isFolder && data.isEmpty);
 		this.toggleClass('is-folder', data.isFolder);

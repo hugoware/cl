@@ -2,13 +2,14 @@
 (function() {
 
 	// returns the instance of this lesson
-	function $LESSON_TYPE$Lesson() {		
+	function $LESSON_TYPE$Lesson(state) {		
 		this.data = $DATA$;
-		this.state = { };
+		this.state = state;
 
 		// shared library access
 		var _ = $LESSON_TYPE$Lesson.lodash;
-		var $html = $LESSON_TYPE$Lesson.cheerio;
+    var $html = $LESSON_TYPE$Lesson.cheerio;
+    var $ = $LESSON_TYPE$Lesson.jquery;
 
 		// default function for calling
 		this.invoke = function() {

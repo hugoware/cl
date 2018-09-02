@@ -38,6 +38,8 @@ export default class Tab extends Component {
 
 	// handles removing modified state
 	onSaveFile = file => {
+		if (!$state.permissions.SAVE_FILE) return;
+
 		if (!isSameFile(this, file)) return;
 		this.removeClass('is-modified');
 	}
@@ -51,6 +53,7 @@ export default class Tab extends Component {
 	// update any changes
 	refresh() {
 		this.ui.name.text(this.file.name);
+		this.attr('file', this.file.path);
 	}
 
 }

@@ -40,6 +40,7 @@ export default class Assistant extends Component {
 		// this is attached 
 		this.listen('clear-project', this.onClearProject);
 		this.listen('activate-project', this.onActivateProject);
+		this.listen('next-slide', this.onNext);
 		this.on('click', '.next', this.onNext);
 		this.on('click', '.previous', this.onPrevious);
 
@@ -119,9 +120,6 @@ export default class Assistant extends Component {
 		if (index === this.slideIndex) return;
 		this.slideIndex = index;
 
-		// // clear the view
-		// this.ui.panel.empty();
-
 		// update slide content
 		const { slide } = $state.lesson;
 		const view = slide.isQuestion ? this.views.question : this.views.slide;
@@ -133,10 +131,11 @@ export default class Assistant extends Component {
 			overlay: mode === 'overlay',
 			'is-last': slide.isLast,
 			'is-first': slide.isFirst,
+			'is-waiting': slide.isWaiting,
+			'is-checkpoint': slide.isCheckpoint,
 		});
 
 		// show the correct view
-		console.log('showing', view);
 		_.each(this.views, view => view.hide());
 		view.show();
 

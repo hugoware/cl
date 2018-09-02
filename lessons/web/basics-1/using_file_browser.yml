@@ -3,22 +3,38 @@
   definition:
     id: html
     name: HTML
-    aka: HTML
+    aka: Hyper Text Markup Language
     define: This is the full def
 
 - snippet:
     id: html_tag_example
+    language: html
     zones:
       front_tag: 0 5
       end_tag: 18 24
+      content: 5 18
     content: |
       <div>this is a tag</div>
 
+# - 
+#   slide:
+#     mode: popup
+#     highlight:
+#       - .file-browser
+
+#     content: |
+#       This is the *File Browser*
+
+#       This is a list of all files and folders in your project. Let's try to create a file
+
+#     gesture: .file-browser
+
 -
   slide:
-    mode: popup
+    mode: overlay
     title: Creating Web Pages - Part 1
     subtitle: More About Tags
+    checkpoint: true
     content: |
 
       This part has an inline *define* [define html] and this is the `>` sign -- it can do to create a website.
@@ -28,35 +44,72 @@
       [hidden] speak, but don't show
       [silent delay:500] show, but don't speak -- and delay
 
-      Wait for dramatic effect
+      Wait for dramatic [define html effect is amazing]
 
       [delay: 2000] Dramatic!
 
       This is a final part that's not read
       
 
-    gesture: .file-browser ::center
+    gesture: $file-browser ::center
 
-    markers: .file-browser ::center(-40,-20) ::hover(2s) ::lead
-    highlights: .selector
+    markers:
+      # - $file-browser [file="/main.css"] ::center
+      # - $file-browser ::center ::hover(2s) ::lead
+      # - $file-browser .actions .upload-file ::center
+    highlights:
+      # - $file-browser
+      # - $file-browser [file="/controller.png"]
+      - $file-browser .actions .create-file
+    
+    events:
+      open-file: verifyDidOpenMainCSS
 
-    config: +create_file -delete_project
+    flags: +create-file +delete-file
 
-    waitFor: .file-browser ::hover(2s)
+    # waitFor: 
+    #   - .tab-bar .tab[file="/home.pug"]
+    #   - .file-browser .create-file ::click
+      # - ::validate(isSlideFinished)
+
+-
+  slide:
+    mode: overlay
+    content: |
+      This is the content of the tag
+
+      [snippet html_tag_example highlight:content]
+
+      It's pretty *darn* neat
+
 
 -
   slide:
     mode: popup
+    checkpoint: true
     content: |
 
-      More blocks of content and the things it should say
+      Create a new file called `new.pug`
 
-      this is another paragraph
+      If you accidentally create the wrong file type, delete and try again
 
       [hidden once] you should be able to now unlock folders
       
 
-    config: +create_folder
+    flags: +delete-file
+
+    waitFor:
+      - .tab-bar .tab[file="/new.pug"]
+
+- 
+  slide:
+    checkpoint: true
+    mode: popup
+    content: |
+      Looks great!
+
+    flags: -create-file -delete-file
+
 
 
 - 

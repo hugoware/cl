@@ -134,6 +134,9 @@ export default class FileBrowser extends Component {
 		// handle files
 		else if (data.isFile) {
 
+			// verify it can be opened
+			if (!$state.permissions.OPEN_FILE) return;
+
 			// before activating a file, update the middleware file system
 			// to use the active file content
 			await $state.openFile(data.path);

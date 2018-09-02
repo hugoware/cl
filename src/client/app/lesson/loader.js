@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import $cherrio from 'cheerio';
+import $jquery from 'jquery';
 
 // shared lesson cache
 const $lessons = { };
@@ -9,6 +11,13 @@ const TIME_PER_INTERVAL = 500;
 // handles saving a script registration
 function registerLesson(id, lesson) {
 	console.log('wants to register', id);
+
+	// share libs
+	lesson.lodash = _;
+	lesson.cherrio = $cherrio;
+	lesson.jquery = $jquery;
+
+	// save the lesson
 	$lessons[id] = lesson;
 }
 
@@ -23,7 +32,7 @@ export async function load(id) {
 
 		// lesson has already been loaded
 		if ($lessons[id]) {
-			const instance = new $lessons[id]();
+			const instance = $lessons[id];
 			return resolve(instance);
 		}
 
@@ -40,7 +49,7 @@ export async function load(id) {
 			// check if the script is loaded
 			if (_.isFunction($lessons[id])) {
 				clearInterval(wait);
-				const instance = new $lessons[id]();
+				const instance = $lessons[id];
 				return resolve(instance);
 			}
 

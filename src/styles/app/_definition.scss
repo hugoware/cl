@@ -1,0 +1,53 @@
+#definition {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: $layer-definition;
+	pointer-events: none;
+
+	// the actual window
+	.content {
+		opacity: 0;
+		@include animate('opacity', 0.3s);
+
+		background: rgba(#000, 0.8);
+		transform: translate(-50%, -100%);
+		color: #fff;
+		margin: -10px 0 0 0;
+
+		box-shadow: inset 0 0 0 2px rgba(#fff, 0.2);
+		padding: 20px;
+	}
+
+	.name {
+		font-size: 22px;
+		padding-bottom: 18px;
+	}
+
+	&.has-aka .name {
+		padding-bottom: 7px;
+	}
+	
+	.aka {
+		font-size: 16px;
+		padding-bottom: 18px;
+
+		span {
+			opacity: 0.6;
+			font-style: italic;
+		}
+
+		.label {
+			padding-bottom: 3px;
+			opacity: 0.4;
+		}
+	}
+
+	&.show .content {
+		opacity: 1;
+	}
+
+	.define {
+		font-size: 18px;
+	}
+}
