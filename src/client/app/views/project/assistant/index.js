@@ -19,6 +19,7 @@ export default class Assistant extends Component {
 
 			ui: {
 				assistant: '.assistant',
+				avatar: '.avatar',
 				dialog: '.dialog',
 				panel: '.panel',
 				toggleSpeech: '.toggle'
@@ -133,6 +134,13 @@ export default class Assistant extends Component {
 			'is-first': slide.isFirst,
 			'is-waiting': slide.isWaiting,
 			'is-checkpoint': slide.isCheckpoint,
+		});
+
+		// pick the emotion, if any
+		this.ui.avatar.toggleClassMap({
+			happy: slide.emotion === 'happy',
+			sad: slide.emotion === 'sad',
+			surprised: slide.emotion === 'surprised'
 		});
 
 		// show the correct view

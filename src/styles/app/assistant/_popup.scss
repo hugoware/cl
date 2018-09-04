@@ -1,20 +1,24 @@
+
+
 #assistant.popup {
 
 	$popup-speech-size: 30px;
 	$popup-message-corner-size: 10px;
 	$popup-bottom-margin: 20px;
-	$popup-right-margin: 190px;
+	$popup-right-margin: 170px;
 	$popup-container-width: 660px;
 	$popup-message-padding: 25px;
 	$popup-avatar-size: 200px;
 	$popup-speech-offset: 0;
 
 	.avatar {
-		img {
+		svg {
 			@include uniform_size($popup-avatar-size);
+			position: relative;
+			left: 20px;
 		}
 
-		bottom: 0;
+		bottom: -2px;
 		right: 0;
 	}
 

@@ -14,7 +14,8 @@
     "clean": "rm -rf ./dist",
     "compile": "./node_modules/.bin/gulp compile",
     "compile-lesson": "babel-node ./lessons/compiler/index.js",
-    "deploy": "./scripts/deploy.sh"
+    "deploy": "./scripts/deploy.sh",
+    "marker": "electron ./lessons/marker/index.html"
   },
   "author": "",
   "license": "ISC",

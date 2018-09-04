@@ -1,8 +1,29 @@
-// .avatar {
-// 	img {
-// 		display: none;
-// 	}
 
-// 	background: #f00;
-// 	border-radius: 400px;
-// }
+$assistants: girl-1; // girl-2 boy-1 boy-2;
+
+// create each emotion for avatars
+@each $assistant in $assistants {
+
+	.#{$assistant} ##{$assistant} {
+		display: block;
+	}
+
+	.#{$assistant} ##{$assistant}-default {
+		display: block;
+	}
+
+	##{$assistant} ##{$assistant}-happy,
+	##{$assistant} ##{$assistant}-sad,
+	##{$assistant} ##{$assistant}-surprised,
+	.happy ##{$assistant}-default,
+	.surprised ##{$assistant}-default,
+	.sad ##{$assistant}-default {
+		display: none;
+	}
+
+	.happy ##{$assistant}-happy,
+	.sad ##{$assistant}-sad,
+	.surprised ##{$assistant}-surprised {
+		display: block !important; 
+	}
+}

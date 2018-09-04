@@ -79,6 +79,12 @@ function configureBraceResources(instance) {
 		const type = _.trim(request.params[0]).replace(/[^a-z0-9]/g, '');
 		response.sendFile(`${modes}/${type}.js`);
 	});
+
+	// const workers = $path.resolveModule(`brace/worker`);
+	// instance.app.get(`/__codelab__/ace/worker/*.js`, (request, response) => {
+	// 	const type = _.trim(request.params[0]).replace(/[^a-z0-9]/g, '');
+	// 	response.sendFile(`${workers}/${type}.js`);
+	// });
 }
 
 

@@ -1,0 +1,23 @@
+/index.html:
+  heading_begin_tag:
+    start: {row: 7, col: 4}
+    end: {row: 7, col: 8}
+  paragraph_end_tag:
+    start: {row: 9, col: 35}
+    end: {row: 9, col: 39}
+/style.css:
+  css_property_color:
+    start: {row: 1, col: 2}
+    end: {row: 1, col: 7}
+  css_color_value:
+    start: {row: 1, col: 9}
+    end: {row: 1, col: 12}
+  css_color_property:
+    start: {row: 1, col: 2}
+    end: {row: 1, col: 7}
+  css_selector:
+    start: {row: 0, col: 0}
+    end: {row: 0, col: 4}
+  css_rule:
+    start: {row: 0, col: 0}
+    end: {row: 2, col: 1}

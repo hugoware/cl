@@ -51,12 +51,11 @@
       This is a final part that's not read
       
 
-    gesture: $file-browser ::center
-
     markers:
       # - $file-browser [file="/main.css"] ::center
       # - $file-browser ::center ::hover(2s) ::lead
       # - $file-browser .actions .upload-file ::center
+      
     highlights:
       # - $file-browser
       # - $file-browser [file="/controller.png"]
@@ -75,6 +74,7 @@
 -
   slide:
     mode: overlay
+    emotion: surprised
     content: |
       This is the content of the tag
 
@@ -87,6 +87,7 @@
   slide:
     mode: popup
     checkpoint: true
+    emotion: sad
     content: |
 
       Create a new file called `new.pug`
@@ -105,6 +106,7 @@
   slide:
     checkpoint: true
     mode: popup
+    emotion: happy
     content: |
       Looks great!
 

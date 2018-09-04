@@ -55,10 +55,16 @@ function applySnippets(slide ,lesson) {
 	// replace all snippets
 	const snippets = slide.find('.snippet');
 	snippets.each((index, element) => {
-		// const type = element.getAttribute('type');
-		// const highlight = _.trim(element.getAttribute('highlight')).split(/ +/g);
-		// const snippet = lesson.snippets[type];
-		// $editor.colorize(element, { snippet, highlight });
+
+		// create the target for styling
+		const example = document.createElement('div');
+		element.appendChild(example);
+
+		// update the element
+		const type = element.getAttribute('type');
+		const highlight = _.trim(element.getAttribute('highlight')).split(/ +/g);
+		const snippet = lesson.snippets[type];
+		$editor.colorize(example, { snippet, highlight });
 	});
 	
 }

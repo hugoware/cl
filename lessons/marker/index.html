@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Marker</title>
+  </head>
+  <body>
+
+    <div class="container" >
+      <textarea id="edit" ></textarea>
+    </div>
+
+    <div id="save" >Save</div>
+    <input type="text" id="input" >
+
+
+    <style type="text/css" >
+      html, body {
+        overflow: hidden;
+      }
+
+      #input {
+        position: absolute;
+        font-size: 16px;
+        font-weight: bold;
+        font-family: monospace;
+        box-shadow: 0 0 0 15px rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        bottom : 15px;
+        left : 10px;
+        width: 50%;
+        outline: none;
+        display: none;
+      }
+
+      #input.show {
+        display: block;
+      }
+
+      #edit {
+        border: none;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        background: none;
+        color: #fff;
+        font-family: monospace;
+        font-size: 15px;
+      }
+
+      .container {
+        position: absolute;
+        display: inline-block;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        padding: 15px;
+        background: #372725;
+      }
+
+      #save {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: #090;
+        color: #fff;
+        border-radius: 100px;
+        padding: 8px 15px;
+        font-family: sans-serif;
+        cursor: pointer;
+      }
+
+    </style>
+
+
+    <script type="text/javascript" >
+
+      var path = require('path');
+      var fs = require('fs');
+      var yml = require('yaml-js');
+
+      var state = { };
+
+      var saveButton = document.getElementById('save');
+      var editor = document.getElementById('edit');
+      var nameInput = document.getElementById('input');
+
+      nameInput.onblur = function() {
+        nameInput.className = '';
+      };
+
+      nameInput.onkeyup = function(event) {
+        if (event.keyCode !== 13) return;
+
+        // make sure something was input
+        var name = (nameInput.value || '').toString().trim();
+        if (name == '') return;
+
+        // get the indexes and line counts to determine the
+        // row and column that this selection falls on
+        var rangeStart = editor.value.substr(0, editor.selectionStart);
+        var rangeEnd = editor.value.substr(0, editor.selectionEnd);
+        var linesStart = rangeStart.split(/\n/g);
+        var linesEnd = rangeEnd.split(/\n/g);
+        var rowStart = linesStart.length - 1;
+        var rowEnd = linesEnd.length - 1;
+        var columnStart = linesStart[linesStart.length - 1].length;
+        var columnEnd = linesEnd[linesEnd.length - 1].length;
+
+        // save the index info
+        state.content[state.key] = state.content[state.key] || { };
+        state.content[state.key][name] = {
+          start: { row: rowStart, col: columnStart },
+          end: { row: rowEnd, col: columnEnd },
+        };
+
+        // write the output
+        const output = yml.dump(state.content);
+        fs.writeFileSync(state.zoneFile, output);
+        nameInput.className = '';
+
+      };
+
+      saveButton.onclick = function() {
+        nameInput.className = 'show';
+        nameInput.value = '';
+        nameInput.focus();
+      };
+
+      editor.addEventListener('drop', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        var zoneFile;
+        var zoneContent;
+
+        // get the file to load
+        var file = event.dataTransfer.files[0].path;
+        var dir = path.dirname(file);
+
+        // search directories upwards to find the
+        // correct location
+        while (dir) {
+          if (dir === '/' || dir === '')
+            break;
+
+          zoneFile = dir + '/zones.yml';
+          if (!fs.existsSync(zoneFile)) {
+            dir = path.dirname(dir);
+            continue;
+          }
+
+          zoneContent = fs.readFileSync(zoneFile).toString();
+          break;
+        }
+
+        // not a file
+        if (!zoneContent) {
+          alert('not a project file with a zone.yml');
+          return false;
+        }
+
+        // clean up the name a little
+        var project = dir.split('/');
+        project = project.splice(-2).join('/');
+
+        // get the zone file info
+        state.zoneFile = zoneFile;
+        state.content = yml.load(zoneContent);
+        editor.value = fs.readFileSync(file).toString();
+
+        // also save the key -- remove the starting
+        // directory since that's the project files directory
+        state.key = file.substr(dir.length);
+        state.key = state.key.replace(/^\/files/, '');
+
+        // track the directory 
+        saveButton.innerHTML = 'Save ' + project;
+
+        return false;
+      });
+
+    </script>
+  </body>
+</html>

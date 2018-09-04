@@ -1,7 +1,16 @@
 import _ from 'lodash';
 import { getExtension } from "../utils";
 import $brace from 'brace';
+$brace.Range = $brace.acequire('ace/range').Range;
 import ManagedEditor from './managed';
+
+// validations
+require('brace/mode/html');
+require('brace/mode/javascript');
+require('brace/mode/json');
+require('brace/mode/lua');
+require('brace/mode/xml');
+require('brace/mode/css');
 
 // configure Brace
 require('brace/theme/monokai');
@@ -10,6 +19,8 @@ $brace.config.set('modePath', '/__codelab__/ace');
 $brace.config.set('themePath', '/__codelab__/ace');
 
 // default options for the code editor
+const DEFAULT_THEME = 'ace/theme/monokai';
+const DEFAULT_SNIPPET_FONT_SIZE = 21.5;
 const DEFAULT_OPTIONS = {
 	fontSize: 18.5,
 	fontFamily: 'code',
@@ -74,18 +85,7 @@ class EditorManager {
 	 * @param {HTMLElement} container the element to hold for the code editor
 	 */
 	createInstance(container) {
-
-		// setup the code editor area
-		const editor = $brace.edit(container);
-		editor.setTheme('ace/theme/monokai');
-
-		// set the theme options
-		editor.setOptions(DEFAULT_OPTIONS);
-		editor.container.style.lineHeight = DEFAULT_OPTIONS.lineHeight;
-		editor.renderer.updateFontSize();
-
-		// manage options
-		editor.setOptions({
+		const editor = createEditor(container, {
 			enableBasicAutocompletion: true,
 			enableSnippets: true,
 			enableLiveAutocompletion: false
@@ -99,62 +99,48 @@ class EditorManager {
 	 * @param {HTMLElement} element the element to colorize
 	*/
 	colorize(element, options) {
-		// const { snippet } = options;
+		
+		// view only editor area
+		const editor = createEditor(element, {
+			fontSize: options.fontSize || DEFAULT_SNIPPET_FONT_SIZE,
+			useWorker: false,
+			readOnly: true,
+			maxLines: 500
+		});
+		
+		// apply the snippet
+		const { snippet, highlight } = options;
+		const session = $brace.createEditSession(snippet.content, `ace/mode/${snippet.language}`);
+		session.setOptions({ tabSize: 2, useWorker: false });
+		editor.setSession(session);
 
-		// const editor = this.editor.create(element, {		
-		// 	value: snippet.content,
-		// 	language: snippet.language,	
-		// 	theme: 'vs-dark',
-		// 	fontFamily: 'code',
-		// 	fontSize: SNIPPET_FONT_SIZE,
-		// 	minimap: { enabled: false },
-		// 	readOnly: true,
-		// 	automaticLayout: true,
-		// 	scrollBeyondLastLine: false,
-		// 	disableLayerHinting: true,
-		// 	matchBrackets: false,
-		// 	showFoldingControls: false,
-		// 	quickSuggestions: false,
-		// 	contextmenu: false
-		// });
+		// check for highlighting
+		if (highlight)
+			_.each(highlight, key => {
+				const zone = snippet.zones[key];
+				const { start, end, line } = zone;
+				const range = new $brace.Range(start.line, start.index, end.line, end.index);
+				editor.session.addMarker(range, 'snippet-highlight', line ? 'fullLine' : '');
+			});
 
-		// // map out all highlighted areas, if any
-		// if (options.highlight) {
-		// 	const highlights = [ ];
-		// 	_.each(options.highlight, zone => {
-
-		// 		// make sure the highlight exists
-		// 		const highlight = snippet.zones[zone];
-		// 		if (!highlight) return;
-
-		// 		// create the range
-		// 		highlights.push({
-		// 			range: new monaco.Range(
-		// 				highlight.start.line + 1,
-		// 				highlight.start.index + 1,
-		// 				highlight.end.line + 1,
-		// 				highlight.end.index + 1
-		// 			),
-
-		// 			options: {
-		// 				isWholeLine: highlight.line,
-		// 				inlineClassName: 'snippet-highlight'
-		// 			}
-		// 		});
-		// 	});
-
-		// 	// if there's ranges, update them now
-		// 	if (_.some(highlights))
-		// 		editor.deltaDecorations([], highlights);
-		// }
-
-		// // this it kinda dumb, but we have to manually set the size in this case
-		// const height = (editor.getModel().getLineCount() * SNIPPET_FONT_SIZE) * SNIPPET_LINE_HEIGHT;
-		// element.style.height = `${height}px`;
-
-		// return editor;
+		return { element, snippet, editor, session };
 	}
 
+}
+
+// setup a code editor area
+function createEditor(container, options) {
+
+	// setup the copied options
+	options = _.assign({ }, DEFAULT_OPTIONS, options);
+
+	// create the editor
+	const editor = $brace.edit(container);
+	editor.setTheme(DEFAULT_THEME);
+	editor.setOptions(options);
+	editor.container.style.lineHeight = DEFAULT_OPTIONS.lineHeight;
+	editor.renderer.updateFontSize();
+	return editor;
 }
 
 
