@@ -2,6 +2,7 @@
 import $database from '../storage/database';
 import format from '../formatters';
 import $fsx from 'fs-extra';
+import $date from '../utils/date';
 import projectValidator from '../validators/project';
 import { resolveProject } from '../path';
 
@@ -57,7 +58,7 @@ export default async function createProject(data) {
 		try {
 			// get a new ID for this project
 			const id = await $database.generateId($database.projects, 6);
-			const now = +new Date;
+			const now = $date.now();
 			const project = { id, ownerId, name, description, type, modifiedAt: now };
 			if (!!language) project.language = language;
 

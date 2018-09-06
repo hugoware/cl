@@ -4,6 +4,7 @@ import { OAuth2Client } from 'google-auth-library';
 
 import $config from '../config';
 import $database from '../storage/database';
+import $date from '../utils/date';
 
 /** @typedef {Object} LoginResult
  * @prop {string} user The id for the logged in user
@@ -57,7 +58,7 @@ export default async function login(data = { }) {
 	// systemAccessUntil
 
 	// successful login, update the account
-	const now = +new Date;
+	const now = $date.now();
 	const { id } = user;
 	await $database.users.update({ id }, {
 		$set: { lastLoginAt: now }

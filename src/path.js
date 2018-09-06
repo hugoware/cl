@@ -39,6 +39,17 @@ export function resolvePath(path) {
   return resolveRoot(`~/dist/${path}`);
 }
 
+/** Resolves a path to a lesson directory
+ * @param {string} [id] the ID of the lesson to find
+ * @param {string} [file] the file to locate in the lesson directory
+ * @returns {string} the resolved path
+ */
+export function resolveLesson(id = '', file) {
+	let path = `~/dist/lessons/${id}`;
+	if (!!file) path += '/' + removeLeadingSlash(file)
+  return resolveRoot(path);
+}
+
 /** Resolves a path from the public web server directory
  * @param {string} path the path to resolve
  * @returns {string} the resolved path

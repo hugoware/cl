@@ -1,0 +1,40 @@
+doctype
+html
+	head
+		title Admin
+		link(rel='stylesheet' type='text/css' href='/__codelab__/admin/index.css')
+
+	body
+
+		#success
+			.message
+
+		#error
+			.source
+			.message
+
+		#manage-user.module
+			.title Manage User
+			.content
+				.controls
+					input(placeholder='email')
+					button(find-user) Find User
+
+		#create-user.module
+			.title Create User
+			.content
+				.controls
+					input(field-first-name placeholder='first name')
+					input(field-last-name placeholder='last name')
+					input(field-email placeholder='email')
+					input(field-type placeholder='type' value='student')
+					button(create-user) Create User
+
+
+	script(type='text/javascript' src='/__codelab__/admin.js')
+
+	//- live reload access
+	if !production
+		script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
+
+

@@ -5,6 +5,8 @@
   </head>
   <body>
 
+    <div id="status" ></div>
+
     <div class="container" >
       <textarea id="edit" ></textarea>
     </div>
@@ -16,6 +18,27 @@
     <style type="text/css" >
       html, body {
         overflow: hidden;
+      }
+
+      #status {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 999;
+        padding: 10px;
+        color: #fff;
+        font-family: monospace;
+        font-size: 15px;
+        background: rgba(0,0,0, 0.3);
+      }
+
+      #status div {
+        padding: 5px;
+      }
+
+      #status div:hover {
+        background: rgba(255, 255, 255, 0.3);
+        cursor: not-allowed;
       }
 
       #input {
@@ -77,13 +100,62 @@
 
       var path = require('path');
       var fs = require('fs');
-      var yml = require('yaml-js');
+      var yml = require('js-yaml');
+      var _ = require('lodash');
 
       var state = { };
 
+      var statusContainer = document.getElementById('status');
       var saveButton = document.getElementById('save');
       var editor = document.getElementById('edit');
       var nameInput = document.getElementById('input');
+
+      // saves the current state
+      function writeContent() {
+        updateStatus();
+        const output = yml.dump(state.content);
+        fs.writeFileSync(state.zoneFile, output);
+      }
+
+      // drop an item
+      function removeItem(item) {
+        delete state.content[state.key][item];
+        writeContent();
+      }
+
+      // sync the list of props
+      function updateStatus() {
+        statusContainer.innerHTML = '';
+        if (!state.content) return;
+
+        // add each item
+        const source = state.content[state.key];
+        const keys = _.keys(source);
+        keys.sort();
+        _.each(keys, function(key) {
+
+          const element = document.createElement('div');
+          element.onclick = function() {
+            removeItem(key);
+          };
+
+          element.innerText = key;
+          statusContainer.appendChild(element);
+        });
+      }
+
+      window.onload = function() {
+        editor.focus();
+      };
+
+      // shortcut to open editing
+      window.onmouseup = function(event) {
+        if (editor.selectionStart === editor.selectionEnd) return;
+        nameInput.className = 'show';
+        nameInput.value = '';
+        nameInput.focus();
+      };
+
 
       nameInput.onblur = function() {
         nameInput.className = '';
@@ -95,6 +167,7 @@
         // make sure something was input
         var name = (nameInput.value || '').toString().trim();
         if (name == '') return;
+        name = _.snakeCase(name);
 
         // get the indexes and line counts to determine the
         // row and column that this selection falls on
@@ -115,10 +188,8 @@
         };
 
         // write the output
-        const output = yml.dump(state.content);
-        fs.writeFileSync(state.zoneFile, output);
+        writeContent();
         nameInput.className = '';
-
       };
 
       saveButton.onclick = function() {
@@ -172,10 +243,23 @@
         // also save the key -- remove the starting
         // directory since that's the project files directory
         state.key = file.substr(dir.length);
-        state.key = state.key.replace(/^\/files/, '');
+
+        // for snippets, remove the filename
+        if (/^\/snippets/.test(state.key)) {
+          state.key = state.key.replace(/^\/snippets\//, '')
+            .replace(/\..*$/, '');
+          console.log('using snippet key', state.key);
+        }
+        else {
+          state.key = state.key.replace(/^\/files/, '');
+        }
+
 
         // track the directory 
         saveButton.innerHTML = 'Save ' + project;
+        updateStatus();
+
+        setTimeout(function() { editor.focus(); }, 1);
 
         return false;
       });

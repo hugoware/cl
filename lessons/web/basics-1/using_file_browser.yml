@@ -6,32 +6,9 @@
     aka: Hyper Text Markup Language
     define: This is the full def
 
-- snippet:
-    id: html_tag_example
-    language: html
-    zones:
-      front_tag: 0 5
-      end_tag: 18 24
-      content: 5 18
-    content: |
-      <div>this is a tag</div>
-
-# - 
-#   slide:
-#     mode: popup
-#     highlight:
-#       - .file-browser
-
-#     content: |
-#       This is the *File Browser*
-
-#       This is a list of all files and folders in your project. Let's try to create a file
-
-#     gesture: .file-browser
-
 -
   slide:
-    mode: overlay
+    mode: popup
     title: Creating Web Pages - Part 1
     subtitle: More About Tags
     checkpoint: true
@@ -79,6 +56,26 @@
       This is the content of the tag
 
       [snippet html_tag_example highlight:content]
+
+      It's pretty *darn* neat
+-
+  slide:
+    mode: overlay
+    content: |
+      This is a brand new snippet
+
+      [snippet complex_tag highlight:entire_tag]
+
+      It's pretty *darn* neat
+
+-
+  slide:
+    mode: overlay
+    emotion: surprised
+    content: |
+      This is a brand new snippet
+
+      [snippet mary_example highlight:console_example]
 
       It's pretty *darn* neat
 

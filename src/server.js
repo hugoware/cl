@@ -15,6 +15,9 @@ import $path from './path';
 import $fs from './storage/file-system';
 import $database from './storage/database';
 
+// checking user access
+import userHasPermissions from './queries/user-has-permissions';
+
 // session storage
 const MongoStore = $connect($session)
 
@@ -69,7 +72,7 @@ function createHttpServer(instance) {
 // share public resources
 function configureStaticResources(instance) {
   instance.app.use('/__codelab__/lessons', $express.static('./dist/lessons'));
-  instance.app.use('/__codelab__', $express.static('./dist/public'));
+  instance.app.use('/__codelab__', $express.static('./dist/resources/public'));
 }
 
 // accessing resources for the brace editor
@@ -79,14 +82,7 @@ function configureBraceResources(instance) {
 		const type = _.trim(request.params[0]).replace(/[^a-z0-9]/g, '');
 		response.sendFile(`${modes}/${type}.js`);
 	});
-
-	// const workers = $path.resolveModule(`brace/worker`);
-	// instance.app.get(`/__codelab__/ace/worker/*.js`, (request, response) => {
-	// 	const type = _.trim(request.params[0]).replace(/[^a-z0-9]/g, '');
-	// 	response.sendFile(`${workers}/${type}.js`);
-	// });
 }
-
 
 // reads parsed form data
 function parseForm(request, response, next) {
@@ -106,6 +102,36 @@ function parseForm(request, response, next) {
 	
 }
 
+// checks if a user has required permissions
+async function checkUserPermissions(session, permissions) {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const user = _.trim((session && session.user) || '');
+			const allow = await userHasPermissions(user, permissions);
+
+			// check if they can access this response
+			if (!allow) reject();
+			else resolve();
+		}
+		catch (err) {
+			return reject();
+		}
+	})
+
+}
+
+// setup a handler for required permissions to view a page
+function setupRequestPermissionHandler(permissions) {
+	return async function(request, response, next) {
+		try {
+			await checkUserPermissions(request.session, permissions);
+			next();
+		}
+		catch (err) {
+			as404(response);
+		}
+	}
+}
 
 // store user sessions in Mongo
 function configureSessions(instance) {
@@ -193,6 +219,10 @@ function configureHttpRequests(instance, requests) {
 			const method = _.trim(config.method || 'all').toLowerCase();
 			const actions = [ ];
 
+			// adding permission requirements
+			if (config.permissions)
+				actions.push(setupRequestPermissionHandler(config.permissions));
+
 			// check for incoming files
 			if (config.acceptForm)
 				actions.push(parseForm);
@@ -241,7 +271,18 @@ function configureSocketRequests(instance, requests) {
 			if (config.event === 'connect') return;
 
 			// create the handler
-			const handle = (...args) => {
+			const handle = async (...args) => {
+
+				// has permission requirements
+				if (config.permissions) {
+					try {
+						await checkUserPermissions(session, permissions);
+					}
+					catch (err) {
+						socket.emit(`not-found`);
+						return;
+					}
+				}
 
 				// the user does not appear to be logged in
 				if (config.authenticate && !session.user) {
@@ -259,6 +300,12 @@ function configureSocketRequests(instance, requests) {
 		});
 	});
 
+}
+
+// handles returning the 404 page
+function as404(response) {
+	response.status(404);
+	response.render('site/missing');
 }
 
 // kick off the http server

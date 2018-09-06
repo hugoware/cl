@@ -4,6 +4,7 @@ import _ from 'lodash';
 import $state from '../../../state';
 import Component from '../../../component';
 import { cancelEvent } from '../../../utils/index';
+import { requirePermission } from '../prevent';
 
 // handles managing actions for the file browser
 export default class FileBrowserActions extends Component {
@@ -98,47 +99,75 @@ export default class FileBrowserActions extends Component {
 
 	// showing dialogs
 	onRenameItem = () => {
-		if (!$state.permissions.RENAME_ITEMS) return;
-		const selection = $state.getSelection();
-		const item = _.first(selection);
-		this.broadcast('open-dialog', 'rename-item', item);
+		requirePermission({
+			required: $state.permissions.RENAME_ITEMS,
+			message: `Can't Rename Items`,
+			allowed: () => {
+				const selection = $state.getSelection();
+				const item = _.first(selection);
+				this.broadcast('open-dialog', 'rename-item', item);
+			}
+		});
 	}
 
 	onDeleteItems = () => {
-		if (
-			!$state.permissions.DELETE_ITEMS &&
-			!(this.isOnlyFiles && $state.permissions.DELETE_FILE) &&
-			!(this.isOnlyFolders && $state.permissions.DELETE_FOLDER)
-		) return;
+		requirePermission({
+			required: $state.permissions.DELETE_ITEMS
+				|| (this.isOnlyFiles && $state.permissions.DELETE_FILE)
+				|| (this.isOnlyFolders && $state.permissions.DELETE_FOLDER),
+			message: `Can't Delete Items`,
+			allowed: () => {
+				const selection = $state.getSelection();
+				this.broadcast('open-dialog', 'remove-items', selection);
+			}
+		});
 		
-		const selection = $state.getSelection();
-		this.broadcast('open-dialog', 'remove-items', selection);
 	}
 
 	onMoveItems = () => {
-		if (!$state.permissions.MOVE_ITEMS) return;
-		const selection = $state.getSelection(true);
-		this.broadcast('open-dialog', 'move-items', selection);
+		requirePermission({
+			required: $state.permissions.MOVE_ITEMS,
+			message: `Can't Move Items`,
+			allowed: () => {
+				const selection = $state.getSelection(true);
+				this.broadcast('open-dialog', 'move-items', selection);
+			}
+		});
 	}
 	
 	// tries to launch the create folder dialog
 	onCreateFolder = () => {
-		if (!$state.permissions.CREATE_FOLDER) return;
-		if (!this.allowCreateFolder) return;
-		const folder = _.first(this.selection);
-		this.broadcast('open-dialog', 'create-folder', { folder });
+		requirePermission({
+			required: $state.permissions.CREATE_FOLDER,
+			message: `Can't Create Folders`,
+			allowed: () => {
+				if (!this.allowCreateFolder) return;
+				const folder = _.first(this.selection);
+				this.broadcast('open-dialog', 'create-folder', { folder });
+			}
+		});
 	}
 	
 	onCreateFile = () => {
-		if (!$state.permissions.CREATE_FILE) return;
-		const folder = _.first(this.selection);
-		this.broadcast('open-dialog', 'create-file', { folder });
+		requirePermission({
+			required: $state.permissions.CREATE_FILE,
+			message: `Can't Create Files`,
+			allowed: () => {
+				const folder = _.first(this.selection);
+				this.broadcast('open-dialog', 'create-file', { folder });
+			}
+		});
 	}
 	
 	onUploadFile = () => {
-		if (!$state.permissions.UPLOAD_FILE) return;
-		const folder = _.first(this.selection);
-		this.broadcast('open-dialog', 'upload-file', { folder });
+		requirePermission({
+			required: $state.permissions.UPLOAD_FILE,
+			message: `Can't Upload Files`,
+			allowed: () => {
+				const folder = _.first(this.selection);
+				this.broadcast('open-dialog', 'upload-file', { folder });
+			}
+		});
 	}
 
 }

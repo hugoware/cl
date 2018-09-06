@@ -59,11 +59,10 @@
 		left: 0;
 		right: $popup-right-margin;
 		bottom: $popup-bottom-margin;
-		// bottom: 0px;
-		// transform: translate(0, 50%);
 
 		border-radius: $popup-message-corner-size $popup-message-corner-size 0 $popup-message-corner-size;
-		background: rgba(#000, $assistant-popup-background-opacity);
+		background: rgba(#333, 0.95); // $assistant-popup-background-opacity);
+		box-shadow: inset 0 0 0 3px rgba(#000, 0.3);
 		text-shadow: 0 1px 4px #000;
 		
 		color: #fff;

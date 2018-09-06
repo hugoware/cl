@@ -70,3 +70,9 @@
 	* @prop {boolean} hasSelector does this have a target element selected
 	* @prop {function} getBounds gets the current bounds of the item
   */
+
+/** @typedef {Object} PermissionCheck
+ * @prop {string} message the message to display
+ * @prop {boolean|function} required the conditions required to be met
+ * @prop {function} allowed the action to perform if the required conditions are met
+ */

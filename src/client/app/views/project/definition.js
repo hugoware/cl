@@ -20,15 +20,15 @@ export default class DefinitionPopUp extends Component {
 		this.assistant = assistant;
 		this.assistant.on('mouseover', '.define', this.onShow);
 		this.assistant.on('mouseout', '.define', this.onHide);
-		// this.listen('activate-project', this.hide);
-		// this.listen('deactivate-project', this.hide);
+		this.listen('activate-project', this.onHide);
+		this.listen('deactivate-project', this.onHide);
 
+		// update the position as required
 		this.listen('window-resize', this.matchPosition);
 	}
 
 	// match the position on the screen
 	matchPosition = () => {
-		console.log('will try match');
 		if (!this.target) return;
 
 		// get the position

@@ -39,7 +39,7 @@ const $config = {
 	resources: {
 		src: 'src/resources/**/*',
 		watch: 'src/resources/**/*',
-		dest: 'dist/public'
+		dest: 'dist/resources'
 	},
 
 	views: {
@@ -49,7 +49,7 @@ const $config = {
 	},
 
 	scripts: {
-    client: [ 'site', 'app', /* 'viewer', */ 'browser' ],
+    client: [ 'site', 'app', /* 'viewer', */ 'browser', 'admin' ],
 		workers: [ 'pug', 'typescript', 'scss', 'html' ],
 		server: {
 			watch: ['src/**/*.js', '!src/client', '!src/client/**' ],

@@ -6,6 +6,7 @@ import $state, { ProjectItem } from '../../../state';
 import FileBrowserItem from './item';
 import FileBrowserActions from './actions';
 import { cancelEvent } from '../../../utils'
+import { requirePermission } from '../prevent';
 
 const DOUBLE_CLICK_DELAY = 250;
 
@@ -135,7 +136,10 @@ export default class FileBrowser extends Component {
 		else if (data.isFile) {
 
 			// verify it can be opened
-			if (!$state.permissions.OPEN_FILE) return;
+			if (!requirePermission({
+				requires: $state.permissions.OPEN_FILE,
+				message: `Can't Open Files`
+			})) return;
 
 			// before activating a file, update the middleware file system
 			// to use the active file content

@@ -40,46 +40,16 @@ const DEFAULT_OPTIONS = {
 // common editor class
 class EditorManager {
 
-	// get editor() {
-	// 	return this._monaco.editor;
-	// }
-
-	// get core() {
-	// 	return this._monaco;
-	// }
-
 	/** waits for the monoaco editor to load */
 	async init() {
-		const instance = this;
+		return Promise.resolve();
+		// const instance = this;
 
-		// wait for the framework to appear
-		return new Promise(resolve => {
-
-			resolve();
-			
-			// // wait for the monaco editor
-			// function wait() {
-			// 	instance._monaco = window.monaco;
-			// 	if (!instance._monaco)
-			// 		return setTimeout(wait, 100);
-
-			// 	// this was found
-			// 	resolve();
-			// }
-
-			// // kick off the first request
-			// wait();
-		});
+		// // wait for the framework to appear
+		// return new Promise(resolve => {
+		// 	resolve();
+		// });
 	}
-
-	// /** determines the language to use for an editor based on a path
-	//  * @param {string} path the path or file name to use
-	//  * @returns {string} the language to use
-	//  */
-	// getLanguage(path) {
-	// 	const ext = getExtension(path, { removeLeadingDot: true });
-	// 	return $languages[ext] || $languages.plain;
-	// }
 
 	/** creates a new code editor instance
 	 * @param {HTMLElement} container the element to hold for the code editor
@@ -110,7 +80,7 @@ class EditorManager {
 		
 		// apply the snippet
 		const { snippet, highlight } = options;
-		const session = $brace.createEditSession(snippet.content, `ace/mode/${snippet.language}`);
+		const session = $brace.createEditSession(snippet.content, `ace/mode/${snippet.type}`);
 		session.setOptions({ tabSize: 2, useWorker: false });
 		editor.setSession(session);
 
@@ -119,7 +89,7 @@ class EditorManager {
 			_.each(highlight, key => {
 				const zone = snippet.zones[key];
 				const { start, end, line } = zone;
-				const range = new $brace.Range(start.line, start.index, end.line, end.index);
+				const range = new $brace.Range(start.row, start.col, end.row, end.col);
 				editor.session.addMarker(range, 'snippet-highlight', line ? 'fullLine' : '');
 			});
 
@@ -142,6 +112,5 @@ function createEditor(container, options) {
 	editor.renderer.updateFontSize();
 	return editor;
 }
-
 
 export default new EditorManager();

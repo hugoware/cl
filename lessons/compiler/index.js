@@ -32,8 +32,10 @@ const source = process.argv[2];
 const id = _.snakeCase(source);
 const root = $path.resolve(`./lessons/${source}`);
 const output = $path.resolve(`./lessons/output/${id}`);
-const dist = $path.resolve(`./dist/lessons/${id}`);
+const dist = $path.resolve(`./src/resources/lessons/${id}`);
+const snippets = $path.resolve(`${root}/snippets`);
 const manifest = readYml('manifest.yml');
+const zones = readYml('zones.yml');
 const state = { dictionary: $dictionary };
 const type = _.camelCase(source);
 
@@ -50,12 +52,11 @@ for (const item of manifest.lesson) {
 // gather each item for processing
 content = _.compact(content);
 const definitions = _.filter(content, item => 'definition' in item);
-const snippets = _.filter(content, item => 'snippet' in item);
 const slides = _.filter(content, item => 'slide' in item || 'question' in item);
 
 // process each category in order
 processDefinitions(state, manifest, definitions);
-processSnippets(state, manifest, snippets);
+processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
 processSlides(state, manifest, slides);
 
 // include all scripts
@@ -79,16 +80,22 @@ template = template.replace(/\$DATA\$/g, JSON.stringify(manifest, null, IS_PREVI
 const result = IS_PREVIEW ? template: $uglify.minify(template).code;
 
 // copy resources
-console.log('writing content to', output);
-$fsx.writeFileSync(`${output}/index.js`, result);
+console.log('writing content to', dist);
+$fsx.ensureDirSync(dist);
+$fsx.writeFileSync(`${dist}/index.js`, result);
 
 // copy resources, if possible
-if ($fsx.existsSync(`${root}/resources`))
-	$fsx.copySync(`${root}/resources`, `${output}/resources`);
+if ($fsx.existsSync(`${root}/files`))
+  $fsx.copySync(`${root}/files`, `${dist}/files`);
 
 // also copy this to the dist directory
-$fsx.ensureDirSync(dist);
-$fsx.copySync(output, dist)
+
+// write the manifest summary
+$fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
+  name: manifest.name,
+  description: manifest.description,
+  type: manifest.type,
+}));
 	
 // notify this is done
 console.log('generated', id);
