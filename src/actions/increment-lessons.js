@@ -10,10 +10,6 @@ const DEFAULT_UNLOCK_INVERVAL = 7;
 
 /** updates lesson progress for all users */
 export default async function incrementLessons() {
-
-	await createLesson('web_basics_1', 'hugo');
-
-	return;
 	return new Promise(async (resolve, reject) => {
 		try {
 

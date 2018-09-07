@@ -9,15 +9,18 @@ export default class ProjectItem extends Component {
 
 		this.data = data;
 		
-		this.bind({
-			'.name': data.name,
-			'.description': data.description,
-			'.modifiedAt': data.modifiedAt,
-			'$': {
-				attr: { 'data-id': data.id }
-			}
-
+		// populate data
+		this.attr('data-id', data.id);
+		this.addClass(`type-${data.type}`);
+		this.ui.name.text(data.name);
+		this.ui.description.text(data.description);
+		this.ui.modifiedAt.text(data.modifiedAt);
+		this.toggleClassMap({
+			'is-lesson': data.lesson,
+			'is-project': !data.lesson,
 		});
+
+		
 	}
 
 }

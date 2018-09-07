@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Component from '../../../component';
 import ComponentList from '../../../component-list';
 import Tab from './tab';
+import $state from '../../../state';
+import { requirePermission } from '../prevent';
+import { cancelEvent } from '../../../utils';
 
 export default class TabBar extends Component {
 
@@ -68,18 +71,36 @@ export default class TabBar extends Component {
 
 	// handles changing tabs
 	onSelectTab = event => {
+
+		// get the tab
 		const tab = Component.getContext(event.target);
 		if (!tab) return;
 
-		// change the active tab
-		this.setActive(tab);
-		this.broadcast('activate-file', tab.file);
+		// if this tab is already the active one
+		if (tab.is('.active')) return;
+
+		requirePermission({
+			requires: $state.getPermission('SWITCH_TAB'),
+			message: "Can't Switch Files",
+			allowed: () => {
+				this.setActive(tab);
+				this.broadcast('activate-file', tab.file);
+			}
+		});
 	}
 
 	// handles closing a tab
 	onCloseTab = event => {
-		const tab = Component.getContext(event.target);
-		this.closeTab(tab, true);
+		requirePermission({
+			requires: $state.getPermission('CLOSE_FILE'),
+			message: "Can't Close Files",
+			allowed: () => {
+				const tab = Component.getContext(event.target);
+				this.closeTab(tab, true);
+			}
+		});
+
+		return cancelEvent(event);
 	}
 
 	// handle closing the tab view

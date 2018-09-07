@@ -11,6 +11,7 @@ const USER_DATA = {
 	first: 1,
 	last: 1,
 	type: 1,
+	avatar: 1,
 	domain: 1
 };
 

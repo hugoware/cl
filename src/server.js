@@ -71,7 +71,7 @@ function createHttpServer(instance) {
 
 // share public resources
 function configureStaticResources(instance) {
-  instance.app.use('/__codelab__/lessons', $express.static('./dist/lessons'));
+  instance.app.use('/__codelab__/lessons', $express.static('./dist/resources/lessons'));
   instance.app.use('/__codelab__', $express.static('./dist/resources/public'));
 }
 

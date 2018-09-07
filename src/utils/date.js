@@ -1,4 +1,4 @@
-
+import _ from 'lodash';
 import $moment from 'moment';
 
 /** gets the current time 
@@ -27,8 +27,21 @@ export function fromTime(timestamp, amount, unit) {
 	return $moment(timestamp).add(amount, unit).format();
 }
 
+/** displays the time ago string for a timestamp 
+ * @param {string} timestamp the timestamp to adjust from
+ * @param {number} [amount] the amount to adjust by the unit
+ * @param {string} [unit] the unit to adjust by
+ * @returns {string} the time ago string
+*/
+export function timeAgo(timestamp, amount, unit) {
+	const time = $moment(timestamp);
+	if (_.isNumber(amount) && _.isString(unit)) time.add(amount, unit);
+	return time.fromNow()
+}
+
 export default {
 	now,
 	fromNow,
-	fromTime
+	fromTime,
+	timeAgo
 };

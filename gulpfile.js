@@ -33,7 +33,7 @@ const $config = {
 			// 'src/styles/**/*.sass'
 		],
 		src: ['src/styles/**/*', '!src/styles/**/lib/**'],
-		dest: 'dist/public'
+		dest: 'dist/resources/public'
 	},
 
 	resources: {
@@ -52,8 +52,8 @@ const $config = {
     client: [ 'site', 'app', /* 'viewer', */ 'browser', 'admin' ],
 		workers: [ 'pug', 'typescript', 'scss', 'html' ],
 		server: {
-			watch: ['src/**/*.js', '!src/client', '!src/client/**' ],
-			src: ['src/**/*.js', '!src/client', '!src/client/**'],
+			watch: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**', ],
+			src: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**'],
 			dest: 'dist'
 		}
 	}
@@ -81,7 +81,7 @@ _.each($config.scripts.client, source => {
   
   // compiles the client script
   $gulp.task(action, () => {
-    const output = $gulp.dest(`dist/public`);
+    const output = $gulp.dest(`dist/resources/public`);
 
     return $browserify(input, {
       fast: true,
@@ -177,16 +177,16 @@ $gulp.task('compress-css', () => {
 
 
 $gulp.task('compress-json', () => {
-  return $gulp.src(['dist/public/*.json'])
+  return $gulp.src(['dist/resources/public/*.json'])
     .pipe($jsonminify())
-    .pipe($gulp.dest('dist/public'));
+    .pipe($gulp.dest('dist/resources/public'));
 });
 
 
 $gulp.task('compress-images', () => {
-  $gulp.src('dist/public/*')
+  $gulp.src('dist/resources/public/*')
     .pipe($imagemin())
-    .pipe($gulp.dest('dist/public'));
+    .pipe($gulp.dest('dist/resources/public'));
 })
 
 

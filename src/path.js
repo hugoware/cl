@@ -45,7 +45,7 @@ export function resolvePath(path) {
  * @returns {string} the resolved path
  */
 export function resolveLesson(id = '', file) {
-	let path = `~/dist/lessons/${id}`;
+	let path = `~/dist/resources/lessons/${id}`;
 	if (!!file) path += '/' + removeLeadingSlash(file)
   return resolveRoot(path);
 }

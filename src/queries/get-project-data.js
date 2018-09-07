@@ -1,6 +1,8 @@
 
+import $fsx from 'fs-extra';
 import log from '../log';
 import $database from '../storage/database';
+import { resolveLesson } from '../path';
 
 /**
  * gets all project information
@@ -8,9 +10,7 @@ import $database from '../storage/database';
  * @returns {object} general project data
  */
 export default async function getProjectData(id) {
-	let project;
-	
-	try {
+	return new Promise(async (resolve, reject) => {
 		const results = await $database.projects.find({ id })
 			.project({
 				_id: 0,
@@ -18,6 +18,8 @@ export default async function getProjectData(id) {
 				type: 1,
 				name: 1,
 				description: 1,
+				lesson: 1,
+				state: 1,
 				ownerId: 1,
 				modifiedAt: 1,
 				createdAt: 1,
@@ -25,15 +27,26 @@ export default async function getProjectData(id) {
 			.toArray();
 
 		// check for a result
-		project = results[0];
+		const project = results[0];
 		if (!project)
-			throw 'project_not_found';
-	}
-	// database errors
-	catch (err) {
+			return reject('project_not_found');
+
+		// verify this is a real lesson
+		if (project.lesson) {
+			const path = resolveLesson(project.lesson)
+			const exists = await $fsx.exists(path);
+			
+			// remove lesson info if the lesson no longer exists
+			if (!exists) {
+				delete project.lesson;
+				delete project.state;
+			}
+		}
+
+		resolve(project);
+	})
+	.catch(err => {
 		log.ex('queries/get-project-data.js', err);
 		throw 'server_error';
-	}
-
-	return project;
+	});
 }

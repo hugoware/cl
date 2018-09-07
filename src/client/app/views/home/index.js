@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import $api from '../../api';
 import $nav from '../../nav';
+import $icon from '../../icons';
 import { cancelEvent } from '../../utils';
 
 import View from '../';
 import HomeProjectItem from './project-item';
+import AvatarSelection from './avatar-select';
 import Component from '../../component';
 
 export default class HomeView extends View {
@@ -14,39 +16,106 @@ export default class HomeView extends View {
 			template: 'home-view',
 
 			ui: {
+				about: '.about',
 				createProject: '.actions .action.create-project'
 			}
 		});
 
+		// add the avatar selector
+		this.avatarSelection = new AvatarSelection();
+		this.avatarSelection.appendTo(document.body);
+
 		// listen for item events
 		this.ui.createProject.on('click', this.onCreateProject);
-		this.on('click', '.project .action.remove', this.onRemoveProject);
-		this.on('click', '.project .action.publish', this.onPublishProject);
-		this.on('click', '.project', this.onSelectProject);
-
+		this.on('click', '.project-item .action.remove', this.onRemoveProject);
+		this.on('click', '.project-item .action.publish', this.onPublishProject);
+		this.on('click', '.project-item .action.reset', this.onResetLesson);
+		this.on('click', '.project-item', this.onSelectProject);
+		this.ui.avatar.on('click', this.onShowAvatarSelection);
+		this.listen('set-avatar', this.onSetAvatar);
+		this.ui.showProjects.on('click', this.onShowProjects);
+		this.ui.showLessons.on('click', this.onShowLessons);
 	}
 
+	/** tests if any projects are found
+	 * @returns {boolean}
+	 */
+	get hasProjects() {
+		return !!(this.data && _.some(this.data.projects))
+	}
+
+	/** tests if any lessons are found
+	 * @returns {boolean}
+	 */
+	get hasLessons() {
+		return !!(this.data && _.some(this.data.lessons))
+	}
+
+	/** set the current view */
 	async onActivate() {
+		this.busy = true;
+		this.removeClass('projects lessons');
 
 		// get the summary for this view
 		try {
-			const summary = await $api.request('get-home-summary');
+			this.data = await $api.request('get-home-summary');
 
-			// clear an activate the project list
+			// remove existing items
 			this.ui.projectList.empty();
-			_.each(summary.projects, project => {
-				const item = new HomeProjectItem(project);
-				item.appendTo(this.ui.projectList);
+			this.ui.lessonList.empty();
+
+			// add each item
+			_.each({
+				lessons: this.ui.lessonList,
+				projects: this.ui.projectList 
+			}, (list, source) => {
+
+				// add each project item
+				const projects = this.data[source];
+				_.each(projects, project => {
+					const item = new HomeProjectItem(project);
+					item.appendTo(list);
+				});
 			});
 
-			console.log('tried to activate');
+			// set the user stats
+			const { first, avatar } = this.data.user;
+			this.ui.name.text(first);
+			this.onSetAvatar(avatar);
+
+			// activate an appropriate view
+			this.setDefaultView();
 		}
 		catch (err) {
 			console.log('err', err);
 		}
 	}
 
-	onCreateProject = () => this.broadcast('open-dialog', 'create-project')
+	// replaces the user avatar
+	onSetAvatar = avatar => {
+		const icon = $icon.avatar(avatar);
+		this.ui.avatar.empty()
+			.append(icon);
+	}
+
+	// clears the active view
+	setView = view => {
+		this.removeClass('loading no-projects no-lessons projects lessons');
+		setTimeout(() => this.addClass(view), 0);
+	}
+
+	// decides the best view to display
+	setDefaultView = () => {
+		this.setView('projects');
+	}
+
+	// display the popup for selecting a new avatar
+	onShowAvatarSelection = () => {
+		this.avatarSelection.showAvatarSelection();
+	}
+
+	onCreateProject = () =>
+		this.broadcast('open-dialog', 'create-project')
 
 	onSelectProject = event => {
 		const id = getProjectId(event);
@@ -63,6 +132,22 @@ export default class HomeView extends View {
 		const id = getProjectId(event);
 		console.log('will publish', id);
 		return cancelEvent(event);
+	}
+	
+	onResetLesson = event => {
+		const id = getProjectId(event);
+		console.log('will reset lesson', id);
+		return cancelEvent(event);
+	}
+
+	// displays all projects, if any
+	onShowProjects = () => {
+		this.setView(this.hasProjects ? 'projects' : 'no-projects');
+	}
+
+	// displays all lessons
+	onShowLessons = () => {
+		this.setView(this.hasLessons ? 'lessons' : 'no-lessons');
 	}
 
 }

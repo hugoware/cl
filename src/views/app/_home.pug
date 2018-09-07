@@ -1,6 +1,71 @@
 
 +template('home-view')
 	#home.view
+		.nav
+			.about
+				.avatar
+					.icon(bind='avatar')
+					.tooltip Change avatar
+
+				.welcome
+					.greet Hello,
+					.name(bind='name')
+
+			.sections
+				.section.lessons(bind='showLessons')
+					.name Lessons
+					.count(bind='lessonCount')
+					
+				.section.projects(bind='showProjects')
+					.name Projects
+					.count(bind='projectCount')
+
+
+			.actions
+				button.action.create-project(bind='createProject') Create Project
+
+		.content
+			.projects(bind='projectsView')
+				h2 Projects
+				.list(bind='projectList')
+
+			.lessons(bind='lessonsView')
+				h2 Lessons
+				.list(bind='lessonList')
+
+
++template('project-item')
+	.project-item
+		.type
+			.web(icon='error')
+			.code(icon='error')
+			.game2D(icon='error')
+			.game3D(icon='error')
+			.mobile(icon='error')
+
+		.details
+			.name(bind='name')
+			.description(bind='description')
+
+		.modified-at
+			span Updated 
+			span(bind='modifiedAt')
+			
 		.actions
-			button.action.create-project Create Project
-		.project-list(bind='projectList')
+			.action.remove 
+				.icon(icon='error')
+				.label Remove
+			.action.reset 
+				.icon(icon='warning')
+				.label Reset Lesson
+			.action.publish 
+				.icon(icon='success')
+				.label Publish
+
++template('avatar-select')
+	.avatar-select
+		.overlay(bind='overlay')
+		.container
+			for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+				.select(avatar='girl-'+ i icon='girl'+ i + 'Avatar')
+				.select(avatar='boy-'+ i icon='boy'+ i + 'Avatar')

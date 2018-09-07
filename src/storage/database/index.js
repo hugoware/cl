@@ -22,6 +22,7 @@ class Database {
 		this.users = this.db.collection('users');
 		this.accounts = this.db.collection('accounts');
 		this.projects = this.db.collection('projects');
+		this.progress = this.db.collection('progress');
 
 		// console.log($config.port);
 		return Promise.resolve(true);

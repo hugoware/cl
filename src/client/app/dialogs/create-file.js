@@ -4,6 +4,7 @@ import Component from '../component';
 import TextInput from '../ui/text-input';
 import ErrorMessage from '../ui/error-message';
 import $state from '../state';
+import { requirePermission } from '../views/project/prevent';
 
 export default class CreateFileDialog extends Dialog {
 
@@ -226,8 +227,9 @@ export default class CreateFileDialog extends Dialog {
 	}
 
 	onCancel = () => {
-		if (!$state.permissions.DISMISS_CREATE_FOLDER_DIALOG)
-			return false;
+		// requirePermission({
+		// 	require: !$state.getPermission('DISALLOW_DIALOG_HIDE')
+		// });
 	}
 
 }

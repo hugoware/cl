@@ -30,8 +30,7 @@ function readFile(name) {
 // get basic info
 const source = process.argv[2];
 const id = _.snakeCase(source);
-const root = $path.resolve(`./lessons/${source}`);
-const output = $path.resolve(`./lessons/output/${id}`);
+const root = $path.resolve(`./lessons/content/${source}`);
 const dist = $path.resolve(`./src/resources/lessons/${id}`);
 const snippets = $path.resolve(`${root}/snippets`);
 const manifest = readYml('manifest.yml');
@@ -63,12 +62,12 @@ processSlides(state, manifest, slides);
 const scripts = [];
 for (const file of $fsx.readdirSync(root)) {
 	if (!/\.js$/.test(file)) continue;
-	const script = readFile(`${source}/${file}`);
+	const script = readFile(`content/${source}/${file}`);
 	scripts.push(script);
 }
 
 // make sure the destination is there
-$fsx.ensureDirSync(output);
+$fsx.ensureDirSync(dist);
 
 // populate the template
 template = template.replace(/\$LESSON_ID\$/g, id);
@@ -85,8 +84,9 @@ $fsx.ensureDirSync(dist);
 $fsx.writeFileSync(`${dist}/index.js`, result);
 
 // copy resources, if possible
-if ($fsx.existsSync(`${root}/files`))
-  $fsx.copySync(`${root}/files`, `${dist}/files`);
+console.log('checking for resource', `${root}/resources`);
+if ($fsx.existsSync(`${root}/resources`))
+  $fsx.copySync(`${root}/resources`, `${dist}/resources`);
 
 // also copy this to the dist directory
 

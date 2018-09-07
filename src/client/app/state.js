@@ -16,6 +16,9 @@ const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 
 const $state = {
 
+	/** @type {UserDetail} */
+	user: null,
+
 	/** @type {Object<string, boolean>} map of lesson permissions */
 	permissions: null,
 
@@ -58,6 +61,15 @@ const $state = {
 		const { id } = this.project;
 		const { protocol, host } = window.location;
 		return `${protocol}//${id}.${host}`;
+	},
+
+	/** checks for a lesson permission
+	 * @param {string} key the permission to check for
+	 * @returns {boolean} does the user have access
+	 */
+	getPermission: key => {
+		if (!$state.lesson) return true;
+		return $state.permissions[key];
 	},
 
 	/** checks if a file type can be uploaded or not

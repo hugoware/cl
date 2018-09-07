@@ -22,10 +22,11 @@ window.addEventListener('mousemove', event => {
  * @param {PermissionCheck} options
  */
 export function requirePermission(check) {
-
+	console.log('checking', check);
+	
 	// if this can be done, just execute the action
-	if (!!check.required) {
-		try { 
+	if (!!(check.required || check.requires)) {
+		try {
 			if (_.isFunction(check.allowed))
 				check.allowed();
 		}

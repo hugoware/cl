@@ -4,13 +4,23 @@ import _ from 'lodash';
 const PERMISSIONS = [
 	'create_file',
 	'create_folder',
-	'delete_file',
-	'delete_folder',
 	'upload_file',
 	'rename_project',
-	'close_file',
 	'open_file',
+	'close_file',
 	'save_file',
+	
+	'delete_item',
+	'delete_file',
+	'delete_folder',
+	
+	'move_item',
+	'move_file',
+	'move_folder',
+
+	'rename_item',
+	'rename_file',
+	'rename_folder',
 ];
 
 /** handles binding permissions to the state object */
@@ -32,7 +42,6 @@ export default function setupPermissionMap(state) {
 		// check for permissions
 		Object.defineProperty(state.permissions, key, {
 			get: () => {
-				console.log('is checking', key, requires, state.flags);
 
 				// if not running a lesson, there's no
 				// permissions to work with

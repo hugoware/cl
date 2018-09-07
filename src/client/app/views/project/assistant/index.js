@@ -41,6 +41,7 @@ export default class Assistant extends Component {
 		// this is attached 
 		this.listen('clear-project', this.onClearProject);
 		this.listen('activate-project', this.onActivateProject);
+		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('next-slide', this.onNext);
 		this.on('click', '.next', this.onNext);
 		this.on('click', '.previous', this.onPrevious);
@@ -100,6 +101,11 @@ export default class Assistant extends Component {
 		await $state.lesson.go(0);
 		this.refresh();
 		this.show();
+	}
+
+	// hide when leaving the project editor
+	onDeactivateProject = () => {
+		this.hide();
 	}
 
 	// handle button navigation

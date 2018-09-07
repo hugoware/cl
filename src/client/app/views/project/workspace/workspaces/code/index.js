@@ -88,7 +88,6 @@ export default class CodeEditor extends Component {
 
 	// queues up changes to the content manager
 	onContentChange = () => {
-		console.log('did get a change');
 		this.compile();
 	}
 

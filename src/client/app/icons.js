@@ -40,6 +40,39 @@ import addFolderIcon from '../../icons/icon-add-folder.svg';
 import addFileIcon from '../../icons/icon-add-file.svg';
 import toggleDropdownIcon from '../../icons/icon-toggle-dropdown.svg';
 
+// avatars
+import defaultAvatarIcon from '../../icons/default-avatar.svg';
+import girl1AvatarIcon from '../../icons/girl-1.svg';
+import girl2AvatarIcon from '../../icons/girl-2.svg';
+import girl3AvatarIcon from '../../icons/girl-3.svg';
+import girl4AvatarIcon from '../../icons/girl-4.svg';
+import girl5AvatarIcon from '../../icons/girl-5.svg';
+import girl6AvatarIcon from '../../icons/girl-6.svg';
+import girl7AvatarIcon from '../../icons/girl-7.svg';
+import girl8AvatarIcon from '../../icons/girl-8.svg';
+import girl9AvatarIcon from '../../icons/girl-9.svg';
+import girl10AvatarIcon from '../../icons/girl-10.svg';
+import girl11AvatarIcon from '../../icons/girl-11.svg';
+import girl12AvatarIcon from '../../icons/girl-12.svg';
+import girl13AvatarIcon from '../../icons/girl-13.svg';
+import girl14AvatarIcon from '../../icons/girl-14.svg';
+import girl15AvatarIcon from '../../icons/girl-15.svg';
+import boy1AvatarIcon from '../../icons/boy-1.svg';
+import boy2AvatarIcon from '../../icons/boy-2.svg';
+import boy3AvatarIcon from '../../icons/boy-3.svg';
+import boy4AvatarIcon from '../../icons/boy-4.svg';
+import boy5AvatarIcon from '../../icons/boy-5.svg';
+import boy6AvatarIcon from '../../icons/boy-6.svg';
+import boy7AvatarIcon from '../../icons/boy-7.svg';
+import boy8AvatarIcon from '../../icons/boy-8.svg';
+import boy9AvatarIcon from '../../icons/boy-9.svg';
+import boy10AvatarIcon from '../../icons/boy-10.svg';
+import boy11AvatarIcon from '../../icons/boy-11.svg';
+import boy12AvatarIcon from '../../icons/boy-12.svg';
+import boy13AvatarIcon from '../../icons/boy-13.svg';
+import boy14AvatarIcon from '../../icons/boy-14.svg';
+import boy15AvatarIcon from '../../icons/boy-15.svg';
+
 /** @type {Object<string, HTMLElement>} */
 const $icons = {
 	arrowRight,
@@ -80,7 +113,40 @@ const $icons = {
 	pngIcon,
 	jpgIcon,
 	gifIcon,
-	unknownIcon
+	unknownIcon,
+
+	// avatars
+	defaultAvatarIcon,
+	girl1AvatarIcon,
+	girl2AvatarIcon,
+	girl3AvatarIcon,
+	girl4AvatarIcon,
+	girl5AvatarIcon,
+	girl6AvatarIcon,
+	girl7AvatarIcon,
+	girl8AvatarIcon,
+	girl9AvatarIcon,
+	girl10AvatarIcon,
+	girl11AvatarIcon,
+	girl12AvatarIcon,
+	girl13AvatarIcon,
+	girl14AvatarIcon,
+	girl15AvatarIcon,
+	boy1AvatarIcon,
+	boy2AvatarIcon,
+	boy3AvatarIcon,
+	boy4AvatarIcon,
+	boy5AvatarIcon,
+	boy6AvatarIcon,
+	boy7AvatarIcon,
+	boy8AvatarIcon,
+	boy9AvatarIcon,
+	boy10AvatarIcon,
+	boy11AvatarIcon,
+	boy12AvatarIcon,
+	boy13AvatarIcon,
+	boy14AvatarIcon,
+	boy15AvatarIcon
 };
 
 // handles creating icon generators
@@ -98,16 +164,25 @@ export function get(key) {
 	return $icons[key].cloneNode(true);
 }
 
+// helper function
+function findIcon(key, defaultTo) {
+	let id = `${key}Icon`;
+	if (!(id in $icons)) id = defaultTo || 'unknownIcon';
+	return get(id);
+};
+
 export default { 
 	arrowRight: () => get('arrowRight'),
 	close: () => get('closeIcon'),
 	error: () => get('errorIcon'),
 	warning: () => get('warningIcon'),
 	refresh: () => get('refreshIcon'),
-	icon: key => {
-		let id = `${key}Icon`;
-		if (!(id in $icons)) id = 'unknownIcon';
-		return get(id);
+	icon: findIcon,
+
+	avatar: id => {
+		id = _.trim(id).replace(/[^0-9a-zA-Z]/g, '');
+		id += 'Avatar';
+		return findIcon(id, 'defaultAvatarIcon')
 	},
 
 	// file browser

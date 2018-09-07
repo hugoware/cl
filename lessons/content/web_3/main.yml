@@ -1,0 +1,11 @@
+
+-
+  slide:
+    type: overlay
+    content: |
+      This is just a basic slide
+-
+  slide:
+    type: overlay
+    content: |
+      This lesson is now complete

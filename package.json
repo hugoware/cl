@@ -7,7 +7,7 @@
     "prod": "npm run database & npm run prod-server",
     "prod-server": "nodemon ./dist/index.js --watch ./dist/version --delay 1.5 ./config.yml",
     "dev": "npm run database & npm run dev-server & npm run watch",
-    "dev-server": "nodemon ./dist/index.js --watch dist/ --ignore 'dist/workbench.js' --ignore 'dist/public/' --ignore 'dist/views/' --delay 1.5 -- ./config.dev.yml",
+    "dev-server": "nodemon ./dist/index.js --watch dist/ --ignore 'dist/workbench.js' --ignore 'dist/resources/' --ignore 'dist/views/' --delay 1.5 -- ./config.dev.yml",
     "database": "mongod --dbpath ./.data/codelab/",
     "watch": "./node_modules/.bin/gulp watch",
     "workbench": "babel-node ./src/workbench.js ./config.dev.yml",
@@ -15,7 +15,8 @@
     "compile": "./node_modules/.bin/gulp compile",
     "compile-lesson": "babel-node ./lessons/compiler/index.js",
     "deploy": "./scripts/deploy.sh",
-    "marker": "electron ./lessons/marker/index.html"
+    "marker": "electron ./lessons/marker/index.html",
+    "create-lesson": "./scripts/new-lesson.sh"
   },
   "author": "",
   "license": "ISC",
