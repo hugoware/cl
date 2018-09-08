@@ -15,7 +15,7 @@
 				.section.lessons(bind='showLessons')
 					.name Lessons
 					.count(bind='lessonCount')
-					
+
 				.section.projects(bind='showProjects')
 					.name Projects
 					.count(bind='projectCount')
@@ -37,11 +37,11 @@
 +template('project-item')
 	.project-item
 		.type
-			.web(icon='error')
-			.code(icon='error')
-			.game2D(icon='error')
-			.game3D(icon='error')
-			.mobile(icon='error')
+			.web(icon='projectWeb')
+			.code(icon='projectCode')
+			.game2D(icon='projectGame')
+			.game3D(icon='projectGame')
+			.mobile(icon='projectMobile')
 
 		.details
 			.name(bind='name')

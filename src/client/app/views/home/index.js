@@ -26,15 +26,17 @@ export default class HomeView extends View {
 		this.avatarSelection.appendTo(document.body);
 
 		// listen for item events
-		this.ui.createProject.on('click', this.onCreateProject);
 		this.on('click', '.project-item .action.remove', this.onRemoveProject);
 		this.on('click', '.project-item .action.publish', this.onPublishProject);
 		this.on('click', '.project-item .action.reset', this.onResetLesson);
 		this.on('click', '.project-item', this.onSelectProject);
+		
+		this.ui.createProject.on('click', this.onCreateProject);
 		this.ui.avatar.on('click', this.onShowAvatarSelection);
-		this.listen('set-avatar', this.onSetAvatar);
 		this.ui.showProjects.on('click', this.onShowProjects);
 		this.ui.showLessons.on('click', this.onShowLessons);
+
+		this.listen('set-avatar', this.onSetAvatar);
 	}
 
 	/** tests if any projects are found
@@ -109,6 +111,12 @@ export default class HomeView extends View {
 		this.setView('projects');
 	}
 
+	// handle errors
+	showError = err => {
+		alert('TODO: err');
+		console.log('err', err);
+	}
+
 	// display the popup for selecting a new avatar
 	onShowAvatarSelection = () => {
 		this.avatarSelection.showAvatarSelection();
@@ -124,20 +132,63 @@ export default class HomeView extends View {
 
 	onRemoveProject = event => {
 		const id = getProjectId(event);
-		console.log('will remove', id);
-		return cancelEvent(event);
+		if (!_.some(id)) return;
+		cancelEvent(event);
+		
+		// perform the remove
+		this.busy = true;
+		try {
+			const result = await $api.request('remove-project', { projectId: id });
+			console.log(result);
+		}
+		// general errors
+		catch (err) {
+			this.showError(err);
+		}
+		finally {
+			this.busy = false;
+		}
+
 	}
 	
 	onPublishProject = event => {
 		const id = getProjectId(event);
-		console.log('will publish', id);
-		return cancelEvent(event);
+		if (!_.some(id)) return;
+		cancelEvent(event);
+
+		// perform the remove
+		this.busy = true;
+		try {
+			const result = await $api.request('publish-project', { projectId: id });
+			console.log(result);
+		}
+		// general errors
+		catch (err) {
+			this.showError(err);
+		}
+		finally {
+			this.busy = false;
+		}
 	}
 	
 	onResetLesson = event => {
 		const id = getProjectId(event);
-		console.log('will reset lesson', id);
-		return cancelEvent(event);
+		if (!_.some(id)) return;
+		cancelEvent(event);
+
+		// perform the remove
+		this.busy = true;
+		try {
+			const result = await $api.request('reset-lesson', { projectId: id });
+			console.log(result);
+		}
+		// general errors
+		catch (err) {
+			this.showError(err);
+		}
+		finally {
+			this.busy = false;
+		}
 	}
 
 	// displays all projects, if any

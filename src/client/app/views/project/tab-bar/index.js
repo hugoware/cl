@@ -80,7 +80,7 @@ export default class TabBar extends Component {
 		if (tab.is('.active')) return;
 
 		requirePermission({
-			requires: $state.getPermission('SWITCH_TAB'),
+			requires: [ 'CHANGE_TAB' ],
 			message: "Can't Switch Files",
 			allowed: () => {
 				this.setActive(tab);
@@ -92,7 +92,7 @@ export default class TabBar extends Component {
 	// handles closing a tab
 	onCloseTab = event => {
 		requirePermission({
-			requires: $state.getPermission('CLOSE_FILE'),
+			requires: [ 'CLOSE_FILE' ],
 			message: "Can't Close Files",
 			allowed: () => {
 				const tab = Component.getContext(event.target);

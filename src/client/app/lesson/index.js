@@ -22,7 +22,7 @@ export default class Lesson {
 
 	// creates a new lesson
 	constructor(lesson) {
-		this.lesson = lesson;
+		this.instance = lesson;
 
 		// by default, start so that a navigation
 		// should happen
@@ -51,23 +51,23 @@ export default class Lesson {
 
 	/** @type {Object<string, LessonSnippet>} the snippets for the lesson */
 	get snippets() {
-		return this.lesson.data.snippets;
+		return this.instance.data.snippets;
 	}
 
 	/** @type {Object<string, LessonDefinition>} the snippets for the lesson */
 	get definitions() {
-		return this.lesson.data.definitions;
+		return this.instance.data.definitions;
 	}
 
 	/** returns access to the slides and questions for this lesson
 	 * @returns {LessonSlide[]} the collection of slides
 	 */
 	get slides() {
-		return this.lesson.data.lesson;
+		return this.instance.data.lesson;
 	}
 
 	// get snippets() {
-	// 	return this.lesson.data.snippets;
+	// 	return this.instance.data.snippets;
 	// }
 
 	/** navigates to a spcific slide, handles toggling

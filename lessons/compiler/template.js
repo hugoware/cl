@@ -3,13 +3,30 @@
 
 	// returns the instance of this lesson
 	function $LESSON_TYPE$Lesson(state) {		
-		this.data = $DATA$;
-		this.state = state;
+    this.data = $DATA$;
+    this.state = state;
 
-		// shared library access
-		var _ = $LESSON_TYPE$Lesson.lodash;
+    // shared library access
+    var _ = $LESSON_TYPE$Lesson.lodash;
     var $html = $LESSON_TYPE$Lesson.cheerio;
     var $ = $LESSON_TYPE$Lesson.jquery;
+    
+    // shared variables
+    var $lesson = this;
+    var $state = state;
+
+    // shared functions
+    function deny(message, explain) {
+      if (_.isFunction($lesson.onDeny))
+        $lesson.onDeny({ message, explain });
+    }
+
+    // speaks a message using the assistant
+    function speak(message, emotion) {
+      if (_.isFunction($lesson.onSpeak))
+        $lesson.onSpeak({ message, emotion });
+    }
+
 
 		// default function for calling
 		this.invoke = function() {
@@ -18,7 +35,7 @@
 
 			// calls the function, if it exists
 			if (typeof action === 'function')
-				action.apply(this, args);	
+				return action.apply(this, args);	
 		}
 
 		// attach required scripts

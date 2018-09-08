@@ -3,8 +3,10 @@
 import _ from 'lodash';
 import $state from '../../../state';
 import $editor from '../../../editor';
-import $highlight from 'highlightjs';
+import $showdown from 'showdown';
 import Component from '../../../component';
+
+const $convert = new $showdown.Converter();
 
 export default class Slide extends Component {
 
@@ -43,6 +45,20 @@ export default class Slide extends Component {
 
 		// check for hover definitions
 		applySnippets(this, $state.lesson);
+	}
+
+	// replaces the text for the view
+	setContent = message => {
+		
+		// get rid of the titles
+		this.toggleClassMap({
+			'has-title': false,
+			'has-subtitle': false
+		});
+
+		// replace the content
+		const html = $convert.makeHtml(message);
+		this.ui.message.html(html);
 	}
 
 }

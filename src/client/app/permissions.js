@@ -1,67 +1,42 @@
 import _ from 'lodash';
 
-// map of possible permission flags
-const PERMISSIONS = [
-	'create_file',
-	'create_folder',
-	'upload_file',
-	'rename_project',
-	'open_file',
-	'close_file',
-	'save_file',
-	
-	'delete_item',
-	'delete_file',
-	'delete_folder',
-	
-	'move_item',
-	'move_file',
-	'move_folder',
+/** checks for permission flags for the project and lesson */
+export default function checkPermissions(state, permissions, args = [ ]) {
+	permissions = _.isArray(permissions) ? permissions : [ permissions ];
 
-	'rename_item',
-	'rename_file',
-	'rename_folder',
-];
+	// if not running a lesson, there's no
+	// permissions to work with
+	if (!state.lesson)
+		return true;
 
-/** handles binding permissions to the state object */
-export default function setupPermissionMap(state) {
-	state.permissions = { };
-	
-	// create an object to test user permissions
-	_.each(PERMISSIONS, set => {
-	
-		// the first property is the name
-		const requires = set.split(/ /g);
-		const key = _.snakeCase(requires[0]).toUpperCase();
+	// all permissions allowed
+	if (state.flags['sandbox-mode'] || state.flags['open-mode'])
+		return true;
 
-		// convert to expected case
-		_.each(requires, (prop, index) => {
-			requires[index] = _.kebabCase(prop).toLowerCase();
-		});
+	// start checking each requested permission
+	const validation = state.lesson.slide.validation || { };
+	for (const permission of permissions) {
 
-		// check for permissions
-		Object.defineProperty(state.permissions, key, {
-			get: () => {
-
-				// if not running a lesson, there's no
-				// permissions to work with
-				if (!state.lesson)
+		// check for a local validation function
+		const func = _.camelCase(permission);
+		const validator = validation[func];
+		if (_.isString(validator)) {
+			try {
+				// lesson.lesson is the app object then the lesson instance
+				const success = state.lesson.instance.invoke(validator, ...args);
+				if (success === true)
 					return true;
-				
-				// all permissions allowed
-				if(state.flags['sandbox-mode'])
-					return true;
-				
-				// has any value
-				for (const match of requires)
-					if (state.flags[match]) return true;
-
-				// did not find the required flag
-				return false;
 			}
-	
-		});
+			// nothing to do
+			catch (err) { }
+		}
 
-	});
+		// next, check if any of the required flags are set
+		const id = _.kebabCase(permission).toLowerCase();
+		if (state.flags[id] === true)
+			return true;
+	}
 
+	// did not find the required flag
+	return false;
 }

@@ -137,7 +137,8 @@ export default class FileBrowser extends Component {
 
 			// verify it can be opened
 			if (!requirePermission({
-				requires: $state.permissions.OPEN_FILE,
+				args: [ data ],
+				requires: [ 'OPEN_FILE', 'OPEN' ],
 				message: `Can't Open Files`
 			})) return;
 

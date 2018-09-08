@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import Component from '../../component';
 import { evaluateSelector } from '../../utils/selector';
+import $state from '../../state';
 
 const PREVENT_MESSAGE_HIDE_DELAY = 6000;
 const PREVENT_MESSAGE_QUICK_HIDE_DELAY = 1500;
@@ -22,21 +23,37 @@ window.addEventListener('mousemove', event => {
  * @param {PermissionCheck} options
  */
 export function requirePermission(check) {
-	console.log('checking', check);
+	const { required, requires, permissions, args = [ ] } = check;
+
+	// reset the prevent message for this attempt
+	delete PreventActionPopUp.instance.__activated;
 	
 	// if this can be done, just execute the action
-	if (!!(check.required || check.requires)) {
+	// TODO: there's some naming differences that need to be
+	// fixed -- prefer `permissions`
+	let allowed = permissions || requires || required;
+	if (_.isString(allowed) || _.isArray(allowed))
+		allowed = $state.checkPermissions(allowed, ...args);
+
+	// execute if they have permission
+	if (!!allowed) {
 		try {
-			if (_.isFunction(check.allowed))
-				check.allowed();
+			const allow = check.allow || check.allowed;
+			if (_.isFunction(allow))
+				allow();
 		}
 		finally {
 			return true;
 		}
 	}
 
+	// if this was already activated, don't display the message
+	if (PreventActionPopUp.instance.__activated)
+		return;
+
 	// otherwise, display the error
-	PreventActionPopUp.instance.onPreventAction(null, check.message);
+	const { message } = check;
+	PreventActionPopUp.instance.onPreventAction(null, message);
 	return false;
 }
 
@@ -57,15 +74,19 @@ export default class PreventActionPopUp extends Component {
 
 			ui: {
 				message: '.message',
+				explain: '.explain',
 			}
 		});
+
+		// get the default message
+		this.defaultExplainMessage = this.ui.explain.text();
 
 		// only one instance
 		PreventActionPopUp.instance = this;
 
 		// handle events for moving over the definitions
 		this.listen('prevent-action', this.onPreventAction);
-		this.listen('activate-project', this.onHide);
+		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onHide);
 		this.listen('window-resize', this.matchPosition);
 	}
@@ -109,8 +130,14 @@ export default class PreventActionPopUp extends Component {
 		this.$.css({ left: `${x}px`, top: `${y}px` });
 	}
 
+	// handle activating a project
+	onActivateProject = () => {
+		if ($state.lesson)
+			$state.lesson.instance.onDeny = this.onDeny;
+	}
+
 	// handles displaying the view
-	onPreventAction = (location, message) => {
+	onPreventAction = (location, message, explain) => {
 		delete this.selector;
 		delete this.position;
 		delete this.component;
@@ -137,6 +164,7 @@ export default class PreventActionPopUp extends Component {
 		
 		// update the message
 		this.ui.message.text(message);
+		this.ui.explain.text(explain || this.defaultExplainMessage);
 
 		// set some class info, as required
 		this.removeClass('hide show');
@@ -149,6 +177,13 @@ export default class PreventActionPopUp extends Component {
 
 		// set this as active
 		this.matchPosition();
+	}
+
+	// displays the deny message via alt channels
+	onDeny = (options = { }) => {
+		const { message = "Action Not Available", explain } = options;
+		this.onPreventAction(null, message, explain);
+		this.__activated = true;
 	}
 
 	// hides the view

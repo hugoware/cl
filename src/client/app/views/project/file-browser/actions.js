@@ -99,27 +99,27 @@ export default class FileBrowserActions extends Component {
 
 	// showing dialogs
 	onRenameItem = () => {
+		const selection = $state.getSelection();
+		const item = _.first(selection);
 		requirePermission({
-			required: $state.getPermission('RENAME_ITEMS')
-				|| (this.isOnlyFiles && $state.getPermission('RENAME_FILE'))
-				|| (this.isOnlyFolders && $state.getPermission('RENAME_FOLDER')),
+			required: $state.checkPermissions([ 'RENAME_ITEMS', 'RENAME' ], item)
+				|| (this.isOnlyFiles && $state.checkPermissions([ 'RENAME_FILE', 'RENAME' ], item))
+				|| (this.isOnlyFolders && $state.checkPermissions([ 'RENAME_FOLDER', 'RENAME' ], item)),
 			message: `Can't Rename Items`,
 			allowed: () => {
-				const selection = $state.getSelection();
-				const item = _.first(selection);
 				this.broadcast('open-dialog', 'rename-item', item);
 			}
 		});
 	}
 
 	onDeleteItems = () => {
+		const selection = $state.getSelection();
 		requirePermission({
-			required: $state.getPermission('DELETE_ITEMS')
-				|| (this.isOnlyFiles && $state.getPermission('DELETE_FILE'))
-				|| (this.isOnlyFolders && $state.getPermission('DELETE_FOLDER')),
+			required: $state.checkPermissions([ 'DELETE_ITEMS', 'DELETE'], selection)
+				|| (this.isOnlyFiles && $state.checkPermissions([ 'DELETE_FILE', 'DELETE'], selection))
+				|| (this.isOnlyFolders && $state.checkPermissions([ 'DELETE_FOLDER', 'DELETE'], selection)),
 			message: `Can't Delete Items`,
 			allowed: () => {
-				const selection = $state.getSelection();
 				this.broadcast('open-dialog', 'remove-items', selection);
 			}
 		});
@@ -127,13 +127,13 @@ export default class FileBrowserActions extends Component {
 	}
 
 	onMoveItems = () => {
+		const selection = $state.getSelection(true);
 		requirePermission({
-			required: $state.getPermission('MOVE_ITEMS')
-				|| (this.isOnlyFiles && $state.getPermission('MOVE_FILE'))
-				|| (this.isOnlyFolders && $state.getPermission('MOVE_FOLDER')),
+			required: $state.checkPermissions([ 'MOVE_ITEMS', 'MOVE' ], selection)
+				|| (this.isOnlyFiles && $state.checkPermissions([ 'MOVE_FILE', 'MOVE' ], selection))
+				|| (this.isOnlyFolders && $state.checkPermissions([ 'MOVE_FOLDER', 'MOVE' ], selection)),
 			message: `Can't Move Items`,
 			allowed: () => {
-				const selection = $state.getSelection(true);
 				this.broadcast('open-dialog', 'move-items', selection);
 			}
 		});
@@ -142,7 +142,7 @@ export default class FileBrowserActions extends Component {
 	// tries to launch the create folder dialog
 	onCreateFolder = () => {
 		requirePermission({
-			required: $state.getPermission('CREATE_FOLDER'),
+			required: $state.checkPermissions('CREATE_FOLDER'),
 			message: `Can't Create Folders`,
 			allowed: () => {
 				if (!this.allowCreateFolder) return;
@@ -154,7 +154,7 @@ export default class FileBrowserActions extends Component {
 	
 	onCreateFile = () => {
 		requirePermission({
-			required: $state.getPermission('CREATE_FILE'),
+			required: $state.checkPermissions('CREATE_FILE'),
 			message: `Can't Create Files`,
 			allowed: () => {
 				const folder = _.first(this.selection);
@@ -165,7 +165,7 @@ export default class FileBrowserActions extends Component {
 	
 	onUploadFile = () => {
 		requirePermission({
-			required: $state.getPermission('UPLOAD_FILE'),
+			required: $state.checkPermissions('UPLOAD_FILE'),
 			message: `Can't Upload Files`,
 			allowed: () => {
 				const folder = _.first(this.selection);

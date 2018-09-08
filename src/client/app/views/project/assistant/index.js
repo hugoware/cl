@@ -56,6 +56,12 @@ export default class Assistant extends Component {
 
 	}
 
+	// returns the current view
+	get view() {
+		const { slide } = $state.lesson;
+		return slide.isQuestion ? this.views.question : this.views.slide
+	}
+
 	// enables speech
 	onEnableSpeech = () => {
 		this.setSpeech(true);
@@ -97,6 +103,9 @@ export default class Assistant extends Component {
 		this.toggleClass('active', hasLesson);
 		if (!hasLesson) return;
 
+		// set the speech handler
+		$state.lesson.instance.onSpeak = this.onSpeak;
+
 		// since there's a lesson, set current state info
 		await $state.lesson.go(0);
 		this.refresh();
@@ -129,7 +138,7 @@ export default class Assistant extends Component {
 
 		// update slide content
 		const { slide } = $state.lesson;
-		const view = slide.isQuestion ? this.views.question : this.views.slide;
+		const { view } = this;
 
 		// determine the mode to use
 		const mode = slide.mode || 'popup';
@@ -143,11 +152,7 @@ export default class Assistant extends Component {
 		});
 
 		// pick the emotion, if any
-		this.ui.avatar.toggleClassMap({
-			happy: slide.emotion === 'happy',
-			sad: slide.emotion === 'sad',
-			surprised: slide.emotion === 'surprised'
-		});
+		this.setEmotion(slide.emotion);
 
 		// show the correct view
 		_.each(this.views, view => view.hide());
@@ -157,8 +162,44 @@ export default class Assistant extends Component {
 		view.refresh(slide);
 
 		// speak, if possible
-		if ($speech.enabled && _.some(slide.speak))
-			$speech.speak(slide.speak);
+		this.speak(slide.speak);
+	}
+
+	// listens for extra speech events
+	onSpeak = (options = { }) => {
+		const message = _.trim(options.message);
+		if (!_.some(message)) return;
+
+		// TODO: this is kinda ugly -- to get the formatted
+		// text we're grabbing the text value from the node
+		// update the slide content
+		// replace the content
+		this.views.slide.setContent(message);
+		const speak = this.views.slide.ui.message.text();
+		this.speak([ speak ]);
+
+		// speak and update the emotion, if any
+		if ('emotion' in options)
+			this.setEmotion(options.emotion);
+	}
+
+	/** replaces the emotion for the assistant
+	 * @param {string} emotion the emotion to show
+	 */
+	setEmotion = emotion => {
+		this.ui.avatar.toggleClassMap({
+			happy: emotion === 'happy',
+			sad: emotion === 'sad',
+			surprised: emotion === 'surprised'
+		});
+	}
+
+	/** speaks a message using the assistant
+	 * @param {string} message the message to speak
+	 */
+	speak = message => {
+		if ($speech.enabled && _.some(message))
+			$speech.speak(message);
 	}
 
 }

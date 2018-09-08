@@ -56,7 +56,7 @@ $home-content-padding: 25px;
 			padding: 10px 0 0 0;
 
 			.greet {
-				font-size: 14px;
+				font-size: 17px;
 				opacity: 0.6;
 			}
 
@@ -129,7 +129,7 @@ $home-content-padding: 25px;
 
 .project-item {
 	$project-item-padding: 18px;
-	$project-item-icon-margin: 7px;
+	$project-item-icon-margin: 15px;
 
 	cursor: pointer;
 	float: left;
@@ -171,7 +171,7 @@ $home-content-padding: 25px;
 		top: $project-item-icon-margin;
 		left: -$project-item-icon-margin;
 		svg {
-			@include uniform_size(45px);
+			@include uniform_size(40px);
 		}
 	}
 
@@ -184,8 +184,8 @@ $home-content-padding: 25px;
 	}
 
 	.name {
-		font-size: 22px;
-		padding: 0 0 12px 0;
+		font-size: 23px;
+		padding: 0 0 22px 0;
 		text-overflow: ellipsis;
 		word-wrap: none;
 		white-space: nowrap;
@@ -199,7 +199,7 @@ $home-content-padding: 25px;
 		font-size: $description-font-size;
 		opacity: 0.6;
 		position: relative;
-		height: $description-font-size * 2.5;
+		height: $description-font-size * 1.9;
 		width: 100%;
 		text-overflow: ellipsis;
 		overflow: hidden;

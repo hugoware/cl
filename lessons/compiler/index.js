@@ -7,7 +7,7 @@ import $uglify from 'uglify-js';
 import $dictionary from './dictionary';
 
 // helper
-const IS_PREVIEW = false;
+const IS_PREVIEW = true;
 
 // content importers
 import processSlides from './lesson';

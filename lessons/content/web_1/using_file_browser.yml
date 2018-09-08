@@ -12,6 +12,10 @@
     title: Creating Web Pages - Part 1
     subtitle: More About Tags
     checkpoint: true
+
+    validation:
+      openFile: allowOpenIndexHtml
+
     content: |
 
       This part has an inline *define* [define html] and this is the `>` sign -- it can do to create a website.
@@ -37,20 +41,18 @@
       # - $file-browser
       # - $file-browser [file="/controller.png"]
       - $file-browser .actions .create-file
-    
-    events:
-      open-file: verifyDidOpenMainCSS
 
     flags: +create-file +delete-file
 
-    # waitFor: 
-    #   - .tab-bar .tab[file="/home.pug"]
+    waitFor: 
+      - .tab-bar .tab[file="/index.html"]
     #   - .file-browser .create-file ::click
       # - ::validate(isSlideFinished)
 
 -
   slide:
     mode: overlay
+    checkpoint: true
     emotion: surprised
     content: |
       This is the content of the tag

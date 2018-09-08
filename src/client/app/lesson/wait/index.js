@@ -24,13 +24,12 @@ let $waiting;
  * @param {WaitInstruction} events the events that should be waited for
 */
 export function waitFor(events) {
-	const { lesson } = $state.lesson;
-	const { slide } = lesson;
+	const { instance } = $state.lesson;
+	const { slide } = instance;
 
 	// check each selector value
 	evaluateAllSelectors(events, selector => {
 		const { hasCommands, commands } = selector;
-		console.log('waiting for', selector);
 
 		// determine what to do
 		if ('validate' in commands) {

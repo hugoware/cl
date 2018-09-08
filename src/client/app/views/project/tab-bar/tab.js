@@ -2,6 +2,7 @@
 
 import $state from '../../../state';
 import Component from '../../../component';
+import {requirePermission} from '../prevent'
 
 export default class Tab extends Component {
 
@@ -39,10 +40,14 @@ export default class Tab extends Component {
 
 	// handles removing modified state
 	onSaveFile = file => {
-		if (!$state.permissions.SAVE_FILE) return;
-
-		if (!isSameFile(this, file)) return;
-		this.removeClass('is-modified');
+		requirePermission({
+			permissions: [ 'SAVE_FILE' ],
+			message: "Can't Save Files",
+			allow: () => {
+				if (!isSameFile(this, file)) return;
+				this.removeClass('is-modified');
+			}
+		});
 	}
 
 	// handles when a file is renamed

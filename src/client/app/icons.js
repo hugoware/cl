@@ -40,6 +40,12 @@ import addFolderIcon from '../../icons/icon-add-folder.svg';
 import addFileIcon from '../../icons/icon-add-file.svg';
 import toggleDropdownIcon from '../../icons/icon-toggle-dropdown.svg';
 
+// project type
+import projectWebIcon from '../../icons/icon-project-web.svg';
+import projectGameIcon from '../../icons/icon-project-game.svg';
+import projectMobileIcon from '../../icons/icon-project-mobile.svg';
+import projectCodeIcon from '../../icons/icon-project-code.svg';
+
 // avatars
 import defaultAvatarIcon from '../../icons/default-avatar.svg';
 import girl1AvatarIcon from '../../icons/girl-1.svg';
@@ -88,6 +94,11 @@ const $icons = {
 	uploadIcon,
 	moveItemsIcon,
 	toggleDropdownIcon,
+
+	projectWebIcon,
+	projectMobileIcon,
+	projectCodeIcon,
+	projectGameIcon,
 
 	addFolderIcon,
 	addFileIcon,

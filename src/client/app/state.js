@@ -8,7 +8,7 @@ import { getExtension, getPathInfo } from './utils/index';
 import { broadcast } from './events';
 import { simplifyPathCollection } from '../../utils/project';
 import Lesson from './lesson';
-import setupPermissionMap from './permissions';
+import checkPermissions from './permissions';
 
 const ROOT = { path: '/' };
 const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py'];
@@ -67,9 +67,9 @@ const $state = {
 	 * @param {string} key the permission to check for
 	 * @returns {boolean} does the user have access
 	 */
-	getPermission: key => {
+	checkPermissions: (permissions, ...args) => {
 		if (!$state.lesson) return true;
-		return $state.permissions[key];
+		return checkPermissions($state, permissions, args);
 	},
 
 	/** checks if a file type can be uploaded or not
@@ -600,8 +600,5 @@ async function syncProject(children = [ ], parent, relativeTo) {
 	}
 
 }
-
-// creates a map of config options to properties
-setupPermissionMap($state);
 
 export default $state;
