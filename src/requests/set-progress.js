@@ -1,15 +1,22 @@
 
-import setProgress from '../requests/set-progress';
+import getProjectAccess, { ProjectAccess } from '../queries/get-project-access';
+import setProgress from '../actions/set-progress';
 import { resolveError } from '../utils';
 
 export const event = 'set-progress';
 export const authenticate = true;
 
 export async function handle(socket, session, data = { }) {
-	const { projectId, state } = data;
+	const { user } = session;
+	const { projectId, progress } = data;
 
 	try {
-		const result = await setProgress(projectId, state);
+		// make sure they can access this project
+		const access = await getProjectAccess(projectId, user);
+		if (!access.write)
+			throw 'access_denied';
+
+		const result = await setProgress(projectId, progress);
 		socket.ok(event, result);
 	}
 	catch (err) {

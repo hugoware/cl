@@ -5,7 +5,7 @@ import $lfs from './lfs';
 import $api from './api';
 import $speech from './speech';
 import { getExtension, getPathInfo } from './utils/index';
-import { broadcast } from './events';
+import { broadcast, listen } from './events';
 import { simplifyPathCollection } from '../../utils/project';
 import Lesson from './lesson';
 import checkPermissions from './permissions';
@@ -55,12 +55,27 @@ const $state = {
 		return _($state.paths).values().filter(item => item.isFile).value();
 	},
 
+	/** returns a list of all open files
+	 * @returns {ProjectItem[]} the open files
+	 */
+	get openFiles() {
+		return _.filter($state.files, 'isOpen');
+	},
+
+	/** returns the currently active file
+	 * @returns {ProjectItem} the active file
+	 */
+	get activeFile() {
+		return _.find($state.files, 'isActive');
+	},
+
 	/** returns the resource domain for this project
 	 * @returns {string} the root domain to use */
 	getProjectDomain() {
-		const { id } = this.project;
+		const { version, project } = $state;
+		const { id } = project;
 		const { protocol, host } = window.location;
-		return `${protocol}//${id}.${host}`;
+		return `${protocol}//${version}.${id}.${host}`;
 	},
 
 	/** checks for a lesson permission
@@ -80,6 +95,11 @@ const $state = {
 		return true;
 	},
 
+	/** updates the version number for the project */
+	updateVersion: () => {
+		$state.version = +new Date;
+	},
+
 	/** syncs the project data
 	 * @param {Project} project the data to replace
 	*/
@@ -91,6 +111,7 @@ const $state = {
 
 		// rebuild the path indexes
 		$state.projectId = project.id;
+		$state.updateVersion();
 		await syncProject(project.children, null, null);
 
 		window.STATE = $state;
@@ -115,7 +136,8 @@ const $state = {
 				}
 
 				// load the lesson info
-				$state.lesson = await Lesson.load(project.lesson);
+				const { state = { } } = project.progress || { };
+				$state.lesson = await Lesson.load(project.lesson, state);
 				resolve();
 			}
 			// no lesson to perform
@@ -235,6 +257,9 @@ const $state = {
 		// finalize the file changes
 		const file = $state.findItemByPath(path);
 		file.content = content;
+
+		// version updates
+		$state.updateVersion();
 
 		// notify and return
 		broadcast('save-file', path);
@@ -412,9 +437,6 @@ const $state = {
 		// select by default
 		$state.setSelection(path, true, true);
 
-		// // also sort the files by their name
-		// _.sortBy(parent.children, 'name');
-
 		// if the parent isn't already expanded, do it now
 		expandFolder(parent);
 		
@@ -490,6 +512,9 @@ const $state = {
 		broadcast('delete-items', items);
 		$state.clearSelection();
 
+		// fix the version
+		$state.updateVersion();
+
 		// notify the result
 		return result;
 	}
@@ -536,20 +561,7 @@ function deleteItem(item, files) {
 	delete $state.paths[item.path];
 	delete $state.items[item.id];
 	delete item.parent;
-
 }
-
-// // handles filtering all project data to find matches
-// function filterAll(predicate, source, matches = [ ]) {
-// 	source = source || $source.project.children;
-// 	for (const child of source) {
-// 		if (predicate(child)) matches.push(child);
-// 		if (child.isFolder && !child.isEmpty)
-// 			filterAll(predicate, child.children, matches);
-// 	}
-
-// 	return matches;
-// }
 
 // rebuilds the paths for each file in the project
 async function syncProject(children = [ ], parent, relativeTo) {
@@ -600,5 +612,23 @@ async function syncProject(children = [ ], parent, relativeTo) {
 	}
 
 }
+
+// clean up open files
+listen('activate-file', file => {
+	_.each($state.files, file => file.isActive = false);
+	file.isOpen = true;
+	file.isActive = true;
+});
+
+// setup opened file
+listen('open-file', file => {
+	file.isOpen = false;
+});
+
+// clean up closed file
+listen('close-file', file => {
+	file.isOpen = false;
+	file.isActive = false;
+});
 
 export default $state;

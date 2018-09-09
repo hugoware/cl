@@ -19,7 +19,7 @@ export default async function getProjectData(id) {
 				name: 1,
 				description: 1,
 				lesson: 1,
-				state: 1,
+				progress: 1,
 				ownerId: 1,
 				modifiedAt: 1,
 				createdAt: 1,
@@ -39,7 +39,7 @@ export default async function getProjectData(id) {
 			// remove lesson info if the lesson no longer exists
 			if (!exists) {
 				delete project.lesson;
-				delete project.state;
+				delete project.progress;
 			}
 		}
 

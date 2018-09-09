@@ -29,6 +29,7 @@ export default class HomeView extends View {
 		this.on('click', '.project-item .action.remove', this.onRemoveProject);
 		this.on('click', '.project-item .action.publish', this.onPublishProject);
 		this.on('click', '.project-item .action.reset', this.onResetLesson);
+		this.on('click', '.project-item .action.edit', this.onEditProject);
 		this.on('click', '.project-item', this.onSelectProject);
 		
 		this.ui.createProject.on('click', this.onCreateProject);
@@ -130,65 +131,30 @@ export default class HomeView extends View {
 		$nav.go(`project/${id}`);
 	}
 
-	onRemoveProject = event => {
+	// tries to remove a project entry
+	onEditProject = async event => {
 		const id = getProjectId(event);
-		if (!_.some(id)) return;
-		cancelEvent(event);
-		
-		// perform the remove
-		this.busy = true;
-		try {
-			const result = await $api.request('remove-project', { projectId: id });
-			console.log(result);
-		}
-		// general errors
-		catch (err) {
-			this.showError(err);
-		}
-		finally {
-			this.busy = false;
-		}
+		this.broadcast('open-dialog', 'edit-project', { id });
+		return cancelEvent(event);
+	}
 
+	// tries to remove a project entry
+	onRemoveProject = async event => {
+		const id = getProjectId(event);
+		this.broadcast('open-dialog', 'remove-project', { id });
+		return cancelEvent(event);
 	}
 	
-	onPublishProject = event => {
+	onPublishProject = async event => {
 		const id = getProjectId(event);
-		if (!_.some(id)) return;
-		cancelEvent(event);
-
-		// perform the remove
-		this.busy = true;
-		try {
-			const result = await $api.request('publish-project', { projectId: id });
-			console.log(result);
-		}
-		// general errors
-		catch (err) {
-			this.showError(err);
-		}
-		finally {
-			this.busy = false;
-		}
+		this.broadcast('open-dialog', 'publish-project', { id });
+		return cancelEvent(event);
 	}
 	
-	onResetLesson = event => {
+	onResetLesson = async event => {
 		const id = getProjectId(event);
-		if (!_.some(id)) return;
-		cancelEvent(event);
-
-		// perform the remove
-		this.busy = true;
-		try {
-			const result = await $api.request('reset-lesson', { projectId: id });
-			console.log(result);
-		}
-		// general errors
-		catch (err) {
-			this.showError(err);
-		}
-		finally {
-			this.busy = false;
-		}
+		this.broadcast('open-dialog', 'reset-lesson', { id });
+		return cancelEvent(event);
 	}
 
 	// displays all projects, if any

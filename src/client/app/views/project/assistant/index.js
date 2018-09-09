@@ -106,10 +106,41 @@ export default class Assistant extends Component {
 		// set the speech handler
 		$state.lesson.instance.onSpeak = this.onSpeak;
 
+		// check for existing progress
+		let index = 0;
+		let files = [ ];
+		const { progress } = $state.project;
+		if (progress) {
+			files = _.isArray(progress.files) ? progress.files : [ ];
+
+			// set the starting frame
+			index = 0 | (progress.index || 0);
+			if (isNaN(index)) index = 0;
+		}
+
+		// go to the correct frame
+		await $state.lesson.go(index);
+
 		// since there's a lesson, set current state info
-		await $state.lesson.go(0);
 		this.refresh();
 		this.show();
+
+		// check for files to open
+		const active = progress.activeFile || files[0];
+
+		// activate the main file, if possible
+		if (active) {
+			const file = $state.findItemByPath(active);
+			if (file) this.broadcast('activate-file', file);
+		}
+
+		// just open remaining files
+		for (let i = files.length; i-- > 0;)
+			if (files[i] !== active) {
+				const file = $state.findItemByPath(files[i]);
+				if (file) this.broadcast('open-file', file);
+			}
+
 	}
 
 	// hide when leaving the project editor

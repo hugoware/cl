@@ -2,7 +2,7 @@
 (function() {
 
 	// returns the instance of this lesson
-	function web1Lesson(state) {		
+	function web1Lesson(state, project) {		
     this.data = {
   "name": "Basics 1",
   "type": "web",
@@ -43,6 +43,7 @@
     },
     {
       "mode": "overlay",
+      "checkpoint": true,
       "emotion": "surprised",
       "content": "<p>This is the content of the tag</p><div class=\"snippet\" type=\"html_tag_example\" highlight=\"content\"/><p>It's pretty <em>darn</em> neat</p>",
       "type": "slide",
@@ -218,6 +219,7 @@
     }
   }
 };
+    this.project = project;
     this.state = state;
 
     // shared library access
@@ -227,6 +229,7 @@
     
     // shared variables
     var $lesson = this;
+    var $project = project;
     var $state = state;
 
     // shared functions
@@ -259,10 +262,15 @@ function allowOpenIndexHtml(file) {
   // state.allowFile = true;
 
   const allow = file.path === '/index.html';
+
+
   
   if (!allow) {
     deny("Can't Open This File", 'Open the index.html file to continue the lesson');
     speak('Whoops! You can not do that just yet!\n\nMake sure to open`index.html` to continue the lesson.', 'surprised');
+  }
+  else {
+    $state.openedIndex = true;
   }
 
 

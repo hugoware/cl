@@ -10,13 +10,20 @@ export const priority = 0;
 
 // determines the correct home view
 export async function handle(request, response, next) {
+
+	// must start with a version 
+	if (!/^\d+\./.test(request.hostname))
+		return next();
 	
 	// no need to do this
 	if (/^\/?__(codelab|monaco)__/i.test(request.path))
 		return next();
 
+	console.log('trying', request.hostname);
+
 	// determine if this is requesting a project
 	const parts = _.trim(request.hostname).split('.');
+	let version = parts.shift();
 	let id = parts.shift();
 
 	// if for some reason this has the www

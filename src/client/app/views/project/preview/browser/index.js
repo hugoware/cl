@@ -53,7 +53,7 @@ export default class BrowserMode extends Component {
 		this.ui.runScripts.on('click', this.onRunPageScripts);
 
 		// set the default view
-		setTimeout(this.clear);
+		// setTimeout(this.clear);
 	}
 
 	/** changes the browser view URL 

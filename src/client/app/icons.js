@@ -40,6 +40,13 @@ import addFolderIcon from '../../icons/icon-add-folder.svg';
 import addFileIcon from '../../icons/icon-add-file.svg';
 import toggleDropdownIcon from '../../icons/icon-toggle-dropdown.svg';
 
+import actionEditIcon from '../../icons/action-edit.svg';
+import actionPublishIcon from '../../icons/action-publish.svg';
+import actionResetIcon from '../../icons/action-reset.svg';
+import actionRemoveIcon from '../../icons/action-remove.svg';
+import actionMuteIcon from '../../icons/action-mute.svg';
+import actionSpeakIcon from '../../icons/action-speak.svg';
+
 // project type
 import projectWebIcon from '../../icons/icon-project-web.svg';
 import projectGameIcon from '../../icons/icon-project-game.svg';
@@ -94,6 +101,12 @@ const $icons = {
 	uploadIcon,
 	moveItemsIcon,
 	toggleDropdownIcon,
+	actionEditIcon,
+	actionPublishIcon,
+	actionResetIcon,
+	actionRemoveIcon,
+	actionMuteIcon,
+	actionSpeakIcon,
 
 	projectWebIcon,
 	projectMobileIcon,

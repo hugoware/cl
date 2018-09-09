@@ -2,8 +2,9 @@
 (function() {
 
 	// returns the instance of this lesson
-	function $LESSON_TYPE$Lesson(state) {		
+	function $LESSON_TYPE$Lesson(state, project) {		
     this.data = $DATA$;
+    this.project = project;
     this.state = state;
 
     // shared library access
@@ -13,6 +14,7 @@
     
     // shared variables
     var $lesson = this;
+    var $project = project;
     var $state = state;
 
     // shared functions

@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import $ from 'cheerio';
 import $state from '../state';
+import $api from '../api';
 import $focus from './focus';
 import $wait from './wait';
 import { load } from './loader';
@@ -14,9 +15,9 @@ export default class Lesson {
 	 * @param {string} id the id of the lesson to load
 	 * @returns {Lesson} an instance of a lesson
 	 */
-	static async load(id) {
+	static async load(id, state = { }) {
 		const type = await load(id);
-		const instance = new type($state);
+		const instance = new type(state, $state);
 		return new Lesson(instance);
 	}
 
@@ -114,19 +115,26 @@ export default class Lesson {
 		// finalize the current slide
 		applySlide(this, slide);
 		setActiveSlide(this, slide);
-
-		// helper?
-		console.log($state.flags);
-
-		// save the final index
-
-		// update the slide with extra info
-
 	}
 
 	/** navigates to the next slide */
 	next = async () => {
-		return await this.go(this.index + 1);
+		await this.go(this.index + 1);
+
+		// save the lesson state
+		const { projectId } = $state;
+		const { index, instance } = this;
+		const { state } = instance;
+
+		// get the active files
+		const activeFile = ($state.activeFile || { }).path;
+		const files = _($state.openFiles)
+			.map(file => file.path)
+			.value();
+
+		// get the current state
+		const progress = { index, state, files, activeFile };
+		await $api.request('set-progress', { projectId, progress });
 	}
 	
 	/** navigates to the previous slide */

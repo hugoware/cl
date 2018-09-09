@@ -153,6 +153,7 @@ $home-content-padding: 25px;
 
 	&.is-project .reset,
 	&.is-lesson .remove,
+	&.is-lesson .edit,
 	&.is-lesson.is-new .reset,
 	&.is-lesson.in-progress .publish {
 		display: none;
@@ -230,9 +231,9 @@ $home-content-padding: 25px;
 	}
 
 	.actions {
-		$project-item-action-size: 30px;
-		$project-item-action-icon-size: 20px;
-		$project-item-action-tooltip-gap: 10px;
+		$project-item-action-size: 26px;
+		$project-item-action-icon-size: 15px;
+		$project-item-action-tooltip-gap: 6px;
 
 		padding: 0 $project-item-padding $project-item-padding $project-item-padding;
 		float: left;
@@ -242,14 +243,20 @@ $home-content-padding: 25px;
 			float: left;
 			z-index: 0;
 			width: 30px;
-			margin-right: 10px;
+			margin-right: $project-item-action-tooltip-gap;
 			cursor: pointer;
 
 			.icon {
 				@include uniform_size($project-item-action-size);
-				background: rgba(#000, 0.4);
+				background: #000;
 				border-radius: 4px;
 				position: relative;
+				opacity: 0.2;
+				@include animate('opacity');
+
+				&:hover {
+					opacity: 0.8;
+				}
 
 				svg {
 					@include uniform_size($project-item-action-icon-size);

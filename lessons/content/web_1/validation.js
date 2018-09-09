@@ -4,10 +4,15 @@ function allowOpenIndexHtml(file) {
   // state.allowFile = true;
 
   const allow = file.path === '/index.html';
+
+
   
   if (!allow) {
     deny("Can't Open This File", 'Open the index.html file to continue the lesson');
     speak('Whoops! You can not do that just yet!\n\nMake sure to open`index.html` to continue the lesson.', 'surprised');
+  }
+  else {
+    $state.openedIndex = true;
   }
 
 

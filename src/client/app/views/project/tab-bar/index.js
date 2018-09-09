@@ -24,6 +24,7 @@ export default class TabBar extends Component {
 
 		// events
 		this.listen('activate-file', this.onActivateFile);
+		this.listen('open-file', this.onOpenFile);
 		this.listen('delete-items', this.onDeleteItems);
 		this.listen('rename-item', this.onRenameItem);
 		this.listen('activate-project', this.onActivateProject);
@@ -39,18 +40,12 @@ export default class TabBar extends Component {
 
 	// handles opening or activating new tab
 	onActivateFile = file => {
+		this.openTab(file);
+	}
 
-		// create or reuse a tab
-		let tab = this.tabs.findItem(item => item.file.path === file.path);
-		if (!tab) {
-			tab = new Tab(file);
-			this.tabs.appendItem(tab);
-		}
-
-		// focus and update
-		tab.refresh();
-		this.setActive(tab);
-		this.tabs.refresh();
+	// handles opening and just adding the tab to the view
+	onOpenFile = file => {
+		this.openTab(file, true);
 	}
 
 	/** remove items that were recently deleted
@@ -101,6 +96,25 @@ export default class TabBar extends Component {
 		});
 
 		return cancelEvent(event);
+	}
+
+	/** opens a new tab item
+	 * @param {ProjectItem} file the file to open as a tab
+	 * @param {boolean} maintainActiveTab keeps the current active tab as focused
+	 */
+	openTab = (file, maintainActiveTab) => {
+
+		// create or reuse a tab
+		let tab = this.tabs.findItem(item => item.file.path === file.path);
+		if (!tab) {
+			tab = new Tab(file);
+			this.tabs.appendItem(tab);
+		}
+
+		// focus and update
+		tab.refresh();
+		if (!maintainActiveTab) this.setActive(tab);
+		this.tabs.refresh();
 	}
 
 	// handle closing the tab view

@@ -231,6 +231,7 @@ $action-item-icon-size: $action-item-height * 0.6;
 		color: #fff;
 		padding: 15px 10px;
 		margin-bottom: 5px;
+		@include clearfix();
 
 		> div {
 			text-overflow: ellipsis;
@@ -246,6 +247,25 @@ $action-item-icon-size: $action-item-height * 0.6;
 		.description {
 			font-size: 14px;
 			opacity: 0.3;
+		}
+		
+		.type {
+			opacity: 0.75;
+			filter: grayscale(100%);
+			float: left;
+			margin-right: 10px;
+			
+			svg {
+				@include uniform_size(40px);
+				display: none;
+			}
+		}
+
+		&.type-web .web svg,
+		&.type-game .game svg,
+		&.type-code .code svg,
+		&.type-mobile .mobile svg {
+			display: block !important;
 		}
 
 		.options {
