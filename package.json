@@ -69,6 +69,7 @@
     "mime-types": "^2.1.18",
     "moment": "^2.22.2",
     "mongodb": "^3.1.1",
+    "mousetrap": "^1.6.2",
     "multiparty": "^4.2.1",
     "nanoid": "^1.0.7",
     "node-cache": "^4.2.0",

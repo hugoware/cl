@@ -1,11 +1,11 @@
 
 import _ from 'lodash';
+import $keyboard from 'mousetrap';
 
 import Component from '../../../../../component';
 import contentManager from '../../../../../content-manager'
 import $editor from '../../../../../editor';
 import $state from '../../../../../state';
-import $api from '../../../../../api';
 import ManagedEditor from '../../../../../editor/managed';
 
 // the amount of time to wait before compiling
@@ -44,31 +44,42 @@ export default class CodeEditor extends Component {
 		this.editor = $editor.createInstance(this.ui.editor[0]);
 		this.editor.onChanged = this.onContentChange;
 
+		// allow keyboard shortcuts
+		this.ui.editor.find('textarea').addClass('mousetrap');
+
+		// handle keyboard shortcuts
+		$keyboard.bind('mod+shift+s', this.onKeyboardShortcutSaveAll);
+		$keyboard.bind('mod+s', this.onKeyboardShortcutSave);
+
 		// handle tracking changes
 		this.onProcessTimers.interval = setInterval(this.onProcessTimers, 25);
+	}
+
+	// tries to save changes
+	onKeyboardShortcutSave = event => {
+		if (!this.isVisible) return;
+		event.preventDefault();
+		this.onSaveChanges();
+	}
+
+	// tries to save all open files
+	onKeyboardShortcutSaveAll = event => {
+		this.saveAll();
 	}
 
 	// handles when a project is opened
 	onActivateProject = () => {
 		delete this.activeFile;
-
-		// clear all files
-		_.each(this.files, (file, key) => {
-			delete this.files[key];
-		});
+		this.editor.clear();
 	}
 
 	// handles when a file is renamed
 	onRenameItem = rename => {
-		if (!(this.files[rename.previous.path]))
-			return; 
-
-		// swap the two names
-		this.files[rename.path] = this.files[rename.previous.path]
-		delete this.files[rename.previous.path];
-
+		if (!this.activeFile) return;
+		
 		// kick off a new build
-		this.compile();
+		if (this.activeFile.path === rename.path)
+			this.compile();
 	}
 
 	// triggers updates for expired timers
@@ -134,6 +145,22 @@ export default class CodeEditor extends Component {
 			this.busy = false;
 		}
 
+	}
+
+	/** handles saving all of the files that are modified */
+	saveAll = async () => {
+		const instances = this.editor.instances || [ ];
+
+		for (let i = 0; i < instances.length; i++) {
+			const item = instances[i];
+			
+			// check for modified file
+			const { session, file } = item;
+			if (file.modified) {
+				const content = session.getValue();
+				await $state.saveFile(file.path, content);
+			}
+		}
 	}
 
 	/** handles compiling the current file */

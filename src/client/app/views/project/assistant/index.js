@@ -39,7 +39,7 @@ export default class Assistant extends Component {
 		this.hide();
 
 		// this is attached 
-		this.listen('clear-project', this.onClearProject);
+		this.listen('reset', this.onReset);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('next-slide', this.onNext);
@@ -74,7 +74,7 @@ export default class Assistant extends Component {
 	}
 
 	// hides the assistant
-	onClearProject = () => {
+	onReset = () => {
 		this.hide();
 	}
 

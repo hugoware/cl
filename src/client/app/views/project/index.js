@@ -47,7 +47,7 @@ export default class ProjectView extends View {
 
 	// loads the data for this project view
 	onActivate = async () => {
-		this.broadcast('clear-project');
+		this.broadcast('reset');
 		
 		// clear out the existing project, if any
 		if ($state.project)

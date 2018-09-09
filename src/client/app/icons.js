@@ -46,6 +46,9 @@ import actionResetIcon from '../../icons/action-reset.svg';
 import actionRemoveIcon from '../../icons/action-remove.svg';
 import actionMuteIcon from '../../icons/action-mute.svg';
 import actionSpeakIcon from '../../icons/action-speak.svg';
+import actionSaveIcon from '../../icons/action-save.svg';
+import actionFitSizeIcon from '../../icons/action-fit-size.svg';
+import actionActualSizeIcon from '../../icons/action-actual-size.svg';
 
 // project type
 import projectWebIcon from '../../icons/icon-project-web.svg';
@@ -107,6 +110,10 @@ const $icons = {
 	actionRemoveIcon,
 	actionMuteIcon,
 	actionSpeakIcon,
+	actionSpeakIcon,
+	actionSaveIcon,
+	actionActualSizeIcon,
+	actionFitSizeIcon,
 
 	projectWebIcon,
 	projectMobileIcon,

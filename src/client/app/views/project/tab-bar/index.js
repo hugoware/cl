@@ -23,6 +23,7 @@ export default class TabBar extends Component {
 		});
 
 		// events
+		this.listen('reset', this.onReset);
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('open-file', this.onOpenFile);
 		this.listen('delete-items', this.onDeleteItems);
@@ -32,10 +33,15 @@ export default class TabBar extends Component {
 		this.on('click', '.tab', this.onSelectTab);
 	}
 
-	// clear all tabs
-	onActivateProject = () => {
+	// reset when first switching to a project view
+	onReset = () => {
 		this.tabs.clear();
 		this.tabs.refresh();
+	}
+
+	// clear all tabs
+	onActivateProject = () => {
+		
 	}
 
 	// handles opening or activating new tab

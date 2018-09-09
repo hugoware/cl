@@ -32,25 +32,31 @@ export default class FileBrowser extends Component {
 		this.append(this.actions);
 
 		// events
+		this.listen('reset', this.onReset);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('update-project', this.onUpdateProject);
 		this.listen('expand-folder', this.onExpandFolder);
 		this.listen('delete-items', this.onDeleteItems);
 		
 		// ui events
+		this.listen('window-resize', this.onWindowResize);
 		this.on('mouseup', '.toggle', this.onToggleFolder);
 		this.on('mouseup', '.item', this.onReleaseItem);
 		this.on('mouseup', this.onDeselectItems);
-
 	}
 
 	/** @returns {FileBrowserItem} */
 	getItem = target => Component.getContext(target)
 
+	// resetting when switching view
+	onReset = () => {
+		this.expanded = { };
+		this.ui.items.empty();
+		$state.clearSelection();
+	}
+
 	// activated when changing projects
 	onActivateProject = () => {
-		$state.clearSelection();
-		this.expanded = { };
 
 		// update basic data
 		const { project } = $state;
@@ -97,6 +103,11 @@ export default class FileBrowser extends Component {
 			this.toggleExpansion(item);
 	}
 
+	// match the scrollable area
+	onWindowResize = () => {
+		this.matchScrollContainer();
+	}
+
 	// changes the toggle state for an item
 	toggleExpansion = item => {
 		const { path } = item.data;
@@ -112,6 +123,20 @@ export default class FileBrowser extends Component {
 		// update allowed actions
 		this.refreshSelections();
 		this.updateActions();
+	}
+
+	matchScrollContainer = () => {
+		const actions = this.actions.$[0].getBoundingClientRect();
+		const project = this.ui.data[0].getBoundingClientRect();
+		const container = this.$[0].getBoundingClientRect();
+
+		// calculate the empty area
+		let height = container.bottom - container.top;
+		height -= actions.bottom - actions.top;
+		height -= project.bottom - project.top;
+
+		// update to match
+		this.ui.items.height(height);
 	}
 
 	// updates all selected items
@@ -165,6 +190,7 @@ export default class FileBrowser extends Component {
 			this.toggleSelection(item, event.shiftKey);
 		}
 
+		setTimeout(this.matchScrollContainer);
 		return cancelEvent(event);
 	}
 
@@ -173,13 +199,15 @@ export default class FileBrowser extends Component {
 		this.ui.items.empty();
 		this.items = [ ];
 		rebuild(this, this.ui.items, $state.project.children);
+		setTimeout(this.matchScrollContainer);
 	}
-
+	
 	// clears active selections
 	clearSelection = () => {
 		$state.clearSelection();
 		this.find('.selected').removeClass('selected');
 		this.updateActions();
+		setTimeout(this.matchScrollContainer);
 	}
 
 	/** updates the action list */

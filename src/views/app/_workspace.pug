@@ -5,15 +5,23 @@
 +template('workspace-code-editor')
 	.code-editor.workspace
 		.actions
-			.action.save Save Changes
+			.action.save
+				.icon(icon='actionSave')
+				.label Save Changes
 		.editor
 
 +template('workspace-image-viewer')
 	.image-viewer.workspace
 		.actions
-			.action.replace Upload New Image
-			.action.fit Fit to View
-			.action.actual Actual Size
+			.action.replace
+				.icon(icon='actionSave')
+				.label Upload New Image
+			.action.fit
+				.icon(icon='actionFitSize')
+				.label Fit to View
+			.action.actual
+				.icon(icon='actionActualSize')
+				.label Actual Size
 		.editor
 			.frame
 				img

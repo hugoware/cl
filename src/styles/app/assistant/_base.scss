@@ -81,6 +81,7 @@
 
 		opacity: 0;
 		transform: scale(0.8, 0.8) translate(0, $assistant-speech-button-vertical-offset);
+
 		@include animate('background, opacity, transform', 0.3s);
 
 		cursor: pointer;
@@ -116,8 +117,16 @@
 		.icon {
 			margin-right: 10px;
 			width: 30px;
+			height: 30px;
 			text-align: center;
-			border-radius: 100px;
+
+			svg {
+				width: 22px !important;
+				height: 22px !important;
+				position: absolute;
+				top: 5px;
+				margin: 0 0 0 -30px;
+			}
 		}
 	}
 

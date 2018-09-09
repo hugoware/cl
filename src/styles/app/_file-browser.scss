@@ -140,6 +140,15 @@ $action-item-icon-size: $action-item-height * 0.6;
 
 #file-browser {
 
+	.items {
+		overflow: auto;
+		&:after {
+			content: ' ';
+			display: block;
+			height: 30px;
+		}
+	}
+
 	.actions {
 		background: darken($file-browser-background, 2%);
 		color: #fff;
@@ -250,13 +259,14 @@ $action-item-icon-size: $action-item-height * 0.6;
 		}
 		
 		.type {
+			float: right;
 			opacity: 0.75;
 			filter: grayscale(100%);
-			float: left;
-			margin-right: 10px;
+			position: relative;
+			top: -5px;
 			
 			svg {
-				@include uniform_size(40px);
+				@include uniform_size(24px);
 				display: none;
 			}
 		}
