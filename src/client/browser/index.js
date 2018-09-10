@@ -1,4 +1,9 @@
 (() => {
+
+	// quick trim function
+	function trim(str) {
+		return (str || '').toString().replace(/^ *| *$/g, '');
+	}
 	
 	// save some local instances
 	const $alert = window.alert;
@@ -133,6 +138,51 @@
 	// capture alert messages
 	window.alert = (...args) => notify('alert', ...args);
 	window.prompt = (...args) => notify('prompt', ...args);
+
+	addEventListener('unload', () => {
+		notify('navigating');
+	});
+
+	// handle general errors
+	window.addEventListener('error', event => {
+		notify('error', event);
+	});
+
+	// handle general click events and look for
+	// clicking on links -- this will change the window
+	// behavior on the main view
+	window.addEventListener('click', event => {
+		const path = [].slice.call(event.path);
+		while (path.length > 0) {
+
+			// check if this is a link
+			const element = path.shift();
+			if (!/^a$/i.test(element.tagName))
+				continue;
+
+			// externalize all outbound links
+			const url = trim(element.getAttribute('href'));
+			if (/^https?:\/{2}/i.test(url)) {
+				element.setAttribute('target', url);
+				return;
+			}
+
+			// if it's just a link to another anchor on the page
+			if (/^\#/.test(url))
+				continue;
+		
+			// cancel the event and notify the app that
+			// something needs to happen with navigation
+			notify('navigate', { navigate: url });
+
+			// make sure the actual click event doesn't continue
+			event.cancelBubble = true;
+			event.returnValue = false;
+			event.stopImmediatePropagation();
+			event.stopPropagation();
+			return false;
+		}
+	});
 
 	// capture alert messages
 	window.alert = window.top.alert;

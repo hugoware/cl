@@ -4,6 +4,11 @@ import $contentManager from '../../../../content-manager';
 import $state from '../../../../state'
 import { resolvePathFromUrl } from '../../../../utils';
 
+// used to determine default measurements
+// const $iframeBounds = (document.createElement('iframe')).getBoundingClientRect();
+const DEFAULT_IFRAME_WIDTH = 300; // $iframeBounds.right - $iframeBounds - left;
+const DEFAULT_IFRAME_HEIGHT = 150; // $iframeBounds.bottom - $iframeBounds - top;
+
 /** handles individual browser views */
 export default class View {
 
@@ -71,6 +76,54 @@ async function generateTemplate(view, path) {
 
 	// check for a title
 	view.title = _.trim(view.template('title').text());
+
+	// document validation
+	view.template('a')
+		.each((index, link) => {
+
+			// if ('src' in link || !('href' in link))
+				// backwards
+		});
+
+	view.template('img')
+		.each((index, img) => {
+
+			// if (!('src' in img) || 'href' in img)
+			// 	'invalid?'
+
+		});
+
+	// replace each iframe with a screenshot of the
+	// source website
+	view.template('iframe')
+		.each((index, frame) => {
+			
+			// check the url -- make sure it's absolute
+			// let url = _.trim(frame.attribs.src);
+			// if (!url || !/^https?:\/{2}/.test(url)) return;
+
+			// since it's absolute, we're going to fake it to
+			// be an image instead
+			frame.name = 'div';
+
+			// add a deactivation class
+			frame.attribs['class'] = frame.attribs['class'] || '';
+			frame.attribs['class']+= ' disabled-iframe';
+
+			// get width
+			let width = frame.attribs.width;
+			if (isNaN(width)) width = DEFAULT_IFRAME_WIDTH;
+			width = _.clamp(width, 1, 5000);
+
+			// get height
+			let height = frame.attribs.height;
+			if (isNaN(height)) height = DEFAULT_IFRAME_HEIGHT;
+			height = _.clamp(height, 1, 5000);
+
+			// replace the url
+			const defaultStyle = `border: 1px solid #999; display: inline-block;`;
+			frame.attribs.style = `width: ${width}px; height: ${height}px; ${defaultStyle}`;
+		});
 
 	// find all scripts
 	view.template('script')

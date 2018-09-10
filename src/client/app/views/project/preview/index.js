@@ -5,6 +5,11 @@ import Component from '../../../component';
 // different preview modes
 import BrowserMode from './browser';
 
+// instantiatable modes
+const MODES = {
+	browser: BrowserMode
+};
+
 export default class Preview extends Component {
 
 	constructor(context) {
@@ -17,6 +22,9 @@ export default class Preview extends Component {
 			}
 		});
 
+		// cache of handlers
+		this.handlers = { };
+
 		// events
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
@@ -28,21 +36,25 @@ export default class Preview extends Component {
 	// changes the display mode for the project
 	setMode = mode => {
 
-		// manually replace all modes
-		let cx = this.attr('class') || '';
-		cx = cx.replace(/mode\-[a-z]+/, '');
-		cx = cx.replace(/ +/, ' ');
-		cx = _.trim(cx);
-		cx += ` mode-${mode}`;
+		// load a handler for the first time
+		if (!(mode in this.handlers)) {
+			const type = MODES[mode];
 
-		// change the handler depending on the mode
-		this.handler = ({
-			browser: new BrowserMode(this)
-		})[mode];
+			// make sure the handler exists
+			if (!type)
+				throw 'unsupported handler';
 
-		// update the value
-		this.handler.appendTo(this.ui.content);
-		this.attr('class', cx);
+			// create and save the handler
+			const handler = this.handlers[mode] = new type(this);
+			handler.appendTo(this.ui.content);
+		}
+
+		// replace the current mode
+		_.each(MODES, key => this.removeClass(`mode-${key}`));
+		this.addClass(`mode-${mode}`);
+
+		// set the mode
+		this.handler = this.handlers[mode];
 	}
 
 	// prepare the preview window

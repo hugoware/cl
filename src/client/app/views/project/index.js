@@ -65,7 +65,9 @@ export default class ProjectView extends View {
 		await $state.updateLesson(project);
 
 		// project is ready to use
-		this.broadcast('activate-project', $state.project);
+		setTimeout(() => {
+			this.broadcast('activate-project', $state.project);
+		}, 500);
 	}
 
 }

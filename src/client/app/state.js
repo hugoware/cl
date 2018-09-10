@@ -83,7 +83,7 @@ const $state = {
 	 * @returns {boolean} does the user have access
 	 */
 	checkPermissions: (permissions, ...args) => {
-		if (!$state.lesson) return true;
+		if (!$state.lesson || true === window.__FREEMODE__) return true;
 		return checkPermissions($state, permissions, args);
 	},
 

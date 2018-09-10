@@ -72,6 +72,8 @@ export default class ManagedEditor {
 	/** removes all file instances */
 	clear = () => {
 		this.instances.splice(0, this.instances.length);
+		delete this.activeInstance;
+		this.editor.setValue('');
 	}
 
 	/** removes a file from the editor

@@ -1,3 +1,5 @@
 
 
 - include a "free mode" from console in case of emergencies - allow any action until deactivated to fix lessons that get stuck
+
+xx - matching file names not replaced when loading a project

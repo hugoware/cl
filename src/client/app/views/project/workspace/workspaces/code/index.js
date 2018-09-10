@@ -33,10 +33,10 @@ export default class CodeEditor extends Component {
 		this.files = { };
 
 		// handle events
+		this.listen('reset', this.onReset);
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('deactivate-file', this.onDeactivateFile);
 		this.listen('activate-project', this.onActivateProject);
-		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('rename-item', this.onRenameItem);
 		this.ui.save.on('click', this.onSaveChanges);
 
@@ -95,7 +95,12 @@ export default class CodeEditor extends Component {
 		const { content, path } = this.pending;
 		delete this.pending;
 		contentManager.update(path, content);
-	} 
+	}
+	
+	// clear out all files
+	onReset = () => {
+		this.editor.clear();
+	}
 
 	// queues up changes to the content manager
 	onContentChange = () => {

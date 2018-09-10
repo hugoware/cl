@@ -39,11 +39,6 @@ export default class TabBar extends Component {
 		this.tabs.refresh();
 	}
 
-	// clear all tabs
-	onActivateProject = () => {
-		
-	}
-
 	// handles opening or activating new tab
 	onActivateFile = file => {
 		this.openTab(file);

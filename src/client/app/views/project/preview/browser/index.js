@@ -2,9 +2,9 @@
 
 import _ from 'lodash';
 import View from './view';
+import $state from '../../../../state';
 import Component from '../../../../component';
 import { getExtension } from '../../../../utils/index';
-import { listen } from '../../../../events';
 import $errorManager from '../../../../error-manager';
 
 const NO_PREVIEW_LOADED = `
@@ -31,7 +31,8 @@ export default class BrowserMode extends Component {
 			ui: {
 				url: '.url input',
 				title: '.title',
-				output: '.window iframe',
+				output: '.window iframe.output',
+				viewer: '.window iframe.viewer',
 
 				// actions
 				runScripts: '.run-scripts'
@@ -46,11 +47,13 @@ export default class BrowserMode extends Component {
 		this.views = { };
 
 		// listen for the preview window to broadcast changes
+		this.listen('reset', this.onReset);
 		this.listen('preview-message', this.onPreviewMessage);
 		this.listen('rename-item', this.onRenameItem);
 		this.listen('delete-items', this.onDeleteItems);
 		this.ui.output.on('mouseover', this.onAutoExecuteScripts);
 		this.ui.runScripts.on('click', this.onRunPageScripts);
+		this.ui.url.on('change', this.onUrlChanged);
 
 		// set the default view
 		// setTimeout(this.clear);
@@ -92,12 +95,6 @@ export default class BrowserMode extends Component {
 		return this.context.__CODELAB__;
 	}
 
-	/** handles completely resetting the preview window */
-	reset() {
-		this.output.innerHTML = '';
-		this.output.outerHTML = this.output.outerHTML;
-	}
-
 	/** checks if a view is visible
 	 * @returns {boolean} */
 	get hasActiveView() {
@@ -109,6 +106,12 @@ export default class BrowserMode extends Component {
 	 */
 	get activeFile() {
 		return this.view && this.view.file;
+	}
+
+	// tries to navigate to a new location
+	onUrlChanged = () => {
+		const { url } = this;
+		this.navigate(url);
 	}
 
 	// handles starting a new project
@@ -155,7 +158,7 @@ export default class BrowserMode extends Component {
 	}
 
 	// handles incoming preview messages
-	onPreviewMessage = (err, args) => {
+	onPreviewMessage = (err, args = { }) => {
 		if (!this.hasActiveView) return;
 
 		// handling a script error
@@ -164,11 +167,15 @@ export default class BrowserMode extends Component {
 			this.setPageError(args);
 		}
 
+		// handle general navigation
+		else if (args.navigate)
+			this.navigate(args.navigate);
+
 		// else if ('console.log' === name)
 		// else if ('console.log' === name)
 		// else if ('console.log' === name)
 
-		else console.log('received from preview', name);
+		else console.log('preview message', err, args);
 	}
 
 	// handles deactivating a project entirely
@@ -185,8 +192,12 @@ export default class BrowserMode extends Component {
 	}
 
 	// sets the default view content
-	onActivateFile = async file => {
+	onActivateFile = async (file, viewOnly) => {
 		const { path } = file;
+
+		// show the previewer
+		this.ui.viewer.hide();
+		this.ui.output.show();
 		
 		// determine if activating the file should replace
 		// the view that's in the preview or not
@@ -194,16 +205,21 @@ export default class BrowserMode extends Component {
 		if (!_.includes(VIEWABLE_TYPES, ext))
 			return;
 
-		// if replacing a view, clear the error
-		this.clearPageError();
-
 		// update the url
 		this.url = path;
 
 		// find the view to use
-		this.view = this.views[path] = this.views[path] || new View(file);
-		await this.view.refresh(path, { forceRefresh: true });
-		this.render(true);
+		const view = this.views[path] = this.views[path] || new View(file);
+		await view.refresh(path, { forceRefresh: true });
+
+		// if just showing the view only
+		if (!viewOnly) {
+			this.clearPageError();
+			this.view = view;
+		}
+
+		// display the view
+		this.render(view, true);
 	}
 
 	// handles replacing the content of the view if 
@@ -213,7 +229,52 @@ export default class BrowserMode extends Component {
 
 		// refresh the view
 		await this.view.refresh(file);
-		this.render();
+		this.render(this.view);
+	}
+
+	// resetting the view
+	onReset = () => {
+		this.reset();
+	}
+	
+	/** handles completely resetting the preview window */
+	reset() {
+		this.ui.viewer.hide();
+		this.ui.output.show();
+		this.output.innerHTML = '';
+		this.output.outerHTML = this.output.outerHTML;
+		this.output.innerHTML = NO_PREVIEW_LOADED;
+	}
+
+	// navigates to a new url
+	navigate = url => {
+		
+		// this should be for another file in the project
+		url = _.trim(url).split('?')[0];
+		const file = $state.findItemByPath(url);
+
+		// there's not a file - do a 404 page
+		if (!file) {
+			this.output.innerHTML = 'page not found: 404';
+			this.url = url;
+
+			console.log('TODO: needs a message or a 404');
+		}
+		// check the type of file
+		else if ('content' in file) {
+			this.url = file.path;
+			this.onActivateFile(file, true);
+		}
+		
+			// a url based file
+		else {
+			const url = $state.getProjectDomain() + file.path;
+			this.url = file.path;
+			this.ui.viewer.attr('src', url);
+			this.ui.viewer.show();
+			this.ui.output.hide();
+		}
+		
 	}
 
 	/** includes a new page error
@@ -246,23 +307,25 @@ export default class BrowserMode extends Component {
 	/** displays the most current template result 
 	 * @param {boolean} shouldRunScripts should the render also eval scripts
 	*/
-	render = shouldRunScripts => {
+	render = (view, shouldRunScripts) => {
 
 		// clear any scripting errors
 		this.clearPageError();
 		
 		// generate the file again
-		const html = this.view.getHTML();
-
+		const html = view.getHTML();
+		
 		// extra steps are to make sure that the
 		// document body is also cleared of all event
 		// listeners
 		this.reset();
 		this.writeContent(html);
-
+		
 		// populate the title, if possible
-		const title = this.view.title || 'Untitled Page';
+		const title = view.title || 'Untitled Page';
 		this.title = title;
+		console.log('wants to use', title);
+		this.url = view.file.path;
 
 		// since we're resetting the page, clear any
 		// scripting flags
@@ -289,7 +352,7 @@ export default class BrowserMode extends Component {
 		// force a compiled refresh
 		const { file } = this.view;
 		await this.view.refresh(file, true);
-		this.render();
+		this.render(this.view);
 	}
 
 	// execute scripts
@@ -300,7 +363,8 @@ export default class BrowserMode extends Component {
 
 		// if the scripts have already run once then
 		// refresh the content before executing
-		if (this.hasRunScripts) this.render();
+		if (this.hasRunScripts)
+			this.render(this.view);
 
 		// execute the scripts
 		this.hasRunScripts = true;

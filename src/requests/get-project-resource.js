@@ -19,8 +19,6 @@ export async function handle(request, response, next) {
 	if (/^\/?__(codelab|monaco)__/i.test(request.path))
 		return next();
 
-	console.log('trying', request.hostname);
-
 	// determine if this is requesting a project
 	const parts = _.trim(request.hostname).split('.');
 	let version = parts.shift();
