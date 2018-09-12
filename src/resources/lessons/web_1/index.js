@@ -131,89 +131,245 @@
   "snippets": {
     "complex_tag": {
       "content": "<div>\n  <h1>The Title</h1>\n  <p>The main content!</p>\n</div>",
-      "type": "html",
-      "zones": {
-        "first_tag": {
-          "start": {
-            "row": 1,
-            "col": 2
-          },
-          "end": {
-            "row": 1,
-            "col": 20
-          }
+      "type": "html"
+    },
+    "html_tag_example": {
+      "content": "<h1>This is an example of HTML</h1>",
+      "type": "html"
+    },
+    "mary_example": {
+      "content": "function readTheFile() {\n  console.log('reads the file');\n}",
+      "type": "javascript"
+    }
+  },
+  "zones": {
+    "/index.html": {
+      "header_start_tag": {
+        "start": {
+          "row": 7,
+          "col": 4
         },
-        "second_tag": {
-          "start": {
-            "row": 2,
-            "col": 2
-          },
-          "end": {
-            "row": 2,
-            "col": 26
-          }
+        "end": {
+          "row": 7,
+          "col": 8
+        }
+      },
+      "header_end_tag": {
+        "start": {
+          "row": 7,
+          "col": 20
         },
-        "entire_tag": {
-          "start": {
-            "row": 0,
-            "col": 0
-          },
-          "end": {
-            "row": 3,
-            "col": 6
-          }
+        "end": {
+          "row": 7,
+          "col": 25
+        }
+      },
+      "header_content": {
+        "start": {
+          "row": 7,
+          "col": 8
+        },
+        "end": {
+          "row": 7,
+          "col": 20
+        }
+      },
+      "page_title": {
+        "start": {
+          "row": 3,
+          "col": 11
+        },
+        "end": {
+          "row": 3,
+          "col": 19
+        }
+      },
+      "paragraph_start_tag": {
+        "start": {
+          "row": 9,
+          "col": 4
+        },
+        "end": {
+          "row": 9,
+          "col": 7
+        }
+      },
+      "paragraph_end_tag": {
+        "start": {
+          "row": 9,
+          "col": 35
+        },
+        "end": {
+          "row": 9,
+          "col": 39
+        }
+      },
+      "paragraph_content": {
+        "start": {
+          "row": 9,
+          "col": 7
+        },
+        "end": {
+          "row": 9,
+          "col": 35
+        }
+      },
+      "head_tag": {
+        "start": {
+          "row": 2,
+          "col": 2
+        },
+        "end": {
+          "row": 4,
+          "col": 9
+        }
+      },
+      "body_tag": {
+        "start": {
+          "row": 5,
+          "col": 2
+        },
+        "end": {
+          "row": 11,
+          "col": 9
+        }
+      },
+      "doctype": {
+        "start": {
+          "row": 0,
+          "col": 0
+        },
+        "end": {
+          "row": 0,
+          "col": 15
+        }
+      }
+    },
+    "/style.css": {
+      "css_property_color": {
+        "start": {
+          "row": 1,
+          "col": 2
+        },
+        "end": {
+          "row": 1,
+          "col": 7
+        }
+      },
+      "css_color_value": {
+        "start": {
+          "row": 1,
+          "col": 9
+        },
+        "end": {
+          "row": 1,
+          "col": 12
+        }
+      },
+      "css_color_property": {
+        "start": {
+          "row": 1,
+          "col": 2
+        },
+        "end": {
+          "row": 1,
+          "col": 7
+        }
+      },
+      "css_selector": {
+        "start": {
+          "row": 0,
+          "col": 0
+        },
+        "end": {
+          "row": 0,
+          "col": 4
+        }
+      },
+      "css_rule": {
+        "start": {
+          "row": 0,
+          "col": 0
+        },
+        "end": {
+          "row": 2,
+          "col": 1
         }
       }
     },
     "html_tag_example": {
-      "content": "<h1>This is an example of HTML</h1>",
-      "type": "html",
-      "zones": {
-        "front_tag": {
-          "start": {
-            "row": 0,
-            "col": 0
-          },
-          "end": {
-            "row": 0,
-            "col": 4
-          }
+      "front_tag": {
+        "start": {
+          "row": 0,
+          "col": 0
         },
-        "end_tag": {
-          "start": {
-            "row": 0,
-            "col": 30
-          },
-          "end": {
-            "row": 0,
-            "col": 35
-          }
+        "end": {
+          "row": 0,
+          "col": 4
+        }
+      },
+      "end_tag": {
+        "start": {
+          "row": 0,
+          "col": 30
         },
-        "content": {
-          "start": {
-            "row": 0,
-            "col": 4
-          },
-          "end": {
-            "row": 0,
-            "col": 30
-          }
+        "end": {
+          "row": 0,
+          "col": 35
+        }
+      },
+      "content": {
+        "start": {
+          "row": 0,
+          "col": 4
+        },
+        "end": {
+          "row": 0,
+          "col": 30
+        }
+      }
+    },
+    "complex_tag": {
+      "first_tag": {
+        "start": {
+          "row": 1,
+          "col": 2
+        },
+        "end": {
+          "row": 1,
+          "col": 20
+        }
+      },
+      "second_tag": {
+        "start": {
+          "row": 2,
+          "col": 2
+        },
+        "end": {
+          "row": 2,
+          "col": 26
+        }
+      },
+      "entire_tag": {
+        "start": {
+          "row": 0,
+          "col": 0
+        },
+        "end": {
+          "row": 3,
+          "col": 6
         }
       }
     },
     "mary_example": {
-      "content": "function readTheFile() {\n  console.log('reads the file');\n}",
-      "type": "javascript",
-      "zones": {
-        "console_example": {
-          "start": {
-            "row": 1,
-            "col": 2
-          },
-          "end": {
-            "row": 1,
-            "col": 32
-          }
+      "console_example": {
+        "start": {
+          "row": 1,
+          "col": 2
+        },
+        "end": {
+          "row": 1,
+          "col": 32
         }
       }
     }

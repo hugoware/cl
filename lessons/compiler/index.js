@@ -58,6 +58,9 @@ processDefinitions(state, manifest, definitions);
 processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
 processSlides(state, manifest, slides);
 
+// other saved data
+manifest.zones = zones;
+
 // include all scripts
 const scripts = [];
 for (const file of $fsx.readdirSync(root)) {

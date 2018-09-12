@@ -1,4 +1,26 @@
 
+.zone {
+	background: rgba(#fff, 0.05) !important;
+	box-shadow: 0 0 10px #fff;
+	position: absolute;
+	z-index: 9999;
+	opacity: 0;
+	transform: scale(0.5, 0.5);
+	@include animate('transform, opacity', 0.2s);
+	padding: 0 3px;
+	margin: 0 0 0 -3px;
+
+	&.show {
+		opacity: 1;
+		transform: scale(1, 1);
+	}
+}
+
+.ace_active-line {
+	background: #000 !important;
+	opacity: 0.5;
+	z-index: 0;
+}
 
 .code-editor {
 	

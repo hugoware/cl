@@ -30,7 +30,7 @@
       [delay: 2000] Dramatic!
 
       This is a final part that's not read
-      
+
 
     markers:
       # - $file-browser [file="/main.css"] ::center
@@ -48,6 +48,10 @@
       - .tab-bar .tab[file="/index.html"]
     #   - .file-browser .create-file ::click
       # - ::validate(isSlideFinished)
+      # 
+  zones:
+    header_start_tag: allow
+    header_end_tag: allow
 
 -
   slide:

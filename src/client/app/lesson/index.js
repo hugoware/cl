@@ -67,9 +67,15 @@ export default class Lesson {
 		return this.instance.data.lesson;
 	}
 
-	// get snippets() {
-	// 	return this.instance.data.snippets;
-	// }
+	/** returns all of the zones for a file */
+	getZones = path => {
+		const { state, data } = this.instance;
+
+		// copy the zones first
+		state.zones = state.zones || { };
+		state.zones[path] = state.zones[path] || _.assign({ }, data.zones[path]);
+		return state.zones[path];
+	}
 
 	/** navigates to a spcific slide, handles toggling
 	 * any state changes along the way

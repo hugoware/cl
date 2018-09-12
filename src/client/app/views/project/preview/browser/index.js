@@ -324,7 +324,6 @@ export default class BrowserMode extends Component {
 		// populate the title, if possible
 		const title = view.title || 'Untitled Page';
 		this.title = title;
-		console.log('wants to use', title);
 		this.url = view.file.path;
 
 		// since we're resetting the page, clear any

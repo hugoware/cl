@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import { getExtension } from "../utils";
 import $brace from 'brace';
-$brace.Range = $brace.acequire('ace/range').Range;
 import ManagedEditor from './managed';
+const Range = $brace.acequire('ace/range').Range;
 
 // validations
 require('brace/mode/html');
@@ -89,7 +88,7 @@ class EditorManager {
 			_.each(highlight, key => {
 				const zone = snippet.zones[key];
 				const { start, end, line } = zone;
-				const range = new $brace.Range(start.row, start.col, end.row, end.col);
+				const range = new Range(start.row, start.col, end.row, end.col);
 				editor.session.addMarker(range, 'snippet-highlight', line ? 'fullLine' : '');
 			});
 

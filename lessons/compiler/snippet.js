@@ -29,24 +29,24 @@ export default function processSnippets(state, manifest, relativeTo, ranges, sni
 
     // check for the snippet base
     const key = fileName.replace(/\..*$/, '');
-    const zones = ranges[key] || { };
+    // const zones = ranges[key] || { };
 
     // for now, warn of empty tags
-    if (!ranges[key])
-      console.warn('missing highlight ranges for', fileName);
+    // if (!ranges[key])
+    //   console.warn('missing highlight ranges for', fileName);
 
     // collect the content
     const path = $path.resolve(relativeTo, fileName);
     snippet.content = _.trim($fsx.readFileSync(path).toString());
     snippet.type = type;
-    snippet.zones = zones;
-    snippet.line = zones.line;
-    delete zones.line;
+    // snippet.zones = zones;
+    // snippet.line = zones.line;
+    // delete zones.line;
 
     // save the snippet
     manifest.snippets[key] = snippet;
 
     // remove this from the main file
-    delete ranges[key];
+    // delete ranges[key];
   });
 }

@@ -41,6 +41,13 @@ const $state = {
 	 */
 	items: { },
 
+	/** checks if the application is in free mode, meaning not managed by a lesson */
+	get freeMode() {
+		return !$state.lesson
+			|| ($state.lesson && $state.lesson.done)
+			|| window.__FREEMODE__ === true;
+	},
+
 	/** returns all folders found in the project 
 	 * @returns {ProjectItem} found folders
 	 */
@@ -83,7 +90,7 @@ const $state = {
 	 * @returns {boolean} does the user have access
 	 */
 	checkPermissions: (permissions, ...args) => {
-		if (!$state.lesson || true === window.__FREEMODE__) return true;
+		if ($state.freeMode) return true;
 		return checkPermissions($state, permissions, args);
 	},
 
