@@ -45,7 +45,7 @@ export function resolvePath(path) {
  * @returns {string} the resolved path
  */
 export function resolveLesson(id = '', file) {
-	let path = `~/dist/resources/lessons/${id}`;
+	let path = `${$config.lessonDirectory}/${id}`;
 	if (!!file) path += '/' + removeLeadingSlash(file)
   return resolveRoot(path);
 }
@@ -65,7 +65,7 @@ export function resolvePublic(path) {
  */
 export function resolveCache(path) {
   path = removeLeadingSlash(path);
-  const result = $path.resolve(resolveRoot('~/.cache') + path);
+  const result = $path.resolve(resolveRoot($config.cacheDirectory) + path);
   return result;
 }
 
@@ -75,7 +75,7 @@ export function resolveCache(path) {
  */
 export function resolveData(path) {
   path = removeLeadingSlash(path);
-  const result = $path.resolve(resolveRoot('~/.data') + path);
+  const result = $path.resolve(resolveRoot($config.dataDirectory) + path);
   return result;
 }
 
@@ -92,7 +92,7 @@ export function resolveProject(id, path = '', fromCache) {
 	path = sanitizePath(path);
 	path = removeLeadingSlash(path);
 	path = removeTrailingSlash(path);
-	const root = resolveRoot(`~/.data/projects/${id}`);
+	const root = resolveRoot(`${$config.dataDirectory}/projects/${id}`);
 	const result = $path.resolve(`${root}/${path}`);
 	const head = result.substr(0, root.length);
 	const tail = result.substr(root.length + 1);

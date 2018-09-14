@@ -7,6 +7,7 @@ import contentManager from '../../../../../content-manager'
 import $editor from '../../../../../editor';
 import $state from '../../../../../state';
 import ManagedEditor from '../../../../../editor/managed';
+import { requirePermission } from '../../../prevent';
 
 // the amount of time to wait before compiling
 const COMPILER_DELAY = 300;
@@ -104,6 +105,7 @@ export default class CodeEditor extends Component {
 
 	// queues up changes to the content manager
 	onContentChange = () => {
+		console.log('got it');
 		this.compile();
 	}
 
@@ -132,6 +134,7 @@ export default class CodeEditor extends Component {
 	// if someone is being silly and trying to type/click save
 	// in less than a second
 	onSaveChanges = async () => {
+		if (!canSaveFile(this)) return;
 		if (this.busy) return;
 
 		// gather the data
@@ -154,6 +157,7 @@ export default class CodeEditor extends Component {
 
 	/** handles saving all of the files that are modified */
 	saveAll = async () => {
+		if (!canSaveFile(this)) return;
 		const instances = this.editor.instances || [ ];
 
 		for (let i = 0; i < instances.length; i++) {
@@ -170,6 +174,7 @@ export default class CodeEditor extends Component {
 
 	/** handles compiling the current file */
 	compile() {
+		console.log('wants to compile');
 		if (!this.editor.activeInstance) return;
 
 		// try and process the file
@@ -203,4 +208,12 @@ export default class CodeEditor extends Component {
 		this.pending.content = content;
 	}
 
+}
+
+// checks if this file can be saved or not
+function canSaveFile(instance) {
+	return requirePermission({
+		required: $state.checkPermissions(['SAVE_FILE'], instance.file),
+		message: "Can't Save Files",
+	});
 }

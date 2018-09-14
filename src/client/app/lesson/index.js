@@ -7,6 +7,7 @@ import $api from '../api';
 import $focus from './focus';
 import $wait from './wait';
 import { load } from './loader';
+import { broadcast } from '../events';
 
 /** creates a default lesson */
 export default class Lesson {
@@ -67,12 +68,35 @@ export default class Lesson {
 		return this.instance.data.lesson;
 	}
 
+	/** a highlight zone in the document
+	 * @returns {Object<string,LessonZone>} the object map of zones
+	 */
+	get zones() {
+		return this.instance.data.zones;
+	}
+
+	/** returns a snippet by ID */
+	getSnippet = type => {
+		const snippet = this.snippets[type];
+		snippet.zones = this.zones[type];
+		return snippet;
+	}
+
+	/** gets zone information for a path (and specific zone) */
+	getZone = (path, id) => {
+		const zones = this.getZones(path);
+		return zones[id];
+	}
+	
 	/** returns all of the zones for a file */
 	getZones = path => {
 		const { state, data } = this.instance;
-
+		
 		// copy the zones first
 		state.zones = state.zones || { };
+		
+		// return the zones
+		path = path.replace(/\./g, '$');
 		state.zones[path] = state.zones[path] || _.assign({ }, data.zones[path]);
 		return state.zones[path];
 	}
@@ -201,6 +225,9 @@ function setActiveSlide(lesson, slide) {
 	slide.isFirst = index === 0;
 	slide.isLast = index === lastIndex;
 	slide.isCheckpoint = slide.checkpoint === true;
+
+	// let other systems know the slide changed
+	broadcast('slide-changed', this, slide);
 }
 
 
@@ -209,7 +236,7 @@ function applySlide(lesson, slide, invert) {
 	if (!slide) return;
 
 	// check for flags
-	const { flags = {} } = slide;
+	const { flags = { }, zones = { } } = slide;
 	console.log('wants to apply', slide, flags);
 
 	if (invert) {
@@ -220,4 +247,33 @@ function applySlide(lesson, slide, invert) {
 		_.each(flags.add, key => $state.flags[key] = true);
 		_.each(flags.remove, key => delete $state.flags[key]);
 	}
+
+	// also broadcast zone updates
+	_.each(zones, (changes, path) => {
+		notifyZoneUpdates(lesson, path, changes, invert);
+	});
+}
+
+// check for each zone update
+function notifyZoneUpdates(lesson, path, zones, invert) {
+	
+	// update the state for each zone
+	_.each(zones, (state, id) => {
+		const zone = lesson.getZone(path, id);
+		
+		// check the collapse state
+		if (/collapse/.test(state))
+			zone.collapsed = invert ? false : true;
+		else if (/expand/.test(state))
+			zone.collapsed = invert ? true : false;
+		
+		// check the visibility state
+		if (/show/.test(state))
+			zone.active = invert ? false : true;
+		else if (/hide/.test(state))
+			zone.active = invert ? true : false;
+	});
+
+	console.log('current', lesson.instance.state);
+
 }

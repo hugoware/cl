@@ -79,7 +79,7 @@ function applySnippets(slide ,lesson) {
 		// update the element
 		const type = element.getAttribute('type');
 		const highlight = _.trim(element.getAttribute('highlight')).split(/ +/g);
-		const snippet = lesson.snippets[type];
+		const snippet = lesson.getSnippet(type);
 		$editor.colorize(example, { snippet, highlight });
 	});
 	

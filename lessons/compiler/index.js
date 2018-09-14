@@ -31,7 +31,7 @@ function readFile(name) {
 const source = process.argv[2];
 const id = _.snakeCase(source);
 const root = $path.resolve(`./lessons/content/${source}`);
-const dist = $path.resolve(`./src/resources/lessons/${id}`);
+const dist = $path.resolve(`./lessons/output/${id}`);
 const snippets = $path.resolve(`${root}/snippets`);
 const manifest = readYml('manifest.yml');
 const zones = readYml('zones.yml');
@@ -40,6 +40,13 @@ const type = _.camelCase(source);
 
 // get the template to use
 let template = readFile('compiler/template.js');
+
+// fix the zone keys
+for (const id in zones) {
+  const value = zones[id];
+  delete zones[id];
+  zones[id.replace(/\./, '$')] = value;
+}
 
 // start processing each lesson file
 let content = [];
@@ -87,9 +94,14 @@ $fsx.ensureDirSync(dist);
 $fsx.writeFileSync(`${dist}/index.js`, result);
 
 // copy resources, if possible
-console.log('checking for resource', `${root}/resources`);
+console.log('copy resources', `${root}/resources`);
 if ($fsx.existsSync(`${root}/resources`))
   $fsx.copySync(`${root}/resources`, `${dist}/resources`);
+
+// copy files, if possible
+console.log('copy files', `${root}/files`);
+if ($fsx.existsSync(`${root}/files`))
+  $fsx.copySync(`${root}/files`, `${dist}/files`);
 
 // also copy this to the dist directory
 

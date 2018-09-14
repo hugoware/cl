@@ -4,6 +4,7 @@ import $state from '../state';
 import $brace from 'brace';
 import { cancelEvent } from '../utils';
 import ManagedZone from './zone';
+import { listen } from '../events';
 
 // managing text ranges
 const Range = $brace.acequire('ace/range').Range;
@@ -50,17 +51,29 @@ export default class ManagedEditor {
 		this.instances = [ ];
 		this.editor = editor;
 
+		// keep in sync with lessons
+		listen('slide-changed', this.onSlideChanged);
+
 		// setup event handlers
 		this.editor.commands.on('exec', this.onExecuteCommand);
 	}
 
+	// handles changing between lessons
+	onSlideChanged = (lesson, slide) => {
+		this.syncZones(this.activeInstance);
+	}
+
 	// handle command requests
 	onExecuteCommand = event => {
+
+		// can freely edit files
+		if (!$state.lesson || $state.freeMode)
+			return true;
+		
+		// make sure there's an instance to work with
 		const { command = { } } = event;
 		const instance = this.activeInstance;
-
-		// this really shouldn't happen
-		if (!instance) return;
+		if (!instance) return true;
 		
 		// keyboard nav is allowed always
 		if (/^goto(left|right)$/i.test(command.name)
@@ -82,7 +95,6 @@ export default class ManagedEditor {
 			return cancelEvent(event);
 		
 		// check the key used
-		console.log('command name', command.name, event);
 		const range = this.editor.getSelectionRange();
 		const options = {
 			backspace: /backspace/i.test(command.name),
@@ -96,7 +108,7 @@ export default class ManagedEditor {
 			const zone = zones[id];
 
 			// if any zone allows the edit, assume it's okay
-			if (zone.active && zone.allowEdit(event, range, options)) {
+			if (zone.isActive && zone.allowEdit(event, range, options)) {
 				allow = true;
 				break;
 			}
@@ -178,16 +190,19 @@ export default class ManagedEditor {
 				const session = $brace.createEditSession(content, `ace/mode/${syntax}`);
 				session.setOptions(SESSION_OPTIONS);
 
+				// create the handler for content changes
+				session.on('change', this.onChanged);
+
 				// create all of the zones for this file
 				const zones = { };
 				if ($state.lesson) {
+
+					// create each zone
 					const availableZones = $state.lesson.getZones(file.path);
 					_.each(availableZones, (zone, id) => {
-						zones[id] = new ManagedZone(id, zone, session);
+						const instance = new ManagedZone(id, zone, session);
+						zones[id] = instance;
 					});
-					
-					// helper for now
-					zones['header_content'].show();
 				}
 
 				// create the instance
@@ -212,10 +227,20 @@ export default class ManagedEditor {
 			// set the active session
 			this.activeInstance = instance;
 			this.editor.setSession(instance.session);
+			this.syncZones(instance);
 
 			// give back the instance
 			resolve(instance);
 		});
+	}
+
+	// sync zones to the current state
+	syncZones = instance => {
+		if (!instance || !$state.lesson) return;
+		
+		// update zones
+		const { zones } = instance;
+		_.each(zones, zone => zone.sync(true));
 	}
 
 	/** finds an instance of a file using a path 

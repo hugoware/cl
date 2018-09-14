@@ -49,9 +49,11 @@
     #   - .file-browser .create-file ::click
       # - ::validate(isSlideFinished)
       # 
-  zones:
-    header_start_tag: allow
-    header_end_tag: allow
+    zones:
+      /index.html:
+        header_start_tag: show
+        header_end_tag: show
+        paragraph_content: collapse
 
 -
   slide:

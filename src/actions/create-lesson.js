@@ -11,53 +11,72 @@ import { resolveLesson, resolveProject } from '../path';
  */
 export default async function createLesson(lessonId, userId) {
 	return new Promise(async (resolve, reject) => {
-			
-		// get the project data
-		let lesson = resolveLesson(lessonId, 'data.json');
-		lesson = await $fsx.readFile(lesson);
-		lesson = JSON.parse(lesson.toString());
 
 		// check if this needs to be created again or not
 		const query = { lesson: lessonId, ownerId: userId };
 		const lessons = await $database.projects.find(query)
-			.project({ id: 1 })
+			.project({ _id: 0, id: 1 })
 			.toArray();
+
+		console.log('found', lessons);
 
 		// no lessons means we need to create it
 		let id;
 		if (lessons.length === 0) {
+			
+			// get the project data
+			let lesson = resolveLesson(lessonId, 'data.json');
+			lesson = await $fsx.readFile(lesson);
+			lesson = JSON.parse(lesson.toString());
+
 			// try and create the record
 			id = await $database.generateId($database.projects, 6);
 			
+			// get the default information
 			const { name, type, description } = lesson;
 			await $database.projects.insertOne({
 				id, name, type, description,
 				lesson: lessonId,
 				ownerId: userId,
 				modifiedAt: $date.now(),
-				state: { }
+				progress: { }
 			});
 		}
 		// otherwise, we can just replace the state
-		else {
+		else if (lessons.length === 1) {
+			id = lessons[0].id;
 			await $database.projects.update(query, {
-				$set: { state: { } }
+				$set: { 
+					progress: { },
+					modifiedAt: $date.now()
+				}
 			});
 		}
-		
+		// not sure
+		else {
+			return reject('invalid_lesson');
+		}
+
 		// get the resources to copy
-		const source = resolveLesson(lessonId, 'resources');
-		const target = resolveProject(id);
+		try {
+			const source = resolveLesson(lessonId, 'files');
+			const target = resolveProject(id);
+			
+			// remove the old files
+			const exists = await $fsx.exists(target);
+			if (exists) await $fsx.remove(target);
+			
+			// copy the files
+			await $fsx.copy(source, target);
+			
+			// all done
+			resolve({ success: true });
+		}
+		// something went wrong
+		catch (err) {
+			reject(err);
+		}
 
-		// remove the old files
-		const exists = await $fsx.exists(target);
-		if (exists) await $fsx.remove(target);
-		
-		// copy the files
-		await $fsx.copy(source, target);
-
-		// all done
-		resolve();
 	});
 
 }

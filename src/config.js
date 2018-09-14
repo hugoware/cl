@@ -33,6 +33,15 @@ class Config {
 	/** @returns {number} the database port number */
 	get databasePort() { return this.data.database_port; }
 
+	/** @returns {string} the directory where all lesson files are found */
+	get lessonDirectory() { return this.data.lesson_directory; }
+
+	/** @returns {string} the storage location for temp files */
+	get cacheDirectory() { return this.data.cache_directory; }
+
+	/** @returns {string} the storage location for data files */
+	get dataDirectory() { return this.data.data_directory; }
+
 	/** @returns {boolean} is this mode in production */
 	get isProduction() {
 		return /prod(uction)?/i.test(this.data.mode);

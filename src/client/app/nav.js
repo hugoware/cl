@@ -23,6 +23,14 @@ class Nav {
 	 * @param {string} path the new path to navigate to
 	 */
 	go = path => {
+
+		// check if leaving a project view
+		const navToProject = /project\/.+/i.test(path);
+		const atProject = /project\/.+/i.test(this.path);
+		if (!navToProject && atProject)
+			broadcast('deactivate-project');
+
+		// update the state
 		updateState(this, path);
 		
 		// change the state

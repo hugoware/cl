@@ -14,6 +14,10 @@ export default class ManagedZone {
 		this.session = session;
 		this.base = `zone zone-${id}`;
 
+		// save a few props
+		this.isMultiLine = !!zone.multiline;
+		// this.isHidden = !!zone.hide;
+
 		// create two anchors that act as the start
 		// and end range of a zone
 		const { start, end } = zone;
@@ -33,22 +37,17 @@ export default class ManagedZone {
 
 	/** checks if a zone edit is allowed or not */
 	allowEdit = (event, range, options) => {
-		console.log('test edit', this.id);
 		
 		// check if this falls within range
 		const { start, end } = this;
-		const inRange = 
-			range.start.row >= start.row
-			&& range.start.row <= end.row
-		
-			&& range.end.row >= start.row
-			&& range.end.row <= end.row
 
-			&& range.start.column >= start.column
-			&& range.start.column <= end.column
-
-			&& range.end.column >= start.column
-			&& range.end.column <= end.column;
+		// create fake indexes
+		const SHIFT = 1000000;
+		const rangeStart = (range.start.row * SHIFT) + range.start.column;
+		const rangeEnd = (range.end.row * SHIFT) + range.end.column;
+		const zoneStart = (start.row * SHIFT) + start.column;
+		const zoneEnd = (end.row * SHIFT) + end.column;
+		const inRange = rangeStart >= zoneStart && rangeEnd <= zoneEnd;
 
 		// if it's not in range, quit now
 		if (!inRange) return;
@@ -92,6 +91,13 @@ export default class ManagedZone {
 		// checking for adding characters
 		else if (/insert/i.test(command)) {
 
+			// if this doesn't allow more than one line, check for newlines
+			if (!this.isMultiLine) {
+				const newline = this.session.doc.getNewLineCharacter();
+				if (event.args.indexOf(newline) > -1)
+					return false;
+			}
+
 			// inserting a new character before the start anchor
 			if (startAtStart)
 				this.resetColumn = start.column;
@@ -104,26 +110,37 @@ export default class ManagedZone {
 
 	/** handles displaying the zone */
 	show = () => {
-		this.active = true;
+		console.log('try show');
+		this.isActive = true;
 		this.marker.clazz = this.base + ' show';
+		// this.update();
 	}
 	
 	/** handles hiding a zone */
 	hide = () => {
-		this.active = false;
+		this.isActive = false;
 		this.marker.clazz = this.base;
 	}
 
 	/** shows the content for a range */
 	collapse = () => {
+		if (this.isCollapsed) return;
+		this.isCollapsed = true;
 		this.content = this.session.doc.getTextRange(this.range);
-		this.session.remove(range);
+		this.session.remove(this.range);
 	}
 
 	/** expands the content for a range */
 	expand = () => {
-		const position = this.session.doc.indexToPosition(this.start);
-		this.session.insert(position, this.content);
+		if (!this.isCollapsed) return;
+		this.isCollapsed = false;
+
+		// get the original start
+		const { row, column } = this.start;
+
+		// insert contetn and fix
+		this.session.insert(this.start, this.content);
+		this.start.setPosition(row, column);
 	}
 
 	/** handles updating a zone when the ranges change */
@@ -141,14 +158,31 @@ export default class ManagedZone {
 
 	/** extra function to ensure that apply any extra changes to a zone to
 	 * make sure they're aligned correctly
+	 * @param {boolean} [autoUpdate] calls update at the end of syncing
 	 */
-	sync = () => {
+	sync = autoUpdate => {
 
 		// check if resetting the start position
 		if ('resetColumn' in this) {
 			this.start.setPosition(this.start.row, this.resetColumn);
 			delete this.resetColumn;
 		}
+
+		// check for visibility changes
+		if (this.isActive && !this.zone.active)
+			this.hide();
+		else if (!this.isActive && this.zone.active)
+			this.show();
+
+		// check for collapse changes
+		if (!this.isCollapsed && this.zone.collapsed)
+			this.collapse();
+		else if (this.isCollapsed && !this.zone.collapsed)
+			this.expand();
+
+		// sync the view
+		if (!!autoUpdate)
+			this.update();
 
 	}
 

@@ -166,29 +166,35 @@
 				.clear Cancel
 
 +template('dialog-publish-project')
-	.content(width='500').publish-project
+	.content(dialog-width='500').publish-project
 		h3 Feature not available yet
 
 		.actions
 			.action.cancel Cancel
 
 +template('dialog-remove-project')
-	.content(width='500').edit-project
-		h3 Feature not available yet
+	.content(dialog-width='500').edit-project
+		.title Remove Project
+		.message Do you really want to delete this project an all of its files?
+		.error
 
 		.actions
+			.action.confirm.danger Remove Project
 			.action.cancel Cancel
 
 +template('dialog-edit-project')
-	.content(width='500').edit-project
+	.content(dialog-width='500').edit-project
 		h3 Feature not available yet
 
 		.actions
 			.action.cancel Cancel
 
 +template('dialog-reset-lesson')
-	.content(width='500').reset-lesson
-		h3 Feature not available yet
+	.content(dialog-width='500').reset-lesson
+		.title Reset Lesson
+		.message Do you really want to reset this lesson an all of its files?
+		.error
 
 		.actions
+			.action.confirm.danger Reset Lesson
 			.action.cancel Cancel

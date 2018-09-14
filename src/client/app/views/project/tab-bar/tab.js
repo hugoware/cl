@@ -40,14 +40,8 @@ export default class Tab extends Component {
 
 	// handles removing modified state
 	onSaveFile = file => {
-		requirePermission({
-			permissions: [ 'SAVE_FILE' ],
-			message: "Can't Save Files",
-			allow: () => {
-				if (!isSameFile(this, file)) return;
-				this.removeClass('is-modified');
-			}
-		});
+		if (!isSameFile(this, file)) return;
+		this.removeClass('is-modified');
 	}
 
 	// handles when a file is renamed

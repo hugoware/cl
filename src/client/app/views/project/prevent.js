@@ -47,6 +47,9 @@ export function requirePermission(check) {
 		}
 	}
 
+	// if this is just a silent check
+	if (!!check.silent) return;
+
 	// if this was already activated, don't display the message
 	if (PreventActionPopUp.instance.__activated)
 		return;

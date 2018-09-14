@@ -11,7 +11,7 @@ import $bodyParser from 'body-parser';
 import $cookieParser from 'cookie-parser';
 
 import $config from './config';
-import $path from './path';
+import $path, { resolveLesson } from './path';
 import $fs from './storage/file-system';
 import $database from './storage/database';
 
@@ -71,7 +71,7 @@ function createHttpServer(instance) {
 
 // share public resources
 function configureStaticResources(instance) {
-  instance.app.use('/__codelab__/lessons', $express.static('./dist/resources/lessons'));
+  instance.app.use('/__codelab__/lessons', $express.static(resolveLesson()));
   instance.app.use('/__codelab__', $express.static('./dist/resources/public'));
 }
 

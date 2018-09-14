@@ -150,7 +150,7 @@
     }
   },
   "zones": {
-    "/index.html": {
+    "/index$html": {
       "header_start_tag": {
         "start": {
           "row": 7,
@@ -252,7 +252,7 @@
         }
       }
     },
-    "/style.css": {
+    "/style$css": {
       "css_property_color": {
         "start": {
           "row": 1,
