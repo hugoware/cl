@@ -4,6 +4,9 @@ import $fsx from 'fs-extra';
 import getProjectAccess, { ProjectAccess } from '../queries/get-project-access';
 import setProjectModified from '../actions/set-project-modified'
 
+import $database from '../storage/database';
+import $date from '../utils/date';
+
 export const name = 'upload file';
 export const route = '/__codelab__/upload';
 export const method = 'post';
@@ -35,7 +38,7 @@ export async function handle(request, response) {
 		if (!access.write) {
 			response.status(403);
 			return response.send('file_upload_not_allowed');
-		};
+		}
 
 		// make sure a file was provided
 		if (!file) {
@@ -62,6 +65,11 @@ export async function handle(request, response) {
 			response.status();
 			return response.send('file_upload_invalid_path');
 		}
+
+		// update the project
+		await $database.projects.update({ id: projectId }, {
+			$set: { modifiedAt: $date.now() }
+		});
 
 		// since it's good to go, write the content
 		await $fsx.move(file.path, target, { overwrite: true });

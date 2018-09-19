@@ -57,7 +57,7 @@
 
 -
   slide:
-    mode: overlay
+    mode: popup
     checkpoint: true
     emotion: surprised
     content: |
@@ -104,6 +104,9 @@
 
     flags: +delete-file
 
+    validation:
+      deleteFile: verifyFileToDelete
+
     waitFor:
       - .tab-bar .tab[file="/new.pug"]
 
@@ -121,12 +124,42 @@
 
 - 
   question:
+    mode: overlay
     show: 4
+
+    title: What is the name of the `highlighted` block of code?
+    content: |
+      [snippet mary_example highlight:console_example]
+
+    hint: |
+      This is a longer example of what a hint might look like. This is going to span for a period longer than the other items on the page.
+
+    explain: This is just a `summary message` to explain the final answer
+
     choices:
-      - this is correct
-      - This is incorrect
-      - This is also wrong
-      - This shouldn't work
-      - This is another mix
-      - This is failed
+      - this is `correct`
+      - This *is* incorrect
+      - This _is_ also wrong
+      - This ~shouldn't~ work
+      - This *is another* mix
+      - This _is_ failed
+
+- 
+  question:
+    mode: overlay
+    show: 4
+
+    title: This is another question about what you've learned?
+
+    hint: It's really pretty obvious
+
+    explain: This is just a `summary message` to explain the final answer
+
+    choices:
+      - this is `correct`
+      - This *is* incorrect
+      - This _is_ also wrong
+      - This ~shouldn't~ work
+      - This *is another* mix
+      - This _is_ failed
 

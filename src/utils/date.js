@@ -39,9 +39,31 @@ export function timeAgo(timestamp, amount, unit) {
 	return time.fromNow()
 }
 
+/** sorts dates in ascending order - allows for an optional property
+ * @param {any[]} collection the collection of items to sort
+ * @param {string} [prop] if using objects, the date property to sort using
+ */
+export function sort(collection, prop) {
+	return _(collection)
+		.map(item => ({ 
+			item,
+			ts: timestamp(item, prop)
+		}))
+		.orderBy('ts')
+		.map('item')
+		.reverse()
+		.value();
+}
+
+// creates a numeric timestamp
+function timestamp(val, prop) {
+	return $moment(prop ? val[prop] : val).toDate().getTime();
+}
+
 export default {
 	now,
 	fromNow,
 	fromTime,
+	sort,
 	timeAgo
 };

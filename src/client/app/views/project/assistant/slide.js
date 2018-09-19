@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import $state from '../../../state';
-import $editor from '../../../editor';
+import { applySnippets } from './snippets';
 import $showdown from 'showdown';
 import Component from '../../../component';
 
@@ -61,26 +61,4 @@ export default class Slide extends Component {
 		this.ui.message.html(html);
 	}
 
-}
-
-
-
-// attach each snippet
-function applySnippets(slide ,lesson) {
-
-	// replace all snippets
-	const snippets = slide.find('.snippet');
-	snippets.each((index, element) => {
-
-		// create the target for styling
-		const example = document.createElement('div');
-		element.appendChild(example);
-
-		// update the element
-		const type = element.getAttribute('type');
-		const highlight = _.trim(element.getAttribute('highlight')).split(/ +/g);
-		const snippet = lesson.getSnippet(type);
-		$editor.colorize(example, { snippet, highlight });
-	});
-	
 }

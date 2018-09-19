@@ -19,6 +19,7 @@
 @import './_views';
 @import './_header';
 @import './_footer';
+@import './_back';
 @import './assistant/_index';
 @import './_components';
 @import './_console';
@@ -27,7 +28,7 @@
 @import './_dialog';
 @import './dialog/_index';
 @import './_file-browser';
-@import './_preview';
+@import './preview/_index';
 @import './_workspace';
 @import './_tab-bar';
 @import './_console';

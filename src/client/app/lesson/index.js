@@ -149,21 +149,18 @@ export default class Lesson {
 
 	/** navigates to the next slide */
 	next = async () => {
+
+		// if the lesson is over, mark it as completed
+		const { slide } = this;
+		if (slide && slide.isLast)
+			return endLesson(this);
+
+		// continue to the next lesson
 		await this.go(this.index + 1);
 
 		// save the lesson state
 		const { projectId } = $state;
-		const { index, instance } = this;
-		const { state } = instance;
-
-		// get the active files
-		const activeFile = ($state.activeFile || { }).path;
-		const files = _($state.openFiles)
-			.map(file => file.path)
-			.value();
-
-		// get the current state
-		const progress = { index, state, files, activeFile };
+		const progress = this.getProgress();
 		await $api.request('set-progress', { projectId, progress });
 	}
 	
@@ -172,6 +169,21 @@ export default class Lesson {
 		const { slide } = this;
 		if (slide && slide.isCheckpoint) return;
 		return await this.go(this.index - 1);
+	}
+
+	/** returns the current progress for this lesson */
+	getProgress = () => {
+		const { index, instance } = this;
+		const { state } = instance;
+
+		// get the active files
+		const activeFile = ($state.activeFile || {}).path;
+		const files = _($state.openFiles)
+			.map(file => file.path)
+			.value();
+
+		// give back the progress info
+		return { index, state, files, activeFile };
 	}
 
 	/** handles clean up */
@@ -237,7 +249,6 @@ function applySlide(lesson, slide, invert) {
 
 	// check for flags
 	const { flags = { }, zones = { } } = slide;
-	console.log('wants to apply', slide, flags);
 
 	if (invert) {
 		_.each(flags.add, key => delete $state.flags[key]);
@@ -274,6 +285,28 @@ function notifyZoneUpdates(lesson, path, zones, invert) {
 			zone.active = invert ? true : false;
 	});
 
-	console.log('current', lesson.instance.state);
+}
+
+// marks a lesson as completed
+async function endLesson(lesson) {
+	
+	// try and update the project state
+	const { projectId } = $state;
+	try {
+		const result = await $api.request('finish-lesson', { projectId });
+		if (!result.success) throw 'finish_lesson_failed';
+
+		// since it worked, change to free-mode
+		$state.flags['open-mode'] = true;
+		broadcast('lesson-finished');
+	}
+	// if there was any error, the assistant should probably
+	// let them know something went wrong
+	catch(err) {
+		broadcast('assistant-speak', { 
+			emotion: 'sad',
+			message: 'Oops! Seems like there was a problem updating the lesson!'
+		});
+	}
 
 }

@@ -38,6 +38,7 @@ export default class HomeView extends View {
 		this.ui.showLessons.on('click', this.onShowLessons);
 
 		this.listen('set-avatar', this.onSetAvatar);
+		this.listen('reset-project-item', this.onResetProjectItem);
 	}
 
 	/** tests if any projects are found
@@ -129,6 +130,13 @@ export default class HomeView extends View {
 	onSelectProject = event => {
 		const id = getProjectId(event);
 		$nav.go(`project/${id}`);
+	}
+
+	// handles when a project item is confirmed to reset
+	onResetProjectItem = id => {
+		const project = this.find(`[data-id="${id}"]`);
+		project.removeClass('is-finished in-progress');
+		project.addClass('is-new');
 	}
 
 	// tries to remove a project entry

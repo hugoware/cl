@@ -4,10 +4,12 @@ import Component from '../../../component';
 
 // different preview modes
 import BrowserMode from './browser';
+import ReplMode from './repl';
 
 // instantiatable modes
 const MODES = {
-	browser: BrowserMode
+	browser: BrowserMode,
+	repl: ReplMode
 };
 
 export default class Preview extends Component {
@@ -59,7 +61,7 @@ export default class Preview extends Component {
 
 	// prepare the preview window
 	onActivateProject = async () => {
-		this.setMode('browser');
+		this.setMode('repl');
 		this.handler.onActivateProject();
 	}
 

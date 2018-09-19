@@ -9,12 +9,21 @@
 	right: 0;
 	z-index: $layer-assistant;
 
+	&.leave {
+		@include animate('opacity', 0.7s);
+		opacity: 0;
+	}
+
 	.title, .subtitle {
 		display: none;
 	}
 
 	.has-title .title {
 		display: block;
+	}
+
+	&.overlay .has-title .title {
+		padding-right: 30px;
 	}
 
 	.has-subtitle .subtitle {
@@ -138,6 +147,7 @@
 	.title {
 		font-size: 30px;
 		padding-bottom: 25px;
+		line-height: 1.2em;
 	}
 
 	.has-subtitle .title {
@@ -151,7 +161,7 @@
 		font-style: italic;
 	}
 
-	.message {
+	.message, .controls, .title {
 		p {
 			padding-bottom: 15px;
 			line-height: 1.3em;

@@ -131,6 +131,35 @@ $home-content-padding: 25px;
 	$project-item-padding: 18px;
 	$project-item-icon-margin: 15px;
 
+	.is-new, .is-finished, .in-progress {
+		display: none;
+		float: right;
+		padding: 4px 12px;
+		margin-bottom: 8px;
+		font-size: 11.5px;
+		color: #fff;
+		border-radius: 30px;
+		font-weight: normal;
+	}
+
+	&.is-lesson.is-new .is-new,
+	&.is-lesson.is-finished .is-finished,
+	&.is-lesson.in-progress .in-progress {
+		display: block,
+	}
+
+	&.is-lesson.is-new .is-new {
+		background: #F0C330;
+	}
+
+	&.is-lesson.is-finished .is-finished {
+		background: #39CA74;
+	}
+
+	&.is-lesson.in-progress .in-progress {
+		background: #3A99D8;
+	}
+
 	cursor: pointer;
 	float: left;
 	width: 30%;
@@ -155,8 +184,12 @@ $home-content-padding: 25px;
 	&.is-lesson .remove,
 	&.is-lesson .edit,
 	&.is-lesson.is-new .reset,
-	&.is-lesson.in-progress .publish {
+	&.is-lesson .publish {
 		display: none;
+	}
+
+	&.is-lesson.is-finished .publish {
+		display: block;
 	}
 
 	@include animate('transform', 0.2s);
@@ -217,13 +250,17 @@ $home-content-padding: 25px;
 	}
 
 	.modified-at {
+		position: absolute;
 		font-size: 12.5px;
 		font-weight: bold;
-		opacity: 0.3;
-		float: right;
-		height: 30px;
-		line-height: 45px;
+		right: 0;
+		bottom: 20px;
 		padding: 0 $project-item-padding 0 0;
+		
+		.time {
+			opacity: 0.3;
+			clear: both;
+		}
 	}
 
 	.details {
@@ -235,6 +272,7 @@ $home-content-padding: 25px;
 		$project-item-action-icon-size: 15px;
 		$project-item-action-tooltip-gap: 6px;
 
+		height: $project-item-action-size;
 		padding: 0 $project-item-padding $project-item-padding $project-item-padding;
 		float: left;
 

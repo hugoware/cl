@@ -30,11 +30,12 @@ export default function checkPermissions(state, permissions, args = [ ]) {
 			// nothing to do
 			catch (err) { }
 		}
-
-		// next, check if any of the required flags are set
-		const id = _.kebabCase(permission).toLowerCase();
-		if (state.flags[id] === true)
-			return true;
+		// without custom validation, just check flag states
+		else {
+			const id = _.kebabCase(permission).toLowerCase();
+			if (state.flags[id] === true)
+				return true;
+		}
 	}
 
 	// did not find the required flag

@@ -6,13 +6,14 @@ import * as __extensions__ from './extensions';
 
 import $api from './api';
 import $state from './state';
-import nav from './nav';
+import $nav from './nav';
 import $editor from './editor';
 import Component from "./component";
 import Bluebird from 'bluebird';
 
 // page components
 import Header from './header';
+import BackButton from './back';
 // import Footer from './footer';
 
 // sub views
@@ -60,11 +61,13 @@ class App extends Component {
 			ui: {
 				view: '#view',
 				header: '#header',
-				footer: '#footer'
+				footer: '#footer',
+				back: '#back',
 			}
 		});
 
 		this.header = new Header({ $: this.ui.header });
+		this.back = new BackButton({ $: this.ui.back });
 		// this.footer = new Footer({ $: this.ui.footer });
 
 		// sub views
@@ -114,7 +117,7 @@ class App extends Component {
 		// window.addEventListener('resize', this.onWindowResize);
 		window.addEventListener('preview-message', this.onPreviewContentMessage);
 
-		this.setView(nav.view);
+		this.setView($nav.view);
 	}
 
 	// handles broadcasted messages
@@ -124,7 +127,7 @@ class App extends Component {
 
 	// handle general navigation
 	onNavigate = () => {
-		this.setView(nav.view);
+		this.setView($nav.view);
 	}
 
 	// checks when the window size has changed
@@ -154,6 +157,17 @@ class App extends Component {
 		// prevents view switching while already in progress
 		if (this.transitioning) return;
 		this.transitioning = true;
+
+		// check for the view first
+		if (!this.views[view])
+			view = 'missing';
+
+		// update the screen mode
+		this.toggleClassMap({
+			'is-project': view === 'project',
+			'is-home': view === 'home',
+			'is-missing': view === 'missing',
+		});
 
 		// find the view to show
 		view = this.views[view] || this.views.missing;

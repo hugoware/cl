@@ -1,23 +1,146 @@
 /// <reference path="../../../types/index.js" />
-
+import _ from 'lodash';
+import $state from '../../../state';
+import { applySnippets } from './snippets';
 import Component from '../../../component';
+import $speech from '../../../speech';
+
+const DEFAULT_COUNT = 4;
+const INTRO_CORRECT = `That's correct!`;
+const INTRO_INCORRECT = `Oops! That's not correct.`;
 
 export default class Question extends Component {
 
-	constructor() {
+	constructor(assistant) {
 		super({
-			template: 'assistant-question'
+			template: 'assistant-question',
+
+			ui: {
+				title: '.title',
+				message: '.message',
+				choices: '.choices',
+				hint: '.hint-container .hint',
+				explain: '.explain',
+				showHint: '.hint-container .activate'
+			}
 		});
+
+		// save the assistant reference
+		this.assistant = assistant;
+
+		// listen for answer selections
+		this.on('click', '.choices .answer', this.onSelectAnswer);
+		this.ui.showHint.on('click', this.onShowHint);
 
 		// hidden by default
 		this.hide();
 	}
 
+	// handles selecting the answer and displaying the result
+	onSelectAnswer = event => {
+		
+		// don't allow another selection
+		if (this.hasAnswered) return;
+		this.hasAnswered = true;
+
+		// clean up
+		this.removeClass('waiting');
+		this.addClass('answered');
+
+		// determine the result
+		const choice = Component.locate(event.currentTarget, '[answer-index]');
+		const index = 0 | choice.attr('answer-index');
+		const isCorrect = index === this.correctIndex;
+		const handler = isCorrect ? this.onCorrectAnswer : this.onIncorrectAnswer;
+		handler(choice);
+
+		// update the emotion
+		this.assistant.setEmotion(isCorrect ? 'happy' : 'sad');
+		
+		// check for an explanation
+		const { question } = this;
+		if ('explain' in question) {
+			this.addClass('has-explanation');
+			const intro = isCorrect ? INTRO_CORRECT : INTRO_INCORRECT;
+			const message = [intro, 300, question.explained];
+			$speech.speak(message);
+		}
+	}
+
 	/** handles updating the view with slide content 
 	 * @param {LessonSlide} content the content to display
 	*/
-	refresh(content) {
+	refresh = async question => {
+		this.question = question;
+		this.hasAnswered = false;
+		
+		// set the initial view
+		this.removeClass('correct incorrect answered has-hint has-explanation show-hint');
+		this.addClass('waiting');
 
+		// check for a hint options
+		if ('hint' in question)
+			this.addClass('has-hint');
+
+		// get the choices
+		const { choices } = question;
+		const correct = choices[0];
+		let remaining = choices.slice(1);
+		remaining = _.shuffle(remaining);
+
+		// create the answers to show
+		const total = _.size(choices);
+		const collect = _.isNumber(question.count) ? question.count : Math.min(total, DEFAULT_COUNT);
+
+		// update additional information
+		this.ui.title.html(question.title);
+		this.ui.hint.html(question.hint);
+		this.ui.message.html(question.content);
+		this.ui.explain.html(question.explain);
+		applySnippets(this, $state.lesson);
+
+		// empty out old answers
+		this.ui.choices.empty();
+
+		// finally, add each item as an option
+		_([correct].concat(remaining))
+			.slice(0, collect)
+			.shuffle()
+			.each((answer, index) => {
+
+				// the correct answer
+				if (answer === correct)
+					this.correctIndex = index;
+
+				// add the option
+				const choice = document.createElement('div');
+				choice.className = 'answer';
+				choice.setAttribute('answer-index', index);
+				choice.innerHTML = answer;
+				this.ui.choices.append(choice);
+			});
+
+	}
+
+	// displays a hint, if any
+	onShowHint = () => {
+		this.addClass('show-hint');
+	}
+
+	// when the correct answer is selected
+	onCorrectAnswer = selection => {
+		this.addClass('correct answered');
+		selection.addClass('selected');
+	}
+	
+	// when the incorrect answer is selected
+	onIncorrectAnswer = selection => {
+		this.addClass('incorrect answered');
+		selection.addClass('selected');
+		
+		// select the correct answer
+		const correct = this.find(`[answer-index="${this.correctIndex}"]`);
+		correct.addClass('correct');
 	}
 
 }

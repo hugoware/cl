@@ -38,6 +38,8 @@ export default async function createLesson(lessonId, userId) {
 				id, name, type, description,
 				lesson: lessonId,
 				ownerId: userId,
+				started: false,
+				finished: false,
 				modifiedAt: $date.now(),
 				progress: { }
 			});
@@ -47,6 +49,8 @@ export default async function createLesson(lessonId, userId) {
 			id = lessons[0].id;
 			await $database.projects.update(query, {
 				$set: { 
+					started: false,
+					finished: false,
 					progress: { },
 					modifiedAt: $date.now()
 				}

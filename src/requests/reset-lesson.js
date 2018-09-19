@@ -22,7 +22,6 @@ export async function handle(socket, session, data = { }) {
 		// recreate the project
 		const item = records[0];
 		const result = await createLesson(item.lesson, ownerId);
-		console.log('result', result);
 		socket.ok(event, result);
 	}
 	catch (err) {

@@ -49,7 +49,7 @@
       ]
     },
     {
-      "mode": "overlay",
+      "mode": "popup",
       "checkpoint": true,
       "emotion": "surprised",
       "content": "<p>This is the content of the tag</p><div class=\"snippet\" type=\"html_tag_example\" highlight=\"content\"/><p>It's pretty <em>darn</em> neat</p>",
@@ -88,6 +88,9 @@
           "delete-file"
         ]
       },
+      "validation": {
+        "deleteFile": "verifyFileToDelete"
+      },
       "waitFor": [
         ".tab-bar .tab[file=\"/new.pug\"]"
       ],
@@ -115,16 +118,46 @@
       ]
     },
     {
+      "mode": "overlay",
       "show": 4,
+      "title": "What is the name of the <code>highlighted</code> block of code?",
+      "content": "<div class=\"snippet\" type=\"mary_example\" highlight=\"console_example\"/>",
+      "hint": "This is a longer example of what a hint might look like. This is going to span for a period longer than the other items on the page.\n",
+      "explain": "This is just a <code>summary message</code> to explain the final answer",
       "choices": [
-        "this is correct",
-        "This is incorrect",
-        "This is also wrong",
-        "This shouldn't work",
-        "This is another mix",
-        "This is failed"
+        "this is <code>correct</code>",
+        "This <em>is</em> incorrect",
+        "This <em>is</em> also wrong",
+        "This ~shouldn't~ work",
+        "This <em>is another</em> mix",
+        "This <em>is</em> failed"
       ],
-      "type": "question"
+      "type": "question",
+      "speak": [
+        "What is the name of the highlighted block of code?"
+      ],
+      "explained": "This is just a summary message to explain the final answer"
+    },
+    {
+      "mode": "overlay",
+      "show": 4,
+      "title": "This is another question about what you've learned?",
+      "hint": "It's really pretty obvious",
+      "explain": "This is just a <code>summary message</code> to explain the final answer",
+      "choices": [
+        "this is <code>correct</code>",
+        "This <em>is</em> incorrect",
+        "This <em>is</em> also wrong",
+        "This ~shouldn't~ work",
+        "This <em>is another</em> mix",
+        "This <em>is</em> failed"
+      ],
+      "type": "question",
+      "speak": [
+        "This is another question about what you've learned?"
+      ],
+      "content": "",
+      "explained": "This is just a summary message to explain the final answer"
     }
   ],
   "definitions": {
@@ -212,6 +245,7 @@
         }
       },
       "paragraph_content": {
+        "collapsed": true,
         "start": {
           "row": 9,
           "col": 7
@@ -396,13 +430,13 @@
     var $state = state;
 
     // shared functions
-    function deny(message, explain) {
+    function $deny(message, explain) {
       if (_.isFunction($lesson.onDeny))
         $lesson.onDeny({ message, explain });
     }
 
     // speaks a message using the assistant
-    function speak(message, emotion) {
+    function $speak(message, emotion) {
       if (_.isFunction($lesson.onSpeak))
         $lesson.onSpeak({ message, emotion });
     }
@@ -429,8 +463,8 @@ function allowOpenIndexHtml(file) {
 
   
   if (!allow) {
-    deny("Can't Open This File", 'Open the index.html file to continue the lesson');
-    speak('Whoops! You can not do that just yet!\n\nMake sure to open`index.html` to continue the lesson.', 'surprised');
+    $deny("Can't Open This File", 'Open the index.html file to continue the lesson');
+    $speak('Whoops! You can not do that just yet!\n\nMake sure to open`index.html` to continue the lesson.', 'surprised');
   }
   else {
     $state.openedIndex = true;
@@ -458,8 +492,21 @@ function onAfterSlideChange() {
 
 }
 
+function verifyFileToDelete(items) {
+
+  // can delete index
+  if (_.size(items) === 1 && items[0] === '/index.html')
+    return true;
+
+  console.log('trying to delete', items);
+
+  $deny("Can't Delete This File", 'You can only delete the new.pug file');
+  $speak("Nope! Can't delete that file yet", 'sad')
+  return false;
+}
+
 function verifyHtmlEditResult() {
-  this.state.hello = true
+  $state.hello = true
 	console.log('got this', this.state);
 }
 	}

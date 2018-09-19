@@ -48,8 +48,12 @@
 			.description(bind='description')
 
 		.modified-at
-			span Updated 
-			span(bind='modifiedAt')
+			.is-new New
+			.is-finished Complete
+			.in-progress In Progress
+			.time
+				span Updated 
+				span(bind='modifiedAt')
 			
 		.actions
 			.action.remove 

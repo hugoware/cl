@@ -11,7 +11,7 @@ import Lesson from './lesson';
 import checkPermissions from './permissions';
 
 const ROOT = { path: '/' };
-const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py'];
+const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py', 'rb'];
 const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 
 const $state = {
@@ -129,7 +129,7 @@ const $state = {
 		return new Promise(async resolve => { 
 
 			// then load the project data
-			if ('lesson' in project) {
+			if ('lesson' in project && !project.finished) {
 
 				// since lessons depend on speech, make sure
 				// the speech engine is loaded
@@ -636,6 +636,11 @@ listen('open-file', file => {
 listen('close-file', file => {
 	file.isOpen = false;
 	file.isActive = false;
+});
+
+// remove lessons
+listen('lesson-finished', () => {
+	delete $state.lesson;
 });
 
 export default $state;

@@ -1,0 +1,57 @@
+
+#back {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 9999;
+
+	height: $header-height;
+	margin: 0 0 0 -200px;
+	cursor: pointer;
+	
+	@include animate('margin', 0.3s);
+
+	// show returning to projects
+	.is-project &:hover,
+	.is-lesson &:hover {
+		margin: 0;
+
+		.logo {
+			opacity: 0.5;
+		}
+	}
+	
+	.back-to-projects {
+		float: left;
+		height: $header-height;
+		width: 200px;
+		font-size: 17px;
+		text-align: center;
+		line-height: $header-height;
+		font-weight: bold;
+		color: #fff;
+		text-shadow: 0 1px 3px rgba(#000, 0.4);
+
+		@include gradient(rgba(#000, 0.3), rgba(#000, 0), 90deg);
+	}
+
+	.logo {
+		@include animate('opacity');
+		$logo-height: $header-height * 0.66;
+		$logo-scale-ratio: $logo-height / 40;
+		$logo-width: 182 * $logo-scale-ratio;
+
+		float: left;
+		width: $logo-width;
+		height: $logo-height;
+
+		background: url(/__codelab__/app/header-logo.png);
+		background-size: $logo-width $logo-height;
+
+		margin: (($header-height - $logo-height) / 2) 0 0 17px;
+
+		cursor: pointer;
+
+	}
+
+}

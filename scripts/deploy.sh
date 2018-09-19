@@ -42,7 +42,7 @@ echo compressing scripts \(this part takes a while\)
 for script in $SCRIPTS
 do  
   echo compressing $script
-  node --max-old-space-size=4096 /usr/local/bin/uglifyjs ./dist/public/$script.js -mc passes=3,unsafe -o ./dist/public/$script.js --timings 
+  node --max-old-space-size=4096 /usr/local/bin/uglifyjs ./dist/resources/public/$script.js -mc passes=3,unsafe -o ./dist/resources/public/$script.js --timings 
 done
 
 # check if compiling the workers too
@@ -51,7 +51,7 @@ then
   for script in $WORKERS
   do  
     echo compressing $script
-    node --max-old-space-size=4096 /usr/local/bin/uglifyjs ./dist/public/$script.js -mc passes=1,unsafe -o ./cache/workers/$script.js --timings 
+    node --max-old-space-size=4096 /usr/local/bin/uglifyjs ./dist/resources/public/$script.js -mc passes=1,unsafe -o ./cache/workers/$script.js --timings 
   done
 fi
 
@@ -59,12 +59,13 @@ fi
 for script in $WORKERS
 do
   echo copying $script \(cached\)
-  cp ./cache/workers/$script.js ./dist/public/$script.js
+  cp ./cache/workers/$script.js ./dist/resources/public/$script.js
 done
 
 echo
 echo copying to server...
 scp package.json root@codelabschool.com:/srv/www/cl/
+rsync -ruv --chmod=ugo=rwX -e ssh lessons/output/* root@codelabschool.com:/srv/www/cl/lessons/
 rsync -ruv --chmod=ugo=rwX -e ssh dist/* root@codelabschool.com:/srv/www/cl/dist/
 sleep 4s
 

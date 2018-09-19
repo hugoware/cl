@@ -18,13 +18,13 @@
     var $state = state;
 
     // shared functions
-    function deny(message, explain) {
+    function $deny(message, explain) {
       if (_.isFunction($lesson.onDeny))
         $lesson.onDeny({ message, explain });
     }
 
     // speaks a message using the assistant
-    function speak(message, emotion) {
+    function $speak(message, emotion) {
       if (_.isFunction($lesson.onSpeak))
         $lesson.onSpeak({ message, emotion });
     }

@@ -112,13 +112,14 @@ export default class ManagedZone {
 	show = () => {
 		console.log('try show');
 		this.isActive = true;
+		this.zone.active = true;
 		this.marker.clazz = this.base + ' show';
-		// this.update();
 	}
 	
 	/** handles hiding a zone */
 	hide = () => {
 		this.isActive = false;
+		delete this.zone.active;
 		this.marker.clazz = this.base;
 	}
 
@@ -126,6 +127,7 @@ export default class ManagedZone {
 	collapse = () => {
 		if (this.isCollapsed) return;
 		this.isCollapsed = true;
+		this.zone.collapsed = true;
 		this.content = this.session.doc.getTextRange(this.range);
 		this.session.remove(this.range);
 	}
@@ -134,6 +136,7 @@ export default class ManagedZone {
 	expand = () => {
 		if (!this.isCollapsed) return;
 		this.isCollapsed = false;
+		delete this.zone.collapsed;
 
 		// get the original start
 		const { row, column } = this.start;

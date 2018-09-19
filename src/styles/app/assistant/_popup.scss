@@ -22,6 +22,57 @@
 		right: 0;
 	}
 
+	opacity: 1;
+
+	// hides the speaking area
+	&.hide-popup .panel {
+		opacity: 0;
+		pointer-events: none;
+		@include animate('opacity', 0.4s);
+	}
+
+	.show-panel {
+		pointer-events: none;
+		position: absolute;
+		height: $popup-avatar-size;
+		width: $popup-avatar-size * 0.73;
+		z-index: 3;
+		bottom: 0;
+		right: 0;
+	}
+
+	&.hide-popup .show-panel {
+		pointer-events: all;
+	}
+
+	.hide {
+		@include animate('opacity', 0.3s);
+		$hide-icon-size: 30px;
+		display: block;
+		
+		position: absolute;
+		right: $hide-icon-size / -2;
+		top: $hide-icon-size / -2;
+		z-index: 2;
+		
+		background: #000;
+		color: #fff;
+		font-size: 32px;
+		@include uniform_size($hide-icon-size);
+		text-align: center;
+		cursor: pointer;
+		opacity: 0;
+		border-radius: $hide-icon-size;
+	}
+
+	.panel:hover .hide {
+		opacity: 0.4;
+	}
+
+	.hide:hover {
+		opacity: 1 !important;
+	}
+
 	.title {
 		padding: $popup-message-padding;
 		padding-bottom: 20px;

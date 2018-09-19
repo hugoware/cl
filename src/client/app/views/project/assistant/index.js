@@ -22,14 +22,16 @@ export default class Assistant extends Component {
 				avatar: '.avatar',
 				dialog: '.dialog',
 				panel: '.panel',
-				toggleSpeech: '.toggle'
+				toggleSpeech: '.toggle',
+				showPanel: '.show-panel',
+				hide: '.hide'
 			},
 		});
 
 		// create shared instances
-		this.views = { 
-			slide: new Slide(),
-			question: new Question()
+		this.views = {
+			slide: new Slide(this),
+			question: new Question(this)
 		};
 
 		// attach each view
@@ -43,10 +45,14 @@ export default class Assistant extends Component {
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('next-slide', this.onNext);
+		this.listen('assistant-speak', this.onSpeak);
+		this.listen('lesson-finished', this.onFinishLesson);
 		this.on('click', '.next', this.onNext);
 		this.on('click', '.previous', this.onPrevious);
 
 		// set the speech enablement
+		this.ui.showPanel.on('mouseover', this.onRestorePopUp);
+		this.ui.hide.on('click', this.onHidePopUp);
 		this.ui.toggleSpeech.on('click', '.enable', this.onEnableSpeech);
 		this.ui.toggleSpeech.on('click', '.disable', this.onDisableSpeech);
 
@@ -75,7 +81,18 @@ export default class Assistant extends Component {
 
 	// hides the assistant
 	onReset = () => {
+		this.removeClass('leave');
 		this.hide();
+	}
+
+	// display the popup message again
+	onRestorePopUp = () => {
+		this.removeClass('hide-popup');
+	}
+
+	// hides the popup message
+	onHidePopUp = () => {
+		this.addClass('hide-popup');
 	}
 
 	/** changes the speech enablement mode
@@ -95,8 +112,16 @@ export default class Assistant extends Component {
 			$speech.stop();
 	}
 
+	// finished with the assistant
+	onFinishLesson = () => {
+		this.addClass('leave');
+		$speech.stop();
+		setTimeout(this.hide, 1000);
+	}
+
 	// activates
 	onActivateProject = async () => {
+		this.slideIndex = null;
 
 		// test if there's a lesson to display
 		const hasLesson = !!$state.lesson;
@@ -145,6 +170,8 @@ export default class Assistant extends Component {
 
 	// hide when leaving the project editor
 	onDeactivateProject = () => {
+		if ($speech.active) $speech.stop();
+		this.slideIndex = null;
 		this.hide();
 	}
 
@@ -161,6 +188,12 @@ export default class Assistant extends Component {
 
 	// refresh the display for this slide
 	refresh = () => {
+
+		// lesson has been disabled
+		if (!$state.lesson) return;
+
+		// make sure the popup is visible
+		this.removeClass('hide-popup');
 
 		// make sure the slide changed
 		const index = $state.lesson.index;
@@ -182,6 +215,9 @@ export default class Assistant extends Component {
 			'is-checkpoint': slide.isCheckpoint,
 		});
 
+		// update labels as needed
+		this.find('.next').text(slide.isLast ? 'Finish' : 'Next');
+
 		// pick the emotion, if any
 		this.setEmotion(slide.emotion);
 
@@ -200,6 +236,11 @@ export default class Assistant extends Component {
 	onSpeak = (options = { }) => {
 		const message = _.trim(options.message);
 		if (!_.some(message)) return;
+
+		// force the slide mode if something is requesting
+		// a speech message
+		this.views.question.hide();
+		this.views.slide.show();
 
 		// TODO: this is kinda ugly -- to get the formatted
 		// text we're grabbing the text value from the node

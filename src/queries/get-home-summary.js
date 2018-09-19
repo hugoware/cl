@@ -36,15 +36,22 @@ export default async function get(id) {
 					lesson: 1,
 					description: 1,
 					state: 1,
+					started: 1,
+					finished: 1,
 					modifiedAt: 1
 				})
 				.toArray();
+
+			// sort the projects
+			results = $date.sort(results, 'modifiedAt');
 
 			// create public version of the record
 			const projects = _.map(results, project => ({
 				id: project.id,
 				type: project.type,
 				name: project.name,
+				started: project.started,
+				finished: project.finished,
 				description: project.description,
 				lesson: !!project.lesson,
 				state: getLessonState(!!project.lesson, project.state),
@@ -65,10 +72,6 @@ export default async function get(id) {
 			// one immediately
 			// if (lessons.length === 0)
 				// results = [ ];
-
-			// organize
-			_.sortBy(projects, 'modifiedAt');
-			_.sortBy(lessons, 'modifiedAt');
 
 			// create the final summary
 			resolve({ 

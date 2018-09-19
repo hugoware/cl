@@ -2,6 +2,7 @@
 +template('assistant')
 	#assistant
 		.container
+			.show-panel
 			.avatar
 				#girl-1
 					include ../assistants/girl-1.svg
@@ -14,6 +15,7 @@
 						.icon(icon='actionSpeak')
 						.label Allow talking
 			.panel
+				.hide &times;
 
 +template('assistant-slide')
 	.slide
@@ -25,9 +27,19 @@
 			.next Next
 
 +template('assistant-question')
-	.question
-		.number
-		.text
+	.question.has-title
+		.title
+		.message
+		.controls
+			.choices
+			.hint-container
+				.activate Show hint
+				.hint
+			.explain
+			.summary
+
+		.actions
+			.next Next
 	
 +template('definition-popup')
 	#definition

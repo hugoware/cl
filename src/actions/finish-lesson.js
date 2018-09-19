@@ -3,15 +3,15 @@ import _ from 'lodash';
 import $database from '../storage/database';
 import $date from '../utils/date';
 
-/** Handles getting summary information for a user
- * @param {string} id the user ID to find
+/** Handles finishing a lesson
+ * @param {string} id the projectID ID to find
  * @param {object} progress information about the progress of the lesson
  */
-export default async function setProgress(id, progress) {
+export default async function finishLesson(id) {
 	return $database.projects.update({ id }, {
 		$set: { 
-			progress,
-			started: true,
+			progress: null,
+			finished: true,
 			modifiedAt: $date.now(),
 		}
 	});

@@ -12,10 +12,14 @@
 	$assistant-overlay-avatar-gap: 55px;
 	$assistant-overlay-avatar-padding: 10px;
 
+	.hide {
+		display: none;
+	}
+
 	.avatar {
 		@include uniform_size($assistant-overlay-avatar-size);
 		border-radius: $assistant-overlay-avatar-size;
-		@include gradient(rgba(#000, 0.4), rgba(#000, 0), 0deg);
+		@include gradient(rgba(#000, 0.5), rgba(#000, 0), 0deg);
 		box-shadow: 0 0 0 10px #636C72, 0 2px 18px 10px rgba(#000, 0.4);
 		
 		svg {

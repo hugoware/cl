@@ -42,6 +42,7 @@
       row: 9
       col: 39
   paragraph_content:
+    collapsed: true
     start:
       row: 9
       col: 7

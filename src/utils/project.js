@@ -8,7 +8,7 @@ export const TEXT_FILE_TYPES = [
 	
 	// programming languages
 	'js', 'jsx',
-	'rb', 'cs', 'vs', 'py',
+	'rb', 'cs', 'vs', 'py', 'ts',
 
 	// database languages
 	'sql', 'sq',

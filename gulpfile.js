@@ -49,7 +49,7 @@ const $config = {
 	},
 
 	scripts: {
-    client: [ 'site', 'app', /* 'viewer', */ 'browser', 'admin' ],
+    client: [ 'site', 'app', /* 'viewer', */ 'browser', 'admin', 'repl' ],
 		workers: [ 'pug', 'typescript', 'scss', 'html' ],
 		server: {
 			watch: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**', ],
@@ -118,7 +118,7 @@ _.each($config.scripts.workers, source => {
   
   // compiles the worker script
   $gulp.task(action, () => {
-    const output = $gulp.dest(`dist/public`);
+    const output = $gulp.dest(`dist/resources/public`);
 
     return $browserify(input, {
       fast: true,

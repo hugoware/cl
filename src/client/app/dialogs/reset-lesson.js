@@ -38,8 +38,10 @@ export default class ResetLessonDialog extends Dialog {
 			const result = await $api.request('reset-lesson', { lessonId });
 
 			// this reset as requested
-			if (result.success) 
+			if (result.success) {
+				this.broadcast('reset-project-item', lessonId);
 				this.hide();
+			}
 
 			else throw 'lesson_not_reset';
 		}

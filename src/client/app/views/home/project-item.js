@@ -17,6 +17,9 @@ export default class ProjectItem extends Component {
 		this.ui.modifiedAt.text(data.modifiedAt);
 		this.toggleClassMap({
 			'is-lesson': data.lesson,
+			'is-new': !data.started && !data.finished,
+			'in-progress': !!data.started && !data.finished,
+			'is-finished': !!data.finished,
 			'is-project': !data.lesson,
 		});
 

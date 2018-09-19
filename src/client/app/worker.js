@@ -10,6 +10,10 @@ const $workers = {
 	'sass': 'scss',
 	'scss': 'scss',
 	'html': 'html',
+	'ts': 'typescript',
+	'typescript': 'typescript',
+	// 'rb': 'ruby',
+	// 'ruby': 'ruby',
 	// 'css': 'css',
 	// 'js': 'js'
 };
@@ -96,6 +100,7 @@ export default async function getWorker({ name, file }) {
 	if (file) name = getWorkerForFile(file);
 
 	// no worker required for this file
+	console.log('get worker', name);
 	if (!$workers[name])
 		return null;
 

@@ -35,6 +35,9 @@ export function requirePermission(check) {
 	if (_.isString(allowed) || _.isArray(allowed))
 		allowed = $state.checkPermissions(allowed, ...args);
 
+	// decided --
+	console.log('did decide', check, allowed);
+
 	// execute if they have permission
 	if (!!allowed) {
 		try {

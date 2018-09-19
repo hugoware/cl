@@ -22,7 +22,7 @@ export default async function getProjectData(id) {
 				progress: 1,
 				ownerId: 1,
 				modifiedAt: 1,
-				createdAt: 1,
+				finished: 1,
 			})
 			.toArray();
 

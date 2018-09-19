@@ -8,8 +8,8 @@ function allowOpenIndexHtml(file) {
 
   
   if (!allow) {
-    deny("Can't Open This File", 'Open the index.html file to continue the lesson');
-    speak('Whoops! You can not do that just yet!\n\nMake sure to open`index.html` to continue the lesson.', 'surprised');
+    $deny("Can't Open This File", 'Open the index.html file to continue the lesson');
+    $speak('Whoops! You can not do that just yet!\n\nMake sure to open`index.html` to continue the lesson.', 'surprised');
   }
   else {
     $state.openedIndex = true;
@@ -37,7 +37,20 @@ function onAfterSlideChange() {
 
 }
 
+function verifyFileToDelete(items) {
+
+  // can delete index
+  if (_.size(items) === 1 && items[0] === '/index.html')
+    return true;
+
+  console.log('trying to delete', items);
+
+  $deny("Can't Delete This File", 'You can only delete the new.pug file');
+  $speak("Nope! Can't delete that file yet", 'sad')
+  return false;
+}
+
 function verifyHtmlEditResult() {
-  this.state.hello = true
+  $state.hello = true
 	console.log('got this', this.state);
 }

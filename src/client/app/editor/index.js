@@ -7,7 +7,7 @@ const Range = $brace.acequire('ace/range').Range;
 require('brace/mode/html');
 require('brace/mode/javascript');
 require('brace/mode/json');
-require('brace/mode/lua');
+// require('brace/mode/lua');
 require('brace/mode/xml');
 require('brace/mode/css');
 
