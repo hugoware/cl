@@ -1,5 +1,56 @@
 
+
+
+// walk.walk = walk
+
+// walk.walkAddParent = function (ast, fn) {
+
+// 	var stack = [ast], i, j, key, len, node, child, subchild
+
+// 	for (i = 0; i < stack.length; i += 1) {
+
+// 		node = stack[i]
+
+// 		fn(node)
+
+// 		for (key in node) {
+
+// 			if (key !== 'parent') {
+
+// 				child = node[key]
+
+// 				if (child instanceof Array) {
+
+// 					for (j = 0, len = child.length; j < len; j += 1) {
+
+// 						subchild = child[j]
+
+// 						subchild.parent = node
+
+// 						stack.push(subchild)
+
+// 					}
+
+// 				} else if (child != void 0 && typeof child.type === 'string') {
+
+// 					child.parent = node
+
+// 					stack.push(child)
+
+// 				}
+
+// 			}
+
+// 		}
+
+// 	}
+
+// }
+
 importScripts('/__codelab__/typescript/typescriptServices.js');
+import protectCode from '../../runner/protect';
+import importModules from '../../runner/modules';
+
 // import $ts from 'typescript/lib/typescriptServices';
 import $lfs from '../app/lfs';
 import applyCompatibilityFixes from '../../compilers/compatibility';
@@ -15,12 +66,34 @@ self.onmessage = async (msg) => {
 
 // handles standard compiling of pug files
 async function compileFile(file) {
-	let content = await $lfs.read(file);
+	let code = await $lfs.read(file);
+
+	// prepare the code to compile
+	code = importModules(code);
+
+	console.log('========');
+	code = protectCode(code);
+	console.log('========');
+
+	console.log(code);
+	console.log('========');
+
+	// console.log(code);
+	// console.log(tree);
 
 
-	content = content.replace(/IO\.read/, match => {
-		return `await IO.read`;
-	});
+	// console.log('compiling', content);
+	// console.log('============');
+	
+	// const runner = new Runner('iframe');
+	// runner.compile(content);
+
+	// console.log('============');
+	// console.log(runner.script);
+
+	// content = content.replace(/IO\.read/, match => {
+	// 	return `await IO.read`;
+	// });
 
 // 	content = content.replace(/(IO\.read)/g, match => {
 // 		return `await ${match}`;
@@ -41,13 +114,15 @@ async function compileFile(file) {
 // 	content = content.replace(/class +/gi, 'class ___CODELAB___');
 		
 	// prepare the code
-	let code = ts.transpile(content, {
+	code = ts.transpile(code, {
 		noResolve: true,
 		strictFunctionTypes: true,
 		removeComments: true,
-		target: 'ES2015',
+		target: 'ES5',
 		lib: 'ES2015'
 	});
+
+	console.log(code);
 
 // 	const types = { };
 
@@ -79,7 +154,7 @@ async function compileFile(file) {
 
 // // ${code}`;
 
-console.log(code);
+// console.log(code);
 
 // for (const id in types) {
 // 	const exp = new RegExp(` new ${id}( |\\()`, 'g');

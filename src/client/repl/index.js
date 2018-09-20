@@ -15,31 +15,32 @@ import Runner from '../runner';
 	// 	$output.appendChild(line);
 	// };
 
-	// requesting user input values
-	$runner.registerEvent('request_user_input', message => {
-		$runner.pause();
+	// // requesting user input values
+	// $runner.registerEvent('request_user_input', message => {
+	// 	$runner.pause();
 
-		console.log('waiting for input', message);
-		setTimeout(() => $runner.resume('HUGO'), 3000);
-	});
+	// 	console.log('waiting for input', message);
+	// 	setTimeout(() => $runner.resume('HUGO'), 3000);
+	// });
 
-	$runner.registerEvent('xhr_request', () => {
-		$runner.pause();
-		console.log('send_xhr_request');
-	});
+	// $runner.registerEvent('xhr_request', () => {
+	// 	$runner.pause();
+	// 	console.log('send_xhr_request');
+	// });
 
 	// handles executing waiting code
 	function runCode(code) {
-		$runner.stop();
+		console.log('wants to run', code);
+		// $runner.stop();
 
-		// clear the output
-		$output.innerHTML = '';
+		// // clear the output
+		// $output.innerHTML = '';
 
-		// kick off the next request
-		setTimeout(() => {
-			$runner.load(code);
-			$runner.run();
-		}, 250);
+		// // kick off the next request
+		// setTimeout(() => {
+		// 	$runner.load(code);
+		// 	$runner.run();
+		// }, 250);
 	}
 
 	window.__CODELAB__ = {

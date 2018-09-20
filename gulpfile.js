@@ -92,6 +92,7 @@ _.each($config.scripts.client, source => {
       presets: [ 'es2015' ],
       plugins: [
         // 'convert-to-json',
+        ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
         'transform-svg-import-to-string',
         'transform-class-properties',
         'async-to-promises'
@@ -128,6 +129,7 @@ _.each($config.scripts.workers, source => {
     .transform('babelify', {
       presets: [ 'es2015' ],
       plugins: [
+        ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
         'transform-class-properties',
         'async-to-promises'
       ]
@@ -225,7 +227,7 @@ $gulp.task('compile-server-scripts', () => {
     presets: ['es2015'],
     plugins: [
       // 'convert-to-json',
-      ['inline-import', { 'extensions': [ '.txt' ] }],
+      ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
       'transform-class-properties',
       'async-to-promises'
     ]

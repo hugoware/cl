@@ -44,6 +44,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
+    "ast-query": "^2.0.0",
     "babel-plugin-transform-svg-import-to-string": "0.0.1",
     "babelify": "^8.0.0",
     "bad-language-filter": "^1.0.2",
@@ -56,6 +57,8 @@
     "cookie-parser": "^1.4.3",
     "debugjs": "github:amasad/debugjs",
     "dexie": "^2.0.4",
+    "escodegen": "^1.11.0",
+    "esprima": "^4.0.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "firebase": "^5.2.0",
