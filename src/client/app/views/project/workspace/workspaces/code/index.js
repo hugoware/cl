@@ -39,6 +39,7 @@ export default class CodeEditor extends Component {
 		this.listen('deactivate-file', this.onDeactivateFile);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('rename-item', this.onRenameItem);
+		this.listen('execution-finished', this.onExecutionFinished);
 		this.ui.save.on('click', this.onSaveChanges);
 
 		/** @type {ManagedEditor} */
@@ -54,6 +55,27 @@ export default class CodeEditor extends Component {
 
 		// handle tracking changes
 		this.onProcessTimers.interval = setInterval(this.onProcessTimers, 25);
+	}
+
+	/** returns the active editor instance for a file
+	 * @returns {EditorInstance}
+	 */
+	get activeInstance() {
+		return this.editor.activeInstance;
+	}
+	
+	/** returns the actively edited file
+	 * @returns {ProjectItem}
+	 */
+	get activeFile() {
+		return this.activeInstance && this.editor.activeInstance.file;
+	}
+
+	// focus selection on the editor, if any
+	onExecutionFinished = () => {
+		console.log('got message');
+		if (!this.isVisible || !this.activeFile) return;
+		this.editor.setFocus();
 	}
 
 	// tries to save changes

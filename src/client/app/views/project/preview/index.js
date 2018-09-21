@@ -33,6 +33,7 @@ export default class Preview extends Component {
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('compile-file', this.onCompileFile);
 		this.listen('close-file', this.onCloseFile);
+		this.listen('preview-message', this.onPreviewMessage);
 	}
 
 	// changes the display mode for the project
@@ -63,6 +64,11 @@ export default class Preview extends Component {
 	onActivateProject = async () => {
 		this.setMode('repl');
 		this.handler.onActivateProject();
+	}
+
+	// forwarding preview messages
+	onPreviewMessage = (...args) => {
+		this.handler.onPreviewMessage(...args);
 	}
 
 	onDeactivateProject = () => {

@@ -3,6 +3,46 @@ $form-input-default-font-size: 18px;
 $form-input-default-height: 38px;
 $form-input-default-border-radius: 4px;
 
+.osx-key, .win-key {
+	display: none;
+}
+
+.osx .osx-key,
+.win .win-key {
+	display: inline-block;
+}
+
+.with-shortcut {
+
+	.shortcut {
+		width: 0px;
+		padding: 0 !important;
+		text-align: center;
+		overflow: hidden;
+		white-space: nowrap;
+
+		opacity: 0;
+		font-weight: bold;
+		background: rgba(#000, 0.125);
+		
+		margin-left: 0;
+
+		@include animate('width, margin, opacity');
+	}
+
+	&:hover .shortcut {
+		width: 120px;
+		margin-left: 5px;
+		float: none;
+		opacity: 1;
+	}
+	
+	&.mini-shortcut:hover .shortcut {
+		width: 70px;
+	}
+
+}
+
 .ui-text-input {
 	background: #fff;
 	border: 1px solid #ccc;

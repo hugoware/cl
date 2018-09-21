@@ -48,7 +48,6 @@ export default class BrowserMode extends Component {
 
 		// listen for the preview window to broadcast changes
 		this.listen('reset', this.onReset);
-		this.listen('preview-message', this.onPreviewMessage);
 		this.listen('rename-item', this.onRenameItem);
 		this.listen('delete-items', this.onDeleteItems);
 		this.ui.output.on('mouseover', this.onAutoExecuteScripts);

@@ -46,6 +46,16 @@ html
 		if !production
 			script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
 
+		mixin shortcut(mod, combo)
+			.shortcut
+				if mod === 'mod'
+					span.osx-key ⌘
+					span.win-key CTRL
+				else
+					span #{mod}
+
+				span  + #{combo}
+
 		//- handles creating template blocks
 		mixin template(name, doNotWrap)
 			script(id='template--' + name type='text/html')

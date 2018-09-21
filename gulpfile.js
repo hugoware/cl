@@ -92,7 +92,7 @@ _.each($config.scripts.client, source => {
       presets: [ 'es2015' ],
       plugins: [
         // 'convert-to-json',
-        ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
+        ['inline-import', { 'extensions': [ '.txt', '.ts', '.html' ] }],
         'transform-svg-import-to-string',
         'transform-class-properties',
         'async-to-promises'

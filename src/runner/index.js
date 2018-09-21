@@ -1,10 +1,10 @@
 
 import workerScript from './worker.ts';
 import browserScript from './browser.ts';
-import ioScript from './modules/io.ts';
+import consoleScript from './modules/console.ts';
 
 const $modules = {
-	io: ioScript
+	console: consoleScript
 };
 
 function trim(str) {
@@ -26,15 +26,15 @@ export default class Runner {
 
 	compile(code) {
 		
-		code = `\n${code}\n`;
+		// code = `\n${code}\n`;
 
-		code = code.replace(/\n ?import +[^\;|$]+;?[^\n]+/g, match => {
-			const key = trim(match).substr(6).replace(/[^a-zA-Z0-9\_]/g, '');
-			const mod = $modules[key] || `throw "missing module ${key}";`;
-			return `\n${mod}\n`;
-		});
+		// code = code.replace(/\n ?import +[^\;|$]+;?[^\n]+/g, match => {
+		// 	const key = trim(match).substr(6).replace(/[^a-zA-Z0-9\_]/g, '');
+		// 	const mod = $modules[key] || `throw "missing module ${key}";`;
+		// 	return `\n${mod}\n`;
+		// });
 
-		this.script = this.script.replace(/\/{2}__CODE__/, code);
+		// this.script = this.script.replace(/\/{2}__CODE__/, code);
 
 		// const lines = code.split(/\n/g);
 		// _.each(lines, line => {

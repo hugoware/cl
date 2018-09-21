@@ -31,7 +31,7 @@ const DEFAULT_OPTIONS = {
 	showFoldWidgets: false,
 	showInvisibles: false,
 	copyWithEmptySelection: false,
-	scrollPastEnd: false,
+	scrollPastEnd: 0.5,
 	printMarginColumn: -1
 };
 

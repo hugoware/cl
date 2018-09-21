@@ -3,9 +3,10 @@
 import _ from 'lodash';
 import Component from '../../../../component';
 import $contentManager from '../../../../content-manager';
-import $state from '../../../../state';
-import { getExtension } from '../../../../utils/index';
-import $errorManager from '../../../../error-manager';
+import $keyboard from 'mousetrap';
+
+// main content view
+import $view from './view.html';
 
 // create the preview mode
 export default class ReplMode extends Component {
@@ -23,27 +24,19 @@ export default class ReplMode extends Component {
 			}
 		});
 
+		// the previewer instance
+		this.preview = preview;
+
+		// handle script requests
 		this.ui.runScripts.on('click', this.onRunScripts);
 		this.on('run-scripts', this.onGlobalRunScripts);
 
-		this.ui.output.on('load', () => {
-			// create the doc
-			this.writeContent(`
-<html>
-		<head>
-		</head>
-		
-		<pre id="output" ></pre>
-		<pre id="command" >
-			<input id="input" type="text" />
-		</pre>
+		// handle executing code
+		$keyboard.bind('mod+enter', this.onRunScripts);
 
-		<script src="/__codelab__/debugjs.js" type="text/javascript" ></script>
-		<script src="/__codelab__/repl.js" type="text/javascript" ></script>
-</html>
-`);
-		})
-
+		// write the main document
+		this.ui.output.on('load', () => this.writeContent($view));
+		this.ui.output.on('message', (...args) => console.log(args));
 	}
 
 	/** changes the file being executed
@@ -75,37 +68,23 @@ export default class ReplMode extends Component {
 		this.reset();
 	}
 
+	onDeleteItems = paths => { }
+
 	// just always sync the name
 	onRenameItem = () => {
 		if (this.file)
 			this.filePath = this.file.path;
 	}
 
-	// checks if a view should refresh because
-	// a file was deleted
-	onDeleteItems = paths => {
-
+	// handles incoming preview messages
+	onPreviewMessage = (key, args = {}) => {
+		if (key === 'execution-finished');
+			this.broadcast('execution-finished');
 	}
 
-	// handles incoming preview messages
-	onPreviewMessage = (err, args = {}) => {
-		if (!this.hasActiveView) return;
+	// handle resetting
+	reset() {
 
-		// handling a script error
-		if (err === 'error') {
-			args.path = this.activeFile.path;
-			this.setPageError(args);
-		}
-
-		// handle general navigation
-		else if (args.navigate)
-			this.navigate(args.navigate);
-
-		// else if ('console.log' === name)
-		// else if ('console.log' === name)
-		// else if ('console.log' === name)
-
-		else console.log('preview message', err, args);
 	}
 
 	// handles deactivating a project entirely
@@ -119,51 +98,33 @@ export default class ReplMode extends Component {
 			this.clear();
 	}
 
-	// sets the default view content
+	// sets the file to use
 	onActivateFile = async (file, viewOnly) => {
-
 		this.activeFile = file;
-		this.filePath = file.path;
-		
+		this.filePath = file.path;		
 	}
 
 	// handles replacing the content of the view if 
 	// dependencies require it
 	onCompileFile = async () => {
 
-		
 	}
 
 	// handles running
-	onRunScripts = async () => {
-		console.log('file was complied');
-		const scripts = { };
-		const files = $state.files;
+	onRunScripts = () => {
 
-		for (let i = 0, total = files.length; i < total; i++) {
-			const file = files[i];
+		// need to decide correct file -- wait for compile
+		this.bridge.prepare('Running /main.ts ...');
 
-			if (file.isFile && /\.ts$/.test(file.path)) {
-				const code = await $contentManager.get(file.path);
-				scripts[file.path] = _.trim(code);
-			}
+		// wait a moment before starting
+		setTimeout(async () => {
 
-		}
+			// get the code
+			await $contentManager.compile('/main.ts', { silent: true });
+			const code = await $contentManager.get('/main.ts');
+			this.bridge.run(code);
+		}, 1000)
 
-		const all = _.values(scripts).join('\n');
-		console.log('will run', all);
-		this.bridge.run(all);
-
-	}
-
-	// resetting the view
-	onReset = () => {
-		
-	}
-
-	/** handles completely resetting the preview window */
-	reset() {
-		
 	}
 
 	/** replaces the page content with new HTML

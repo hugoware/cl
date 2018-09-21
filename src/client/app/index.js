@@ -101,6 +101,12 @@ class App extends Component {
 		// events
 		this.listen('navigate', this.onNavigate);
 		this.listen('open-dialog', this.onShowDialog);
+
+		// establish operating system
+		const doc = Component.bind(document.body);
+		const isOSX = /mac/i.test(navigator.platform);
+		doc.toggleClassMap({ 'osx': isOSX, 'win': !isOSX });
+
 	}
 
 	// initialize the app

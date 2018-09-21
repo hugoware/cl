@@ -2,6 +2,8 @@
 	border-left: 2px solid rgba(#fff, 0.3);
 
 	$actions-height: 50px;
+	$action-item-height: $actions-height * 0.6;
+	$actions-gap: ($actions-height - $action-item-height) / 2;
 
 	.actions {
 		height: $actions-height;
@@ -13,86 +15,40 @@
 		background: none;
 	}
 
-	// $browser-mode-ui-element-vertical-margin: 7px;
-	// $browser-mode-separator-width: 10px;
-	// $browser-mode-action-gap: 5px;
-	
-	// $browser-mode-ui-element-height: $browser-mode-navigation-bar-height - ($browser-mode-ui-element-vertical-margin * 2);
-	// $browser-mode-action-size: $browser-mode-ui-element-height;
-	// $browser-mode-action-start: 10px;
-	// $browser-mode-action-end: 50px;
-	// $browser-mode-title-start: 60px;
-	// $browser-mode-title-end: 60%;
-	// $browser-mode-url-start: 40%;
-	// $browser-mode-url-end: 10px;
+	.actions {
 
-	// .navigation {
-	// 	display: block;
+		.action {
+			font-size: 15px;
+			margin: $actions-gap 0 0 15px;
+			background: $runner-run-code-background-color;
+			color: #fff;
+			@include align_vertical($action-item-height);
+			@include clearfix();
 
-	// 	height: $browser-mode-navigation-bar-height;
-	// 	background: #eee;
+			.label, .shortcut {
+				float: left;
+			}
 
-	// 	> div {
-	// 		position: absolute;
-	// 	}
+			.label {
+				padding: 0 13px;
+			}
 
-	// 	.actions {
-	// 		left: $browser-mode-action-start;
-	// 		right: $browser-mode-action-end;
-	// 	}
-		
-	// 	.action {
-	// 		position: relative;
-	// 		display: inline-block;
-	// 		margin-right: $browser-mode-action-gap;
-	// 		height: $browser-mode-ui-element-height;
-	// 		width: $browser-mode-ui-element-height;
-	// 		top: $browser-mode-ui-element-vertical-margin;
-	// 		background: #fff;
-	// 		border-radius: 4px;
-	// 		border: 1px solid #999;
-	// 		@include gradient(#fff, #ddd, 180deg);
-	// 		box-shadow: inset 0 0 0 1px #fff;
-
-	// 		svg {
-	// 			width: $browser-mode-ui-element-height * 0.6;
-	// 			height: $browser-mode-ui-element-height * 0.6;
-	// 			@extend .centered;
-	// 		}
-
-	// 	}
-
-	// 	.title {
-	// 		left: $browser-mode-title-start;
-	// 		right: $browser-mode-title-end;
-	// 		height: $browser-mode-navigation-bar-height;
-	// 		line-height: $browser-mode-navigation-bar-height;
-	// 		overflow: hidden;
-	// 		text-overflow: ellipsis;
-	// 		white-space: nowrap;
-	// 	}
-
-	// 	.url {
-	// 		left: $browser-mode-url-start;
-	// 		right: $browser-mode-url-end;
-	// 		top: $browser-mode-ui-element-vertical-margin;
-
-	// 		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
-	// 		background: rgba(255, 255, 255, 0.7);
-	// 		border-radius: 4px;
+			border-radius: 3px;
+			box-shadow: 0 1px 4px #000, inset 0 0 0 1px rgba(#fff, 0.2);
 			
-	// 		input {
-	// 			font-size: 16px;
-	// 			width: 100%;
-	// 			padding: 0;
-	// 			background: none;
-	// 			outline: none;
-	// 			text-indent: 10px;
-	// 			height: $browser-mode-ui-element-height;
-	// 			border: 0;
-	// 		}
-	// 	}
+			position: relative;
+			display: inline-block;
 
-	// }
+			cursor: pointer;
+			@include animate('background, transform', 0.3s);
 
+			&:hover {
+				background: lighten($runner-run-code-background-color, 10%);
+				transform: scale(1.05, 1.05);
+			}
+
+		}
+
+	}
+	
 }

@@ -5,9 +5,10 @@
 +template('workspace-code-editor')
 	.code-editor.workspace
 		.actions
-			.action.save
+			.action.save.with-shortcut.mini-shortcut
 				.icon(icon='actionSave')
 				.label Save Changes
+				+shortcut('mod', 'S')
 		.editor
 
 +template('workspace-image-viewer')

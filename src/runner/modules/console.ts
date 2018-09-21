@@ -2,10 +2,12 @@
 
 const Console = { };
 
-Console.ask = async prompt => {
-	// return ___self.request('io_read', [prompt])
+Console.ask = prompt => {
+	return new Promise(resolve => {
+		__CODELAB__.prompt(prompt, resolve);
+	});
 };
 
-Console.print = async (...args) => {
+Console.log = async (...args) => {
 	console.log(...args);
 };

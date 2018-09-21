@@ -144,7 +144,11 @@ export default class ManagedEditor {
 	 */
 	setFocus = (line, index) => {
 		this.editor.focus();
-		this.editor.gotoLine(line || 0, index || 0, true);
+
+		// focus the view
+		if (_.isNumber(line) && _.isNumber(index)) {
+			this.editor.gotoLine(line, index, true);
+		}
 	}
 
 	/** activates a selection range */

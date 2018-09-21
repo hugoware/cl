@@ -5,6 +5,9 @@ import * as $escodegen from 'escodegen';
 // scripts
 import uiBlockProtectionScript from './protect-ui-block.ts';
 
+// TODO: needs to improve
+export const FIRST_INDEX = uiBlockProtectionScript.split(/\n/g).length + 3;
+
 export default function protectCode(code, options = { }) {
 
 	// collect each option
