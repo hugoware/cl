@@ -48,15 +48,33 @@ $form-input-default-border-radius: 4px;
 	border: 1px solid #ccc;
 	display: inline-block;
 	border-radius: 4px;
+	padding: 0 8px;
 	
-	input {
-		padding: 0 9px;
-		border: none;
-		padding: none;
-		@include align_vertical($form-input-default-height);
+	input, textarea {
+		min-width: 20px;
 		font-size: $form-input-default-font-size;
 		outline: none;
+		border: none;
 		background: none;
+		width: 100%;
+	}
+	
+	input {
+		@include align_vertical($form-input-default-height);
+	}
+	
+	textarea {
+		line-height: 1.2em;
+		min-height: 50px;
+	}
+
+	&.multiline {
+		padding: 5px 8px;
+	}
+
+	&.full,
+	&.full {
+		width: 100%;
 	}
 
 	&.with-tail {
@@ -70,12 +88,23 @@ $form-input-default-border-radius: 4px;
 		padding: 0 9px 0 5px;
 		border-left: 1px solid #ccc;
 		border-radius: 0 $form-input-default-border-radius $form-input-default-border-radius 0;
-		display: none;	
+		display: none;
+		position: relative;	
+		left: 8px;
 	}
 
-	&.with-suffix .suffix {
-		display: inline-block;
+	&.with-suffix {
+		.suffix {
+			display: inline-block;
+		}
+
+		input {
+			padding: 0 5px;
+			margin: 0;
+			width: auto;
+		}
 	}
+
 }
 
 

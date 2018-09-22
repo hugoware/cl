@@ -6,25 +6,28 @@
 
 +template('dialog-create-project')
 	.content(dialog-width='700').create-new-project
+		.title Create New Project
 		.form
 			label
-				span name
-				input.name
+				span Project Name
+				.ui-text-input.full
+					input.name
 			
 			label
-				span description
-				textarea.description
+				span Description #[span.optional Optional]
+				.ui-text-input.full.multiline
+					textarea.description
 
 			ul.project-types
 				li.project-type.project-type-web(data-type='web')
 					.icon(icon='projectWeb')
 					.detail
-						.label Web
+						.label Website
 						.description Create a website using HTML, CSS, and JavaScript
 				li.project-type.project-type-code.alt(data-type='code')
 					.icon(icon='projectCode')
 					.detail
-						.label Code
+						.label Code Console
 						.description Create a simple console program using TypeScript
 				li.project-type.project-type-game(data-type='game2D')
 					.icon(icon='projectGame')

@@ -1,5 +1,3 @@
-import log from '../log';
-import { handleError, createError } from '../utils/errors';
 import createProject from '../actions/create-project';
 
 export const event = 'create-project';
@@ -14,18 +12,7 @@ export async function handle(socket, session, data = { }) {
 		socket.ok(event, result);
 	}
 	catch (err) {
-		handleError(err, {
-			name_already_exists: () =>
-				socket.ok(event, createError('name', 'already_exists')),
-
-			user_not_found: () =>
-				socket.ok(event, createError('user', 'not_found')),
-
-			unknown: () => {
-				log.ex('requests/create-project.js', err);
-				socket.err(event, createError('server'));
-			}
-		});
-
+		const error = resolveError(err, 'requests/create-project.js');
+		socket.err(event, error);
 	}
 }

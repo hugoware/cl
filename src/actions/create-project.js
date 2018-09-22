@@ -4,7 +4,7 @@ import format from '../formatters';
 import $fsx from 'fs-extra';
 import $date from '../utils/date';
 import projectValidator from '../validators/project';
-import { resolveProject } from '../path';
+import { resolveProject, resolveResource } from '../path';
 
 /** expected params for a project
  * @typedef CreateProjectData
@@ -67,7 +67,10 @@ export default async function createProject(data) {
 
 			// make sure to create the new project directory
 			const directory = resolveProject(id);
-			await $fsx.ensureDir(directory);
+			const source = resolveResource(`projects/${type}`);
+
+			// copy the default project
+			await $fsx.copy(source, directory);
 
 			// ready to go
 			return resolve({ success: true, id });

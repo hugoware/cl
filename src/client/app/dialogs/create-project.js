@@ -42,10 +42,11 @@ export default class CreateProjectDialog extends Dialog {
 	onActivate = () => {
 
 		// reset the form
-		this.ui.name.val('');
+		this.ui.name.val('').focus().select();
 		this.ui.description.val('');
 		this.removeClass('has-selection');
 		this.clearTypeSelection();
+		this.errorMessage.clear();
 
 	}
 

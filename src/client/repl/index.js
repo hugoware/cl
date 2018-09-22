@@ -1,11 +1,14 @@
 
 (() => {
+	'use strict';
+
 	// shared state
 	const $state = { };
 
 	// UI elements
 	const $output = document.getElementById('output');
 	const $input = document.getElementById('input');
+	const $error = document.getElementById('error');
 	const $question = document.getElementById('question');
 	const $code = document.getElementById('code');
 
@@ -33,6 +36,30 @@
 		event.args = args;
 		window.top.dispatchEvent(event);
 	}
+
+
+	window.addEventListener('unhandledrejection', () => {
+		$log('uh1');
+	});
+
+	window.addEventListener('unhandledexception', () => {
+		$log('uh2');
+	});
+
+	// displays an error message
+	function showError(ex) {
+		$log('will show', ex);
+
+	}
+
+	// // there was an exception 
+	// window.addEventListener('error', err => {
+	// 	console.log('got erro', err);
+	// });
+
+	// window.onerror = function() {
+	// 	console.log('handle global error');
+	// };
 	
 	// listen for the enter key
 	$input.addEventListener('keyup', event => {
@@ -71,6 +98,7 @@
 	// reset the view before executing code
 	function reset() {
 		removeClass(document.body, 'has-question');
+		removeClass(document.body, 'has-error');
 
 		// reset the state
 		for (const id in $state)
@@ -119,6 +147,22 @@
 
 	window.__CODELAB__ = {
 
+		// handles exceptions in code execution
+		handleError: ex => {
+
+			// get only the main error
+			const lines = (ex || '').toString().split(/\n/g);
+			for (let i = lines.length; i-- > 0;) {
+				const line = lines[i];
+				if (/^\s+at\s+/.test(line))
+					lines.splice(i, 1);
+			}
+
+			// display the error
+			addClass(document.body, 'has-error');
+			$error.innerText = lines.join('\n');
+		},
+
 		// waits for a user prompt
 		prompt: (question, callback) => {
 			question = trim(question);
@@ -157,6 +201,7 @@
 		// notify when finished executing code
 		end: () => {
 			notify('execution-finished');
+			appendLine('line end', 'Program finished...')
 		}
 
 	};

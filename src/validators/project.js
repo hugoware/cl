@@ -7,7 +7,7 @@ const ProjectTypes = {
   'game2d': true,
   'game3d': true,
   'mobile': true,
-  'console': true
+  'code': true
 };
 
 // list of allowed project types

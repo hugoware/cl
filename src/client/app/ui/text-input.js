@@ -93,7 +93,7 @@ export default class TextInput extends Component {
 }
 
 // matches the input size to the text
-function matchInput(instance, text, { fontSize = '18px', fontFamily = 'sans-serif' } = { }) {
+function matchInput(instance, text, { fontSize = '19px', fontFamily = 'sans-serif' } = { }) {
 	const size = $measureText({
 		text,
 		fontSize,

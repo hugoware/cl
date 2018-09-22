@@ -59,6 +59,15 @@ export function resolvePublic(path) {
   return resolveRoot(`~/dist/public/${path}`);
 }
 
+/** Resolves a path to the resource directory
+ * @param {string} path the path to resolve
+ * @returns {string} the resource path
+ */
+export function resolveResource(path) {
+  path = removeLeadingSlash(path);
+  return resolveRoot(`~/dist/resources/${path}`);
+}
+
 /** Resolves a path to the temporary file cache
  * @param {string} path the path to resolve
  * @returns {string} the resolved path

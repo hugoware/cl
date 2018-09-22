@@ -35,6 +35,7 @@ export default class Preview extends Component {
 		this.handlers = { };
 
 		// events
+		this.listen('reset', this.onReset);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('activate-file', this.onActivateFile);
@@ -43,28 +44,30 @@ export default class Preview extends Component {
 		this.listen('preview-message', this.onPreviewMessage);
 	}
 
+	// resetting the view
+	onReset = () => {
+		if (this.handler) this.handler.dispose();
+		delete this.handler;
+		this.ui.content.empty();
+	}
+
 	// changes the display mode for the project
 	setMode = mode => {
 
 		// load a handler for the first time
-		if (!(mode in this.handlers)) {
-			const type = MODES[mode];
+		const type = MODES[mode];
 
-			// make sure the handler exists
-			if (!type)
-				throw 'unsupported handler';
+		// make sure the handler exists
+		if (!type)
+			throw 'unsupported handler';
 
-			// create and save the handler
-			const handler = this.handlers[mode] = new type(this);
-			handler.appendTo(this.ui.content);
-		}
+		// create and save the handler
+		this.handler = new type(this);
+		this.handler.appendTo(this.ui.content);
 
 		// replace the current mode
-		_.each(MODES, key => this.removeClass(`mode-${key}`));
+		_.each(MODE_TYPES, key => this.removeClass(`mode-${key}`));
 		this.addClass(`mode-${mode}`);
-
-		// set the mode
-		this.handler = this.handlers[mode];
 	}
 
 	// prepare the preview window
@@ -76,24 +79,29 @@ export default class Preview extends Component {
 
 	// forwarding preview messages
 	onPreviewMessage = (...args) => {
+		if (!this.handler) return;
 		this.handler.onPreviewMessage(...args);
 	}
 
 	onDeactivateProject = () => {
+		if (!this.handler) return;
 		this.handler.onDeactivateProject();
 	}
 
 	onCloseFile = file => {
+		if (!this.handler) return;
 		this.handler.onCloseFile(file);
 	}
 
 	// handles when files are loaded
 	onActivateFile = async file => {
+		if (!this.handler) return;
 		this.handler.onActivateFile(file);
 	}
 
 	// check for dependencies and update
 	onCompileFile = async file => {
+		if (!this.handler) return;
 		this.handler.onCompileFile(file);
 	}
 

@@ -30,7 +30,14 @@ export default function protectCode(code, options = { }) {
 
 		${protectBlockedUI ? uiBlockProtectionScript : ''}
 
-		${code}
+		try {
+			${code}
+		}
+		// catch all exceptions
+		catch (ex) {
+			if (window.__CODELAB__ && window.__CODELAB__.handleError)
+				window.__CODELAB__.handleError(ex);
+		}
 
 	})();`;
 
