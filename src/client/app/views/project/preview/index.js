@@ -12,6 +12,13 @@ const MODES = {
 	repl: ReplMode
 };
 
+// preview display types
+const MODE_TYPES = { 
+	web: 'browser',
+	code: 'repl',
+	default: 'error'
+};
+
 export default class Preview extends Component {
 
 	constructor(context) {
@@ -61,8 +68,9 @@ export default class Preview extends Component {
 	}
 
 	// prepare the preview window
-	onActivateProject = async () => {
-		this.setMode('repl');
+	onActivateProject = async project => {
+		const mode = MODE_TYPES[project.type] || MODE_TYPES.default;
+		this.setMode(mode);
 		this.handler.onActivateProject();
 	}
 

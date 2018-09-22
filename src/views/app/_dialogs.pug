@@ -5,7 +5,7 @@
 		.dialog
 
 +template('dialog-create-project')
-	.content(dialog-width='600').create-new-project
+	.content(dialog-width='700').create-new-project
 		.form
 			label
 				span name
@@ -15,18 +15,27 @@
 				span description
 				textarea.description
 
-			ul
-				li.type(data-type='web') Web
-				li.type(data-type='code') Code
-				//- li.type(data-type='web') Game 2D
-				//- li.type(data-type='web') Game 3D
-
-			ul
-				li.language(data-type='javascript') JavaScript
-				li.language(data-type='lua') Lua
-				li.language(data-type='csharp') C#
-				li.language(data-type='python') Python
-				li.language(data-type='typescript') TypeScript
+			ul.project-types
+				li.project-type.project-type-web(data-type='web')
+					.icon(icon='projectWeb')
+					.detail
+						.label Web
+						.description Create a website using HTML, CSS, and JavaScript
+				li.project-type.project-type-code.alt(data-type='code')
+					.icon(icon='projectCode')
+					.detail
+						.label Code
+						.description Create a simple console program using TypeScript
+				li.project-type.project-type-game(data-type='game2D')
+					.icon(icon='projectGame')
+					.detail
+						.label Game (2D)
+						.description Create a variety of video game types using TypeScript
+				li.project-type.project-type-mobile.alt(data-type='mobile')
+					.icon(icon='projectMobile')
+					.detail
+						.label Mobile App
+						.description Create a mobile application using TypeScript
 
 			.error
 

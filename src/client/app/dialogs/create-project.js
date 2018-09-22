@@ -14,7 +14,7 @@ export default class CreateProjectDialog extends Dialog {
 			ui: {
 				name: '.name',
 				description: '.description',
-				types: '.type',
+				types: '.project-type',
 				errorMessage: '.error',
 
 				submit: '.action.confirm',
@@ -35,7 +35,7 @@ export default class CreateProjectDialog extends Dialog {
 		this.ui.cancel.on('click', this.onCancel);
 
 		// setup type selection
-		this.on('click', '.type', this.onSelectType);
+		this.on('click', '.project-type', this.onSelectType);
 	}
 
 	// handle activating the dialog window
@@ -44,6 +44,8 @@ export default class CreateProjectDialog extends Dialog {
 		// reset the form
 		this.ui.name.val('');
 		this.ui.description.val('');
+		this.removeClass('has-selection');
+		this.clearTypeSelection();
 
 	}
 
@@ -55,7 +57,8 @@ export default class CreateProjectDialog extends Dialog {
 		this.clearTypeSelection();
 
 		// update the selection
-		const instance = Component.locate(event.target, '.type');
+		this.addClass('has-selection');
+		const instance = Component.locate(event.target, '.project-type');
 		instance.addClass('selected');
 	}
 

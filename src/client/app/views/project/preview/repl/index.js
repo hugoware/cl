@@ -83,8 +83,12 @@ export default class ReplMode extends Component {
 	}
 
 	// handle resetting
-	reset() {
+	reset() { }
 
+	// clear the view, as needed
+	clear() {
+		if (this.bridge)
+			this.bridge.clear();
 	}
 
 	// handles deactivating a project entirely

@@ -1,5 +1,7 @@
 
 .create-new-project {
+	$project-icon-size: 50px;
+	$project-type-active-background-color: #8C9E9F;
 
 	label {
 		display: block;
@@ -8,8 +10,83 @@
 	span {
 		display: block;
 	}
-	
-	.selected {
-		color: #f00;
+
+	// handle selections
+	&.has-selection {
+		.project-type { opacity: 0.3 }
+		.project-type.selected,
+		.project-type.selected:hover {
+			background: lighten(#359BD9, 10%);
+			color: #fff;
+			opacity: 1;
+			box-shadow: inset 0 0 0 1px rgba(#000, 0.3);
+			text-shadow: 0 1px 3px rgba(#000, 0.4);
+
+			.description {
+				opacity: 0.8;
+			}
+		}
 	}
+	
+
+	.project-types {
+		@include clearfix;
+
+		.project-type {
+			position: relative;
+			// padding: 15px;
+			border-radius: 10px;
+			cursor: pointer;
+			float: left;
+			width: 48%;
+
+			display: block;
+			@include clearfix;
+			@include animate('background, opacity, color');
+			margin: 0 0 10px 0;
+			height: 100px;
+
+			&:hover {
+				opacity: 1 !important;
+				background: lighten($project-type-active-background-color, 33%);
+				color: #000;
+			}
+
+			&.alt {
+				float: right;
+			}
+		}
+		
+		.icon {
+			padding: 8px;
+			float: right;
+			// position: absolute;
+			svg {
+				@include uniform_size($project-icon-size);
+			}
+		}
+
+		.project-type-game {
+			svg {
+				transform: scale(1.15, 1.15);
+			}
+		}
+
+		.detail {
+			padding: 15px 10px 15px 15px;
+		}
+
+		.label {
+			font-size: 20px;
+			font-weight: 600;
+		}
+
+		.description {
+			font-size: 15px;
+			opacity: 0.6;
+		}
+		
+	}
+
+
 }

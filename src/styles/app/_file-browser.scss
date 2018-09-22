@@ -260,10 +260,11 @@ $action-item-icon-size: $action-item-height * 0.6;
 		
 		.type {
 			float: right;
-			opacity: 0.75;
-			filter: grayscale(100%);
 			position: relative;
 			top: -5px;
+			background: rgba(#000, 0.2);
+			padding: 5px;
+			border-radius: 100px;
 			
 			svg {
 				@include uniform_size(24px);

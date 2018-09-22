@@ -146,6 +146,11 @@
 			appendLine('line start', msg);
 		},
 
+		// clear the view
+		clear: () => {
+			reset();
+		},
+
 		// kicks off a code request
 		run: code => runCode(code),
 
