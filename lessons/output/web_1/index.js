@@ -158,6 +158,15 @@
       ],
       "content": "",
       "explained": "This is just a summary message to explain the final answer"
+    },
+    {
+      "checkpoint": true,
+      "mode": "popup",
+      "content": "<p>That's it! The lesson is finished!</p>",
+      "type": "slide",
+      "speak": [
+        "That's it! The lesson is finished!"
+      ]
     }
   ],
   "definitions": {

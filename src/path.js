@@ -74,7 +74,7 @@ export function resolveResource(path) {
  */
 export function resolveCache(path) {
   path = removeLeadingSlash(path);
-  const result = $path.resolve(resolveRoot($config.cacheDirectory) + path);
+  const result = $path.resolve(resolveRoot($config.cacheDirectory), path);
   return result;
 }
 
@@ -84,7 +84,7 @@ export function resolveCache(path) {
  */
 export function resolveData(path) {
   path = removeLeadingSlash(path);
-  const result = $path.resolve(resolveRoot($config.dataDirectory) + path);
+  const result = $path.resolve(resolveRoot($config.dataDirectory), path);
   return result;
 }
 

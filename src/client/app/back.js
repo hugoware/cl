@@ -19,12 +19,22 @@ export default class BackButton extends Component {
 		super(config);
 
 		this.on('click', this.onLeaveProject);
-
 	}
 
+	// return to the home view, if not already there
 	onLeaveProject = () => {
-		this.broadcast('deactivate-project');
-		$nav.go('/');
+
+		// clear project data
+		if ($nav.segments[0] === 'project') {
+			this.broadcast('deactivate-project');
+		}
+		// other screens?
+		// else { }
+
+		// if not already at the home screen, navigate
+		if ($nav.segments[0] !== '')
+			$nav.go('/');
+
 	}	
 
 }

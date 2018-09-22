@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import $randomcolor from 'randomcolor';
 import $lfs from '../lfs';
 import $state from '../state'
 import $url from 'url';
@@ -151,4 +152,37 @@ export function getFileInfo(fileName) {
 export function resolvePathFromUrl(path, relativeTo) {
 	path = $url.resolve(relativeTo + '/', path);
 	return $lfs.normalizePath(path);
+}
+
+/** creates a hash from a string value 
+ * @param {string} str the string to create the hash from
+ * @returns {number} the final hash
+*/
+export function hashString(str) {
+	str = (str || '').toString()
+	var hash = 0, i, chr;
+	if (str.length === 0) return hash;
+	for (i = 0; i < str.length; i++) {
+		chr = str.charCodeAt(i);
+		hash = ((hash << 5) - hash) + chr;
+		hash |= 0; // Convert to 32bit integer
+	}
+	return hash;
+};
+
+/** creates a random color
+ * @param {number} [basedOn] provide an optional known value
+ * @return {string} the resulting color
+ */
+export function randomColor(basedOn = Math.random()) {
+	return `#${(basedOn * 0xFFFFFF << 0).toString(16)}`;
+}
+
+/** creates a semi-random color based on a string
+ * @param {string} str the string value to base the color on
+ * @returns {string} the color to use
+ */
+export function semiRandomColor(str) {
+	const seed = Math.abs(hashString(str));
+	return $randomcolor({ seed, format: 'hex' });
 }

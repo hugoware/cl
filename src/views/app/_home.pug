@@ -12,30 +12,32 @@
 					.name(bind='name')
 
 			.sections
+				.section.projects(bind='showProjects')
+					.name Projects
+					.count(bind='projectCount')
+					
 				.section.lessons(bind='showLessons')
 					.name Lessons
 					.count(bind='lessonCount')
 
-				.section.projects(bind='showProjects')
-					.name Projects
-					.count(bind='projectCount')
-
-
-			.actions
-				button.action.create-project(bind='createProject') Create Project
-
 		.content
 			.projects(bind='projectsView')
-				h2 Projects
+				.heading
+					h2 Projects
+					.actions
+						.action.create-project(bind='createProject') Create Project
+
 				.list(bind='projectList')
 
 			.lessons(bind='lessonsView')
-				h2 Lessons
+				.heading
+					h2 Lessons
 				.list(bind='lessonList')
 
 
 +template('project-item')
 	.project-item
+		.bar
 		.type
 			.web(icon='projectWeb')
 			.code(icon='projectCode')

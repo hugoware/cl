@@ -80,8 +80,10 @@ function captureImports(map, sources, imports = [], imported = { }) {
 		}
 	}
 
-	// when finishing, update the first line
-	map.lines[0] += `  //##CODELAB_FILE##:${map.path}`
+	// preix each line
+	// for (let i = 0, total = map.lines.length; i < total; i++) {
+		// map.lines[i] += `__CODELAB_REPORT__("${map.path}", ${i+1}); ${map.lines[i]}\n`;
+	// }
 
 	return map.lines.join('\n');
 }

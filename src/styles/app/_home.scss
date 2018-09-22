@@ -1,6 +1,8 @@
 
 $home-sidebar-width: 230px;
-$home-content-padding: 25px;
+$home-content-padding: 40px;
+$project-item-accent-height: 6px;
+$project-item-accent-gap: 3px;
 
 #home {
 	$sidebar-item-hover-background: lighten($sidebar-background, 20%);
@@ -96,22 +98,55 @@ $home-content-padding: 25px;
 	.content {
 		position: absolute;
 		top: $home-content-padding;
-		left: $home-sidebar-width + $home-content-padding;
+		left: $home-sidebar-width;
 		right: 0;
 		bottom: 0;
+		overflow: auto;
+		padding: 0 0 ($home-content-padding * 2) $home-content-padding;
 
 		> div {
 			opacity: 0;
 			display: none;
 		}
 
-		h2 {
-			font-size: 46px;
-			padding: 0 0 30px 0;
-			color: #fff;
-			opacity: 0.6;
-			text-shadow: 0 2px 8px rgba(#000, 0.5);
+		.heading {
+			padding: 0 0 40px 0;
+			@include clearfix;
+			min-width: 450px;
+			
+			h2 {
+				float: left;
+				font-size: 46px;
+				color: #fff;
+				opacity: 0.6;
+				text-shadow: 0 2px 8px rgba(#000, 0.5);
+			}
+	
+			.actions {
+				float: right;
+				padding: 8px 5% 0 100px;
+			}
+	
+			.action {
+				@include align_vertical(40px);
+				color: #fff;
+				background: #29BB9C;
+				padding: 0 20px;
+				cursor: pointer;
+				border-radius: 3px;
+				box-shadow: inset 0 0 0 1px rgba(#fff, 0.3), 0 1px 3px #000;
+				white-space: nowrap;
+
+				@include animate('background, transform', 0.2s);
+				
+				&:hover {
+					background: lighten(#29BB9C, 10%);
+					transform: scale(1.1, 1.1);
+				}
+			}
 		}
+
+
 	}
 
 	&.projects .sections .projects,
@@ -168,16 +203,25 @@ $home-content-padding: 25px;
 	position: relative;
 	margin: 0 3% 40px 0;
 
+	@media screen and (max-width: 1500px) {
+		width: 46%;
+	}
+
+	@media screen and (max-width: 1100px) {
+		width: 95%;
+	}
+
 	background: #fff;
-	&.is-lesson:before {
-		$lesson-accent-size: 4px;
-		content: ' ';
+	
+	.bar {
+		display: block;
 		position: absolute;
 		background: #F1C631;
-		left: $lesson-accent-size;
-		right: $lesson-accent-size;
-		height: $lesson-accent-size;
-		bottom: $lesson-accent-size;
+		left: $project-item-accent-gap;
+		right: $project-item-accent-gap;
+		top: $project-item-accent-gap;
+		height: $project-item-accent-height;
+		border-radius: 3px 3px 0 0;
 	}
 
 	&.is-project .reset,
@@ -219,7 +263,7 @@ $home-content-padding: 25px;
 
 	.name {
 		font-size: 23px;
-		padding: 0 0 22px 0;
+		padding: 6px 0 22px 0;
 		text-overflow: ellipsis;
 		word-wrap: none;
 		white-space: nowrap;

@@ -179,9 +179,18 @@
 
 +template('dialog-publish-project')
 	.content(dialog-width='500').publish-project
-		h3 Feature not available yet
+	
+		.message Domain Name
+
+		.message
+			h3 Successfully Published!
+			p can be accessed at http://codelabschool.com/projectid
+
+		.share
+			.send
 
 		.actions
+			.action.confirm Publish
 			.action.cancel Cancel
 
 +template('dialog-remove-project')

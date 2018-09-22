@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import $path from '../path';
 import $fsx from 'fs-extra';
-import getProjectType from '../queries/get-project-type';
-import { resolveError } from '../utils';
 
 export const name = 'serve project resource';
 export const route = '/*';
@@ -55,6 +53,4 @@ export async function handle(request, response, next) {
 	catch (err) {
 		response.send('404');
 	}
-
-
 }

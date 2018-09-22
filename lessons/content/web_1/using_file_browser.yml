@@ -163,3 +163,9 @@
       - This *is another* mix
       - This _is_ failed
 
+-
+  slide:
+    checkpoint: true
+    mode: popup
+    content: That's it! The lesson is finished!
+

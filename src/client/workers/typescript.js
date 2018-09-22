@@ -29,9 +29,16 @@ async function compileFile(file) {
 		// replace modules with imports
 		code = resolveImports(file, files);
 
-		// include one last line to notify when execution
-		// has finished running
-		code += '\n\nif (window && window.__CODELAB__ && window.__CODELAB__.end) window.__CODELAB__.end()';
+		// final code modifications
+		code = `
+
+${code}
+
+// terminating code
+if (window && window.__CODELAB__ && window.__CODELAB__.end)
+	window.__CODELAB__.end();
+
+	`;
 		
 		// apply apply code protection (loop safety, async simplification)
 		const protect = protectCode(code);
@@ -40,11 +47,12 @@ async function compileFile(file) {
 		const compiled = ts.transpile(protect, {
 			noResolve: true,
 			strictFunctionTypes: true,
-			removeComments: true,
+			removeComments: false,
+			// inlineSourceMap: true,
 			target: 'ES5',
 			lib: 'ES2015'
 		});
-		
+
 		// share the generated code
 		self.postMessage(['compile:ok', { success: true, content: compiled }]);
 	}

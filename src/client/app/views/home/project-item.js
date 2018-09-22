@@ -1,13 +1,23 @@
 import Component from '../../component';
+import { semiRandomColor } from '../../utils/index';
 
 export default class ProjectItem extends Component {
 
 	constructor(data) {
 		super({
-			template: 'project-item'
+			template: 'project-item',
+			ui: {
+				bar: '.bar'
+			}
 		});
 
 		this.data = data;
+
+		// set the helper color
+		if (!data.lesson) {
+			const backgroundColor = semiRandomColor(data.id);
+			this.ui.bar.css({ backgroundColor });
+		}
 		
 		// populate data
 		this.attr('data-id', data.id);
