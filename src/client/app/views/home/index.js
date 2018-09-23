@@ -27,7 +27,7 @@ export default class HomeView extends View {
 
 		// listen for item events
 		this.on('click', '.project-item .action.remove', this.onRemoveProject);
-		this.on('click', '.project-item .action.publish', this.onPublishProject);
+		this.on('click', '.project-item .action.publish', this.onShareProject);
 		this.on('click', '.project-item .action.reset', this.onResetLesson);
 		this.on('click', '.project-item .action.edit', this.onEditProject);
 		this.on('click', '.project-item', this.onSelectProject);
@@ -142,7 +142,7 @@ export default class HomeView extends View {
 	// tries to remove a project entry
 	onEditProject = async event => {
 		const id = getProjectId(event);
-		this.broadcast('open-dialog', 'edit-project', { id });
+		this.broadcast('open-dialog', 'project-settings', { id });
 		return cancelEvent(event);
 	}
 
@@ -153,9 +153,9 @@ export default class HomeView extends View {
 		return cancelEvent(event);
 	}
 	
-	onPublishProject = async event => {
+	onShareProject = async event => {
 		const id = getProjectId(event);
-		this.broadcast('open-dialog', 'publish-project', { id });
+		this.broadcast('open-dialog', 'share-project', { id });
 		return cancelEvent(event);
 	}
 	

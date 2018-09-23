@@ -266,6 +266,7 @@ export default class Component {
 				const args = element.attr('icon-args');
 				try {
 					const icon = $icons[id] ? $icons[id](args) : $icons.icon(id, args);
+					element.removeAttr('icon');
 					element.append(icon);
 				}
 				catch (err) {

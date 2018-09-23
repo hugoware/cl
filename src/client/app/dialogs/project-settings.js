@@ -3,11 +3,11 @@ import Dialog from './';
 import TextInput from '../ui/text-input';
 import ErrorMessage from '../ui/error-message';
 
-export default class EditProjectDialog extends Dialog {
+export default class ProjectSettingsDialog extends Dialog {
 
 	constructor() {
 		super({
-			template: 'dialog-edit-project',
+			template: 'dialog-project-settings',
 
 			ui: {
 				error: '.error',

@@ -2,11 +2,11 @@
 import Dialog from './';
 import ErrorMessage from '../ui/error-message';
 
-export default class PublishProjectDialog extends Dialog {
+export default class ShareProjectDialog extends Dialog {
 
 	constructor() {
 		super({
-			template: 'dialog-publish-project',
+			template: 'dialog-share-project',
 
 			ui: {
 				error: '.error'

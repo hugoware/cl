@@ -177,24 +177,18 @@
 				.overwrite Overwrite
 				.clear Cancel
 
-+template('dialog-publish-project')
-	.content(dialog-width='500').publish-project
++template('dialog-share-project')
+	.content(dialog-width='500').share-project
 	
-		.message Domain Name
-
-		.message
-			h3 Successfully Published!
-			p can be accessed at http://codelabschool.com/projectid
-
-		.share
-			.send
+		.title Share Project
+		.message Variety of share options
 
 		.actions
 			.action.confirm Publish
 			.action.cancel Cancel
 
 +template('dialog-remove-project')
-	.content(dialog-width='500').edit-project
+	.content(dialog-width='500').remove-project
 		.title Remove Project
 		.message Do you really want to delete this project an all of its files?
 		.error
@@ -203,9 +197,9 @@
 			.action.confirm.danger Remove Project
 			.action.cancel Cancel
 
-+template('dialog-edit-project')
-	.content(dialog-width='500').edit-project
-		h3 Feature not available yet
++template('dialog-project-settings')
+	.content(dialog-width='500').project-settings
+		h3 Project Settings
 
 		.actions
 			.action.cancel Cancel

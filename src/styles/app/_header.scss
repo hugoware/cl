@@ -1,0 +1,160 @@
+
+
+#header {
+
+	// icons
+	&.is-type-web .web,
+	&.is-type-game .game,
+	&.is-type-code .code,
+	&.is-type-mobile .mobile {
+		display: block !important;
+	}
+
+	// option access
+	&.is-lesson {
+		.settings, .share-project {
+			display: none;
+		}
+	}
+
+	&.is-lesson.is-finished {
+		.share-project {
+			display: block;
+		}
+	}
+
+	.actions, .project-data {
+		display: none;
+	}
+
+	&.has-project {
+		.actions, .project-data {
+			display: block;
+		}
+	}
+
+	&.is-lesson .lesson {
+		display: block;
+	}
+
+	.type div {
+		display: none;
+	}
+
+	.type {
+		svg {
+			@include uniform_size($header-height * 0.6);
+		}
+	}
+
+	.actions {
+		float: right;
+		padding: 13px 25px 0;
+
+		.action {
+			float: left;
+			margin-left: 25px;
+			cursor: pointer;
+
+			&:hover {
+				svg {
+					transform: scale(1.2, 1.2);
+				}
+
+				.tip {
+					transform: translate(0, 0);
+					opacity: 1;
+				}
+			}
+		}
+
+		svg {
+			@include uniform_size($header-height * 0.43);
+		}
+	}
+
+	.tip, .detail {
+		position: absolute;
+		top: $header-height;
+		background: rgba(#000, 0.8);
+		padding: 11px;
+		color: #fff;
+		font-size: 15px;
+		border-radius: 4px;
+		white-space: nowrap;
+		pointer-events: none;
+
+		@include animate('opacity, transform');
+		transform: translate(0, -7px);
+		opacity: 0;
+	}
+
+	.info {
+		float: left;
+		@include clearfix;
+		cursor: pointer;
+		&:hover .detail {
+			transform: translate(0, 0);
+			opacity: 1;
+		}
+	}
+
+	.detail {
+		min-width: 300px;
+		padding: 22px;
+
+		.type {
+			font-size: 15px;
+			padding: 0 0 5px 0;
+			opacity: 0.6;
+		}
+
+		.description {
+			font-size: 18px;
+		}
+	}
+
+	.tip {
+		right: 0;
+	}
+
+	.share-project .tip { right: 10px; }
+	.open-in-window .tip { right: 10px; }
+	.settings .tip { right: 60px; }
+
+	.lesson {
+		float: left;
+		@include align_vertical($header-height * 0.5);
+		margin: (($header-height * 0.5) / 2) 0 0 40px;
+		padding: 0 15px;
+		font-size: 15px;
+		font-weight: 600;
+		color: $header-background;
+		border-radius: 100px;
+		background: rgba(#fff, 0.5);
+		display: none;
+	}
+	
+	.icon {
+		float: left;
+		position: relative;
+		top: ($header-height * 0.4) / 2;
+	}
+
+	.project-data {
+		position: absolute;
+		left: 230px;
+		right: 200px;
+		color: #fff;
+	}
+
+	.name {
+		@include align_vertical($header-height);
+		font-size: 18px;
+		font-weight: 600;
+		position: relative;
+		left: 15px;
+		float: left;
+	}
+
+}

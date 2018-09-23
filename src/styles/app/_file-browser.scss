@@ -26,7 +26,7 @@ $action-item-icon-size: $action-item-height * 0.6;
 	user-select: none;
 
 	// tree depth - anything deeper is just silly
-	@for $i from 1 through 25 {
+	@for $i from 1 through 35 {
 		&.depth-#{$i} > {
 			.item, .empty {
 				padding-left: 10px * $i;
@@ -235,55 +235,49 @@ $action-item-icon-size: $action-item-height * 0.6;
 
 	}
 
-	.project-data {
-		background: rgba(#000, 0.1);
-		color: #fff;
-		padding: 15px 10px;
-		margin-bottom: 5px;
-		@include clearfix();
+	// .project-data {
+	// 	background: rgba(#000, 0.1);
+	// 	color: #fff;
+	// 	padding: 15px 10px;
+	// 	margin-bottom: 5px;
+	// 	@include clearfix();
 
-		> div {
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
-		}
+	// 	> div {
+	// 		text-overflow: ellipsis;
+	// 		white-space: nowrap;
+	// 		overflow: hidden;
+	// 	}
 
-		.name {
-			font-size: 18px;
-			padding: 0 0 8px 0;
-		}
+	// 	.name {
+	// 		font-size: 18px;
+	// 		padding: 0 0 8px 0;
+	// 	}
 
-		.description {
-			font-size: 14px;
-			opacity: 0.3;
-		}
+	// 	.description {
+	// 		font-size: 14px;
+	// 		opacity: 0.3;
+	// 	}
 		
-		.type {
-			float: right;
-			position: relative;
-			top: -5px;
-			background: rgba(#000, 0.2);
-			padding: 5px;
-			border-radius: 100px;
+	// 	.type {
+	// 		float: right;
+	// 		position: relative;
+	// 		top: -5px;
+	// 		background: rgba(#000, 0.2);
+	// 		padding: 5px;
+	// 		border-radius: 100px;
 			
-			svg {
-				@include uniform_size(24px);
-				display: none;
-			}
-		}
+	// 		svg {
+	// 			@include uniform_size(24px);
+	// 			display: none;
+	// 		}
+	// 	}
 
-		&.type-web .web svg,
-		&.type-game .game svg,
-		&.type-code .code svg,
-		&.type-mobile .mobile svg {
-			display: block !important;
-		}
 
-		.options {
-			height: 0;
-			overflow: hidden;
-		}
+	// 	.options {
+	// 		height: 0;
+	// 		overflow: hidden;
+	// 	}
 
-	}
+	// }
 
 }

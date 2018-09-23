@@ -25,11 +25,13 @@ export async function handle(request, response, next) {
 	if (/www/i.test(id))
 		id = parts.shift();
 
+	// if this doesn't appear to be a project at all
+	if (id.length !== 6)
+		return next();
+
 	// since this is requesting a project, get the
 	// default info for the project
-	console.log('looking for id', id);
 	const project = await $cache.projects.get(id);
-	console.log('found', project);
 
 	// process the request
 	const handler = project.type === 'web' ? previewWebProject

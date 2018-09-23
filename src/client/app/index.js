@@ -29,8 +29,8 @@ import RenameItemDialog from './dialogs/rename-item';
 import MoveItemsDialog from './dialogs/move-items'
 import ConfirmCloseDialog from './dialogs/confirm-close';
 import UploadFileDialog from './dialogs/upload-file';
-import PublishProjectDialog from './dialogs/publish-project';
-import EditProjectDialog from './dialogs/edit-project';
+import ShareProjectDialog from './dialogs/share-project';
+import ProjectSettingsDialog from './dialogs/project-settings';
 import RemoveProjectDialog from './dialogs/remove-project';
 import ResetLessonDialog from './dialogs/reset-lesson';
 
@@ -87,9 +87,9 @@ class App extends Component {
 			moveItems: new MoveItemsDialog(),
 			uploadFile: new UploadFileDialog(),
 			resetLesson: new ResetLessonDialog(),
-			editProject: new EditProjectDialog(),
+			projectSettings: new ProjectSettingsDialog(),
 			removeProject: new RemoveProjectDialog(),
-			publishProject: new PublishProjectDialog(),
+			shareProject: new ShareProjectDialog(),
 		};
 
 		// shared events

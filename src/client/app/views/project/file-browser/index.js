@@ -17,13 +17,7 @@ export default class FileBrowser extends Component {
 			context,
 			template: 'file-browser',
 			ui: {
-				items: '.items',
-
-				// meta info
-				data: '.project-data',
-				name: '.project-data .name',
-				description: '.project-data .description',
-
+				items: '.items'
 			}
 		});
 
@@ -57,19 +51,6 @@ export default class FileBrowser extends Component {
 
 	// activated when changing projects
 	onActivateProject = () => {
-
-		// update basic data
-		const { project } = $state;
-		this.ui.name.text(project.name);
-		this.ui.description.text(project.description);
-		
-		// update the project type
-		let className = this.ui.data.attr('class') || '';
-		className = className.replace(/type\-[a-z0-9]+/gi, '');
-		this.ui.data.attr('class', className);
-		this.ui.data.addClass(`type-${project.type}`);
-
-		// rebuild the state
 		this.rebuildStructure();
 	}
 
@@ -127,13 +108,11 @@ export default class FileBrowser extends Component {
 
 	matchScrollContainer = () => {
 		const actions = this.actions.$[0].getBoundingClientRect();
-		const project = this.ui.data[0].getBoundingClientRect();
 		const container = this.$[0].getBoundingClientRect();
 
 		// calculate the empty area
 		let height = container.bottom - container.top;
 		height -= actions.bottom - actions.top;
-		height -= project.bottom - project.top;
 
 		// update to match
 		this.ui.items.height(height);
