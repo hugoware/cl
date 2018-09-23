@@ -1,7 +1,7 @@
 
 importScripts('/__codelab__/typescript/typescriptServices.js');
-import protectCode from '../../runner/protect';
-import { resolveImports, getErrorFile } from '../../runner/modules';
+import protectCode from '../../compilers/simplescript/protect';
+import { resolveImports, getErrorFile } from '../../compilers/simplescript/modules';
 
 // import $ts from 'typescript/lib/typescriptServices';
 import $lfs from '../app/lfs';
@@ -28,17 +28,6 @@ async function compileFile(file) {
 		
 		// replace modules with imports
 		code = resolveImports(file, files);
-
-		// final code modifications
-		code = `
-
-${code}
-
-// terminating code
-if (window && window.__CODELAB__ && window.__CODELAB__.end)
-	window.__CODELAB__.end();
-
-	`;
 		
 		// apply apply code protection (loop safety, async simplification)
 		const protect = protectCode(code);
@@ -48,7 +37,6 @@ if (window && window.__CODELAB__ && window.__CODELAB__.end)
 			noResolve: true,
 			strictFunctionTypes: true,
 			removeComments: false,
-			// inlineSourceMap: true,
 			target: 'ES5',
 			lib: 'ES2015'
 		});

@@ -35,8 +35,13 @@ export default function protectCode(code, options = { }) {
 		}
 		// catch all exceptions
 		catch (ex) {
-			if (window.__CODELAB__ && window.__CODELAB__.handleError)
-				window.__CODELAB__.handleError(ex);
+			if (window.__CODELAB__ && window.__CODELAB__.handleException)
+				window.__CODELAB__.handleException(ex);
+		}
+		// terminating code
+		finally {
+			if (window && window.__CODELAB__ && window.__CODELAB__.end)
+				window.__CODELAB__.end();
 		}
 
 	})();`;

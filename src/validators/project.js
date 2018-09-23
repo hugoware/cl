@@ -1,11 +1,9 @@
 import _ from 'lodash';
 import { stringify, resolveError } from './utils';
-// import { ProjectTypes } from '../models/project';
 
 const ProjectTypes = {
   'web': true,
-  'game2d': true,
-  'game3d': true,
+  'game': true,
   'mobile': true,
   'code': true
 };

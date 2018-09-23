@@ -1,54 +1,54 @@
 
-import workerScript from './worker.ts';
-import browserScript from './browser.ts';
-import consoleScript from './modules/console.ts';
+// import workerScript from './worker.ts';
+// import browserScript from './browser.ts';
+// import consoleScript from './modules/console.ts';
 
-const $modules = {
-	console: consoleScript
-};
+// const $modules = {
+// 	console: consoleScript
+// };
 
-function trim(str) {
-	return (str || '').toString().replace(/^\s*|\s*$/g, '');
-}
+// function trim(str) {
+// 	return (str || '').toString().replace(/^\s*|\s*$/g, '');
+// }
 
-// handles building the runner script
-export default class Runner {
+// // handles building the runner script
+// export default class Runner {
 
-	constructor(mode) {
+// 	constructor(mode) {
 
-		// console.log('worker', workerScript);
-		// console.log('browser', browserScript);
-		// console.log('io', ioScript);
+// 		// console.log('worker', workerScript);
+// 		// console.log('browser', browserScript);
+// 		// console.log('io', ioScript);
 
-		this.script = workerScript;
+// 		this.script = workerScript;
 
-	}
+// 	}
 
-	compile(code) {
+// 	compile(code) {
 		
-		// code = `\n${code}\n`;
+// 		// code = `\n${code}\n`;
 
-		// code = code.replace(/\n ?import +[^\;|$]+;?[^\n]+/g, match => {
-		// 	const key = trim(match).substr(6).replace(/[^a-zA-Z0-9\_]/g, '');
-		// 	const mod = $modules[key] || `throw "missing module ${key}";`;
-		// 	return `\n${mod}\n`;
-		// });
+// 		// code = code.replace(/\n ?import +[^\;|$]+;?[^\n]+/g, match => {
+// 		// 	const key = trim(match).substr(6).replace(/[^a-zA-Z0-9\_]/g, '');
+// 		// 	const mod = $modules[key] || `throw "missing module ${key}";`;
+// 		// 	return `\n${mod}\n`;
+// 		// });
 
-		// this.script = this.script.replace(/\/{2}__CODE__/, code);
+// 		// this.script = this.script.replace(/\/{2}__CODE__/, code);
 
-		// const lines = code.split(/\n/g);
-		// _.each(lines, line => {
+// 		// const lines = code.split(/\n/g);
+// 		// _.each(lines, line => {
 
-		// 	// check for an import
-		// 	line = _.trim(line);
+// 		// 	// check for an import
+// 		// 	line = _.trim(line);
 
-		// 	if () {
-		// 		console.log('is import', )
-		// 	}
+// 		// 	if () {
+// 		// 		console.log('is import', )
+// 		// 	}
 
-		// });
+// 		// });
 
 
-	}
+// 	}
 
-}
+// }

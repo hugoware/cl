@@ -79,6 +79,24 @@ div, input {
 		@include align_vertical(50px);
 	}
 
+	.line.warn {
+		background: rgba(mix(#F2C52B, #34363D, 50%), 0.66);
+		color: #ffa;
+	}
+
+	.line.error {
+		background: rgba(mix(#DF3B32, #34363D, 50%), 0.66);
+		color: #faa;
+	}
+
+	.line.warn:nth-child(odd) {
+		background: darken(rgba(mix(#F2C52B, #34363D, 50%), 0.66), 7%);
+	}
+
+	.line.error:nth-child(odd) {
+		background: darken(rgba(mix(#DF3B32, #34363D, 50%), 0.66), 7%);
+	}
+
 	.end {
 		font-style: italic;
 		background: darken(#3B3E46, 4%) !important;

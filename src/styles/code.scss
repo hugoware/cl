@@ -1,0 +1,148 @@
+
+@import '_reset';
+@import '_utils';
+@import './app/fonts';
+@import './repl';
+
+html, body {
+	background: #3B3E46;
+}
+
+@mixin logo($scale) {
+	$logo-width: 365px * $scale;
+	$logo-height: 80px * $scale;
+	background: url(/__codelab__/app/header-logo.png);
+	background-size: $logo-width $logo-height;
+	width: $logo-width;
+	height: $logo-height;
+}
+
+#install,
+#intro,
+#program {
+	display: none;
+}
+
+.intro #intro,
+.program #program {
+	display: block;
+}
+
+.logo {
+	@include logo(0.5);
+	display: inline-block;
+}
+
+#avatar {
+	width: 100px;
+	height: 100px;
+	background: rgba(#000, 0.3);
+	border-radius: 100px;
+	display: inline-block;
+
+	svg {
+		width: 80px;
+		height: 80px;
+		position: relative;
+		top: 10px;
+	}
+}
+
+#intro {
+	text-align: center;
+	margin: 10% auto 0 auto;
+	text-shadow: 0 1px 4px rgba(#000, 0.4);
+	width: 400px;
+
+	#avatar {
+		margin-bottom: 15px;
+	}
+
+	.title, .description {
+		font-family: $default-font;
+	}
+
+	.title {
+		font-size: 28px;
+		padding: 0 0 15px 0;
+	}
+
+	.description {
+		font-size: 17px;
+		opacity: 0.6;
+		padding: 0 0 10px 0;
+	}
+
+	.created-by {
+		padding: 0 0 35px 0;
+		font-size: 15px;
+	}
+
+	.actions {
+		padding: 50px 0 0 0;
+	}
+
+	.action {
+		@include align_vertical(60px);
+		font-size: 19px;
+		padding: 0 32px;
+	}
+
+}
+
+.action {
+	font-family: $default-font;
+	font-weight: 600;
+	display: inline-block;
+	cursor: pointer;
+	border-radius: 100px;
+	background: #369CDA;
+
+	@include animate('background, transform');
+
+	&:hover {
+		transform: scale(1.1, 1.1);
+		background: lighten(#369CDA, 10%);
+	}
+}
+
+#program {
+	padding: 100px 0 100px 0;
+
+	.header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		background: rgba(#000, 0.4);
+		padding: 20px;
+		@include clearfix;
+	}
+
+	.logo {
+		float: left;
+		@include logo(0.4);
+	}
+	
+	.about {
+		float: left;
+		padding: 0 0 0 25px;
+		font-family: $default-font;
+		font-size: 20px;
+		margin: 3px 0 0 0;
+		opacity: 0.8;
+	}
+
+	.action {
+		float: right;
+		@include align_vertical(32px);
+		font-size: 16px;
+		padding: 0 18px;
+		display: none;
+	}
+
+}
+
+.is-finished #program .action {
+	display: block;
+}

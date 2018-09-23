@@ -49,8 +49,9 @@ const $config = {
 	},
 
 	scripts: {
-    client: [ 'site', 'app', /* 'viewer', */ 'browser', 'admin', 'repl' ],
-		workers: [ 'pug', 'typescript', 'scss', 'html' ],
+    client: [ 'site', 'app', 'browser', 'admin', 'repl' ],
+    workers: [ 'pug', 'typescript', 'scss', 'html' ],
+		viewers: [ 'code', 'mobile-install' ],
 		server: {
 			watch: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**', ],
 			src: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**'],
@@ -151,6 +152,49 @@ _.each($config.scripts.workers, source => {
   });
 });
 
+
+// setup worker build scripts
+_.each($config.scripts.viewers, source => {
+  const input = `src/client/viewer/${source}/index.js`;
+  const action = `compile-viewer-${source}-scripts`;
+  const watch = `watch-viewer-${source}-scripts`;
+  
+  // compiles the viewer script
+  $gulp.task(action, () => {
+    const output = $gulp.dest(`dist/resources/public`);
+
+    return $browserify(input, {
+      fast: true,
+      cache: { },
+      packageCache: { },
+    })
+    .transform('babelify', {
+      presets: [ 'es2015' ],
+      plugins: [
+        ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
+        'transform-svg-import-to-string',
+        'transform-class-properties',
+        'async-to-promises'
+      ]
+    })
+    // .transform('browserify-shim', {
+    //   global: true,
+    //   'fs': 'global:LFS'
+    // })
+    .bundle()
+    .on('error', displayError)
+    .pipe($source(`${source}.js`))
+    .pipe($buffer())
+    .pipe(output);
+  });
+
+  // setup a watch
+  $gulp.task(watch, () => {
+    $gulp.watch([`src/client/viewer/${source}/**/*.js`], [ action ]);
+  });
+});
+
+
 // handles svg icon cleanup
 $gulp.task('clean-svg-icons', $run('node ./scripts/clean-svg-icons.js'));
 
@@ -244,8 +288,10 @@ $gulp.task('compile-server-scripts', () => {
 _.each(['compile', 'watch'], task => {
   const scriptTasks = _.map($config.scripts.client, source => `${task}-client-${source}-scripts`);
   const workerTasks = _.map($config.scripts.workers, source => `${task}-worker-${source}-scripts`);
+  const viewerTasks = _.map($config.scripts.viewers, source => `${task}-viewer-${source}-scripts`);
   $gulp.task(`${task}-client-scripts`, scriptTasks);
   $gulp.task(`${task}-worker-scripts`, workerTasks);
+  $gulp.task(`${task}-viewer-scripts`, viewerTasks);
 });
 
 
@@ -274,12 +320,12 @@ $gulp.task('watch-svg-icons', () => {
 
 // general tasks
 $gulp.task('compress', [ 'compress-images', 'compress-json', 'compress-css' ]);
-$gulp.task('compile', ['clean-svg-icons', 'copy-views', 'compile-styles', 'compile-client-scripts', 'compile-server-scripts', 'copy-resources']);
-$gulp.task('watch', ['watch-views', 'watch-styles', 'watch-worker-scripts', 'watch-client-scripts', 'watch-resources', 'watch-server-scripts', 'watch-svg-icons']);
+$gulp.task('compile', ['clean-svg-icons', 'copy-views', 'compile-styles', 'compile-viewer-scripts', 'compile-client-scripts', 'compile-server-scripts', 'copy-resources']);
+$gulp.task('watch', ['watch-views', 'watch-styles', 'watch-viewer-scripts', 'watch-worker-scripts', 'watch-client-scripts', 'watch-resources', 'watch-server-scripts', 'watch-svg-icons']);
 
 // full deployment task
 $gulp.task('deploy', done => $sequence(
-  [ 'clean-svg-icons', 'copy-views', 'compile-styles', 'copy-resources', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts' ],
+  [ 'clean-svg-icons', 'copy-views', 'compile-styles', 'copy-resources', 'compile-viewer-scripts', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts' ],
   'compress',
   done 
 ));

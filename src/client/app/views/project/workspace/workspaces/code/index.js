@@ -73,7 +73,6 @@ export default class CodeEditor extends Component {
 
 	// focus selection on the editor, if any
 	onExecutionFinished = () => {
-		console.log('got message');
 		if (!this.isVisible || !this.activeFile) return;
 		this.editor.setFocus();
 	}

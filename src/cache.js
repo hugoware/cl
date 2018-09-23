@@ -20,6 +20,7 @@ $cache.projects = {
 				id: 1,
 				name: 1,
 				type: 1,
+				ownerId: 1,
 				isPublic: 1
 			})
 			.toArray();

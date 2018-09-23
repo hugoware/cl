@@ -118,7 +118,7 @@ export default class ReplMode extends Component {
 	onRunScripts = () => {
 
 		// need to decide correct file -- wait for compile
-		this.bridge.prepare('Running /main.ts ...');
+		this.bridge.load('Running /main.ts ...');
 
 		// wait a moment before starting
 		setTimeout(async () => {
