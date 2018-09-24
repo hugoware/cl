@@ -3,7 +3,7 @@
 
 +template('file-browser-item')
 	.file-browser-item
-		.item
+		.item(tooltip="Double click to activate this item")
 			.toggle
 			.icon
 			.name
@@ -15,7 +15,7 @@
 +template('file-browser-actions')
 	.actions
 		h3 Available Actions
-		.action.create-folder
+		.action.create-folder(tooltip='Creates a new folder in this project')
 			.icon(icon='addFolder')
 			.label Create new folder
 		

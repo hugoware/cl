@@ -13,8 +13,8 @@ import Bluebird from 'bluebird';
 
 // page components
 import Header from './header';
+import Footer from './footer';
 import BackButton from './back';
-// import Footer from './footer';
 
 // sub views
 import HomeView from './views/home'
@@ -68,7 +68,7 @@ class App extends Component {
 
 		this.header = new Header({ $: this.ui.header });
 		this.back = new BackButton({ $: this.ui.back });
-		// this.footer = new Footer({ $: this.ui.footer });
+		this.footer = new Footer({ $: this.ui.footer });
 
 		// sub views
 		this.views = {

@@ -14,7 +14,13 @@ const ROOT = { path: '/' };
 const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py', 'rb'];
 const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 
+const isProd = !/localhost/gi.test(window.location.host);
+
 const $state = {
+
+	// some helpers
+	isProd,
+	isLocal: !isProd,
 
 	/** @type {UserDetail} */
 	user: null,
@@ -76,8 +82,18 @@ const $state = {
 		return _.find($state.files, 'isActive');
 	},
 
+	/** clears all project data and notifies the app */
+	clearProject: () => {
+		$state.project = null;
+		$state.lesson = null;
+		$state.paths = { };
+		$state.items = { };
+		broadcast('deactivate-project');
+	},
+
 	/** checks if any files are currently unsaved */
-	hasUnsavedFiles() {
+	hasUnsavedFiles: () => {
+		if (!$state.project) return false;
 		const { files } = $state;
 		for (const file of files)
 			if (file.modified)
@@ -86,7 +102,7 @@ const $state = {
 	},
 
 	/** opens the current project in a window */
-	openProjectPreviewWindow() {
+	openProjectPreviewWindow: () => {
 		const { project } = $state;
 
 		// without a project, this can't be done
@@ -100,7 +116,7 @@ const $state = {
 
 	/** returns the resource domain for this project
 	 * @returns {string} the root domain to use */
-	getProjectDomain() {
+	getProjectDomain: () => {
 		const { version, project } = $state;
 		const { id } = project;
 		const { protocol, host } = window.location;

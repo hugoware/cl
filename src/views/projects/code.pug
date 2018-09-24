@@ -31,11 +31,12 @@ html
 		include ./mobile-install
 
 		#intro
+			.logo-container
+				a.logo(href="http://codelabschool.com" target='codelab')
 			#avatar(avatar=user.avatar)
 			.title= project.name
 			.description= project.description || 'No program description provided'
 			.created-by Created By #[strong= user.first]
-			a.logo(href="http://codelabschool.com" target='codelab')
 
 			.actions
 				.action.run Run Program

@@ -27,6 +27,8 @@ export default class CreateProjectDialog extends Dialog {
 		this.removeClass('is-preview is-close');
 		this.addClass(`is-${options.reason}`);
 		this.confirm = options.confirm;
+		this.cancel = options.cancel;
+		this.onlyHideOnSaveChanges = !!options.onlyHideOnSaveChanges;
 	}
 
 	// ignore saving changes
@@ -48,6 +50,16 @@ export default class CreateProjectDialog extends Dialog {
 	onSaveAll = () => {
 		if (!this.isVisible) return;
 		this.hide();
+
+		// if this should use the confirm action
+		if (!this.onlyHideOnSaveChanges)
+			this.confirm();
+	}
+
+	// when canceling the request
+	onCancel = () => {
+		if (this.cancel)
+			this.cancel();
 	}
 
 }

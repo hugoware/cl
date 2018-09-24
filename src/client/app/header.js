@@ -7,7 +7,9 @@ export default class Header extends Component {
 
 	// creates the new header
 	constructor(config) {
-		config = _.assign({ }, config, {
+
+		// prepare the component
+		super(config, {
 			ui: {
 				name: '.name',
 				description: '.description',
@@ -16,9 +18,6 @@ export default class Header extends Component {
 				projectSettings: '.settings',
 			}
 		});
-
-		// prepare the component
-		super(config);
 
 		// events
 		this.listen('reset', this.onReset);
@@ -73,6 +72,7 @@ export default class Header extends Component {
 		// if modified, then show a confirmation
 		if (hasModified) {
 			this.broadcast('open-dialog', 'unsaved-changes', {
+				onlyHideOnSaveChanges: true,
 				reason: 'preview',
 				confirm: () => $state.openProjectPreviewWindow()
 			});

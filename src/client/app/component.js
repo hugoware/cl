@@ -152,7 +152,8 @@ export default class Component {
 	/** creates a new Component
 	 * @param {ComponentOptions} options Binding directions for a component
 	 */
-  constructor(options) {
+  constructor(options, extend) {
+		if (extend) options = _.assign({ }, options, extend);
 		
 		// loads from a template
 		let dom;
