@@ -1,0 +1,53 @@
+import _ from 'lodash';
+import $api from '../api';
+import $nav from '../nav';
+
+import Dialog from './';
+import Component from '../component'
+
+export default class CreateProjectDialog extends Dialog {
+
+	constructor() {
+		super({
+			template: 'dialog-unsaved-changes',
+			ui: {
+				ignore: '.ignore'
+			}
+		});
+
+		// listen for saving
+		this.listen('save-all-finished', this.onSaveAll);
+
+		// setup handlers
+		this.ui.ignore.on('click', this.onIgnore);
+	}
+
+	// handle activating the dialog window
+	onActivate = options => {
+		this.removeClass('is-preview is-close');
+		this.addClass(`is-${options.reason}`);
+		this.confirm = options.confirm;
+	}
+
+	// ignore saving changes
+	onIgnore = () => {
+		if (this.busy) return;
+		this.busy = true;
+		this.hide();
+		this.confirm();
+	}
+	
+	// try and save the changes
+	onConfirm = () => {
+		if (this.busy) return;
+		this.busy = true;
+		this.broadcast('save-all');
+	}
+
+	// handles when all files are saved
+	onSaveAll = () => {
+		if (!this.isVisible) return;
+		this.hide();
+	}
+
+}

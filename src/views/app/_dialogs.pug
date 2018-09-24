@@ -216,3 +216,16 @@
 		.actions
 			.action.confirm.danger Reset Lesson
 			.action.cancel Cancel
+
++template('dialog-unsaved-changes')
+	.content(dialog-width='640').unsaved-changes
+		.title Unsaved Changes
+		.message
+			| You have files that haven't been saved yet!
+			span.is-preview  The new window will not show these changes!
+			span.is-closing  Closing the project will cause your changes to be lost!
+
+		.actions
+			.action.confirm.primary Save Changes
+			.action.ignore Continue without Saving
+			.action.cancel Cancel

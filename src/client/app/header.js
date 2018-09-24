@@ -1,6 +1,7 @@
 
 import _ from 'lodash';
 import Component from "./component";
+import $state from './state'
 
 export default class Header extends Component {
 
@@ -67,10 +68,17 @@ export default class Header extends Component {
 
 	// open a new window with the project
 	onClickNewWindow = () => {
-		if (!this.project) return;
-		const { id } = this.project;
-		const { protocol, host } = window.location;
-		window.open(`${protocol}//${id}.${host}`, `__project_${id}`);
+		const hasModified = $state.hasUnsavedFiles();
+
+		// if modified, then show a confirmation
+		if (hasModified) {
+			this.broadcast('open-dialog', 'unsaved-changes', {
+				reason: 'preview',
+				confirm: () => $state.openProjectPreviewWindow()
+			});
+		}
+		else $state.openProjectPreviewWindow();
+
 	}
 
 	// show the project settings dialog

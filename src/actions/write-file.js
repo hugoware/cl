@@ -4,6 +4,8 @@ import $fsx from 'fs-extra';
 import $path from '../path';
 import $database from '../storage/database';
 import $date from '../utils/date';
+import clearProjectCache from '../actions/clear-project-cache';
+import setProjectModified from './set-project-modified';
 
 /** @typedef {Object} WriteFileOptions
  * @prop {boolean} doNotCreateIfMissing throws an exception if the file doesn't already exist
@@ -26,12 +28,20 @@ export default async function writeFile(projectId, path, data, options = { }) {
 			throw 'file_not_found';
 	}
 
+	
 	// since it exists, write the content
 	try {
+		// clean up, if needed
 		await $database.projects.update({ id: projectId }, {
 			$set: { modifiedAt: $date.now() }
 		});
+
+		// write the content
 		await $fsx.outputFile(target, data);
+
+		// finalize
+		setProjectModified(projectId);
+		clearProjectCache(projectId);
 	}
 	catch (err) {
 		log.ex('actions/write-file.js', err);

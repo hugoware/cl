@@ -1,4 +1,5 @@
 import $ from 'cash-dom';
+const MAX_CONSOLE_LINES = 300;
 
 // trims a string
 function trim(str) {
@@ -55,6 +56,7 @@ export default class CodeRunner {
 		__CODELAB__.consoleWarn = this.onConsoleWarn;
 		__CODELAB__.consoleError = this.onConsoleError;
 		__CODELAB__.consolePrompt = this.onConsolePrompt;
+		__CODELAB__.consoleClear = this.onConsoleClear;
 		__CODELAB__.handleException = this.onHandleException;
 
 		// interface for external programs
@@ -91,6 +93,13 @@ export default class CodeRunner {
 	onConsoleLog = (...args) => this.writeOutput('', args)
 	onConsoleWarn = (...args) => this.writeOutput('warn', args)
 	onConsoleError = (...args) => this.writeOutput('error', args)
+
+	// clears all messages
+	onConsoleClear = () => {
+		const output = this.ui.output[0];
+		for (let i = output.children.length; i-- > 1;)
+			output.removeChild(output.children[i]);
+	}
 
 	// listens for exceptions from the code
 	onHandleException = ex => {
@@ -194,6 +203,12 @@ export default class CodeRunner {
 	writeOutput = (style, args) => {
 		args = $.isArray(args) ? args : [args];
 
+		// check if too many appended lines
+		if (++this.totalLines > MAX_CONSOLE_LINES) {
+			const output = this.ui.output[0];
+			output.removeChild(output.children[0]);
+		}
+
 		// create the result
 		const line = document.createElement('div');
 		line.className = `${style || ''} line`;
@@ -213,6 +228,9 @@ export default class CodeRunner {
 
 		// reset the state
 		delete __CODELAB__.onPromptCallback;
+
+		// reset the line count
+		this.totalLines = 0;
 
 		// remove all timers and intervals
 		const { intervals, timeouts } = this.timing.active;

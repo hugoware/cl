@@ -76,6 +76,28 @@ const $state = {
 		return _.find($state.files, 'isActive');
 	},
 
+	/** checks if any files are currently unsaved */
+	hasUnsavedFiles() {
+		const { files } = $state;
+		for (const file of files)
+			if (file.modified)
+				return true;
+		return false;
+	},
+
+	/** opens the current project in a window */
+	openProjectPreviewWindow() {
+		const { project } = $state;
+
+		// without a project, this can't be done
+		if (!project) return;
+
+		// open the window
+		const { id } = project;
+		const { protocol, host } = window.location;
+		window.open(`${protocol}//${id}.${host}`, `__project_${id}`);
+	},
+
 	/** returns the resource domain for this project
 	 * @returns {string} the root domain to use */
 	getProjectDomain() {
@@ -264,6 +286,7 @@ const $state = {
 		// finalize the file changes
 		const file = $state.findItemByPath(path);
 		file.content = content;
+		file.modified = false;
 
 		// version updates
 		$state.updateVersion();

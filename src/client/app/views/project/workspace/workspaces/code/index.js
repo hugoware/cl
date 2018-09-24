@@ -40,6 +40,7 @@ export default class CodeEditor extends Component {
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('rename-item', this.onRenameItem);
 		this.listen('execution-finished', this.onExecutionFinished);
+		this.listen('save-all', this.onSaveAll);
 		this.ui.save.on('click', this.onSaveChanges);
 
 		/** @type {ManagedEditor} */
@@ -86,6 +87,11 @@ export default class CodeEditor extends Component {
 
 	// tries to save all open files
 	onKeyboardShortcutSaveAll = event => {
+		this.saveAll();
+	}
+
+	// tries to save all open files
+	onSaveAll = event => {
 		this.saveAll();
 	}
 
@@ -191,11 +197,14 @@ export default class CodeEditor extends Component {
 				await $state.saveFile(file.path, content);
 			}
 		}
+
+		// handles all files being saved
+		console.log('wants to finish');
+		this.broadcast('save-all-finished');
 	}
 
 	/** handles compiling the current file */
 	compile() {
-		console.log('wants to compile');
 		if (!this.editor.activeInstance) return;
 
 		// try and process the file

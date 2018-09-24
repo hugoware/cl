@@ -30,6 +30,4 @@ CodeRunner.create(instance => {
 	window.addEventListener('preview-message', () => {
 		doc.addClass('is-finished');
 	});
-
-
 });

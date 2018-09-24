@@ -8,6 +8,10 @@ Console.ask = async prompt => {
 	});
 };
 
+Console.clear = async (...args) => {
+	__CODELAB__.consoleClear(...args);
+};
+
 Console.log = async (...args) => {
 	__CODELAB__.consoleLog(...args);
 };

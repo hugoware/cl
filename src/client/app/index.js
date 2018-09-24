@@ -27,7 +27,7 @@ import CreateFolderDialog from './dialogs/create-folder';
 import RemoveItemsDialog from './dialogs/remove-items';
 import RenameItemDialog from './dialogs/rename-item';
 import MoveItemsDialog from './dialogs/move-items'
-import ConfirmCloseDialog from './dialogs/confirm-close';
+import UnsavedChangesDialog from './dialogs/unsaved-changes';
 import UploadFileDialog from './dialogs/upload-file';
 import ShareProjectDialog from './dialogs/share-project';
 import ProjectSettingsDialog from './dialogs/project-settings';
@@ -83,7 +83,7 @@ class App extends Component {
 			createFolder: new CreateFolderDialog(),
 			removeItems: new RemoveItemsDialog(),
 			renameItem: new RenameItemDialog(),
-			confirmClose: new ConfirmCloseDialog(),
+			unsavedChanges: new UnsavedChangesDialog(),
 			moveItems: new MoveItemsDialog(),
 			uploadFile: new UploadFileDialog(),
 			resetLesson: new ResetLessonDialog(),

@@ -1,0 +1,12 @@
+.dialog .unsaved-changes {
+
+	.is-preview, .is-closing {
+		display: none;
+	}
+
+	&.is-preview .is-preview,
+	&.is-closing .is-closing {
+		display: inline;
+	}
+
+}

@@ -4,6 +4,7 @@ import $fsx from 'fs-extra';
 import $path from '../path';
 import { simplifyPathCollection } from '../utils/project';
 import setProjectModified from './set-project-modified';
+import clearProjectCache from './clear-project-cache';
 
 /** Handles removing a file at the provided path
  * @param {string} projectId The project that the files should be removed from
@@ -27,6 +28,7 @@ export default async function removeItems(projectId, items) {
 
 		// since this worked, update the project
 		setProjectModified(projectId);
+		clearProjectCache(projectId);
 
 		return { success: true };
 	}

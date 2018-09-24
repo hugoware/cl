@@ -18,17 +18,24 @@ export default async function handleRequest(request, response, project) {
 	const compiled = $path.resolveCache(`/projects/${id}/compiled.js`);
 
 	// check if already cached
-	// const exists = await $fsx.exists(compiled);
-	const exists = false; // await $fsx.exists(compiled);
+	const exists = await $fsx.exists(compiled);
 
 	// if it's not compiled, then generate it now
 	if (!exists)
 		await compileProject(source, compiled);
 
+	// get the up to date project data
+	const projects = await $database.projects.find({ id: project.id })
+		.project({ name: 1, description: 1 })
+		.toArray();
+
 	// grab the user info
 	const results = await $database.users.find({ id: project.ownerId })
 		.project({ first: 1, avatar: 1, anonymous: 1 })
 		.toArray();
+
+	// use the project
+	project = projects[0] || project;
 
 	// find the owner
 	let user = results[0] || getAnonymous();
