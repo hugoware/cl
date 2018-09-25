@@ -166,6 +166,10 @@ $project-item-accent-gap: 3px;
 	$project-item-padding: 18px;
 	$project-item-icon-margin: 15px;
 
+	&.removed {
+		display: none;
+	}
+
 	.is-new, .is-finished, .in-progress {
 		display: none;
 		float: right;
@@ -202,6 +206,7 @@ $project-item-accent-gap: 3px;
 	border-radius: 5px;
 	position: relative;
 	margin: 0 3% 40px 0;
+	height: 170px;
 
 	@media screen and (max-width: 1500px) {
 		width: 46%;
@@ -229,7 +234,7 @@ $project-item-accent-gap: 3px;
 	&.is-lesson .edit,
 	&.is-lesson.is-new .reset,
 	&.is-lesson .publish {
-		// display: none;
+		display: none;
 	}
 
 	&.is-lesson.is-finished .publish {

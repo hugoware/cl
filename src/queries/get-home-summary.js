@@ -26,7 +26,7 @@ export default async function get(id) {
 				return reject('user_not_found');
 
 			// find all of the user projects
-			const query = { ownerId: id };
+			const query = { ownerId: id, removed: { $not: { $eq: true } } };
 			let results = await $database.projects.find(query)
 				.project({
 					_id: 0,

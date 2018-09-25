@@ -12,13 +12,19 @@ export default class ProjectItem extends Component {
 		});
 
 		this.data = data;
+		this.refresh();		
+	}
+
+	// update the project data
+	refresh() {
+		const { data } = this;
 
 		// set the helper color
 		if (!data.lesson) {
 			const backgroundColor = semiRandomColor(data.id);
 			this.ui.bar.css({ backgroundColor });
 		}
-		
+
 		// populate data
 		this.attr('data-id', data.id);
 		this.addClass(`type-${data.type}`);
@@ -33,7 +39,6 @@ export default class ProjectItem extends Component {
 			'is-project': !data.lesson,
 		});
 
-		
 	}
 
 }

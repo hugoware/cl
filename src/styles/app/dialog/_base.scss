@@ -5,4 +5,26 @@
 		padding : 0 0 7px 0;
 	}
 
+	label {
+		display: block;
+		padding: 15px 0 0 0;
+	}
+	
+	span {
+		display: block;
+		font-weight: bold;
+		font-size: 17px;
+		padding: 0 0 6px 0;
+
+		span {
+			display: inline-block;
+			padding: 0;
+		}
+
+		.optional {
+			opacity: 0.5;
+			font-style: italic;
+		}
+	}
+
 }

@@ -181,7 +181,7 @@
 				.clear Cancel
 
 +template('dialog-share-project')
-	.content(dialog-width='500').share-project
+	.content(dialog-width='600').share-project
 	
 		.title Share Project
 		.message Variety of share options
@@ -191,7 +191,7 @@
 			.action.cancel Cancel
 
 +template('dialog-remove-project')
-	.content(dialog-width='500').remove-project
+	.content(dialog-width='600').remove-project
 		.title Remove Project
 		.message Do you really want to delete this project an all of its files?
 		.error
@@ -201,14 +201,35 @@
 			.action.cancel Cancel
 
 +template('dialog-project-settings')
-	.content(dialog-width='500').project-settings
-		h3 Project Settings
+	.content(dialog-width='600').project-settings
+		.title Project Settings
+
+		.error
+
+		.form
+			label
+				span Project Name
+				.ui-text-input.full
+					input.name
+			
+			label
+				span Description #[span.optional Optional]
+				.ui-text-input.full.multiline
+					textarea.description
+
+			.subtitle Domain Name
+			.message You can add your own domain name so people can browse to your website using. #[a(href='/how-to-domain' target='__custom_domain_name') How to setup your own domain name]
+			label
+				span Domain Name
+				.ui-text-input.full
+					input.domain
 
 		.actions
+			.action.confirm.primary Save Changes
 			.action.cancel Cancel
 
 +template('dialog-reset-lesson')
-	.content(dialog-width='500').reset-lesson
+	.content(dialog-width='600').reset-lesson
 		.title Reset Lesson
 		.message Do you really want to reset this lesson an all of its files?
 		.error

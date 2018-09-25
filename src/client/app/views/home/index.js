@@ -39,6 +39,8 @@ export default class HomeView extends View {
 
 		this.listen('set-avatar', this.onSetAvatar);
 		this.listen('reset-project-item', this.onResetProjectItem);
+		this.listen('remove-project', this.onProjectRemoved);
+		this.listen('edit-project', this.onProjectEdited);
 	}
 
 	/** tests if any projects are found
@@ -64,23 +66,8 @@ export default class HomeView extends View {
 		try {
 			this.data = await $api.request('get-home-summary');
 
-			// remove existing items
-			this.ui.projectList.empty();
-			this.ui.lessonList.empty();
-
-			// add each item
-			_.each({
-				lessons: this.ui.lessonList,
-				projects: this.ui.projectList 
-			}, (list, source) => {
-
-				// add each project item
-				const projects = this.data[source];
-				_.each(projects, project => {
-					const item = new HomeProjectItem(project);
-					item.appendTo(list);
-				});
-			});
+			// update the available items
+			this.refreshProjectLists();
 
 			// set the user stats
 			const { first, avatar } = this.data.user;
@@ -141,27 +128,29 @@ export default class HomeView extends View {
 
 	// tries to remove a project entry
 	onEditProject = async event => {
-		const id = getProjectId(event);
-		this.broadcast('open-dialog', 'project-settings', { id });
+		const data = getProjectData(event, this);
+		this.broadcast('open-dialog', 'project-settings', data);
 		return cancelEvent(event);
 	}
 
 	// tries to remove a project entry
 	onRemoveProject = async event => {
-		const id = getProjectId(event);
-		this.broadcast('open-dialog', 'remove-project', { id });
+		const data = getProjectData(event, this);
+		this.broadcast('open-dialog', 'remove-project', data);
 		return cancelEvent(event);
 	}
 	
+	// displays share options
 	onShareProject = async event => {
-		const id = getProjectId(event);
-		this.broadcast('open-dialog', 'share-project', { id });
+		const data = getProjectData(event, this);
+		this.broadcast('open-dialog', 'share-project', data);
 		return cancelEvent(event);
 	}
 	
+	// displays reset options
 	onResetLesson = async event => {
-		const id = getProjectId(event);
-		this.broadcast('open-dialog', 'reset-lesson', { id });
+		const data = getProjectData(event, this);
+		this.broadcast('open-dialog', 'reset-lesson', data);
 		return cancelEvent(event);
 	}
 
@@ -175,9 +164,54 @@ export default class HomeView extends View {
 		this.setView(this.hasLessons ? 'lessons' : 'no-lessons');
 	}
 
+	// finds and removes a project
+	onProjectRemoved = id => {
+		const removed = this.find(`[data-id="${id}"]`);
+		removed.addClass('removed');
+	}
+
+	// handles when project data is changed
+	onProjectEdited = data => {
+		const element = this.find(`[data-id="${data.id}"]`);
+		const context = Component.getContext(element);
+
+		// update the data then refresh
+		_.assign(context.data, data);
+		context.refresh();
+	}
+
+	// updates the view for project items
+	refreshProjectLists = () => {
+		// remove existing items
+		this.ui.projectList.empty();
+		this.ui.lessonList.empty();
+
+		// add each item
+		_.each({
+			lessons: this.ui.lessonList,
+			projects: this.ui.projectList
+		}, (list, source) => {
+
+			// add each project item
+			const projects = this.data[source];
+			_.each(projects, project => {
+				const item = new HomeProjectItem(project);
+				item.appendTo(list);
+			});
+		});
+	}
+
 }
 
+// finds a project ID
 function getProjectId(event) {
 	const project = Component.locate(event.target, '[data-id]');
 	return project.attr('data-id');
+}
+
+// finds a project data item
+function getProjectData(event, instance) {
+	const id = getProjectId(event);
+	const { projects, lessons } = instance.data;
+	return _.find(projects, { id }) || _.find(lessons, { id });
 }

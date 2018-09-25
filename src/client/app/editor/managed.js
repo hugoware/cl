@@ -126,16 +126,12 @@ export default class ManagedEditor {
 		
 	}
 
-	/** clear all undo actions for the file provided (or active file) 
-	 * @param {string} [path] the file path to use -- default to current
+	/** clear all undo actions for all files
 	*/
 	clearUndoHistory = path => {
-		console.warn('need to be done');
-		// const reset = path ? [_.find(this.instances, )]
-		
-
-		// const session = path ? this.sessions[path] : this.currentSession;
-		// if (session) session.getUndoManager().reset();
+		_.each(this.instances, instance => {
+			instance.session.getUndoManager().reset();
+		});
 	}
 
 	/** sets the focus to the editor
