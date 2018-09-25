@@ -17,7 +17,8 @@ export function applySnippets(slide, lesson) {
 		const type = element.getAttribute('type');
 		const highlight = _.trim(element.getAttribute('highlight')).split(/ +/g);
 		const snippet = lesson.getSnippet(type);
-		$editor.colorize(example, { snippet, highlight });
+		const zones = lesson.zones[type];
+		$editor.colorize(example, { snippet, zones, highlight });
 	});
 
 }

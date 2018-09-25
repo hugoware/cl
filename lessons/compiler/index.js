@@ -4,15 +4,17 @@ import $path from 'path';
 import $fsx from 'fs-extra';
 import $yml from 'js-yaml';
 import $uglify from 'uglify-js';
+import * as $babel from 'babel-core';
 import $dictionary from './dictionary';
 
 // helper
-const IS_PREVIEW = true;
+const IS_PREVIEW = false;
 
 // content importers
 import processSlides from './lesson';
 import processDefinitions from './definition';
 import processSnippets from './snippet'; 
+import processZones from './zones'; 
 
 // reads content from a yml file
 function readYml(target) {
@@ -64,8 +66,6 @@ const slides = _.filter(content, item => 'slide' in item || 'question' in item);
 processDefinitions(state, manifest, definitions);
 processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
 processSlides(state, manifest, slides);
-
-// other saved data
 manifest.zones = zones;
 
 // include all scripts
@@ -79,20 +79,6 @@ for (const file of $fsx.readdirSync(root)) {
 // make sure the destination is there
 $fsx.ensureDirSync(dist);
 
-// populate the template
-template = template.replace(/\$LESSON_ID\$/g, id);
-template = template.replace(/\$LESSON_TYPE\$/g, type);
-template = template.replace(/\$SCRIPTS\$/g, scripts.join('\n\n'));
-template = template.replace(/\$DATA\$/g, JSON.stringify(manifest, null, IS_PREVIEW ? 2 : null));
-
-// create the final result
-const result = IS_PREVIEW ? template: $uglify.minify(template).code;
-
-// copy resources
-console.log('writing content to', dist);
-$fsx.ensureDirSync(dist);
-$fsx.writeFileSync(`${dist}/index.js`, result);
-
 // copy resources, if possible
 console.log('copy resources', `${root}/resources`);
 if ($fsx.existsSync(`${root}/resources`))
@@ -103,7 +89,40 @@ console.log('copy files', `${root}/files`);
 if ($fsx.existsSync(`${root}/files`))
   $fsx.copySync(`${root}/files`, `${dist}/files`);
 
-// also copy this to the dist directory
+// process the zone data which includes copying
+// collapsed content and modifying files
+processZones(manifest, manifest.zones, `${dist}/files`);
+
+// populate the template
+template = template.replace(/\$LESSON_ID\$/g, id);
+template = template.replace(/\$LESSON_TYPE\$/g, type);
+template = template.replace(/\$SCRIPTS\$/g, scripts.join('\n\n'));
+template = template.replace(/\$DATA\$/g, JSON.stringify(manifest, null, IS_PREVIEW ? 2 : null));
+
+// create the final result
+const transformed = $babel.transform(template, {
+  presets: [ 'ES2015' ]
+});
+
+// failing to compile
+if (!transformed.code)
+  throw 'failed to compile code files';
+
+// compress
+let result;
+if (IS_PREVIEW) {
+  result = transformed.code;
+}
+else {
+  const min = $uglify.minify(transformed.code);
+  if (!min.code)
+    throw 'failed to minify code';
+  result = min.code;
+}
+
+// copy resources
+$fsx.ensureDirSync(dist);
+$fsx.writeFileSync(`${dist}/index.js`, result);
 
 // write the manifest summary
 $fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
@@ -111,6 +130,6 @@ $fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
   description: manifest.description,
   type: manifest.type,
 }));
-	
+  
 // notify this is done
 console.log('generated', id);

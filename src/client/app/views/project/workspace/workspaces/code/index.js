@@ -132,7 +132,6 @@ export default class CodeEditor extends Component {
 
 	// queues up changes to the content manager
 	onContentChange = () => {
-		console.log('got it');
 		this.compile();
 	}
 
@@ -165,7 +164,8 @@ export default class CodeEditor extends Component {
 		if (this.busy) return;
 
 		// gather the data
-		const { content, file } = this.editor.activeInstance;
+		const { file } = this.editor.activeInstance;
+		const content = this.editor.getContent(file);
 		const { path } = file;
 
 		// try and update the project data
@@ -191,15 +191,14 @@ export default class CodeEditor extends Component {
 			const item = instances[i];
 			
 			// check for modified file
-			const { session, file } = item;
+			const { file } = item;
 			if (file.modified) {
-				const content = session.getValue();
+				const content = this.editor.getContent(file);
 				await $state.saveFile(file.path, content);
 			}
 		}
 
 		// handles all files being saved
-		console.log('wants to finish');
 		this.broadcast('save-all-finished');
 	}
 
@@ -209,6 +208,7 @@ export default class CodeEditor extends Component {
 
 		// try and process the file
 		const { file, content } = this.editor.activeInstance;
+		file.current = content;
 		this.queueUpdate(file.path, content);
 	}
 

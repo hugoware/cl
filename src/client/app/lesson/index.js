@@ -16,9 +16,20 @@ export default class Lesson {
 	 * @param {string} id the id of the lesson to load
 	 * @returns {Lesson} an instance of a lesson
 	 */
-	static async load(id, state = { }) {
-		const type = await load(id);
-		const instance = new type(state, $state);
+	static async load(project) {
+		const type = await load(project.lesson);
+
+		// get the data
+		const { progress = { } } = project;
+		const { state = { }, modified = [ ] } = progress;
+		const instance = new type(state, project);
+
+		// save additional information that's not
+		// used by the lessons
+		instance.project = project;
+		instance.state = state;
+		instance.modified = modified;
+
 		return new Lesson(instance);
 	}
 
@@ -157,11 +168,7 @@ export default class Lesson {
 
 		// continue to the next lesson
 		await this.go(this.index + 1);
-
-		// save the lesson state
-		const { projectId } = $state;
-		const progress = this.getProgress();
-		await $api.request('set-progress', { projectId, progress });
+		await this.saveProgress();
 	}
 	
 	/** navigates to the previous slide */
@@ -169,6 +176,14 @@ export default class Lesson {
 		const { slide } = this;
 		if (slide && slide.isCheckpoint) return;
 		return await this.go(this.index - 1);
+	}
+
+	/** returns temporary modified file content
+	 * @param {string} path the path of the temp file
+	 */
+	getModified = path => {
+		const modified = _.find(this.instance.modified, { path });
+		return modified ? modified.content : null;
 	}
 
 	/** returns the current progress for this lesson */
@@ -182,8 +197,21 @@ export default class Lesson {
 			.map(file => file.path)
 			.value();
 
+		// grab modified, but unsaved files
+		const modified = [ ];
+		_.each($state.modifiedFiles, file => {
+			modified.push({ path: file.path, content: file.current });
+		});
+
 		// give back the progress info
-		return { index, state, files, activeFile };
+		return { index, state, files, activeFile, modified };
+	}
+
+	/** saves the progress for the current lesson */
+	saveProgress = async () => {
+		const { projectId } = $state;
+		const progress = this.getProgress();
+		return await $api.request('set-progress', { projectId, progress });
 	}
 
 	/** handles clean up */

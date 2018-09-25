@@ -75,6 +75,13 @@ const $state = {
 		return _.filter($state.files, 'isOpen');
 	},
 
+	/** returns a list of all modified files
+	 * @returns {ProjectItem[]} the modified files
+	 */
+	get modifiedFiles() {
+		return _.filter($state.files, 'modified');
+	},
+
 	/** returns the currently active file
 	 * @returns {ProjectItem} the active file
 	 */
@@ -181,8 +188,7 @@ const $state = {
 				}
 
 				// load the lesson info
-				const { state = { } } = project.progress || { };
-				$state.lesson = await Lesson.load(project.lesson, state);
+				$state.lesson = await Lesson.load(project);
 				resolve();
 			}
 			// no lesson to perform

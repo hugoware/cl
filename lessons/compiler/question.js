@@ -22,10 +22,6 @@ export default function processQuestion(state, manifest, question) {
   // format questions, if needed
   question.choices = _.map(question.choices, inlineConvert);
   
-
-  console.log('here', question);	
-	
-
 }
 
 // quick conversion removing paragraphs

@@ -229,7 +229,7 @@ $project-item-accent-gap: 3px;
 	&.is-lesson .edit,
 	&.is-lesson.is-new .reset,
 	&.is-lesson .publish {
-		display: none;
+		// display: none;
 	}
 
 	&.is-lesson.is-finished .publish {

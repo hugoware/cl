@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import $state from '../state';
 import $brace from 'brace';
 import ManagedEditor from './managed';
 const Range = $brace.acequire('ace/range').Range;
@@ -78,7 +79,7 @@ class EditorManager {
 		});
 		
 		// apply the snippet
-		const { snippet, highlight } = options;
+		const { snippet, highlight, zones } = options;
 		const session = $brace.createEditSession(snippet.content, `ace/mode/${snippet.type}`);
 		session.setOptions({ tabSize: 2, useWorker: false });
 		editor.setSession(session);
@@ -86,7 +87,12 @@ class EditorManager {
 		// check for highlighting
 		if (highlight)
 			_.each(highlight, key => {
-				const zone = snippet.zones[key];
+
+				// check for the zone to highlight
+				const zone = zones[key];
+				if (!zone) return;
+
+				// update the markers
 				const { start, end, line } = zone;
 				const range = new Range(start.row, start.col, end.row, end.col);
 				editor.session.addMarker(range, 'snippet-highlight', line ? 'fullLine' : '');

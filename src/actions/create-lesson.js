@@ -18,8 +18,6 @@ export default async function createLesson(lessonId, userId) {
 			.project({ _id: 0, id: 1 })
 			.toArray();
 
-		console.log('found', lessons);
-
 		// no lessons means we need to create it
 		let id;
 		if (lessons.length === 0) {

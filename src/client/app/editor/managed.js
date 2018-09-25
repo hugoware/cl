@@ -4,7 +4,7 @@ import $state from '../state';
 import $brace from 'brace';
 import { cancelEvent } from '../utils';
 import ManagedZone from './zone';
-import { listen } from '../events';
+import { listen , broadcast} from '../events';
 
 // managing text ranges
 const Range = $brace.acequire('ace/range').Range;
@@ -187,7 +187,28 @@ export default class ManagedEditor {
 
 			// create the new file, if needed
 			if (!instance) {
-				const content = await $lfs.read(file.path);
+
+				// determine the content source
+				let content;
+
+				// if this is a lesson, we need to make sure that the file
+				// doesn't have a semi-modified state - This is when the file
+				// is changed because of a collapse/expand, but not saved
+				const { lesson } = $state;
+				if (lesson) {
+					const modified = lesson.getModified(file.path);
+					if (modified) {
+						content = modified;
+
+						// also need to mark it as modified
+						file.modified = true;
+						broadcast('modify-file', file);
+					}
+				}
+
+				// without content, just read it normally
+				if (!content)
+					content = await $lfs.read(file.path);
 
 				// create the session info
 				const syntax = $languages[file.ext] || $languages.plain;
@@ -254,6 +275,24 @@ export default class ManagedEditor {
 		return path
 			? _.find(this.instances, instance => instance.file.path === path)
 			: this.activeInstance;
+	}
+
+	// returns the content for a file, making sure to replace
+	// any collapsed areas before showing the changes
+	getContent = file => {
+		const instance = _.find(this.instances, instance => instance.file.path === file.path);
+		return instance.getValue();
+		// let content = instance.session.getValue();
+
+		// // populate any collapsed zones before saving
+		// _.each(instance.zones, zone => {
+		// 	if (!zone.isCollapsed) return;
+		// 	const index = instance.session.doc.positionToIndex(zone.start)
+		// 	content = content.substr(0, index) + zone.content + content.substr(index);
+		// });
+
+		// // return the filled content
+		// return content;
 	}
 
 }

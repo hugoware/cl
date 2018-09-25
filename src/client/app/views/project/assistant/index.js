@@ -47,6 +47,7 @@ export default class Assistant extends Component {
 		this.listen('next-slide', this.onNext);
 		this.listen('assistant-speak', this.onSpeak);
 		this.listen('lesson-finished', this.onFinishLesson);
+		this.listen('save-file', this.onSaveFile);
 		this.on('click', '.next', this.onNext);
 		this.on('click', '.previous', this.onPrevious);
 
@@ -93,6 +94,11 @@ export default class Assistant extends Component {
 	// hides the popup message
 	onHidePopUp = () => {
 		this.addClass('hide-popup');
+	}
+
+	// sync the lesson state
+	onSaveFile = () => {
+		this.lesson.saveProgress();
 	}
 
 	/** changes the speech enablement mode

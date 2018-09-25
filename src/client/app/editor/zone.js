@@ -16,7 +16,7 @@ export default class ManagedZone {
 
 		// save a few props
 		this.isMultiLine = !!zone.multiline;
-		// this.isHidden = !!zone.hide;
+		this.isCollapsed = !!this.zone.content;
 
 		// create two anchors that act as the start
 		// and end range of a zone
@@ -30,7 +30,7 @@ export default class ManagedZone {
 		this.marker = session.getMarkers()[index];
 		this.marker.clazz = this.base;
 
-		// // stay in sync
+		// stay in sync
 		this.start.on('change', this.update);
 		this.end.on('change', this.update);
 	}
@@ -110,7 +110,6 @@ export default class ManagedZone {
 
 	/** handles displaying the zone */
 	show = () => {
-		console.log('try show');
 		this.isActive = true;
 		this.zone.active = true;
 		this.marker.clazz = this.base + ' show';
@@ -128,7 +127,7 @@ export default class ManagedZone {
 		if (this.isCollapsed) return;
 		this.isCollapsed = true;
 		this.zone.collapsed = true;
-		this.content = this.session.doc.getTextRange(this.range);
+		this.zone.content = this.session.doc.getTextRange(this.range);
 		this.session.remove(this.range);
 	}
 
@@ -137,13 +136,14 @@ export default class ManagedZone {
 		if (!this.isCollapsed) return;
 		this.isCollapsed = false;
 		delete this.zone.collapsed;
-
+		
 		// get the original start
 		const { row, column } = this.start;
 
 		// insert contetn and fix
-		this.session.insert(this.start, this.content);
+		this.session.insert(this.start, this.zone.content);
 		this.start.setPosition(row, column);
+		delete this.zone.content;
 	}
 
 	/** handles updating a zone when the ranges change */

@@ -36,6 +36,24 @@
         padding: 5px;
       }
 
+      #status div.line:after,
+      #status div.collapsed:after {
+        opacity: 0.5;
+        margin-left: 10px;
+      }
+
+      #status div.line:after {
+        content: 'l';
+      }
+
+      #status div.collapsed:after {
+        content: 'c';
+      }
+
+      #status div.line.collapsed:after {
+        content: 'cl';
+      }
+
       #status div:hover {
         background: rgba(255, 255, 255, 0.3);
         cursor: not-allowed;
@@ -134,10 +152,15 @@
         keys.sort();
         _.each(keys, function(key) {
 
+          const item = source[key];
           const element = document.createElement('div');
           element.onclick = function() {
             removeItem(key);
           };
+
+          element.className = '';
+          if (item.collapsed) element.className += ' collapsed';
+          if (item.line) element.className += ' line';
 
           element.innerText = key;
           statusContainer.appendChild(element);
@@ -151,9 +174,11 @@
       // shortcut to open editing
       window.onmouseup = function(event) {
         if (editor.selectionStart === editor.selectionEnd) return;
-        nameInput.className = 'show';
-        nameInput.value = '';
-        nameInput.focus();
+        setTimeout(() => {
+          nameInput.className = 'show';
+          nameInput.value = '';
+          nameInput.focus();
+        }, 250);
       };
 
 
@@ -167,7 +192,23 @@
         // make sure something was input
         var name = (nameInput.value || '').toString().trim();
         if (name == '') return;
-        name = _.snakeCase(name);
+
+        // check for flags
+        let isCollapsed;
+        name = name.replace(/\!(collapse|hide)/gi, () => {
+          isCollapsed = true;
+          return '';
+        });
+
+        // check for flags
+        let isLine;
+        name = name.replace(/\!line/gi, () => {
+          isLine = true;
+          return '';
+        });
+
+        // get the final name
+        name = _.snakeCase(_.trim(name));
 
         // get the indexes and line counts to determine the
         // row and column that this selection falls on
@@ -180,12 +221,29 @@
         var columnStart = linesStart[linesStart.length - 1].length;
         var columnEnd = linesEnd[linesEnd.length - 1].length;
 
+        // check if moving down a line
+        const lines = editor.value.split(/\n/g);
+        if (lines[rowStart].length === columnStart) {
+          columnStart = 0;
+          rowStart += 1;
+        }
+
         // save the index info
         state.content[state.key] = state.content[state.key] || { };
         state.content[state.key][name] = {
           start: { row: rowStart, col: columnStart },
           end: { row: rowEnd, col: columnEnd },
         };
+
+        if (isCollapsed) {
+          state.content[state.key][name].collapsed = true;
+        }
+
+        if (isLine) {
+          state.content[state.key][name].line = true;
+          state.content[state.key][name].start.col = 0;
+          state.content[state.key][name].end.col = 0;
+        }
 
         // write the output
         writeContent();
@@ -198,12 +256,19 @@
         nameInput.focus();
       };
 
+      // no changing the content
+      editor.onkeyup = editor.onkeydown = editor.oninput = function(event) {
+        event.stopPropagation();
+        return false;
+      };
+
       editor.addEventListener('drop', function(event) {
         event.stopPropagation();
         event.preventDefault();
 
         var zoneFile;
         var zoneContent;
+        var zoneFileExists;
 
         // get the file to load
         var file = event.dataTransfer.files[0].path;
@@ -221,13 +286,14 @@
             continue;
           }
 
+          zoneFileExists = true;
           zoneContent = fs.readFileSync(zoneFile).toString();
           break;
         }
 
         // not a file
-        if (!zoneContent) {
-          alert('not a project file with a zone.yml');
+        if (!zoneFileExists) {
+          alert('not a project file with a zones.yml');
           return false;
         }
 
@@ -237,7 +303,7 @@
 
         // get the zone file info
         state.zoneFile = zoneFile;
-        state.content = yml.load(zoneContent);
+        state.content = yml.load(zoneContent) || { };
         editor.value = fs.readFileSync(file).toString();
 
         // also save the key -- remove the starting

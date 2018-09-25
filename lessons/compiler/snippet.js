@@ -39,6 +39,7 @@ export default function processSnippets(state, manifest, relativeTo, ranges, sni
     const path = $path.resolve(relativeTo, fileName);
     snippet.content = _.trim($fsx.readFileSync(path).toString());
     snippet.type = type;
+    delete snippet.zones;
     // snippet.zones = zones;
     // snippet.line = zones.line;
     // delete zones.line;

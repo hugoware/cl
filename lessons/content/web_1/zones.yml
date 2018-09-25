@@ -13,20 +13,28 @@
     end:
       row: 7
       col: 25
-  header_content:
+  paragraph_content:
     start:
-      row: 7
+      row: 9
+      col: 7
+    end:
+      row: 9
+      col: 35
+    collapsed: true
+  body_end_tag:
+    start:
+      row: 11
+      col: 2
+    end:
+      row: 11
+      col: 9
+  body_start_tag:
+    start:
+      row: 5
+      col: 2
+    end:
+      row: 5
       col: 8
-    end:
-      row: 7
-      col: 20
-  page_title:
-    start:
-      row: 3
-      col: 11
-    end:
-      row: 3
-      col: 19
   paragraph_start_tag:
     start:
       row: 9
@@ -41,120 +49,67 @@
     end:
       row: 9
       col: 39
-  paragraph_content:
-    collapsed: true
-    start:
-      row: 9
-      col: 7
-    end:
-      row: 9
-      col: 35
-  head_tag:
-    start:
-      row: 2
-      col: 2
-    end:
-      row: 4
-      col: 9
-  body_tag:
-    start:
-      row: 5
-      col: 2
-    end:
-      row: 11
-      col: 9
-  doctype:
-    start:
-      row: 0
-      col: 0
-    end:
-      row: 0
-      col: 15
-/style.css:
-  css_property_color:
-    start:
-      row: 1
-      col: 2
-    end:
-      row: 1
-      col: 7
-  css_color_value:
-    start:
-      row: 1
-      col: 9
-    end:
-      row: 1
-      col: 12
-  css_color_property:
-    start:
-      row: 1
-      col: 2
-    end:
-      row: 1
-      col: 7
-  css_selector:
-    start:
-      row: 0
-      col: 0
-    end:
-      row: 0
-      col: 4
-  css_rule:
-    start:
-      row: 0
-      col: 0
-    end:
-      row: 2
-      col: 1
-html_tag_example:
-  front_tag:
-    start:
-      row: 0
-      col: 0
-    end:
-      row: 0
-      col: 4
-  end_tag:
-    start:
-      row: 0
-      col: 30
-    end:
-      row: 0
-      col: 35
-  content:
-    start:
-      row: 0
-      col: 4
-    end:
-      row: 0
-      col: 30
 complex_tag:
-  first_tag:
+  main_content:
     start:
       row: 1
-      col: 2
+      col: 6
     end:
       row: 1
+      col: 15
+  paragraph_content:
+    start:
+      row: 2
+      col: 5
+    end:
+      row: 2
+      col: 22
+    collapsed: true
+html_tag_example:
+  main_content:
+    start:
+      row: 0
+      col: 4
+    end:
+      row: 0
+      col: 30
+mary_example:
+  read_file:
+    start:
+      row: 0
+      col: 9
+    end:
+      row: 0
       col: 20
-  second_tag:
+  argument:
     start:
-      row: 2
-      col: 2
+      row: 1
+      col: 14
     end:
-      row: 2
-      col: 26
-  entire_tag:
+      row: 1
+      col: 30
+  function_scope:
     start:
       row: 0
       col: 0
     end:
-      row: 3
-      col: 6
-mary_example:
-  console_example:
+      row: 2
+      col: 0
+    line: true
+  function:
+    start:
+      row: 0
+      col: 9
+    end:
+      row: 0
+      col: 20
+    collapsed: true
+  code_block:
     start:
       row: 1
-      col: 2
+      col: 0
     end:
       row: 1
-      col: 32
+      col: 0
+    collapsed: true
+    line: true

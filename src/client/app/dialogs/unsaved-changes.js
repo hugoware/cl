@@ -1,9 +1,6 @@
 import _ from 'lodash';
-import $api from '../api';
-import $nav from '../nav';
 
 import Dialog from './';
-import Component from '../component'
 
 export default class CreateProjectDialog extends Dialog {
 

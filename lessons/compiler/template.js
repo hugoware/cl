@@ -4,8 +4,6 @@
 	// returns the instance of this lesson
 	function $LESSON_TYPE$Lesson(state, project) {		
     this.data = $DATA$;
-    this.project = project;
-    this.state = state;
 
     // shared library access
     var _ = $LESSON_TYPE$Lesson.lodash;

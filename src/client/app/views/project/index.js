@@ -47,7 +47,9 @@ export default class ProjectView extends View {
 		// helper for making sure changes are saved
 		if ($state.isProd)
 			window.onbeforeunload = () => {
-				if (!$state.hasUnsavedFiles()) return null;
+				
+				// must be able to save file
+				if (!$state.checkPermissions(['SAVE_FILE']) || !$state.hasUnsavedFiles()) return null;
 				return `You have unsaved changes! Are you sure you want to leave?`;
 			};
 	}

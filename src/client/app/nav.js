@@ -41,7 +41,7 @@ class Nav {
 		if (path === this.lastNavigationPath) return;
 
 		// check for unsaved changes first
-		if (this.isProjectView && $state.hasUnsavedFiles())
+		if (this.isProjectView && $state.hasUnsavedFiles() && $state.checkPermissions(['SAVE_FILE']))
 			broadcast('open-dialog', 'unsaved-changes', {
 				reason: 'closing',
 				confirm: () => applyNavigation(this, path),

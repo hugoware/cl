@@ -78,21 +78,22 @@ export default function processSlide(state, manifest, slide) {
 
 			// check if this is hidden
 			if (snippet) {
+
+        commands = _.trim(commands.substr(1, commands.length - 2));
 				const params = commands.split(/:/g);
-				for (let i = 0; i < params.length; i += 2) {
 
-					// gets the key value
-					let key = params[i].split('').reverse().join('');
-					key = key.replace(/ .*/, '');
-					key = key.split('').reverse().join('');
+        // convert to an object
+				for (let i = 1; i < params.length; i++) {
 
-					// get the value
-					let value = params[i+1].split('').reverse().join('');
-					value = value.replace(/^[^ ] /, '');
-					value = value.split('').reverse().join('');
+          const key = _.trim(params[i - 1].match(/[^\s]+$/));
 
-					// special cleanup
-					value = value.replace(/\]$/, '');
+          // if not the last one, remove
+          // the trailing command
+          let value = _.trim(params[i]);
+          if (i !== params.length - 1)
+            value = _.trim(value.replace(/[^\s]+$/, ''));
+
+					// save the property
 					props.push(`${key}="${value}"`);
 				}
 			}
