@@ -27,6 +27,9 @@ export function evaluateSelector(selector) {
 	// be used for actions
 	const commands = {};
 
+	// check for special commands so we can minimize selectors
+	selector = selector.replace(/[a-zA-Z]+\([^\)]*\)( |$)+/g, executeFunctionSelector);
+
 	// remove all special rules that I added
 	selector = selector.replace(/\:{2}[^ $]+/g, match => {
 		match = match.substr(2);
@@ -99,3 +102,36 @@ function getSelectorArray(arg) {
 	arg = _.isArray(arg) ? arg : [arg];
 	return _.compact(arg);
 }
+
+// special commands
+function executeFunctionSelector(str) {
+	const { command, args } = parseFunctionSelector(str);
+
+	// file openn
+	switch(command) {
+		case 'fileOpen':
+			return `.tab-bar .tab[file="${args[0]}"]`;
+
+		case 'fileBrowser':
+			return `#file-browser [file="${args[0]}"]`;
+
+		default:
+			throw 'unknown command';
+	}
+}
+
+
+// special commands
+function parseFunctionSelector(str) {
+	const parts = str.split('(');
+	const command = parts[0];
+
+	// get the arguments
+	let args = parts.slice(1).join('(');
+	args = args.substr(0, args.length - 1);
+	args = _.map(args.split(','), _.trim);
+
+	// check the final
+	return { command, args };
+}
+

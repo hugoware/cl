@@ -11,7 +11,7 @@ const ProjectTypes = {
 // list of allowed project types
 const MIN_NAME_LENGTH = 3;
 const MAX_NAME_LENGTH = 50;
-const MAX_DESCRIPTION_LENGTH = 100;
+const MAX_DESCRIPTION_LENGTH = 255;
 
 /** validates the provided name for a project
  * @param {string} type the requested project type

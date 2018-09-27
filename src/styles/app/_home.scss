@@ -206,7 +206,7 @@ $project-item-accent-gap: 3px;
 	border-radius: 5px;
 	position: relative;
 	margin: 0 3% 40px 0;
-	height: 170px;
+	height: 180px;
 
 	@media screen and (max-width: 1500px) {
 		width: 46%;
@@ -232,12 +232,14 @@ $project-item-accent-gap: 3px;
 	&.is-project .reset,
 	&.is-lesson .remove,
 	&.is-lesson .edit,
+	&.is-lesson .open,
 	&.is-lesson.is-new .reset,
 	&.is-lesson .publish {
 		display: none;
 	}
 
-	&.is-lesson.is-finished .publish {
+	&.is-lesson.is-finished .publish,
+	&.is-lesson.is-finished .open {
 		display: block;
 	}
 
@@ -281,8 +283,9 @@ $project-item-accent-gap: 3px;
 		font-size: $description-font-size;
 		opacity: 0.6;
 		position: relative;
-		height: $description-font-size * 1.9;
-		width: 100%;
+		line-height: 1.3em;
+		height: $description-font-size * 2.4;
+		width: 80%;
 		text-overflow: ellipsis;
 		overflow: hidden;
 
@@ -291,7 +294,7 @@ $project-item-accent-gap: 3px;
 			position: absolute;
 			left: 0;
 			right: 0;
-			top: 0;
+			height: $description-font-size * 1.1;
 			bottom: 0;
 			@include gradient(#fff, rgba(#fff, 0), 0deg);
 		}
@@ -337,11 +340,11 @@ $project-item-accent-gap: 3px;
 				background: #000;
 				border-radius: 4px;
 				position: relative;
-				opacity: 0.2;
+				opacity: 0.25;
 				@include animate('opacity');
 
 				&:hover {
-					opacity: 0.8;
+					opacity: 0.8 !important;
 				}
 
 				svg {
@@ -378,6 +381,15 @@ $project-item-accent-gap: 3px;
 				top: $project-item-action-size + $project-item-action-tooltip-gap;
 			}
 
+		}
+
+
+		.action.remove {
+			margin-left: 35px;
+			
+			.icon {
+				opacity: 0.1;
+			}
 		}
 
 	}

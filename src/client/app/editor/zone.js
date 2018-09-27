@@ -37,6 +37,7 @@ export default class ManagedZone {
 
 	/** checks if a zone edit is allowed or not */
 	allowEdit = (event, range, options) => {
+		if (!this.isEditable) return;
 		
 		// check if this falls within range
 		const { start, end } = this;
@@ -122,6 +123,19 @@ export default class ManagedZone {
 		this.marker.clazz = this.base;
 	}
 
+	/** handles displaying the zone */
+	edit = () => {
+		this.show();
+		this.isEditable = true;
+		this.zone.editable = true;
+	}
+	
+	/** handles hiding a zone */
+	lock = () => {
+		this.isEditable = false;
+		this.zone.editable = false;
+	}
+
 	/** shows the content for a range */
 	collapse = () => {
 		if (this.isCollapsed) return;
@@ -170,6 +184,12 @@ export default class ManagedZone {
 			this.start.setPosition(this.start.row, this.resetColumn);
 			delete this.resetColumn;
 		}
+
+		// check for zone states
+		if (this.isEditable && !this.zone.editable)
+			this.lock();
+		else if (!this.isEditable && this.zone.editable)
+			this.edit();
 
 		// check for visibility changes
 		if (this.isActive && !this.zone.active)

@@ -44,14 +44,14 @@ export async function handle(request, response, next) {
 		return next();
 
 	// make sure it exists first
-	// try {
+	try {
 
 		// perform the request
 		await handler(request, response, project);
-	// }
-	// // failed to read the file
-	// catch (err) {
-	// 	response.send('404');
-	// }
+	}
+	// failed to read the file
+	catch (err) {
+		response.render('projects/missing');
+	}
 
 }

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Component from '../../../component';
-import ComponentList from '../../../component-list';
 import ConsoleMessage from './message';
+import { clear } from '../../../error-manager';
 
 export default class Console extends Component {
 
@@ -16,12 +16,31 @@ export default class Console extends Component {
 			}
 		});
 
+		this.listen('reset', this.onReset);
+		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('project-errors', this.onProjectErrors);
 
 	}
 
+	// clears all errors
+	onDeactivateProject = () => {
+		this.reset();
+	}
+
+	// clears all errors
+	onReset = () => {
+		this.reset();
+	}
+
+	// checks for incoming errors
 	onProjectErrors = result => {
 		this.update(result);
+	}
+
+	/** handles resetting the error console */
+	reset = () => {
+		this.ui.messages.empty();
+		clear();
 	}
 
 	/** @param {ProjectErrorState} result */

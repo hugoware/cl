@@ -6,15 +6,34 @@
     aka: Hyper Text Markup Language
     define: This is the full def
 
+- slide:
+    mode: popup
+    content: |
+      Let's learn about unordered lists
+
+      Start by opening the `index.html` file by double clicking on it
+
+    waitFor:
+      - fileOpen(/index.html)
+
+    highlights:
+      - fileBrowser(/index.html)
+
+    validation:
+      openFile: allowOpenIndexHtml
+
+- slide:
+    mode: popup
+    content: |
+      Great! Now that this file is open, let's look at a few things
+
 -
   slide:
     mode: popup
     title: Creating Web Pages - Part 1
     subtitle: More About Tags
-    checkpoint: true
+    allowBack: true
 
-    validation:
-      openFile: allowOpenIndexHtml
 
     content: |
 
@@ -49,16 +68,23 @@
     #   - .file-browser .create-file ::click
       # - ::validate(isSlideFinished)
       # 
-    zones:
-      /index.html:
-        header_start_tag: show
-        header_end_tag: show
+
+    files:
+      /index.html: lock
+
+    # zones:
+    #   /index.html:
+    #     header_start_tag: edit
+    #     header_end_tag: show
 -
   slide:
     mode: popup
     title: Creating Web Pages - Part 1
     subtitle: More About Tags
     checkpoint: true
+
+    files:
+      /index.html: unlock
 
     content: |
 
@@ -152,7 +178,7 @@
 
     title: What is the name of the `highlighted` block of code?
     content: |
-      [snippet mary_example highlight:console_example]
+      [snippet mary_example]
 
     hint: |
       This is a longer example of what a hint might look like. This is going to span for a period longer than the other items on the page.

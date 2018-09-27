@@ -13,14 +13,6 @@
     end:
       row: 7
       col: 25
-  paragraph_content:
-    start:
-      row: 9
-      col: 7
-    end:
-      row: 9
-      col: 35
-    collapsed: true
   body_end_tag:
     start:
       row: 11
@@ -35,20 +27,14 @@
     end:
       row: 5
       col: 8
-  paragraph_start_tag:
+  list:
     start:
-      row: 9
-      col: 4
+      row: 10
+      col: 6
     end:
-      row: 9
-      col: 7
-  paragraph_end_tag:
-    start:
-      row: 9
-      col: 35
-    end:
-      row: 9
-      col: 39
+      row: 12
+      col: 36
+    collapsed: true
 complex_tag:
   main_content:
     start:

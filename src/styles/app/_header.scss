@@ -100,17 +100,20 @@
 	}
 
 	.detail {
-		min-width: 300px;
 		padding: 22px;
 
 		.type {
 			font-size: 15px;
-			padding: 0 0 5px 0;
+			padding: 0 0 8px 0;
 			opacity: 0.6;
 		}
 
 		.description {
 			font-size: 18px;
+			min-width: 300px;
+			max-width: 400px;
+			white-space: normal;
+			line-height: 1.2em;
 		}
 	}
 

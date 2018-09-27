@@ -58,18 +58,21 @@
 				span(bind='modifiedAt')
 			
 		.actions
-			.action.remove 
-				.icon(icon='actionRemove')
-				.label Remove Project
 			.action.edit 
 				.icon(icon='actionEdit')
 				.label Edit Project
 			.action.reset 
 				.icon(icon='actionReset')
 				.label Reset Lesson
+			.action.open 
+				.icon(icon='actionOpen')
+				.label Open in New Window
 			.action.publish 
 				.icon(icon='actionPublish')
 				.label Share
+			.action.remove 
+				.icon(icon='actionRemove')
+				.label Remove Project
 
 +template('avatar-select')
 	.avatar-select

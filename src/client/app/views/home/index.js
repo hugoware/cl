@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import $api from '../../api';
 import $nav from '../../nav';
+import $state from '../../state';
 import $icon from '../../icons';
 import { cancelEvent } from '../../utils';
 
@@ -30,6 +31,7 @@ export default class HomeView extends View {
 		this.on('click', '.project-item .action.publish', this.onShareProject);
 		this.on('click', '.project-item .action.reset', this.onResetLesson);
 		this.on('click', '.project-item .action.edit', this.onEditProject);
+		this.on('click', '.project-item .action.open', this.onOpenInNewWindow);
 		this.on('click', '.project-item', this.onSelectProject);
 		
 		this.ui.createProject.on('click', this.onCreateProject);
@@ -124,6 +126,14 @@ export default class HomeView extends View {
 		const project = this.find(`[data-id="${id}"]`);
 		project.removeClass('is-finished in-progress');
 		project.addClass('is-new');
+	}
+
+	// tries to remove a project entry
+	onOpenInNewWindow = async event => {
+		const id = getProjectId(event);
+		console.log('try open');
+		$state.openProjectPreviewWindow({ id });
+		return cancelEvent(event);
 	}
 
 	// tries to remove a project entry

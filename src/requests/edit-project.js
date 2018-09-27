@@ -10,6 +10,9 @@ export async function handle(socket, session, data = { }) {
 	const { user } = session;
 	const { id } = data;
 
+	// attach the current user as the owner
+	data.ownerId = user;
+
 	try {
 		// make sure they can access this project
 		const access = await getProjectAccess(id, user);

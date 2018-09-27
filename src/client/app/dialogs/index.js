@@ -69,6 +69,10 @@ export default class Dialog extends Component {
 		
 		// use the UI element hide (don't use the overriden hide function)
 		this.dialog.$.show();
+
+		// check for an error handler
+		if (this.errorMessage)
+			this.errorMessage.clear();
 		
 		// check for an activation function
 		if (this.onActivate)

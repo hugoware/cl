@@ -4,3 +4,22 @@
 		display: none;
 	}
 }
+
+.ace_editor.ace_autocomplete {
+
+	border: 2px solid lighten(#3B3E46, 30%) !important;
+
+	.ace_content .ace_text-layer {
+
+		color: lighten(#3B3E46, 70%);
+
+		.ace_line {
+			font-size: 14.5px;
+		}
+
+		.ace_completion-highlight {
+			color: #2BBDEC;
+		}
+	}
+
+}

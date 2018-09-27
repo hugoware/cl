@@ -82,6 +82,8 @@ function configureBraceResources(instance) {
 		const type = _.trim(request.params[0]).replace(/[^a-z0-9]/g, '');
 		response.sendFile(`${modes}/${type}.js`);
 	});
+
+	instance.app.use('/__codelab__/ace/snippets/', $express.static('./node_modules/brace/snippets'));
 }
 
 // reads parsed form data

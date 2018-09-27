@@ -98,7 +98,7 @@ export default class Assistant extends Component {
 
 	// sync the lesson state
 	onSaveFile = () => {
-		this.lesson.saveProgress();
+		$state.lesson.saveProgress();
 	}
 
 	/** changes the speech enablement mode

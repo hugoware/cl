@@ -87,6 +87,7 @@ export default class ManagedEditor {
 		|| /^selectto(start|end)$/i.test(command.name)
 		|| /^select(up|down)$/i.test(command.name)
 		|| /^selectall$/i.test(command.name)
+		|| /^esc$/i.test(command.name)
 		) return;
 
 		// check for a few command that can't be used in lesson mode - 
@@ -103,9 +104,11 @@ export default class ManagedEditor {
 
 		// check each active zone for editing
 		let allow;
+		let hasActiveZone;
 		const zones = instance.zones || EMPTY_ZONES;
 		for (const id in zones) {
 			const zone = zones[id];
+			hasActiveZone = hasActiveZone || zone.isActive;
 
 			// if any zone allows the edit, assume it's okay
 			if (zone.isActive && zone.allowEdit(event, range, options)) {
@@ -115,8 +118,12 @@ export default class ManagedEditor {
 		}
 		
 		// cancel if not allowed
-		if (!allow)
+		if (hasActiveZone && !allow)
 			return cancelEvent(event);
+
+		// check if the file is locked
+		if (!$state.lesson.canEditFile(instance.file.path))
+			return false;
 		
 		// update the zones
 		setTimeout(() => {
@@ -273,22 +280,14 @@ export default class ManagedEditor {
 			: this.activeInstance;
 	}
 
-	// returns the content for a file, making sure to replace
-	// any collapsed areas before showing the changes
+	/** returns the content for a file, making sure to replace
+	 * any collapsed areas before showing the changes 
+	 * @param {ProjectItem} file the file that should be found
+	 * */
 	getContent = file => {
 		const instance = _.find(this.instances, instance => instance.file.path === file.path);
-		return instance.getValue();
-		// let content = instance.session.getValue();
-
-		// // populate any collapsed zones before saving
-		// _.each(instance.zones, zone => {
-		// 	if (!zone.isCollapsed) return;
-		// 	const index = instance.session.doc.positionToIndex(zone.start)
-		// 	content = content.substr(0, index) + zone.content + content.substr(index);
-		// });
-
-		// // return the filled content
-		// return content;
+		const content = instance.session.getValue();
+		return content;
 	}
 
 }

@@ -13,6 +13,7 @@ export default async function editProject(id, data) {
 	return new Promise(async (resolve, reject) => {
 
 		// format the data first
+		const ownerId = data.ownerId;
 		const name = format.toName(data.name);
 		const description = format.removeExtraSpaces(data.description);
 		const domain = _.trim(data.domain);
@@ -29,6 +30,14 @@ export default async function editProject(id, data) {
 		// if there were any data errors, stop now
 		if (errors.hasErrors)
 			return reject({ success: false, errors });
+
+		// make sure this name isn't already in use
+		const nameExists = await $database.exists($database.projects, {
+			name, ownerId, id: { $not: { $eq: id } }
+		});
+
+		if (nameExists)
+			return reject('name_already_exists');
 
 		// if there's a domain, we need to adjust some stuff
 

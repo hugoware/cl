@@ -109,16 +109,22 @@ const $state = {
 	},
 
 	/** opens the current project in a window */
-	openProjectPreviewWindow: () => {
-		const { project } = $state;
+	openProjectPreviewWindow: ({ id, path = '' } = { }) => {
 
-		// without a project, this can't be done
-		if (!project) return;
+		// without an ID, check for the current project
+		if (!id) {
+			const { project } = $state;
+			
+			// without a project, this can't be done
+			if (!project) return;
+			
+			// get the current project ID
+			id = project.id;
+		}
 
 		// open the window
-		const { id } = project;
 		const { protocol, host } = window.location;
-		window.open(`${protocol}//${id}.${host}`, `__project_${id}`);
+		window.open(`${protocol}//${id}.${host}${path}`, `__project_${id}`);
 	},
 
 	/** returns the resource domain for this project

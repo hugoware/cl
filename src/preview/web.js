@@ -28,7 +28,7 @@ export default async function handleRequest(request, response, project) {
 
 		// check if the view name exists
 		let defaultTo = await getDefault(target);
-
+		
 		// if not, check for an index file in the
 		// same location
 		if (!defaultTo)
@@ -75,17 +75,18 @@ async function getDefault(relativeTo, name = '') {
 
 // check for a 404 page
 async function serve404(source, response, project) {
-
+	
 	// if there wasn't a default document, try one more
 	// time to check and see if there's a usable 404 page
 	const defaultTo = await getDefault(source, '/404');
-
+	
 	// if there's still not a default, then we should
 	// just give up here
+	response.status(404);
 	if (defaultTo)
-		serveFile(defaultTo.target, defaultTo.ext, source, response, project);
+		serveFile(defaultTo.path, defaultTo.ext, source, response, project);
 	else
-		response.send('needs default 404 page', { project });
+		response.render('projects/missing', { project });
 }
 
 
@@ -199,7 +200,6 @@ async function compile(path, source, cache, action) {
 		// handle results
 		thread.on('message', result => finalize(result.content));
 		thread.on('error', err => {
-			console.log('err');
 			finalize('error');
 		});
 

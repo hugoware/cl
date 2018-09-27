@@ -37,6 +37,9 @@ export default class Lesson {
 	constructor(lesson) {
 		this.instance = lesson;
 
+		// lock and unlock states for files
+		this.files = { };
+
 		// by default, start so that a navigation
 		// should happen
 		/** @type {number} the current slide index */
@@ -84,6 +87,13 @@ export default class Lesson {
 	 */
 	get zones() {
 		return this.instance.data.zones;
+	}
+
+	/** checks if a file path is allowed to be edited
+	 * @param {string} path the path to the file
+	 */
+	canEditFile = path => {
+		return this.files[path] !== true;
 	}
 
 	/** returns a snippet by ID */
@@ -264,7 +274,7 @@ function setActiveSlide(lesson, slide) {
 	slide.isWaiting = _.some(wait);
 	slide.isFirst = index === 0;
 	slide.isLast = index === lastIndex;
-	slide.isCheckpoint = slide.checkpoint === true;
+	slide.isCheckpoint = slide.allowBack !== true;
 
 	// let other systems know the slide changed
 	broadcast('slide-changed', this, slide);
@@ -281,10 +291,20 @@ function applySlide(lesson, slide, invert) {
 	if (invert) {
 		_.each(flags.add, key => delete $state.flags[key]);
 		_.each(flags.remove, key => $state.flags[key] = true);
+		_.each(slide.files, (flag, path) => {
+			console.log('alt', path, flag);
+			if (flag === 'lock') lesson.files[path] = false;
+			else if (flag === 'unlock') lesson.files[path] = true;
+		});
 	}
 	else {
 		_.each(flags.add, key => $state.flags[key] = true);
 		_.each(flags.remove, key => delete $state.flags[key]);
+		_.each(slide.files, (flag, path) => {
+			console.log('alt', path, flag);
+			if (flag === 'lock') lesson.files[path] = true;
+			else if (flag === 'unlock') lesson.files[path] = false;
+		});
 	}
 
 	// also broadcast zone updates
@@ -299,6 +319,12 @@ function notifyZoneUpdates(lesson, path, zones, invert) {
 	// update the state for each zone
 	_.each(zones, (state, id) => {
 		const zone = lesson.getZone(path, id);
+		
+		// check the collapse state
+		if (/edit/.test(state))
+			zone.editable = invert ? false : true;
+		else if (/lock/.test(state))
+			zone.editable = invert ? true : false;
 		
 		// check the collapse state
 		if (/collapse/.test(state))

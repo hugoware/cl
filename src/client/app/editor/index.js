@@ -1,8 +1,11 @@
 import _ from 'lodash';
-import $state from '../state';
+import { getCompletions } from './autocomplete';
 import $brace from 'brace';
+import 'brace/ext/language_tools'
+
 import ManagedEditor from './managed';
 const Range = $brace.acequire('ace/range').Range;
+const LanguageTools = $brace.acequire('ace/ext/language_tools');
 
 // validations
 require('brace/mode/html');
@@ -36,19 +39,12 @@ const DEFAULT_OPTIONS = {
 	printMarginColumn: -1
 };
 
-
 // common editor class
 class EditorManager {
 
 	/** waits for the monoaco editor to load */
 	async init() {
 		return Promise.resolve();
-		// const instance = this;
-
-		// // wait for the framework to appear
-		// return new Promise(resolve => {
-		// 	resolve();
-		// });
 	}
 
 	/** creates a new code editor instance
@@ -56,9 +52,9 @@ class EditorManager {
 	 */
 	createInstance(container) {
 		const editor = createEditor(container, {
-			enableBasicAutocompletion: true,
+			enableBasicAutocompletion: true, // [{ getCompletions }],
 			enableSnippets: true,
-			enableLiveAutocompletion: false
+			enableLiveAutocompletion: true
 		});
 
 		// create the editor instance

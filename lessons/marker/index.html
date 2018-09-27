@@ -162,6 +162,9 @@
           if (item.collapsed) element.className += ' collapsed';
           if (item.line) element.className += ' line';
 
+          const detail = `start:${item.start.row}:${item.start.col} -- end:${item.end.row}:${item.end.col}`;
+          element.setAttribute('title', detail);
+
           element.innerText = key;
           statusContainer.appendChild(element);
         });
