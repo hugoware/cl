@@ -450,6 +450,9 @@ function updateZones(instance, options) {
 			ze.column = rev[ze.row].length;
 			updated = true;
 		}
+
+		if (updated)
+			zone.update();
 	
 	}
 

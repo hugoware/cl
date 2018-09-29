@@ -2,18 +2,26 @@
 (function() {
 
 	// returns the instance of this lesson
-	function $LESSON_TYPE$Lesson(state, project) {		
+	function $LESSON_TYPE$Lesson(state, project, utils) {		
     this.data = $DATA$;
 
-    // shared library access
-    var _ = $LESSON_TYPE$Lesson.lodash;
-    var $html = $LESSON_TYPE$Lesson.cheerio;
-    var $ = $LESSON_TYPE$Lesson.jquery;
+    // share imported utils
+    var _ = utils._;
     
     // shared variables
     var $lesson = this;
     var $project = project;
     var $state = state;
+
+    // parses a string of html
+    function $html(str) {
+      return utils.$html((str || '').toString());
+    }
+
+    // a general selector function
+    function $() {
+      return utils.$.apply(utils.$, arguments);
+    }
 
     // shared functions
     function $deny(message, explain) {
@@ -27,6 +35,17 @@
         $lesson.onSpeak({ message, emotion });
     }
 
+    // returns the message to the prior content
+    function $revert() {
+      if (_.isFunction($lesson.onRevert))
+        $lesson.onRevert();
+    }
+
+    // gets a zone
+    function $zone(file, id, asDom) {
+      const html = utils.getZoneContent(file, id);
+      return asDom ? $html(html) : html;
+    }
 
 		// default function for calling
 		this.invoke = function(fallback) {

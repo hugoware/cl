@@ -110,7 +110,7 @@ if (!transformed.code)
 
 // compress
 let result;
-if (IS_PREVIEW) {
+if (!IS_PREVIEW) {
   result = transformed.code;
 }
 else {

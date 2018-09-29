@@ -25,6 +25,13 @@ export default class Slide extends Component {
 		this.hide();
 	}
 
+	/** checks if there's a reverted value already set
+	 * @returns {boolean} there's a revert value
+	 */
+	get hasRevert() {
+		return '_revert' in this;
+	}
+
 	/** handles updating the view with slide content 
 	 * @param {LessonSlide} slide the slide to display
 	*/
@@ -47,8 +54,21 @@ export default class Slide extends Component {
 		applySnippets(this, $state.lesson);
 	}
 
-	// replaces the text for the view
-	setContent = message => {
+	/** restores the old content without speaking it */
+	revert() {
+		this.ui.message.html(this._revert);
+	}
+
+	/** replaces the content for the view
+	 * @param {string} message a markdown themed content message
+	 * @param {boolean} [saveRevert] should this save a revert version 
+	 */
+	setContent = (message, saveRevert) => {
+
+		// save the revert text, if any
+		delete this._revert;
+		if (saveRevert)
+			this._revert = this.ui.message.html();
 		
 		// get rid of the titles
 		this.toggleClassMap({

@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import $ from 'cheerio';
+import $jquery from 'jquery';
 import $state from '../state';
 import $api from '../api';
 import $focus from './focus';
@@ -22,10 +23,19 @@ export default class Lesson {
 		// get the data
 		const { progress = { } } = project;
 		const { state = { }, modified = [ ] } = progress;
-		const instance = new type(state, project);
+		const utils = {
 
-		// save additional information that's not
-		// used by the lessons
+			// libraries
+			_, $: $jquery,
+			$html: str => $cheerio.load(str),
+
+			// other utilities
+			getZoneContent: $state.getZoneContent
+		};
+
+		// create the lesson and save additional information
+		// that's shared in other placed by the lesson
+		const instance = new type(state, project, utils);
 		instance.project = project;
 		instance.state = state;
 		instance.modified = modified;
@@ -94,6 +104,14 @@ export default class Lesson {
 	 */
 	canEditFile = path => {
 		return this.files[path] !== true;
+	}
+
+	/** finds a validator by name for the lesson
+	 * @param {string} key the name of the validator
+	 * @returns {function} the validation function
+	 */
+	getValidator = key => {
+		return this.instance[key];
 	}
 
 	/** returns a snippet by ID */
@@ -256,6 +274,7 @@ function setActiveSlide(lesson, slide) {
 	const { index, lastIndex } = lesson;
 
 	// remove all active highlights
+	$wait.clear();
 	$focus.clear();
 
 	// check for markers

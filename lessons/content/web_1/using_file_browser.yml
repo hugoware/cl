@@ -32,10 +32,16 @@
     content: |
       These are tags that wrap the unordered list
 
+    autoNext: false
+
+    waitFor:
+      - ::event(modify-file, verifyHasMultipleListItems)
+
     zones:
       /index.html:
         ul_start_tag: show
         ul_end_tag: show
+        ul_content: edit
 
 - slide:
     mode: popup

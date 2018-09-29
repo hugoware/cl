@@ -37,6 +37,26 @@ this.onAfterSlideChange = () => {
 
 }
 
+
+let count = 0;
+this.verifyHasMultipleListItems = () => {
+  count++;
+
+  if (((count % 5) === 0)) {
+    $speak('Looks great! Move onto the next step when you are ready');
+  }
+  else {
+    $revert();
+  }
+
+  return ((count % 5) === 0);
+
+  // const html = $zone('/index.html', 'ul_content');
+  // console.log('matched to', html);
+
+};
+
+
 this.verifyFileToDelete = (items) => {
 
   // can delete index

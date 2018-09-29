@@ -47,6 +47,11 @@ const $state = {
 	 */
 	items: { },
 
+	/** current content for files in the editor
+	 * @type {Object<string, string>}
+	 */
+	content: { },
+
 	/** checks if the application is in free mode, meaning not managed by a lesson */
 	get freeMode() {
 		return !$state.lesson
@@ -95,6 +100,7 @@ const $state = {
 		$state.lesson = null;
 		$state.paths = { };
 		$state.items = { };
+		$state.content = { };
 		broadcast('deactivate-project');
 	},
 
@@ -203,6 +209,36 @@ const $state = {
 				resolve();
 			}
 		});
+	},
+
+	/** checks for the current content for a zone */
+	getZoneContent: (path, id) => {
+		const zone = $state.lesson.getZone(path, id);
+		const file = $state.findItemByPath(path);
+		const content = file.current || file.content;
+		const lines = content.split(/\r?\n/);
+
+		// start adding up each line before this zone
+		let start = zone.start.col;
+		let end = zone.end.col;
+		for (let i = 0, total = lines.length; i < total; i++) {
+			const len = lines[i].length + 1; // including the new line
+			
+			// it's adding up before both zones
+			if (zone.start.row > i) {
+				start += len;
+				end += len;
+			}
+			// it's just the last row
+			else if (zone.end.row > i)
+				end += len;
+
+			// no more new lines
+			else break;
+		}
+
+		// return the substring that matches the range
+		return content.substr(start, end - start);
 	},
 
 	// /** finds a project item using an ID

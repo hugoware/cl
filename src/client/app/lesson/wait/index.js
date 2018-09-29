@@ -19,6 +19,7 @@ const $events = [ ];
 
 // tracks the active interval, if any
 let $waiting;
+let $success;
 
 /** handles waiting events for a slide 
  * @param {WaitInstruction} events the events that should be waited for
@@ -27,13 +28,16 @@ export function waitFor(events) {
 	const { instance } = $state.lesson;
 	const { slide } = instance;
 
+	// always clear success
+	$success = false;
+
 	// check each selector value
 	evaluateAllSelectors(events, selector => {
 		const { hasCommands, commands } = selector;
 
 		// determine what to do
 		if ('validate' in commands) {
-			const validation = new WaitForValidation(selector, lesson, slide);
+			const validation = new WaitForValidation(selector, slide);
 			$poll.push(validation);
 		}
 		// there's no commands, so this is waiting for
@@ -44,7 +48,7 @@ export function waitFor(events) {
 		}
 		// for now, this is probably a UI event of some sort
 		else if ('event' in commands || 'click' in commands || 'hover' in commands) {
-			const event = new WaitForEvent(selector, handleSuccess);
+			const event = new WaitForEvent(selector, handleResult);
 			$events.push(event);
 		}
 	});
@@ -75,21 +79,20 @@ export function clear() {
 }
 
 // handle a successful attempt to move to the next slide
-function handleSuccess() {
-	clear();
-	broadcast('next-slide');
+function handleResult(success) {
+	if (success === $success) return;
+	$success = success;
+	broadcast('slide-wait-for-result', success);
 }
-
 
 // evaluate each polled event
 function processQueue() {
 	let success;
 	for (const item of $poll)
-		success = success !== false ? item.validate() : success;
-
+	success = success !== false ? item.validate() : success;
+	
 	// make sure this worked
-	if (success === true)
-		handleSuccess();
+	handleResult(success);
 }
 
 // share functions

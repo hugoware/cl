@@ -31,13 +31,18 @@ export function evaluateSelector(selector) {
 	selector = selector.replace(/[a-zA-Z]+\([^\)]*\)( |$)+/g, executeFunctionSelector);
 
 	// remove all special rules that I added
-	selector = selector.replace(/\:{2}[^ $]+/g, match => {
+	selector = selector.replace(/:{2}[^\(]+\([^\)]*\)( |$)*/g, match => {
 		match = match.substr(2);
 
 		// check for arguments
-		const parts = match.split(/\(|\)/g);
-		const command = parts[0];
-		const args = _.trim(parts[1]).split(/,/g);
+		let command;
+		const parts = match.substr(0, match.length - 1).replace(/^[^\(]+\(/, cmd => {
+			command = cmd.substr(0, cmd.length - 1);
+			return '';
+		});
+
+		// extract all arguments
+		const args = _.trim(parts).split(/ ?, ?/g);
 		commands[command] = args;
 
 		// remove it
@@ -48,7 +53,6 @@ export function evaluateSelector(selector) {
 	selector = _.trim(selector);
 	const hasSelector = _.some(selector);
 	const hasCommands = _.some(commands);
-
 
 	// create the selector instance
 	const instance = {
@@ -116,7 +120,7 @@ function executeFunctionSelector(str) {
 			return `#file-browser [file="${args[0]}"]`;
 
 		default:
-			throw 'unknown command';
+			return str;
 	}
 }
 

@@ -100,11 +100,11 @@ export default async function getWorker({ name, file }) {
 	if (file) name = getWorkerForFile(file);
 
 	// no worker required for this file
-	console.log('get worker', name);
 	if (!$workers[name])
-		return null;
-
+	return null;
+	
 	// load the worker
+	console.log('load worker:', name);
 	return new Promise(async (resolve) => {
 
 		// check the cache first

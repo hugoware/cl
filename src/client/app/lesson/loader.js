@@ -1,6 +1,4 @@
 import _ from 'lodash';
-import $cherrio from 'cheerio';
-import $jquery from 'jquery';
 
 // shared lesson cache
 const $lessons = { };
@@ -10,14 +8,7 @@ const TIME_PER_INTERVAL = 500;
 
 // handles saving a script registration
 function registerLesson(id, lesson) {
-	console.log('wants to register', id);
-
-	// share libs
-	lesson.lodash = _;
-	lesson.cherrio = $cherrio;
-	lesson.jquery = $jquery;
-
-	// save the lesson
+	console.log('register lesson:', id);
 	$lessons[id] = lesson;
 }
 

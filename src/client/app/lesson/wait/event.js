@@ -1,4 +1,6 @@
 import $ from 'jquery';
+import $state from '../../state';
+import { listen, remove } from '../../events';
 const $context = $(document.body);
 
 // waits for a user interaction
@@ -18,6 +20,9 @@ export default class UserEvent {
 		// setup click events
 		else if (selector.commands.click)
 			setupClick(this);
+
+		// setup a global listener
+		else setupEvent(this);
 	}
 
 	// clean up - if any
@@ -25,8 +30,43 @@ export default class UserEvent {
 		$context.off('mouseover.wait');
 		$context.off('mouseout.wait');
 		$context.off('click.wait');
+
+		// clear any timers
+		clearTimeout(this.__debounce);
+
+		// check for alt events
+		remove(this.__disposeListener);
+		delete this.__disposeListener;
 	}
 
+}
+
+// setup a custom event handler
+function setupEvent(instance) {
+	const { onSuccess, selector } = instance;
+	const { commands } = selector;
+
+	// find the validation action
+	const event = commands.event[0];
+	const validator = commands.event[1];
+	const debounce = 0 | (commands.event[2] || 0);
+	const action = $state.lesson.getValidator(validator);
+	
+	// handles validation
+	instance.onValidation = (...args) => {
+
+		// perform with a delay to allow anything to catch up
+		clearTimeout(instance.__debounce);
+		instance.__debounce = setTimeout(() => {
+
+			// check the validation
+			const success = action.apply($state.lesson.instance, args);
+			onSuccess(success);
+		}, debounce);
+	};
+
+	// wait for this event
+	instance.__disposeListener = listen(event, instance.onValidation);
 }
 
 // wait for simple click events

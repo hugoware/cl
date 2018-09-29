@@ -44,7 +44,7 @@ export default class Assistant extends Component {
 		this.listen('reset', this.onReset);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
-		this.listen('next-slide', this.onNext);
+		this.listen('slide-wait-for-result', this.onSlideWaitForResult);
 		this.listen('assistant-speak', this.onSpeak);
 		this.listen('lesson-finished', this.onFinishLesson);
 		this.listen('save-file', this.onSaveFile);
@@ -67,6 +67,18 @@ export default class Assistant extends Component {
 	get view() {
 		const { slide } = $state.lesson;
 		return slide.isQuestion ? this.views.question : this.views.slide
+	}
+
+	// decides what to do with a result
+	onSlideWaitForResult = success => {
+		
+		// just enable/disable the next button
+		if ($state.lesson.slide.autoNext === false)
+			this.toggleClass('is-waiting', !success);
+
+		// go to the next slide
+		else if (success)
+			this.onNext();
 	}
 
 	// enables speech
@@ -136,6 +148,7 @@ export default class Assistant extends Component {
 
 		// set the speech handler
 		$state.lesson.instance.onSpeak = this.onSpeak;
+		$state.lesson.instance.onRevert = this.onRevert;
 
 		// check for existing progress
 		let index = 0;
@@ -238,6 +251,11 @@ export default class Assistant extends Component {
 		this.speak(slide.speak);
 	}
 
+	// returns the message to the original state
+	onRevert = () => {
+		this.views.slide.revert();
+	}
+
 	// listens for extra speech events
 	onSpeak = (options = { }) => {
 		const message = _.trim(options.message);
@@ -248,17 +266,25 @@ export default class Assistant extends Component {
 		this.views.question.hide();
 		this.views.slide.show();
 
+		// check if there's a revert value -- this means
+		// we're bouncing between success and completion messages
+		// so we shouldn't speak too many times
+		const allowSpeech = !this.views.slide.hasRevert;
+
 		// TODO: this is kinda ugly -- to get the formatted
 		// text we're grabbing the text value from the node
 		// update the slide content
 		// replace the content
-		this.views.slide.setContent(message);
-		const speak = this.views.slide.ui.message.text();
-		this.speak([ speak ]);
+		this.views.slide.setContent(message, true);
 
 		// speak and update the emotion, if any
 		if ('emotion' in options)
 			this.setEmotion(options.emotion);
+
+		// check if speaking
+		if (!allowSpeech) return;
+		const speak = this.views.slide.ui.message.text();
+		this.speak([ speak ]);
 	}
 
 	/** replaces the emotion for the assistant
