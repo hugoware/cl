@@ -27,6 +27,37 @@
     content: |
       Great! Now that this file is open, let's look at a few things
 
+- slide:
+    mode: popup
+    content: |
+      These are tags that wrap the unordered list
+
+    zones:
+      /index.html:
+        ul_start_tag: show
+        ul_end_tag: show
+
+- slide:
+    mode: popup
+    content: |
+      This is the contents that go inside
+
+    zones:
+      /index.html:
+        ul_start_tag: edit
+        ul_end_tag: edit
+        ul_content: expand
+
+- slide:
+    mode: popup
+    content: |
+      Let's insert another item in the list
+
+    zones:
+      /index.html:
+        ul_content: edit
+
+
 -
   slide:
     mode: popup

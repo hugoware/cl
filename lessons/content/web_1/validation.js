@@ -1,5 +1,5 @@
 
-function allowOpenIndexHtml(file) {
+this.allowOpenIndexHtml = file => {
   console.log('checking for index.html', file);
   // state.allowFile = true;
 
@@ -22,22 +22,22 @@ function allowOpenIndexHtml(file) {
 
 }
 
-function didOpenMainCSS(file) {
+this.didOpenMainCSS = file => {
 
 
 }
 
 
-function onBeforeSlideChange() {
+this.onBeforeSlideChange = () => {
 	
 
 }
 
-function onAfterSlideChange() {
+this.onAfterSlideChange = () => {
 
 }
 
-function verifyFileToDelete(items) {
+this.verifyFileToDelete = (items) => {
 
   // can delete index
   if (_.size(items) === 1 && items[0] === '/index.html')
@@ -50,7 +50,7 @@ function verifyFileToDelete(items) {
   return false;
 }
 
-function verifyHtmlEditResult() {
+this.verifyHtmlEditResult = () => {
   $state.hello = true
 	console.log('got this', this.state);
 }

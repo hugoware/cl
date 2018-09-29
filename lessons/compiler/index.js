@@ -132,4 +132,4 @@ $fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
 }));
   
 // notify this is done
-console.log('generated', id);
+console.log('generated', JSON.stringify(manifest, null, 2));

@@ -40,6 +40,7 @@ export default class CodeEditor extends Component {
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('rename-item', this.onRenameItem);
 		this.listen('execution-finished', this.onExecutionFinished);
+		this.listen('slide-changed', this.onSlideChanged);
 		this.listen('save-all', this.onSaveAll);
 		this.ui.save.on('click', this.onSaveChanges);
 
@@ -70,6 +71,11 @@ export default class CodeEditor extends Component {
 	 */
 	get activeFile() {
 		return this.activeInstance && this.editor.activeInstance.file;
+	}
+
+	// make sure to refresh when slides change
+	onSlideChanged = () => {
+		this.editor.editor.resize(true);
 	}
 
 	// focus selection on the editor, if any

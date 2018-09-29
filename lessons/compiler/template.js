@@ -29,13 +29,18 @@
 
 
 		// default function for calling
-		this.invoke = function() {
+		this.invoke = function(fallback) {
 			var args = [].slice.call(arguments);
-			var action = eval(args.shift());
+      var action = this[args.shift()];
 
 			// calls the function, if it exists
-			if (typeof action === 'function')
-				return action.apply(this, args);	
+      try {
+        if (typeof action === 'function')
+          return action.apply(this, args);
+      }
+      catch (err) {
+        return fallback || null;
+      }
 		}
 
 		// attach required scripts

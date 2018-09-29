@@ -15,99 +15,133 @@ export default class ManagedZone {
 		this.base = `zone zone-${id}`;
 
 		// save a few props
-		this.isMultiLine = !!zone.multiline;
+		this.isMultiLine = !!zone.line;
 		this.isCollapsed = !!this.zone.content;
 
 		// create two anchors that act as the start
 		// and end range of a zone
 		const { start, end } = zone;
-		this.start = new Anchor(session.doc, start.row, start.col);
-		this.end = new Anchor(session.doc, end.row, end.col);
 		this.range = new Range(start.row, start.col, end.row, end.col);
 
 		// capture the marker
 		const index = session.addMarker(this.range);
 		this.marker = session.getMarkers()[index];
 		this.marker.clazz = this.base;
-
-		// stay in sync
-		this.start.on('change', this.update);
-		this.end.on('change', this.update);
 	}
 
-	/** checks if a zone edit is allowed or not */
-	allowEdit = (event, range, options) => {
-		if (!this.isEditable) return;
+	// /** checks if a zone edit is allowed or not */
+	// allowEdit = (event, range) => {
+	// 	if (!this.isEditable) return;
 		
-		// check if this falls within range
-		const { start, end } = this;
+	// 	// check if this falls within range
+	// 	const { start, end } = this;
 
-		// create fake indexes
-		const SHIFT = 1000000;
-		const rangeStart = (range.start.row * SHIFT) + range.start.column;
-		const rangeEnd = (range.end.row * SHIFT) + range.end.column;
-		const zoneStart = (start.row * SHIFT) + start.column;
-		const zoneEnd = (end.row * SHIFT) + end.column;
-		const inRange = rangeStart >= zoneStart && rangeEnd <= zoneEnd;
+	// 	// create fake indexes
+	// 	const SHIFT = 1000000;
+	// 	let rangeStart = range.start.row;
+	// 	let rangeEnd = range.end.row;
+	// 	let zoneStart = start.row;
+	// 	let zoneEnd = end.row;
 
-		// if it's not in range, quit now
-		if (!inRange) return;
+	// 	// adjust if this is a line
+	// 	if (!this.isMultiLine) {
+	// 		rangeStart = (rangeStart * SHIFT) + range.start.column;
+	// 		rangeEnd = (rangeEnd * SHIFT) + range.end.column;
+	// 		zoneStart = (zoneStart * SHIFT) + start.column;
+	// 		zoneEnd = (zoneEnd * SHIFT) + end.column;
+	// 	}
 
-		// get some range info
-		const command = event.command.name;
-		const startAtStart = start.column === range.start.column && start.row === range.start.row;
-		const endAtStart = start.column === range.end.column && start.row === range.end.row;
-		const startAtEnd = end.column === range.start.column && end.row === range.start.row;
-		const endAtEnd = end.column === range.end.column && end.row === range.end.row;
-		const entireSelection = startAtStart && endAtEnd;
+	// 	// test the range
+	// 	const inRange = rangeStart >= zoneStart && rangeEnd <= zoneEnd;
+
 		
-		// trying to delete the value
-		if (/backspace/i.test(command)) {
+	// 	console.log('range:', inRange);
 
-			// mark this as empty so we can display
-			// a range of characters even though it's empty
-			if (entireSelection)
-				this.isEmpty = true;
+	// 	// if it's not in range, quit now
+	// 	if (!inRange) return;
 
-			// can't delete from the start of the selection
-			if (endAtStart)
-				return false;
+	// 	// get some range info
+	// 	const command = event.command.name;
+	// 	let startAtStart = start.row === range.start.row;
+	// 	let endAtStart = start.row === range.end.row;
+	// 	let startAtEnd = end.row === range.start.row;
+	// 	let endAtEnd = end.row === range.end.row;
 
-		}
+	// 	if (!this.isMultiLine) {	
+	// 		startAtStart = start.column === range.start.column && start.row === range.start.row;
+	// 		endAtStart = start.column === range.end.column && start.row === range.end.row;
+	// 		startAtEnd = end.column === range.start.column && end.row === range.start.row;
+	// 		endAtEnd = end.column === range.end.column && end.row === range.end.row;
+	// 	}
 
-		// using the delete
-		else if (/del/i.test(command)) {
+	// 	const entireSelection = startAtStart && endAtEnd;
+		
+	// 	// trying to delete the value
+	// 	if (/backspace/i.test(command)) {
 
-			// mark this as empty so we can display
-			// a range of characters even though it's empty
-			if (entireSelection)
-				this.isEmpty = true;
+	// 		// we always need the columns for this
+	// 		startAtStart = start.column === range.start.column && start.row === range.start.row;
+	// 		endAtStart = start.column === range.end.column && start.row === range.end.row;
 
-			// trying to delete the characters beyond the end
-			// by using the del hey
-			if (startAtEnd)
-				return false;
-		}
+	// 		// check if trying to delete out of the area
+	// 		if (startAtStart || endAtStart)
+	// 			return false;
 
-		// checking for adding characters
-		else if (/insert/i.test(command)) {
+	// 		// mark this as empty so we can display
+	// 		// a range of characters even though it's empty
+	// 		if (entireSelection)
+	// 			this.isEmpty = true;
+	// 	}
 
-			// if this doesn't allow more than one line, check for newlines
-			if (!this.isMultiLine) {
-				const newline = this.session.doc.getNewLineCharacter();
-				if (event.args.indexOf(newline) > -1)
-					return false;
-			}
+	// 	// using the delete
+	// 	else if (/del/i.test(command)) {
 
-			// inserting a new character before the start anchor
-			if (startAtStart)
-				this.resetColumn = start.column;
+	// 		// mark this as empty so we can display
+	// 		// a range of characters even though it's empty
+	// 		if (entireSelection)
+	// 			this.isEmpty = true;
 
-		}
+	// 		// trying to delete the characters beyond the end
+	// 		// by using the del hey
+	// 		if (startAtEnd)
+	// 			return false;
+	// 	}
 
-		// good to go
-		return true;
-	}
+	// 	// checking for adding characters
+	// 	else if (/insert/i.test(command)) {
+
+	// 		// has newline
+	// 		const newline = this.session.doc.getNewLineCharacter();
+	// 		const total = (event.args.split(newline).length) - 1;
+	// 		const hasNewlines = total > 0;
+
+	// 		console.log('inserting', hasNewlines, total);
+
+	// 		// if this doesn't allow more than one line, check for newlines
+	// 		if (!this.isMultiLine && hasNewlines) {
+	// 			return false;
+	// 		}
+	// 		// asjust
+	// 		else if (this.isMultiLine && hasNewlines && (startAtEnd || endAtEnd)) {
+	// 			this.resetRow = end.row + 0.5;
+	// 			// return false;
+	// 			// console.log('move end');
+	// 			// setTimeout(() => {
+	// 			// 	end.setPosition(end.row, end.column);
+	// 			// 	// this.sync(true);
+	// 			// });
+	// 		}
+
+	// 		// inserting a new character before the start anchor
+	// 		if (startAtStart)
+	// 			this.resetColumn = start.column;
+
+	// 	}
+
+	// 	// good to go
+	// 	setTimeout(this.sync);
+	// 	return true;
+	// }
 
 	/** handles displaying the zone */
 	show = () => {
@@ -162,11 +196,11 @@ export default class ManagedZone {
 
 	/** handles updating a zone when the ranges change */
 	update = () => {
-		const { zone, range, start, end } = this;
-		zone.start.row = range.start.row = start.row;
-		zone.start.col = range.start.column = start.column;
-		zone.end.row = range.end.row = end.row;
-		zone.end.col = range.end.column = end.column;
+		const { zone, range } = this;
+		zone.start.row = range.start.row
+		zone.start.col = range.start.column
+		zone.end.row = range.end.row
+		zone.end.col = range.end.column
 
 		// match styling
 		const multiline = zone.start.row !== zone.end.row;
@@ -175,15 +209,8 @@ export default class ManagedZone {
 
 	/** extra function to ensure that apply any extra changes to a zone to
 	 * make sure they're aligned correctly
-	 * @param {boolean} [autoUpdate] calls update at the end of syncing
 	 */
-	sync = autoUpdate => {
-
-		// check if resetting the start position
-		if ('resetColumn' in this) {
-			this.start.setPosition(this.start.row, this.resetColumn);
-			delete this.resetColumn;
-		}
+	sync = () => {
 
 		// check for zone states
 		if (this.isEditable && !this.zone.editable)
@@ -203,16 +230,9 @@ export default class ManagedZone {
 		else if (this.isCollapsed && !this.zone.collapsed)
 			this.expand();
 
-		// sync the view
-		if (!!autoUpdate)
-			this.update();
+		// sync styles and columns
+		this.update();
 
-	}
-
-	/** removes a zone from action */
-	dispose = () => {
-		this.start.detach();
-		this.end.detach();
 	}
 
 }

@@ -115,7 +115,6 @@
 
 
     <script type="text/javascript" >
-
       var path = require('path');
       var fs = require('fs');
       var yml = require('js-yaml');
@@ -198,7 +197,7 @@
 
         // check for flags
         let isCollapsed;
-        name = name.replace(/\!(collapse|hide)/gi, () => {
+        name = name.replace(/\!(collapsed?|hide)/gi, () => {
           isCollapsed = true;
           return '';
         });
@@ -242,10 +241,10 @@
           state.content[state.key][name].collapsed = true;
         }
 
-        if (isLine) {
+        if (isLine || rowStart !== rowEnd) {
           state.content[state.key][name].line = true;
-          state.content[state.key][name].start.col = 0;
-          state.content[state.key][name].end.col = 0;
+          // state.content[state.key][name].start.col = 0;
+          // state.content[state.key][name].end.col = 0;
         }
 
         // write the output
@@ -261,20 +260,42 @@
 
       // no changing the content
       editor.onkeyup = editor.onkeydown = editor.oninput = function(event) {
+
+        // open dialog
+        if (event.keyCode === 79 && event.metaKey)
+          openDialog();
+
         event.stopPropagation();
         return false;
       };
+
+
+      function openDialog() {
+        const { dialog } = require('electron').remote;
+        const paths = dialog.showOpenDialog({ properties: ['openFile'] });
+        if (paths.length === 0) return;
+        setTimeout(() => openFile(paths[0]));
+        return false;
+      }
+
 
       editor.addEventListener('drop', function(event) {
         event.stopPropagation();
         event.preventDefault();
 
-        var zoneFile;
-        var zoneContent;
-        var zoneFileExists;
 
         // get the file to load
         var file = event.dataTransfer.files[0].path;
+        setTimeout(() => openFile(file));
+        return false;
+      });
+
+
+      // opens a new files
+      function openFile(file) {
+        var zoneFile;
+        var zoneContent;
+        var zoneFileExists;
         var dir = path.dirname(file);
 
         // search directories upwards to find the
@@ -331,7 +352,7 @@
         setTimeout(function() { editor.focus(); }, 1);
 
         return false;
-      });
+      };
 
     </script>
   </body>

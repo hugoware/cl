@@ -33,9 +33,10 @@ export default class Highlight {
 
 		const { selector } = this;
 		const bounds = selector.getBounds();
-		const { left, top, width, height } = bounds;
+		if (!bounds) return;
 
 		// update the position
+		const { left, top, width, height } = bounds;
 		this.highlight.offset({ left, top });
 		this.highlight.height(height);
 		this.highlight.width(width);

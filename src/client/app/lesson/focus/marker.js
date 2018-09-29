@@ -39,6 +39,7 @@ export default class Marker {
 		const { selector } = this;
 		const { center } = selector.commands;
 		const bounds = selector.getBounds();
+		if (!bounds) return;
 
 		// calculate positions
 		let left = center ? bounds.cx : bounds.left;

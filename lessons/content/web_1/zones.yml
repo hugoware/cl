@@ -1,40 +1,26 @@
 /index.html:
-  header_start_tag:
+  ul_start_tag:
     start:
-      row: 7
+      row: 9
       col: 4
     end:
-      row: 7
+      row: 9
       col: 8
-  header_end_tag:
+  ul_end_tag:
     start:
-      row: 7
-      col: 20
+      row: 13
+      col: 4
     end:
-      row: 7
-      col: 25
-  body_end_tag:
-    start:
-      row: 11
-      col: 2
-    end:
-      row: 11
+      row: 13
       col: 9
-  body_start_tag:
-    start:
-      row: 5
-      col: 2
-    end:
-      row: 5
-      col: 8
-  list:
+  ul_content:
     start:
       row: 10
-      col: 6
+      col: 0
     end:
       row: 12
       col: 36
-    collapsed: true
+    line: true
 complex_tag:
   main_content:
     start:

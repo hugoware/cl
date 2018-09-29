@@ -11,6 +11,7 @@ const Range = $brace.acequire('ace/range').Range;
 
 // empty collection
 const EMPTY_ZONES = { };
+const ROW_OFFSET = 1000000;
 
 // default options for new sessions
 const SESSION_OPTIONS = {
@@ -59,78 +60,87 @@ export default class ManagedEditor {
 	}
 
 	// handles changing between lessons
-	onSlideChanged = (lesson, slide) => {
+	onSlideChanged = () => {
 		this.syncZones(this.activeInstance);
 	}
 
 	// handle command requests
 	onExecuteCommand = event => {
-
+		
 		// can freely edit files
 		if (!$state.lesson || $state.freeMode)
 			return true;
-		
+			
 		// make sure there's an instance to work with
 		const { command = { } } = event;
 		const instance = this.activeInstance;
 		if (!instance) return true;
+
+		console.log('managed:', event.command.name, event);
 		
 		// keyboard nav is allowed always
 		if (/^goto(left|right)$/i.test(command.name)
-		|| /^goline(down|up)$/i.test(command.name)
-		|| /^goto(line|word)(left|right)$/i.test(command.name)
-		|| /^select(left|right)$/i.test(command.name)
-		|| /^selectword(left|right)$/i.test(command.name)
-		|| /^selecttoline(start|end)$/i.test(command.name)
-		|| /^gotoline(start|end)$/i.test(command.name)
-		|| /^goto(start|end)$/i.test(command.name)
-		|| /^selectto(start|end)$/i.test(command.name)
-		|| /^select(up|down)$/i.test(command.name)
-		|| /^selectall$/i.test(command.name)
-		|| /^esc$/i.test(command.name)
-		) return;
+			|| /^goline(down|up)$/i.test(command.name)
+			|| /^goto(line|word)(left|right)$/i.test(command.name)
+			|| /^select(left|right)$/i.test(command.name)
+			|| /^selectword(left|right)$/i.test(command.name)
+			|| /^selecttoline(start|end)$/i.test(command.name)
+			|| /^gotoline(start|end)$/i.test(command.name)
+			|| /^goto(start|end)$/i.test(command.name)
+			|| /^selectto(start|end)$/i.test(command.name)
+			|| /^select(up|down)$/i.test(command.name)
+			|| /^selectall$/i.test(command.name)
+			|| /^esc$/i.test(command.name)
+			) return;
 
 		// check for a few command that can't be used in lesson mode - 
 		// work on fixing these later
 		if (/(removeword|removeline|copylines|removeto|movelines|splitline)/i.test(command.name))
 			return cancelEvent(event);
+
+		// make sure the file can even be changed
+		const canEditFile = $state.lesson.canEditFile(instance.file.path);
 		
 		// check the key used
-		const range = this.editor.getSelectionRange();
+		const zones = instance.zones || EMPTY_ZONES;
+		
+		// without zones, just use the file status
+		if (zones.length === 0)
+			return !canEditFile ? cancelEvent(event) : true;
+
+		// gather up insertion information
+		const { session, content } = this.activeInstance;
+		const newline = session.doc.getNewLineCharacter();
+		const selection = this.editor.getSelectionRange();
+		const text = (event.args || '').toString();
+		const totalNewLines = text.split(newline).length - 1;
+		const hasNewLines = totalNewLines > 0;
+		const lines = content.split(newline);
+
+		// create the options to check with
 		const options = {
-			backspace: /backspace/i.test(command.name),
-			del: /del/i.test(command.name),
+			selection, event, zones,
+			hasNewLines, totalNewLines,
+			lines, newline,
+			isInsert: /insert/i.test(command.name),
+			isBackspace: /backspace/i.test(command.name),
+			isDelete: /del/i.test(command.name)
 		};
 
-		// check each active zone for editing
-		let allow;
-		let hasActiveZone;
-		const zones = instance.zones || EMPTY_ZONES;
-		for (const id in zones) {
-			const zone = zones[id];
-			hasActiveZone = hasActiveZone || zone.isActive;
-
-			// if any zone allows the edit, assume it's okay
-			if (zone.isActive && zone.allowEdit(event, range, options)) {
-				allow = true;
-				break;
-			}
-		}
-		
-		// cancel if not allowed
-		if (hasActiveZone && !allow)
+		// check that this edit is allowed
+		const canEdit = isEditAllowed(this, options);
+		if (!canEdit)
 			return cancelEvent(event);
 
-		// check if the file is locked
-		if (!$state.lesson.canEditFile(instance.file.path))
-			return false;
-		
-		// update the zones
-		setTimeout(() => {
-			for (const id in zones)
-				zones[id].sync();
-		});
-		
+		// execute?
+		command.exec(this.editor, event.args);
+		options.after = this.editor.getSelectionRange();
+		options.updated = this.activeInstance.content;
+
+		// apply the update - if the update fails
+		// then the even will be canceled
+		updateZones(this, options);
+		return cancelEvent(event);
 	}
 
 	/** clear all undo actions for all files
@@ -291,3 +301,173 @@ export default class ManagedEditor {
 	}
 
 }
+
+// creates a fake index
+function toIndex(range) {
+	return (range.row * ROW_OFFSET) + range.column;
+}
+
+// checks if an edit can be used
+function isEditAllowed(instance, options) {
+
+	// check if this falls within range
+	const {
+		isBackspace, isDelete, isInsert,
+		zones, selection, hasNewLines, lines,
+	} = options;
+
+	// get the selection range
+	const selectionStart = toIndex(selection.start);
+	const selectionEnd = toIndex(selection.end);
+	
+	// start checing each zone
+	for (const id in zones) {
+		const zone = zones[id];
+		
+		// can't even be edited
+		if (!zone.isEditable) continue;
+
+		// get the current index values
+		const zoneStart = toIndex(zone.range.start);
+		const zoneEnd = toIndex(zone.range.end);
+		
+		// check if this is outside the range
+		if (selectionStart < zoneStart ||
+			selectionEnd < zoneStart ||
+			selectionStart > zoneEnd ||
+			selectionEnd > zoneEnd)
+			continue;
+
+		// start checking special conditions
+		const startAtStart = selectionStart === zoneStart;
+		const startAtEnd = selectionStart === zoneEnd;
+		const endAtStart = selectionEnd === zoneStart;
+		const endAtEnd = selectionEnd === zoneEnd;
+
+		if (isBackspace) {
+
+			// not a selection and is at the start of the
+			// range, can't backspace any further
+			if (startAtStart && endAtStart)
+				continue;
+
+		}
+		else if (isDelete) {
+
+			// not a seleciton and trying to delete characters
+			// outside the range of the box
+			if (startAtEnd && endAtEnd)
+				continue;
+
+		}
+		else if (isInsert) {
+
+			if (hasNewLines && !zone.isMultiLine)
+				continue;
+
+		}
+
+		// appears this is okay
+		return true;
+
+	}
+
+	// failed all checks
+	return false;
+	
+}
+
+// applies the update
+function updateZones(instance, options) {
+	const { selection, after, zones, updated, event, newline, isInsert, isBackspace, isDelete } = options;
+	const before = selection;
+
+	// check the diff for the events
+	const lineChanges = after.end.row - before.end.row;
+	const insertedAtNewline = after.end.column;
+
+	const rev = updated.split(newline);
+
+	console.log(lineChanges, insertedAtNewline);
+	
+	// // gather up insertion information
+	// const text = (event.args || '').toString();
+	// const lines = text.split(newline);
+	// const lengthAtLine = _.map(lines, line => line.length);
+	// const contentLength = _.map(options.lines, line => line.length);
+	
+	// // checking for newlines
+	// let totalNewLines = 0; // lines.length - 1;
+	
+	// start updating each line
+	const ss = before.start;
+	const se = before.end;
+
+	// // check if deleting a line
+	// if (isInsert)
+	// 	totalNewLines = lines.length - 1;
+
+	// else if (isBackspace || isDelete) {
+	// 	totalNewLines = ss.row - se.row;
+
+	// 	if (isBackspace && ss.column === 0 && se.column === 0)
+	// 		totalNewLines -= 1;
+
+	// 	// if deleting at the end
+	// 	else if (isDelete && ss.column === contentLength[ss.row] && se.column === contentLength[se.row])
+	// 		totalNewLines -= 1;
+	// }
+
+	// a list of actual changes to perform
+	const adjustments = [ ];
+
+	// start processing each zone
+	for(const id in zones) {
+		const zone = zones[id];
+
+		// get some common checks done
+		const zs = zone.range.start;
+		const ze = zone.range.end;
+
+		// // save the column adjustment
+		// if (isInsert && se.row === ze.row) {
+
+		// 	// if inserted a new line
+
+		// 	adjustments.push({ zone, cursor: ze, type: 'column', delta: lengthAtLine[lines.length - 1] });
+		// }
+		let updated;
+
+		// inserting rows
+		if (zs.row > se.row) {
+			zs.row += lineChanges;
+			updated = true;
+		}
+
+		// moved down a row
+		if (ze.row >= se.row) {
+			ze.row += lineChanges;
+			ze.column = rev[ze.row].length;
+			updated = true;
+		}
+	
+	}
+
+	// apply each adjustment
+	_(adjustments)
+		.map(adjust => {
+			adjust.cursor[adjust.type] += adjust.delta;
+			return adjust.zone;
+		})
+		.uniqBy('id')
+		.each(zone => zone.update());
+
+	for (const id in zones) {
+		const zone = zones[id];
+		console.log(zone.id, zone.range.end.row, zone.range.end.column);
+	}
+
+	// was successful
+	return true;
+}
+

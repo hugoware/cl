@@ -52,20 +52,26 @@ function next() {
 		return setTimeout(continueSpeaking, command);
 
 	// create the speech
-	const talk = new SpeechSynthesisUtterance();
-	talk.lang = 'en-US';
-	talk.voice = $speech.config.voice;
-	talk.pitch = $speech.config.pitch;
-	talk.rate = 1;
-	talk.text = command;
-
-	// setup events
-  talk.onend = () => continueSpeaking();
-	
-	// start the speaking
-	$speech.active.talk = talk;
-	$speech.paused = false;
-	$speech.synth.speak(talk);
+	try {
+		const talk = new SpeechSynthesisUtterance();
+		talk.lang = 'en-US';
+		talk.voice = $speech.config.voice;
+		talk.pitch = $speech.config.pitch;
+		talk.rate = 1;
+		talk.text = command;
+		
+		// setup events
+		talk.onend = () => continueSpeaking();
+		
+		// start the speaking
+		$speech.active.talk = talk;
+		$speech.paused = false;
+		$speech.synth.speak(talk);
+	}
+	// don't stop the lesson if this fails
+	catch (ex) {
+		console.warn('unable to start speech', ex);
+	}
 
 }
 

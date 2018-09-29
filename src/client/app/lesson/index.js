@@ -292,7 +292,6 @@ function applySlide(lesson, slide, invert) {
 		_.each(flags.add, key => delete $state.flags[key]);
 		_.each(flags.remove, key => $state.flags[key] = true);
 		_.each(slide.files, (flag, path) => {
-			console.log('alt', path, flag);
 			if (flag === 'lock') lesson.files[path] = false;
 			else if (flag === 'unlock') lesson.files[path] = true;
 		});
@@ -301,7 +300,6 @@ function applySlide(lesson, slide, invert) {
 		_.each(flags.add, key => $state.flags[key] = true);
 		_.each(flags.remove, key => delete $state.flags[key]);
 		_.each(slide.files, (flag, path) => {
-			console.log('alt', path, flag);
 			if (flag === 'lock') lesson.files[path] = true;
 			else if (flag === 'unlock') lesson.files[path] = false;
 		});
