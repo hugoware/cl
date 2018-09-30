@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import $ from 'jquery';
 import $state from '../../state';
 import { listen, remove } from '../../events';
@@ -64,6 +65,10 @@ function setupEvent(instance) {
 			onSuccess(success);
 		}, debounce);
 	};
+
+	// perform validation immediately
+	if (_.isFunction(instance.onValidation.init))
+		instance.onValidation.init();
 
 	// wait for this event
 	instance.__disposeListener = listen(event, instance.onValidation);

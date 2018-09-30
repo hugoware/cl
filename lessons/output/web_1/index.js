@@ -17,8 +17,8 @@
     var $state = state;
 
     // parses a string of html
-    function $html(str) {
-      return utils.$html((str || '').toString());
+    function $html(str, options) {
+      return _.isString(str) ? utils.$html((str || '').toString(), options) : utils.$html(str);
     }
 
     // a general selector function
@@ -27,24 +27,60 @@
     }
 
     // shared functions
-    function $deny(message, explain) {
+    function $denyAccess(message, explain) {
       if (_.isFunction($lesson.onDeny)) $lesson.onDeny({ message: message, explain: explain });
     }
 
     // speaks a message using the assistant
-    function $speak(message, emotion) {
-      if (_.isFunction($lesson.onSpeak)) $lesson.onSpeak({ message: message, emotion: emotion });
+    function $speakMessage(message, emotion) {
+      if (_.isFunction($lesson.onSpeak)) $lesson.onSpeak({ message: message, emotion: emotion, isOverride: true });
     }
 
     // returns the message to the prior content
-    function $revert() {
+    function $revertMessage() {
       if (_.isFunction($lesson.onRevert)) $lesson.onRevert();
     }
 
+    // handles displaying a hint
+    function $showHint(str, options) {
+      if (!_.isFunction($lesson.onHint)) return;
+      options = options || {};
+      options.message = str;
+      $lesson.onHint(options);
+    }
+
+    // handles hiding hints
+    function $hideHint() {
+      if (_.isFunction($lesson.onHint)) $lesson.onHint(null);
+    }
+
+    // runs a series of actions until one
+    // of them returns false
+    function $validate(options) {
+      var actions = [].slice.call(arguments);
+      for (var i = 0, total = actions.length; i < total; i++) {
+        var action = actions[i];
+
+        // perform each action
+        try {
+          if (action() === false) throw 'validation failed';
+        }
+
+        // for errors, just fail
+        catch (err) {
+          $revertMessage();
+          return false;
+        }
+      }
+
+      // was successful
+      return true;
+    }
+
     // gets a zone
-    function $zone(file, id, asDom) {
+    function $getZone(file, id, asDom, strict) {
       var html = utils.getZoneContent(file, id);
-      return asDom ? $html(html) : html;
+      return asDom ? $html(html, { strict: strict !== false }) : html;
     }
 
     // default function for calling
@@ -86,21 +122,69 @@
 
     this.onAfterSlideChange = function () {};
 
-    var count = 0;
+    // check they've added enough messages
     this.verifyHasMultipleListItems = function () {
-      count++;
+      var zone = void 0;
+      var requiredItems = 5;
+      var minimumLength = 3;
 
-      if (count % 5 === 0) {
-        $speak('Looks great! Move onto the next step when you are ready');
-      } else {
-        $revert();
-      }
+      return $validate(
 
-      return count % 5 === 0;
+      // make sure there's a valid zone
+      function () {
+        zone = $getZone('/index.html', 'ul_content', true);
+        if (!zone) {
+          $showHint('Fix the HTML errors to continue');
+          return false;
+        }
+      },
 
-      // const html = $zone('/index.html', 'ul_content');
-      // console.log('matched to', html);
+      // check how many items are listed
+      function () {
+
+        var totalItems = 0;
+        var hasEmptyItem = void 0;
+        var hasShortItem = void 0;
+
+        // check each list item
+        zone('li').each(function (index, node) {
+          totalItems++;
+
+          // check the contents
+          var item = $html(node);
+          var text = _.trim(item.text());
+          if (text.length === 0) hasEmptyItem = true;
+          if (text.length < minimumLength) hasShortItem = true;
+        });
+
+        // update the message, if needed
+        if (totalItems < requiredItems) {
+          var remaining = requiredItems - totalItems;
+          var plural = remaining > 1 ? 's' : '';
+          $showHint("Enter " + remaining + " more list item" + plural);
+          return false;
+        }
+
+        // check for other conditions
+        if (hasEmptyItem) {
+          $showHint("Add content to each list item");
+          return false;
+        }
+
+        if (hasShortItem) {
+          $showHint("Add at least " + minimumLength + " characters per list item");
+          return false;
+        }
+      },
+
+      // passed validation
+      function () {
+        $hideHint();
+        $speakMessage('Looks great! You can move onto the next step now');
+      });
     };
+
+    this.verifyHasMultipleListItems.init = this.verifyHasMultipleListItems;
 
     this.verifyFileToDelete = function (items) {
 

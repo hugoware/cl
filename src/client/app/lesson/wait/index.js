@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import $state from '../../state';
 import { evaluateAllSelectors } from '../../utils/selector';
-import { broadcast } from '../../events';
+import { listen, broadcast } from '../../events';
 
 // wait events
 import WaitForValidation from './validate';
@@ -20,6 +20,10 @@ const $events = [ ];
 // tracks the active interval, if any
 let $waiting;
 let $success;
+
+// dispose of events
+listen('reset', clear);
+listen('deactivate-project', clear);
 
 /** handles waiting events for a slide 
  * @param {WaitInstruction} events the events that should be waited for

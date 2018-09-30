@@ -36,6 +36,8 @@ export default class Slide extends Component {
 	 * @param {LessonSlide} slide the slide to display
 	*/
 	refresh(slide) {
+		this.slide = slide;
+		this.isUsingOverrideMessage = false;
 
 		// check for button visibility
 		this.toggleClassMap({
@@ -56,19 +58,15 @@ export default class Slide extends Component {
 
 	/** restores the old content without speaking it */
 	revert() {
-		this.ui.message.html(this._revert);
+		this.refresh(this.slide);
+		this.isUsingRevertMessage = true;
 	}
 
 	/** replaces the content for the view
 	 * @param {string} message a markdown themed content message
-	 * @param {boolean} [saveRevert] should this save a revert version 
 	 */
-	setContent = (message, saveRevert) => {
-
-		// save the revert text, if any
-		delete this._revert;
-		if (saveRevert)
-			this._revert = this.ui.message.html();
+	setContent = message => {
+		this.isUsingRevertMessage = false;
 		
 		// get rid of the titles
 		this.toggleClassMap({

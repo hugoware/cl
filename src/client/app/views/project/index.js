@@ -12,6 +12,7 @@ import Preview from './preview';
 import Assistant from './assistant';
 import Definition from './definition';
 import PreventActionPopUp from './prevent'
+import HintDisplay from '../../lesson/focus/hint'
 
 export default class ProjectView extends View {
 
@@ -40,6 +41,10 @@ export default class ProjectView extends View {
 
 		this.definition = new Definition(this.assistant);
 		this.definition.appendTo(document.body);
+
+		// create the hint popup
+		this.hint = new HintDisplay();
+		this.hint.appendTo(document.body);
 
 		this.preventAction = new PreventActionPopUp();
 		this.preventAction.appendTo(document.body);

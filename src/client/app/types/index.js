@@ -76,3 +76,7 @@
  * @prop {boolean|function} required the conditions required to be met
  * @prop {function} allowed the action to perform if the required conditions are met
  */
+
+/** @typedef {Object} SoundOptions
+ * @prop {number} balance the sound balance to play from
+ */

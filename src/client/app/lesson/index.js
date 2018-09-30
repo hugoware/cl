@@ -1,7 +1,8 @@
 /// <reference path="../types/index.js" />
 
 import _ from 'lodash';
-import $ from 'cheerio';
+import $cheerio from 'cheerio';
+import $xml from 'xmlchecker';
 import $jquery from 'jquery';
 import $state from '../state';
 import $api from '../api';
@@ -27,7 +28,24 @@ export default class Lesson {
 
 			// libraries
 			_, $: $jquery,
-			$html: str => $cheerio.load(str),
+
+			// parsing html snippets
+			$html: (str, options = { }) => {
+
+				// failed validation
+				try {
+					$xml.check(`<?xml version="1.0" ?><root>${str}</root>`); 
+				}
+				catch (err) {
+					return null;
+				}
+
+				// parse the html
+				return $cheerio.load(str, {
+					withDomLvl1: false,
+					xmlMode: options.strict,
+				});
+			},
 
 			// other utilities
 			getZoneContent: $state.getZoneContent
@@ -264,7 +282,7 @@ function initialize(lesson) {
 
 		// replace any snippets
 		if (slide.content)
-			slide.template = $.load(slide.content);
+			slide.template = $cheerio.load(slide.content);
 	});
 	
 }

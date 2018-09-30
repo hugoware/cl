@@ -33,12 +33,15 @@ function readFile(name) {
 const source = process.argv[2];
 const id = _.snakeCase(source);
 const root = $path.resolve(`./lessons/content/${source}`);
+const scriptDirectory = `${root}/scripts`;
 const dist = $path.resolve(`./lessons/output/${id}`);
 const snippets = $path.resolve(`${root}/snippets`);
 const manifest = readYml('manifest.yml');
 const zones = readYml('zones.yml');
 const state = { dictionary: $dictionary };
 const type = _.camelCase(source);
+
+console.log(scriptDirectory);
 
 // get the template to use
 let template = readFile('compiler/template.js');
@@ -70,9 +73,9 @@ manifest.zones = zones;
 
 // include all scripts
 const scripts = [];
-for (const file of $fsx.readdirSync(root)) {
+for (const file of $fsx.readdirSync(scriptDirectory)) {
 	if (!/\.js$/.test(file)) continue;
-	const script = readFile(`content/${source}/${file}`);
+	const script = readFile(`${scriptDirectory}/${file}`);
 	scripts.push(script);
 }
 

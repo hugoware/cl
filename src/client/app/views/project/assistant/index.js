@@ -1,6 +1,7 @@
 /// <reference path="../../../types/index.js" />
 
 import _ from 'lodash';
+import $sound from '../../../sound';
 import $state from '../../../state';
 import $speech from '../../../speech';
 import Component from '../../../component';
@@ -149,6 +150,7 @@ export default class Assistant extends Component {
 		// set the speech handler
 		$state.lesson.instance.onSpeak = this.onSpeak;
 		$state.lesson.instance.onRevert = this.onRevert;
+		$state.lesson.instance.onHint = this.onHint;
 
 		// check for existing progress
 		let index = 0;
@@ -254,6 +256,13 @@ export default class Assistant extends Component {
 	// returns the message to the original state
 	onRevert = () => {
 		this.views.slide.revert();
+		$speech.stop();
+	}
+
+	// handles updating hint messages
+	onHint = options => {
+		console.log('trying to show hint');
+		this.broadcast('show-hint', options);
 	}
 
 	// listens for extra speech events
@@ -266,25 +275,31 @@ export default class Assistant extends Component {
 		this.views.question.hide();
 		this.views.slide.show();
 
-		// check if there's a revert value -- this means
-		// we're bouncing between success and completion messages
-		// so we shouldn't speak too many times
-		const allowSpeech = !this.views.slide.hasRevert;
+		// don't do this twice on accident
+		if (this.views.slide.isUsingOverrideMessage)
+			return;
 
 		// TODO: this is kinda ugly -- to get the formatted
 		// text we're grabbing the text value from the node
 		// update the slide content
 		// replace the content
-		this.views.slide.setContent(message, true);
+		const isSwitchingToOverride = !this.views.slide.isUsingOverrideMessage;
+		this.views.slide.setContent(message);
+		this.views.slide.isUsingOverrideMessage = true;
 
 		// speak and update the emotion, if any
 		if ('emotion' in options)
 			this.setEmotion(options.emotion);
 
 		// check if speaking
-		if (!allowSpeech) return;
-		const speak = this.views.slide.ui.message.text();
-		this.speak([ speak ]);
+		if (isSwitchingToOverride) {
+			const speak = this.views.slide.ui.message.text();
+			this.speak([ speak ]);
+
+			// play a sound effect, if needed
+			$sound.notify({ balance: 0.75 });
+		}
+
 	}
 
 	/** replaces the emotion for the assistant
