@@ -8,7 +8,7 @@ import * as $babel from 'babel-core';
 import $dictionary from './dictionary';
 
 // helper
-const IS_PREVIEW = false;
+const IS_PREVIEW = true;
 
 // content importers
 import processSlides from './lesson';
@@ -40,8 +40,6 @@ const manifest = readYml('manifest.yml');
 const zones = readYml('zones.yml');
 const state = { dictionary: $dictionary };
 const type = _.camelCase(source);
-
-console.log(scriptDirectory);
 
 // get the template to use
 let template = readFile('compiler/template.js');
@@ -75,7 +73,7 @@ manifest.zones = zones;
 const scripts = [];
 for (const file of $fsx.readdirSync(scriptDirectory)) {
 	if (!/\.js$/.test(file)) continue;
-	const script = readFile(`${scriptDirectory}/${file}`);
+	const script = $fsx.readFileSync($path.resolve(scriptDirectory, file)).toString();
 	scripts.push(script);
 }
 
@@ -113,7 +111,7 @@ if (!transformed.code)
 
 // compress
 let result;
-if (!IS_PREVIEW) {
+if (IS_PREVIEW) {
   result = transformed.code;
 }
 else {

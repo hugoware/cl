@@ -8,7 +8,9 @@ const $sounds = new Howl({
 	preload: true,
 	src: ['/__codelab__/app/sounds.mp3'],
 	sprite: {
-		notify: [0, 500]
+		notify: [0, 500],
+		success: [1000, 1750],
+		error: [3000, 500]
 	}
 });
 
@@ -26,7 +28,23 @@ function notify(options) {
 	play('notify', options);
 }
 
+/** plays a success noise 
+ * @param {SoundOptions} [options] sound choices
+*/
+function success(options) {
+	play('success', options);
+}
+
+/** plays a error noise 
+ * @param {SoundOptions} [options] sound choices
+*/
+function error(options) {
+	play('error', options);
+}
+
 // export sound choices
 export default {
-	notify
+	notify,
+	success,
+	error
 };

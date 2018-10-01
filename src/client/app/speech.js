@@ -163,6 +163,10 @@ const $speech = {
 	 */
 	speak: message => {
 		$speech.stop();
+		
+		// speaking is not allowed
+		if (!$speech.enabled)
+			return;
 
 		// should be an array of messages to speak
 		if (!_.isArray(message))

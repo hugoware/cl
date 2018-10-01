@@ -4,6 +4,7 @@ import $state from '../../../state';
 import { applySnippets } from './snippets';
 import Component from '../../../component';
 import $speech from '../../../speech';
+import $sound from '../../../sound';
 
 const DEFAULT_COUNT = 4;
 const INTRO_CORRECT = `That's correct!`;
@@ -129,12 +130,14 @@ export default class Question extends Component {
 
 	// when the correct answer is selected
 	onCorrectAnswer = selection => {
+		$sound.success();
 		this.addClass('correct answered');
 		selection.addClass('selected');
 	}
 	
 	// when the incorrect answer is selected
 	onIncorrectAnswer = selection => {
+		$sound.error();
 		this.addClass('incorrect answered');
 		selection.addClass('selected');
 		

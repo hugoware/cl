@@ -59,8 +59,15 @@
 
     // runs a series of actions until one
     // of them returns false
-    function $validate(options) {
+    function $validate() {
       const actions = [].slice.call(arguments);
+
+      // check for extra options
+      let options = { };
+      if (!_.isFunction(actions[0]))
+        options = actions.shift();
+
+      // run each action
       for (let i = 0, total = actions.length; i < total; i++) {
         const action = actions[i];
 
@@ -72,7 +79,8 @@
 
         // for errors, just fail
         catch(err) {
-          $revertMessage();
+          if (options.revertOnError !== false)
+            $revertMessage();
           return false;
         }
       }

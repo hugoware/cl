@@ -172,6 +172,8 @@ const $state = {
 		$state.paths = { };
 		$state.items = { };
 		$state.config = { };
+		$state.flags = { };
+		$state.content = { };
 
 		// rebuild the path indexes
 		$state.projectId = project.id;

@@ -29,6 +29,11 @@ export default class ManagedZone {
 		this.marker.clazz = this.base;
 	}
 
+	/** deactivates a zone entirely */
+	clear = () => {
+		this.hide();
+	}
+
 	/** handles displaying the zone */
 	show = () => {
 		this.isActive = true;

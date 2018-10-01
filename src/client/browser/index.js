@@ -1,4 +1,14 @@
+
 (() => {
+
+	// prevents events from finishing
+	function cancelEvent(event) {
+		event.cancelBubble = true;
+		event.returnValue = false;
+		event.stopImmediatePropagation();
+		event.stopPropagation();
+		return false;
+	}
 
 	// quick trim function
 	function trim(str) {
@@ -168,19 +178,22 @@
 			}
 
 			// if it's just a link to another anchor on the page
-			if (/^\#/.test(url))
-				continue;
+			if (/^\#/.test(url)) {
+				const name = url.replace(/^\#+/, '');
+				const anchors = document.getElementsByTagName('a');
+				for (const anchor of anchors) {
+					if (anchor.getAttribute('name') !== name) continue;
+					anchor.scrollIntoView();
+				}
+
+				// don't finish the request
+				return cancelEvent(event);
+			}
 		
 			// cancel the event and notify the app that
 			// something needs to happen with navigation
 			notify('navigate', { navigate: url });
-
-			// make sure the actual click event doesn't continue
-			event.cancelBubble = true;
-			event.returnValue = false;
-			event.stopImmediatePropagation();
-			event.stopPropagation();
-			return false;
+			return cancelEvent(event);
 		}
 	});
 

@@ -42,6 +42,7 @@ export default class CodeEditor extends Component {
 		this.listen('execution-finished', this.onExecutionFinished);
 		this.listen('slide-changed', this.onSlideChanged);
 		this.listen('save-all', this.onSaveAll);
+		this.listen('lesson-finished', this.onLessonFinished);
 		this.ui.save.on('click', this.onSaveChanges);
 
 		/** @type {ManagedEditor} */
@@ -73,8 +74,14 @@ export default class CodeEditor extends Component {
 		return this.activeInstance && this.editor.activeInstance.file;
 	}
 
+	// done with the lesson
+	onLessonFinished = () => {
+		this.editor.clearAllZones();
+	}
+
 	// make sure to refresh when slides change
 	onSlideChanged = () => {
+		this.editor.clearUndoHistory();
 		this.editor.editor.resize(true);
 	}
 

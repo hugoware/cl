@@ -281,6 +281,13 @@ export default class ManagedEditor {
 		_.each(zones, zone => zone.sync(true));
 	}
 
+	// deactivates all zones
+	clearZones = () => {
+		_.each(this.instances, instance => {
+			_.each(instance.zones, zone => zone.clear());
+		});
+	}
+
 	/** finds an instance of a file using a path 
 	 * @param {string} [path] the path to find
 	*/
@@ -383,40 +390,13 @@ function updateZones(instance, options) {
 	const before = selection;
 
 	// check the diff for the events
+	// const insertedAtNewline = after.end.column;
 	const lineChanges = after.end.row - before.end.row;
-	const insertedAtNewline = after.end.column;
-
 	const rev = updated.split(newline);
-
-	console.log(lineChanges, insertedAtNewline);
-	
-	// // gather up insertion information
-	// const text = (event.args || '').toString();
-	// const lines = text.split(newline);
-	// const lengthAtLine = _.map(lines, line => line.length);
-	// const contentLength = _.map(options.lines, line => line.length);
-	
-	// // checking for newlines
-	// let totalNewLines = 0; // lines.length - 1;
 	
 	// start updating each line
-	const ss = before.start;
+	// const ss = before.start;
 	const se = before.end;
-
-	// // check if deleting a line
-	// if (isInsert)
-	// 	totalNewLines = lines.length - 1;
-
-	// else if (isBackspace || isDelete) {
-	// 	totalNewLines = ss.row - se.row;
-
-	// 	if (isBackspace && ss.column === 0 && se.column === 0)
-	// 		totalNewLines -= 1;
-
-	// 	// if deleting at the end
-	// 	else if (isDelete && ss.column === contentLength[ss.row] && se.column === contentLength[se.row])
-	// 		totalNewLines -= 1;
-	// }
 
 	// a list of actual changes to perform
 	const adjustments = [ ];
@@ -429,13 +409,7 @@ function updateZones(instance, options) {
 		const zs = zone.range.start;
 		const ze = zone.range.end;
 
-		// // save the column adjustment
-		// if (isInsert && se.row === ze.row) {
-
-		// 	// if inserted a new line
-
-		// 	adjustments.push({ zone, cursor: ze, type: 'column', delta: lengthAtLine[lines.length - 1] });
-		// }
+		// tracking if this was changed or not
 		let updated;
 
 		// inserting rows
@@ -451,6 +425,7 @@ function updateZones(instance, options) {
 			updated = true;
 		}
 
+		// if it was changed, refresh it
 		if (updated)
 			zone.update();
 	
@@ -464,11 +439,6 @@ function updateZones(instance, options) {
 		})
 		.uniqBy('id')
 		.each(zone => zone.update());
-
-	for (const id in zones) {
-		const zone = zones[id];
-		console.log(zone.id, zone.range.end.row, zone.range.end.column);
-	}
 
 	// was successful
 	return true;

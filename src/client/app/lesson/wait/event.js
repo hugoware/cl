@@ -44,6 +44,7 @@ export default class UserEvent {
 
 // setup a custom event handler
 function setupEvent(instance) {
+	console.log('setup');
 	const { onSuccess, selector } = instance;
 	const { commands } = selector;
 

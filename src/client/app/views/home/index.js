@@ -117,6 +117,8 @@ export default class HomeView extends View {
 		this.broadcast('open-dialog', 'create-project')
 
 	onSelectProject = event => {
+		if (this.busy) return;
+		this.busy = true;
 		const id = getProjectId(event);
 		$nav.go(`project/${id}`);
 	}
@@ -136,8 +138,9 @@ export default class HomeView extends View {
 		return cancelEvent(event);
 	}
 
-	// tries to remove a project entry
+	// shows the edit dialog
 	onEditProject = async event => {
+		if (this.busy) return;
 		const data = getProjectData(event, this);
 		this.broadcast('open-dialog', 'project-settings', data);
 		return cancelEvent(event);
@@ -145,6 +148,7 @@ export default class HomeView extends View {
 
 	// tries to remove a project entry
 	onRemoveProject = async event => {
+		if (this.busy) return;
 		const data = getProjectData(event, this);
 		this.broadcast('open-dialog', 'remove-project', data);
 		return cancelEvent(event);
@@ -152,6 +156,7 @@ export default class HomeView extends View {
 	
 	// displays share options
 	onShareProject = async event => {
+		if (this.busy) return;
 		const data = getProjectData(event, this);
 		this.broadcast('open-dialog', 'share-project', data);
 		return cancelEvent(event);
@@ -159,6 +164,7 @@ export default class HomeView extends View {
 	
 	// displays reset options
 	onResetLesson = async event => {
+		if (this.busy) return;
 		const data = getProjectData(event, this);
 		this.broadcast('open-dialog', 'reset-lesson', data);
 		return cancelEvent(event);

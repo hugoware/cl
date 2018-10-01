@@ -23,7 +23,7 @@ export default function checkPermissions(state, permissions, args = [ ]) {
 		if (_.isString(validator)) {
 			try {
 				// lesson.lesson is the app object then the lesson instance
-				const success = state.lesson.instance.invoke(validator, ...args);
+				const success = state.lesson.instance[validator](...args);
 				if (success === true)
 					return true;
 			}

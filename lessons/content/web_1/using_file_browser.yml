@@ -20,7 +20,7 @@
       - fileBrowser(/index.html)
 
     validation:
-      openFile: allowOpenIndexHtml
+      openFile: canOpenIndexHtml
 
 - slide:
     mode: popup
@@ -35,7 +35,7 @@
     autoNext: false
 
     waitFor:
-      - ::event(modify-file, verifyHasMultipleListItems)
+      - ::event(modify-file, verifyHasEnoughListItems)
 
     zones:
       /index.html:
@@ -43,168 +43,168 @@
         ul_end_tag: show
         ul_content: edit
 
-- slide:
-    mode: popup
-    content: |
-      This is the contents that go inside
+# - slide:
+#     mode: popup
+#     content: |
+#       This is the contents that go inside
 
-    zones:
-      /index.html:
-        ul_start_tag: edit
-        ul_end_tag: edit
-        ul_content: expand
+#     zones:
+#       /index.html:
+#         ul_start_tag: edit
+#         ul_end_tag: edit
+#         ul_content: expand
 
-- slide:
-    mode: popup
-    content: |
-      Let's insert another item in the list
+# - slide:
+#     mode: popup
+#     content: |
+#       Let's insert another item in the list
 
-    zones:
-      /index.html:
-        ul_content: edit
-
-
--
-  slide:
-    mode: popup
-    title: Creating Web Pages - Part 1
-    subtitle: More About Tags
-    allowBack: true
+#     zones:
+#       /index.html:
+#         ul_content: edit
 
 
-    content: |
-
-      This part has an inline *define* [define html] and this is the `>` sign -- it can do to create a website.
-
-      [snippet html_tag_example highlight:main_content]
-
-      [hidden] speak, but don't show
-      [silent delay:500] show, but don't speak -- and delay
-
-      Wait for dramatic [define html effect is amazing]
-
-      [delay: 2000] Dramatic!
-
-      This is a final part that's not read
+# -
+#   slide:
+#     mode: popup
+#     title: Creating Web Pages - Part 1
+#     subtitle: More About Tags
+#     allowBack: true
 
 
-    markers:
-      # - $file-browser [file="/main.css"] ::center
-      # - $file-browser ::center ::hover(2s) ::lead
-      # - $file-browser .actions .upload-file ::center
+#     content: |
+
+#       This part has an inline *define* [define html] and this is the `>` sign -- it can do to create a website.
+
+#       [snippet html_tag_example highlight:main_content]
+
+#       [hidden] speak, but don't show
+#       [silent delay:500] show, but don't speak -- and delay
+
+#       Wait for dramatic [define html effect is amazing]
+
+#       [delay: 2000] Dramatic!
+
+#       This is a final part that's not read
+
+
+#     markers:
+#       # - $file-browser [file="/main.css"] ::center
+#       # - $file-browser ::center ::hover(2s) ::lead
+#       # - $file-browser .actions .upload-file ::center
       
-    highlights:
-      # - $file-browser
-      # - $file-browser [file="/controller.png"]
-      - $file-browser .actions .create-file
+#     highlights:
+#       # - $file-browser
+#       # - $file-browser [file="/controller.png"]
+#       - $file-browser .actions .create-file
 
-    flags: +create-file +delete-file
+#     flags: +create-file +delete-file
 
-    waitFor: 
-      - .tab-bar .tab[file="/index.html"]
-    #   - .file-browser .create-file ::click
-      # - ::validate(isSlideFinished)
-      # 
+#     waitFor: 
+#       - .tab-bar .tab[file="/index.html"]
+#     #   - .file-browser .create-file ::click
+#       # - ::validate(isSlideFinished)
+#       # 
 
-    files:
-      /index.html: lock
+#     files:
+#       /index.html: lock
 
-    # zones:
-    #   /index.html:
-    #     header_start_tag: edit
-    #     header_end_tag: show
--
-  slide:
-    mode: popup
-    title: Creating Web Pages - Part 1
-    subtitle: More About Tags
-    checkpoint: true
+#     # zones:
+#     #   /index.html:
+#     #     header_start_tag: edit
+#     #     header_end_tag: show
+# -
+#   slide:
+#     mode: popup
+#     title: Creating Web Pages - Part 1
+#     subtitle: More About Tags
+#     checkpoint: true
 
-    files:
-      /index.html: unlock
+#     files:
+#       /index.html: unlock
 
-    content: |
+#     content: |
 
-      waiting
--
-  slide:
-    mode: popup
-    title: Creating Web Pages - Part 1
-    subtitle: More About Tags
-    checkpoint: true
+#       waiting
+# -
+#   slide:
+#     mode: popup
+#     title: Creating Web Pages - Part 1
+#     subtitle: More About Tags
+#     checkpoint: true
 
-    content: |
+#     content: |
 
-      This should expand the paragraph
+#       This should expand the paragraph
 
-    zones:
-      /index.html:
-        paragraph_content: expand
+#     zones:
+#       /index.html:
+#         paragraph_content: expand
 
--
-  slide:
-    mode: popup
-    checkpoint: true
-    emotion: surprised
-    content: |
-      This is the content of the tag
+# -
+#   slide:
+#     mode: popup
+#     checkpoint: true
+#     emotion: surprised
+#     content: |
+#       This is the content of the tag
 
-      [snippet html_tag_example highlight:main_content]
+#       [snippet html_tag_example highlight:main_content]
 
-      It's pretty *darn* neat
--
-  slide:
-    mode: overlay
-    content: |
-      This is a brand new snippet
+#       It's pretty *darn* neat
+# -
+#   slide:
+#     mode: overlay
+#     content: |
+#       This is a brand new snippet
 
-      [snippet complex_tag]
+#       [snippet complex_tag]
 
-      It's pretty *darn* neat
+#       It's pretty *darn* neat
 
--
-  slide:
-    mode: overlay
-    emotion: surprised
-    content: |
-      This is a brand new snippet
+# -
+#   slide:
+#     mode: overlay
+#     emotion: surprised
+#     content: |
+#       This is a brand new snippet
 
-      [snippet mary_example]
+#       [snippet mary_example]
 
-      It's pretty *darn* neat
+#       It's pretty *darn* neat
 
 
--
-  slide:
-    mode: popup
-    checkpoint: true
-    emotion: sad
-    content: |
+# -
+#   slide:
+#     mode: popup
+#     checkpoint: true
+#     emotion: sad
+#     content: |
 
-      Create a new file called `new.pug`
+#       Create a new file called `new.pug`
 
-      If you accidentally create the wrong file type, delete and try again
+#       If you accidentally create the wrong file type, delete and try again
 
-      [hidden once] you should be able to now unlock folders
+#       [hidden once] you should be able to now unlock folders
       
 
-    flags: +delete-file
+#     flags: +delete-file
 
-    validation:
-      deleteFile: verifyFileToDelete
+#     validation:
+#       deleteFile: verifyFileToDelete
 
-    waitFor:
-      - .tab-bar .tab[file="/new.pug"]
+#     waitFor:
+#       - .tab-bar .tab[file="/new.pug"]
 
-- 
-  slide:
-    checkpoint: true
-    mode: popup
-    emotion: happy
-    content: |
-      Looks great!
+# - 
+#   slide:
+#     checkpoint: true
+#     mode: popup
+#     emotion: happy
+#     content: |
+#       Looks great!
 
-    flags: -create-file -delete-file
+#     flags: -create-file -delete-file
 
 
 

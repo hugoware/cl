@@ -96,7 +96,6 @@ export default class Assistant extends Component {
 	// hides the assistant
 	onReset = () => {
 		this.removeClass('leave');
-		this.hide();
 	}
 
 	// display the popup message again
@@ -111,7 +110,8 @@ export default class Assistant extends Component {
 
 	// sync the lesson state
 	onSaveFile = () => {
-		$state.lesson.saveProgress();
+		if ($state.lesson)
+			$state.lesson.saveProgress();
 	}
 
 	/** changes the speech enablement mode
@@ -247,6 +247,7 @@ export default class Assistant extends Component {
 		view.show();
 
 		// update the content
+		this.views.slide.hasUsedOverrideMessage = false;
 		view.refresh(slide);
 
 		// speak, if possible
@@ -284,8 +285,10 @@ export default class Assistant extends Component {
 		// update the slide content
 		// replace the content
 		const isSwitchingToOverride = !this.views.slide.isUsingOverrideMessage;
+		const hasUsedOverrideMessage = !!this.views.slide.hasUsedOverrideMessage;
 		this.views.slide.setContent(message);
 		this.views.slide.isUsingOverrideMessage = true;
+		this.views.slide.hasUsedOverrideMessage = true;
 
 		// speak and update the emotion, if any
 		if ('emotion' in options)
@@ -293,8 +296,13 @@ export default class Assistant extends Component {
 
 		// check if speaking
 		if (isSwitchingToOverride) {
-			const speak = this.views.slide.ui.message.text();
-			this.speak([ speak ]);
+
+			// this is the first time this has happened
+			// so speak the first attempt
+			if (!hasUsedOverrideMessage) {
+				const speak = this.views.slide.ui.message.text();
+				this.speak([ speak ]);
+			}
 
 			// play a sound effect, if needed
 			$sound.notify({ balance: 0.75 });
@@ -317,7 +325,7 @@ export default class Assistant extends Component {
 	 * @param {string} message the message to speak
 	 */
 	speak = message => {
-		if ($speech.enabled && _.some(message))
+		if (_.some(message))
 			$speech.speak(message);
 	}
 

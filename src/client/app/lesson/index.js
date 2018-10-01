@@ -11,6 +11,9 @@ import $wait from './wait';
 import { load } from './loader';
 import { broadcast } from '../events';
 
+// can't seem to use this anywhere in a playground
+window.cheerio = $cheerio;
+
 /** creates a default lesson */
 export default class Lesson {
 
@@ -31,19 +34,24 @@ export default class Lesson {
 
 			// parsing html snippets
 			$html: (str, options = { }) => {
+				
+				// just converting a cheerio object
+				if (_.isObject(str))
+					return $cheerio(str);
 
 				// failed validation
+				str = `<root>${str}</root>`;
 				try {
-					$xml.check(`<?xml version="1.0" ?><root>${str}</root>`); 
+					$xml.check(`<?xml version="1.0" ?>${str}`); 
 				}
 				catch (err) {
 					return null;
 				}
 
 				// parse the html
-				return $cheerio.load(str, {
+				return $cheerio(str, {
 					withDomLvl1: false,
-					xmlMode: options.strict,
+					xmlMode: true
 				});
 			},
 

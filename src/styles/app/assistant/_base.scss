@@ -10,8 +10,10 @@
 	z-index: $layer-assistant;
 
 	&.leave {
-		@include animate('opacity', 0.7s);
-		opacity: 0;
+		@include animate('opacity, transform', 0.7s);
+		pointer-events: none;
+		transform: translate(100%, 0);
+		opacity: 0 !important;
 	}
 
 	.title, .subtitle {

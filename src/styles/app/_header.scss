@@ -12,13 +12,13 @@
 
 	// option access
 	&.is-lesson {
-		.settings, .share-project {
+		.open-in-window, .settings, .share-project {
 			display: none;
 		}
 	}
 
 	&.is-lesson.is-finished {
-		.share-project {
+		.open-in-window, .share-project {
 			display: block;
 		}
 	}
