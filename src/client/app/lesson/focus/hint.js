@@ -15,6 +15,9 @@ export default class HintDisplay extends Component {
 		});
 
 		// handle showing and hiding
+		this.listen('reset', this.onReset);
+		this.listen('deactivate-project', this.onDeactivateProject);
+		this.listen('finish-project', this.onFinishProject);
 		this.listen('show-hint', this.onShowHint);
 		this.listen('hide-hint', this.onHideHint);
 		
@@ -29,13 +32,27 @@ export default class HintDisplay extends Component {
 		this.onHideHint();
 	}
 
+	// when resetting the document
+	onReset = () => {
+		this.onHideHint();
+	}
+
+	// leaving the project view
+	onDeactivateProject = () => {
+		this.onHideHint();
+	}
+
 	// updates the marker position
 	onAutoRefresh = () => {
 
+		// don't do anything if already hiding
+		if (this.isHidingHint)
+			return;
+
+		// match the cursor position for now
 		const selector = evaluateSelector('.ace_editor .ace_cursor');
 		const bounds = selector.getBounds();
 		this.offset({ top: bounds.top, left: bounds.left });
-
 	}
 
 	// handles showing the hint

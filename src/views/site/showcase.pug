@@ -5,7 +5,7 @@ html(lang='en')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     
-    title Policies / CodeLab
+    title CodeLab
 
     link(rel='shortcut icon' href='/site/icons/favicon.ico' type='image/x-icon')
     link(rel='icon' href='/site/icons/favicon.ico' type='image/x-icon')
@@ -51,20 +51,27 @@ html(lang='en')
             a.logo(href='/') CodeLab
 
           .row.intro
-            .feature CodeLab Policies
+            .feature Student Showcase
             .details
             .actions
               a.button.how-it-works(href='/') Return to Home
 
-      .section.policies.container-fluid
-        for policy in content.policies
-          .row.content
-            .col-md-8.explanation
-                h3.title= policy.title
-                div !{policy.content}
-            .col-md-4.summary
-              h4 Basically, we're saying...
-              .simple !{policy.summary}
+      .section.showcase.container-fluid
+        .row.content
+        - for (i = 0; i < showcase.length / 3; i++) {
+            - for (j = 0; j < 3; j++) {
+              .col-md-4.col-sm-6.col-xs-6
+                .item
+                  a(href='/'+ showcase[(i * 3) + j].alias)
+                    //- img(src='/showcase/'+ showcase[(i * 3) + j].alias)
+                    img(src='/site/images/no-preview.png')
+                    .title= showcase[(i * 3) + j].title
+                    .created-by= showcase[(i * 3) + j].created_by
+            - }
+        - }
+
+
+
 
 
       .footer

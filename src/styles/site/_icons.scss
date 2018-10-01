@@ -1,0 +1,27 @@
+.icon {
+  display: inline-block;
+  font: normal normal normal 16px/1 icons;
+  font-size: inherit;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+// .icon.code-icon:before { content: '\f259'; }
+.icon.code-icon:before { content: '\f336'; }
+.icon.game-icon:before { content: '\f209'; }
+.icon.mobile-icon:before { content: '\f293'; }
+.icon.web-icon:before { content: '\f197'; }
+.icon.email-icon:before { content: '\f1c6'; }
+.icon.phone-icon:before { content: '\f2b4'; }
+.icon.map-icon:before { content: '\f27d'; }
+
+.icon.session-icon:before { content: '\f15c'; }
+.icon.clock-icon:before { content: '\f18f'; }
+.icon.coach-icon:before { content: '\f27b'; }
+.icon.tools-icon:before { content: '\f336'; }
+.icon.share-icon:before { content: '\f369'; }
+.icon.discount-icon:before { content: '\f178'; }

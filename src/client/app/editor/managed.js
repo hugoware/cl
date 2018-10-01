@@ -129,10 +129,13 @@ export default class ManagedEditor {
 
 		// check that this edit is allowed
 		const canEdit = isEditAllowed(this, options);
-		if (!canEdit)
+		if (!canEdit) {
+			this.editor.setOptions({ enableBasicAutocompletion: false, enableLiveAutocompletion: false });
 			return cancelEvent(event);
+		}
 
 		// execute?
+		this.editor.setOptions({ enableBasicAutocompletion: true, enableLiveAutocompletion: true });
 		command.exec(this.editor, event.args);
 		options.after = this.editor.getSelectionRange();
 		options.updated = this.activeInstance.content;

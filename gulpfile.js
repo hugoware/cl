@@ -74,6 +74,37 @@ function displayError(err) {
 }
 
 
+// // simple compile for auto-complete scripts
+// $gulp.task('compile-auto-complete-scripts', () => {
+//   const output = $gulp.dest(`dist/resources/public`);
+
+//   return $browserify('src/client/auto-complete/*.js', {
+//     fast: true,
+//     cache: { },
+//     packageCache: { },
+//   })
+//   .transform('babelify', {
+//     presets: [ 'es2015' ],
+//     plugins: [
+//       // 'convert-to-json',
+//       ['inline-import', { 'extensions': [ '.txt', '.ts', '.html' ] }],
+//       'transform-svg-import-to-string',
+//       'transform-class-properties',
+//       'async-to-promises'
+//     ]
+//   })
+//   .bundle()
+//   .on('error', displayError)
+//   .pipe($buffer())
+//   .pipe(output);
+// });
+
+// // setup a watch
+// $gulp.task('watch-auto-complete-scripts', () => {
+//   $gulp.watch([`src/client/auto-complete/**/*`], [ action ]);
+// });
+
+
 // setup client build scripts
 _.each($config.scripts.client, source => {
   const input = `src/client/${source}/index.js`;

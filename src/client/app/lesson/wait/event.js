@@ -44,7 +44,6 @@ export default class UserEvent {
 
 // setup a custom event handler
 function setupEvent(instance) {
-	console.log('setup');
 	const { onSuccess, selector } = instance;
 	const { commands } = selector;
 
@@ -67,9 +66,9 @@ function setupEvent(instance) {
 		}, debounce);
 	};
 
-	// perform validation immediately
-	if (_.isFunction(instance.onValidation.init))
-		instance.onValidation.init();
+	// if this wants to be executed immediately
+	if (action.init === true)
+		try { action(); } catch(ex) { /* don't crash */ }
 
 	// wait for this event
 	instance.__disposeListener = listen(event, instance.onValidation);

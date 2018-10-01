@@ -1,0 +1,31 @@
+-
+  question: Why does CodeLab use self-paced tutorials and not classroom lectures?
+  answer: |
+    There's several advantages to self-paced learning
+
+    1. A lecture requires that all students are on the same topic, with the same understanding, at the same time. Self-paced learning allows students to focus on the topic they're studing.
+    2. Professional developers do not learn in a classroom environment, but instead reading documentation and tutorials.
+-
+  question: Do we need to bring a laptop to attend classes?
+  answer: |
+    You can, if you'd like, but we have work-stations available for use.
+    You will need to be able to use headphones
+    You will need to have access to a keyboard
+    iPads are not recommended
+-
+  question: Can I see what my student has created?
+  answer: |
+    Yes! One of the main goals for CodeLab is to make it so that work could be easily published and shared with friends and family.
+    Additionally, unlocked courses are available from home.
+-
+  question: Do you teach programming with Minecraft or Scratch?
+  answer: |
+    We think that games like Minecraft and block based programming languages like Scratch are a fantastic way to get kids interested coding.
+
+    However, our goal at CodeLab is to help aspiring developers take their first steps into developing software with programming languages used by professionals.
+-
+  question: Can we use CodeLab in our school district?
+  answer: |
+    Yes! Contact us for information about licencing for school districts.
+
+    send an email to hello@codelabschool.com or use the [Request School District Licencing](http://google.com/) form

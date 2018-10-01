@@ -1,0 +1,898 @@
+@import '_utils';
+@import '_fonts';
+@import '_icons';
+@import './_bootstrap';
+
+$theme-color: #118CF8;
+// $theme-color: #3A99D8;
+$default-action-color: #39CA74;
+$secondary-action-color: #29BB9C;
+$minor-action-color: #3A99D8;
+
+.debug {
+  box-shadow: inset 0 0 0 4px #f00;
+}
+
+#login-button {
+	float: right;
+	font-size: 18px;
+	padding: 7px 25px;
+	border: 4px solid #fff;
+	border-radius: 100px;
+	cursor: pointer;
+	font-weight: 600;
+
+	transition: background 0.3s;
+	&:hover {
+		background: rgba(#fff, 0.3);
+	}
+}
+
+.jump {
+  position: absolute;
+  display: block;
+  height: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: -100px 0 0 0;
+}
+
+.button {
+  transition: all 0.4s;
+  $action-font-size: 19px;
+  $action-padding: 30px;
+  $action-height: 50px;
+  $action-spacing: 20px;
+
+  display: inline-block;
+  margin-right: 15px;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+
+  font-size: $action-font-size;
+  line-height: $action-height;
+  height: $action-height;
+  padding: 0 $action-padding;
+  border-radius: $action-height;
+	background: rgba(50, 50, 50, 0.8);
+	
+	&:visited, &:active {
+		color: #fff;
+	}
+}
+
+.action a {
+  text-decoration: none;
+}
+
+@mixin header_underline($color) {
+  border-bottom: 8px solid $color;
+}
+
+@mixin button_hover($button-color) {
+  background-color: $button-color;
+  box-shadow: inset 0 0 0 2px lighten($button-color, 15%);
+  text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  color: #fff;
+}
+
+html, body {
+  font-family: Poppins, sans-serif;
+}
+
+.main.content {
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.loading .loading {
+  display: none;
+}
+
+.wrapper {
+
+  &.tutorials {
+    padding: 15px 0;
+  } 
+
+}
+
+.header {
+  background: 50% 60% no-repeat url(/__codelab__/site/images/header-background.jpg);
+  background-size: cover;
+  color: #fff;
+
+  &:before {
+    content: ' ';
+    display: block;
+    height: 10px;
+    background: $theme-color;
+  }
+
+  padding: 0 0 100px 0;
+
+  .bar {
+    padding: 40px 0;
+  }
+
+  .intro {
+    padding: 60px 20px;
+    text-shadow: 0 1px 3px #000;
+    font-size: 32px;
+  }
+
+  .learn-to {
+    font-size: 120%;
+    font-weight: bold;
+    color: #ccc;
+  }
+
+  .feature {
+    font-weight: bold;
+    font-size: 180%;
+    display: inline-block;
+    padding: 0 32px 0 20px;
+    background: rgba(0, 0, 0, 0.4);
+    margin: 0 -20px;
+
+    .typed-cursor {
+      opacity: 0.3;
+    }
+
+    #feature-display {
+      display: inline-block;
+    }
+  }
+
+
+  .details {
+    font-size: 24px;
+    padding: 40px 0 60px 0;
+    max-width: 800px;
+    line-height: 1.6em;
+  }
+
+  .actions a {
+    @extend .button;
+
+    &.how-it-works:hover {
+      @include button_hover($default-action-color);
+    }
+
+    &.try-demo:hover {
+      @include button_hover($secondary-action-color);
+    }
+
+    &.view-schedule:hover {
+      @include button_hover($minor-action-color);
+    }
+
+  }
+
+  .logo {
+    $logo-scale: 0.25;
+    $logo-width: 1040px * $logo-scale; 
+    $logo-height: 228px * $logo-scale;
+    background: url(/__codelab__/site/images/logo.png) no-repeat;
+    background-size: $logo-width $logo-height;
+    width: $logo-width;
+    height: $logo-height;
+    display: block;
+    overflow: hidden;
+    text-indent: -100%;
+  }
+}
+
+.section {
+
+  .description {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    
+    h3 {
+      font-size: 48px;
+      font-weight: bold;
+      padding: 0 0 15px 0;
+
+      @include header_underline(#E54D42);
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6em;
+      padding: 20px 0 0 0;
+    }
+
+    .action {
+      padding-top: 30px;
+    }
+
+  }
+
+  padding: 100px 0;
+
+}
+
+.sessions .footnote {
+  padding: 20px 0;
+  text-align: center;
+
+  &, a {
+    color: #999;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.courses {
+  .action {
+    a.button {
+      &:hover {
+        @include button_hover(#E34E47);
+      }
+    }
+  }
+}
+
+.faq {
+  .action {
+    a.button {
+      &:hover {
+        @include button_hover(#F0C13D);
+      }
+    }
+  }
+}
+
+.course-list {
+  padding: 10px;
+  position: relative;
+  top: -30px;
+
+  .course {
+    transition: all 0.4s;
+    padding: 5px;
+    z-index: 0;
+    
+    &:hover {
+      transform: scale(1.05, 1.05);
+      z-index: 4;
+    }
+  }
+
+  .details {
+    background: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: inset 0 0 0 2px rgba(0,0,0, 0.1);
+    border-radius: 10px;  
+  }
+
+  .icon {
+    right: 8px;
+    top: 5px;
+    font-size: 65px;
+    z-index: 1;
+  }
+
+	.category-icon {
+		height: 70px;
+		background-repeat: no-repeat;
+		background-size: auto 100%;
+		background-position: 50% 0;
+	}
+
+  .code-icon { background-image: url(/__codelab__/site/images/icon-code.png); }
+  .game-icon { background-image: url(/__codelab__/site/images/icon-game.png); }
+  .web-icon { background-image: url(/__codelab__/site/images/icon-web.png); }
+  .mobile-icon { background-image: url(/__codelab__/site/images/icon-mobile.png); }
+
+  .name {
+    font-size: 22px;
+    padding: 15px 0 7px 0;
+    font-weight: bold;
+  }
+
+  .about {
+    font-size: 14px;
+    line-height: 1.4em;
+    color: #777;
+  }
+}
+
+.wrapper.tutorials {
+  background: #344A5D;
+  position: relative;
+
+  .screenshot {
+    background: url(/__codelab__/site/images/assistant.png) no-repeat;
+    background-size: auto 100%;
+    background-position: 100% 0;
+    position: absolute;
+    top: -30px;
+    bottom: -30px;
+		width: 150%;
+    transform: translate(-110%, 0);
+  }
+
+  img {
+    display: none;
+  }
+
+  h3 {
+    @include header_underline(#409AD6);
+  }
+
+  p {
+    padding-top: 20px;
+  }
+
+  a {
+    @extend .button;
+    background-color: $minor-action-color;
+
+    &:hover {
+      @include button_hover($default-action-color);
+    }
+  }
+
+  color: #fff;
+  padding: 0;
+
+  .section {
+    padding: 0;
+  }
+
+  .details {
+    padding: 60px 30px;
+    background: rgba(#344A5D, 0.8);
+  }
+}
+
+.section.about {
+  background: $theme-color;
+  color: #fff;
+  padding: 100px 0 120px 0;
+  position: relative;
+
+  h3 {
+    @include header_underline(lighten($theme-color, 15%));
+  }
+
+  a {
+    color: #fff;
+    &:hover {
+      @include button_hover(lighten($theme-color, 10%));
+    }
+  }
+
+  // img {
+  //   width: 100%;
+  // }
+  .concept {
+    // height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 55%;
+
+    background: url(/__codelab__/site/images/concept.jpg);
+    background-size: auto 80%;
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+  }
+}
+
+.location {
+
+  padding: 0;
+  position: relative;
+
+  #map {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    
+    background: #EBEEF0 url(/__codelab__/site/images/map.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+  }
+
+  $form-background: #fff;
+  .form {
+    background: rgba($form-background, 0.4);
+  }
+
+  .description {
+    background: rgba($form-background, 0.7);
+    padding: 60px 20px;
+
+    h3 {
+      @include header_underline(#995DB4);
+    }
+  }
+
+  .action {
+    padding: 40px 0 0 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 15px;
+    box-shadow: inset 0 0 0 2px #ddd;
+    border-radius: 5px;
+
+    li {
+      $info-item-height: 45px;
+      position: relative;
+      padding: 0 0 0 5px;
+      
+      .icon, .info {
+        padding: 0;
+        margin: 0;
+        height: $info-item-height;
+        line-height: $info-item-height;
+        display: inline-block;
+      }
+
+      .info {
+        font-size: 18px;
+        color: #555;
+        padding-left: 40px;
+        color: #000;
+      }
+      
+      .icon {
+        font-size: 24px;
+        width: 36px;
+        top: 50%;
+        transform: translate(0, -50%);
+        position: absolute;
+      }
+
+      .map-icon { color: #999; }
+      .email-icon { color: #999; }
+      .phone-icon { color: #999; }
+    }
+
+  }
+
+  .action {
+    a.button {
+      &:hover {
+        @include button_hover(#8C49AB);
+      }
+    }
+  }
+}
+
+.policies {
+
+  .explanation {
+    padding-bottom: 30px;
+  }
+  
+  .summary {
+    margin-top: 10px;
+    padding: 15px 25px;
+    background: #f3f3f3;
+
+    h4 {
+      font-size: 16px;
+      font-weight: normal;
+      color: #999;
+    }
+
+    .simple {
+      padding-top: 5px;
+      line-height: 1.6em;
+      font-size: 13px;
+    }
+  }
+
+
+}
+
+.schedule {
+
+  .description {
+    h3 {
+      @include header_underline(#34BA9C);
+		}
+		
+		padding-bottom: 30px;
+  }
+
+}
+
+.showcase {
+
+  max-width: 1100px;
+  
+  .item {
+    padding: 0 10px 30px 10px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  a {
+    color: #888;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  .title, .created-by {
+  }
+
+  .title {
+    color: #555;
+    padding: 9px 0 0px 0;
+    font-size: 14.5px;
+  }
+  
+  .created-by {
+    color: #888;
+    font-size: 12px;
+  }
+
+}
+
+.faq {
+
+  .description {
+    h3 {
+      @include header_underline(#F1C22A);
+    }
+  }
+
+  // .question-list {
+  //   position: absolute;
+  // }
+
+  .question {
+    transition: all 0.4s;
+
+    $question-hover-background: $theme-color;
+    $question-hover-color: #fff;
+    $answer-background: darken($theme-color, 15%);
+    $answer-color: #fff;
+    $answer-padding: 20px;
+
+    position: relative;
+    z-index: 0;
+    margin-bottom: 10px;
+
+    background: $question-hover-background;
+    
+
+    .title {
+      padding: 15px 20px;
+      font-size: 18px;
+      cursor: help;
+
+      color: #fff;
+      strong {
+        color: #fff;
+      }
+    }
+
+    .answer {
+      transition: all 0.4s;
+      
+      // position: absolute;
+      padding: $answer-padding;
+      // height: 0;
+      overflow: hidden;
+      // opacity: 0;
+      font-size: 16px;
+      line-height: 1.5em;
+      z-index: 4;
+      left: -25px;
+      right: -25px;
+
+      ol {
+        padding: 13px;
+      }
+
+      li {
+        margin: 0;
+        padding: 8px 0;
+      }
+
+      a {
+        // color: lighten($theme-color, 33%);
+        color: #fff;
+        background: darken($answer-background, 10%);
+        display: inline-block;
+        padding: 0 5px;
+        border-radius: 4px;
+      }
+
+      p {
+        margin: 0 0 20px 0;
+
+        &:last-child {
+          margin: 0;
+        }
+      }
+
+      // transform: translate(30px, 0);
+      background: $answer-background;
+      color: $answer-color;
+
+      // &:after {
+      //   opacity: 0;
+      //   bottom: 100%;
+      //   left: 50%;
+      //   border: solid transparent;
+      //   content: " ";
+      //   height: 0;
+      //   width: 0;
+      //   position: absolute;
+      //   pointer-events: none;
+      //   border-color: rgba(58, 153, 216, 0);
+      //   border-bottom-color: $answer-background;
+      //   border-width: 10px;
+      //   margin-left: -10px;
+      //   z-index: 5;
+      // }
+    }
+
+    &.collapsed {
+      background: $answer-background;
+      color: $answer-color;
+
+      background: darken(#A6ADB5, 5%);
+
+      .answer {
+        height: 0;
+        padding: 0 $answer-padding;
+      }
+    }
+
+    // &:hover, &.hover {
+    //   z-index: 9;
+
+    //   .title {
+    //     background: $question-hover-background;
+    //   }
+
+    //   .title, .title strong {
+    //     color: $question-hover-color;
+    //   }
+
+    //   .answer {
+    //     opacity: 1;
+    //     padding: 30px;
+    //     height: auto;
+    //     &:after {
+    //       opacity: 1;
+    //     }
+    //   }
+    // }
+
+  }
+
+}
+
+// .time-slots {
+//   padding-bottom: 30px;
+//   .slot {
+//     padding-top: 20px;
+    
+//     .detail {
+//       padding: 18px 10px 18px 12px;
+//       // background: #eee;
+//       box-shadow: inset 0 0 0 3px #ddd;
+//     }
+
+//     .icon {
+//       font-size: 40px;
+//       color: #bbb;
+//       display: inline-block;
+//       // position: absolute;
+//       transform: translate(0, -30%);
+//     }
+
+//     .day {
+//       display: inline-block;
+//       padding: 0 0 0 11px;
+//       line-height: auto;
+//     }
+//   }
+
+//   .name {
+//     font-weight: 500;
+//     font-size: 20px;
+//     padding: 0 0 4px 0;
+//   }
+
+//   .hours {
+//     font-size: 15.5px;
+//     color: #777;
+//   }
+
+// }
+
+.time-slots {
+
+	.step {
+		clear: both;
+	}
+
+	.about {
+		padding: 10px 0 15px 60px;
+		clear: both;
+	}
+
+	h3 {
+		margin: 0;
+		font-size: 22px;
+		font-weight: 600;
+	}
+
+	p {
+		opacity: 0.6;
+		font-size: 15px;
+		font-style: italic;
+	}
+
+	.step-icon {
+		$time-slot-icon-size: 50px;
+		width: $time-slot-icon-size;
+		height: $time-slot-icon-size;
+		background-size: auto 100%;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		position: absolute;
+		margin: 5px 0 0 0;
+	}
+
+	.icon-clock { background-image: url(/__codelab__/site/images/icon-clock.png); }
+	.icon-calendar { background-image: url(/__codelab__/site/images/icon-calendar.png); }
+	.icon-start { background-image: url(/__codelab__/site/images/icon-start.png); }
+
+}
+
+.pricing-table {
+	$standard-plan-color: #3AB99D;
+  box-shadow: inset 0 0 0 2px $standard-plan-color;
+  margin-top: 30px 0 0 0;
+
+  .price {
+    background: $standard-plan-color;
+    text-align: center;
+
+    color: #fff;
+    font-size: 38px;
+    font-weight: bold;
+    padding: 10px;
+	}
+	
+	$remote-plan-color: #7F9B9A;
+	&.remote-plan {
+		box-shadow: inset 0 0 0 2px $remote-plan-color;
+		.price {
+			background-color: $remote-plan-color;
+		}
+		.summary {
+			background-color: rgba($remote-plan-color, 0.2);
+		}
+	}
+
+	.title {
+		font-size: 22px;
+		font-weight: normal;
+	}
+
+  .cost, .term {
+    display: inline;
+  }
+
+  .term {
+    vertical-align: super;
+    font-size: 18px;
+    margin-left: 8px;
+  }
+
+	.summary {
+		padding: 15px 25px;
+		font-size: 16px;
+		line-height: 1.4em;
+		background-color: rgba($standard-plan-color, 0.2);
+	}
+
+  .features {
+
+    .item:nth-child(even) {
+      background: rgba(0,0,0,0.03);
+    }
+
+    .icon, .detail {
+      display: inline-block;
+    }
+
+    .icon {
+      font-size: 32px;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      opacity: 0.4;
+    }
+
+    .detail {
+      padding-left: 50px;
+    }
+
+    .item {
+      $feature-item-height: 60px;
+      font-size: 18px;
+      padding: 17px 12px;
+
+      position: relative;
+    }
+
+  }
+
+
+}
+
+.footer {
+  margin: 60px 0 0 0;
+  padding: 40px 0 125px 0;
+  background: $theme-color;
+  border-top: 25px solid lighten($theme-color, 8%);
+  text-align: center;
+
+  .content {
+    opacity: 0.5;
+    width: 80%;
+    padding: 50px 0 0 0;
+    margin: 0 auto;
+    // border-top: 2px solid #999;
+    font-size: 16px;
+
+    &, a {
+      color: #fff;
+    }
+
+    .separator {
+      display: inline-block;
+      padding: 0 20px;
+    }
+
+    // span {
+    //   display: block;
+    //   padding: 7px 0 0 0;
+    // }
+  }
+
+  .logo {
+    $logo-scale: 0.2;
+    $logo-width: 1040px * $logo-scale; 
+    $logo-height: 228px * $logo-scale;
+    background: url(/__codelab__/site/images/logo.png) no-repeat;
+    background-size: $logo-width $logo-height;
+    width: $logo-width;
+    height: $logo-height;
+    display: block;
+    overflow: hidden;
+    text-indent: -100%;
+    margin: 0 auto 15px auto;
+    opacity: 1;
+  }
+}
+
+@import '_responsive';

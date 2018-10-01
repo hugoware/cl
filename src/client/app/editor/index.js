@@ -7,13 +7,20 @@ import ManagedEditor from './managed';
 const Range = $brace.acequire('ace/range').Range;
 const LanguageTools = $brace.acequire('ace/ext/language_tools');
 
+// handle loading custom ones like this
+window.LANG = LanguageTools;
+_.each(window.COMPLETERS, completer => {
+	LanguageTools.addCompleter(completer);
+})
+
+
 // validations
 require('brace/mode/html');
 require('brace/mode/javascript');
 require('brace/mode/json');
-// require('brace/mode/lua');
 require('brace/mode/xml');
 require('brace/mode/css');
+// require('brace/mode/lua');
 
 // configure Brace
 require('brace/theme/monokai');
@@ -53,7 +60,7 @@ class EditorManager {
 	createInstance(container) {
 		const editor = createEditor(container, {
 			enableBasicAutocompletion: true, // [{ getCompletions }],
-			enableSnippets: true,
+			enableSnippets: false,
 			enableLiveAutocompletion: true
 		});
 

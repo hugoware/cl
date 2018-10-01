@@ -166,6 +166,7 @@ export default {
 	resolvePublic,
 	resolveCache,
 	resolveProject,
+	resolveResource,
 	resolveData,
 	sanitizePath,
 };
