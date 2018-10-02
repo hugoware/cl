@@ -35,7 +35,8 @@ export async function handle(request, response, next) {
 		return next();
 
 	// find the file to send
-	const path = $path.resolveProject(id, request.path);
+	let path = decodeURI(request.path);
+	path = $path.resolveProject(id, path);
 
 	// make sure it exists first
 	try {

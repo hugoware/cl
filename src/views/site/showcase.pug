@@ -1,88 +1,35 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='UTF-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    
-    title CodeLab
+extends _template
+include _header
 
-    link(rel='shortcut icon' href='/site/icons/favicon.ico' type='image/x-icon')
-    link(rel='icon' href='/site/icons/favicon.ico' type='image/x-icon')
-    link(rel='apple-touch-icon' sizes='57x57' href='/site/icons/apple-icon-57x57.png')
-    link(rel='apple-touch-icon' sizes='60x60' href='/site/icons/apple-icon-60x60.png')
-    link(rel='apple-touch-icon' sizes='72x72' href='/site/icons/apple-icon-72x72.png')
-    link(rel='apple-touch-icon' sizes='76x76' href='/site/icons/apple-icon-76x76.png')
-    link(rel='apple-touch-icon' sizes='114x114' href='/site/icons/apple-icon-114x114.png')
-    link(rel='apple-touch-icon' sizes='120x120' href='/site/icons/apple-icon-120x120.png')
-    link(rel='apple-touch-icon' sizes='144x144' href='/site/icons/apple-icon-144x144.png')
-    link(rel='apple-touch-icon' sizes='152x152' href='/site/icons/apple-icon-152x152.png')
-    link(rel='apple-touch-icon' sizes='180x180' href='/site/icons/apple-icon-180x180.png')
-    link(rel='icon' type='image/png' sizes='192x192' href='/site/icons/android-icon-192x192.png')
-    link(rel='icon' type='image/png' sizes='32x32' href='/site/icons/favicon-32x32.png')
-    link(rel='icon' type='image/png' sizes='96x96' href='/site/icons/favicon-96x96.png')
-    link(rel='icon' type='image/png' sizes='16x16' href='/site/icons/favicon-16x16.png')
-    link(rel='manifest' href='/site/icons/manifest.json')
+block title
+	| Showcase / CodeLab
 
-    meta(name='msapplication-TileColor' content='#e24d49')
-    meta(name='msapplication-TileImage' content='/site/icons/ms-icon-144x144.png')
-    meta(name='theme-color' content='#e24d49')
+mixin showcase_item(item)
+	.col-md-4.col-sm-6.col-xs-10.col-xs-offset-1.col-sm-offset-0
+		.item(class='type-'+ item.type)
+			a(href='//' + item.id + '.codelabschool.com/' target='_app_'+ item.id)
+				.example
+					img(src='/thumbnail/'+ item.id)
+				.title= item.title
+				.created-by= item.created_by
+				.description= item.description
 
-    link(rel='stylesheet', type='text/css', href='/site/index.css')
+block content
+	script(type='text/javascript').
+		document.body.className = 'loading';
 
-    //- if lt IE 9
-      script(src='http://html5shiv.googlecode.com/svn/trunk/html5.js')
-      script(src='vendor/html5shiv.js')
-      script(src='vendor/respond.js')
+	.loading
+		h1 Loading
 
-  body
-    script(type='text/javascript').
-      document.body.className = 'loading';
+	.main.content
 
-    .loading
-      h1 Loading
+		+standard_header('Student Showcase')
+			| Check out some of the creations made using CodeLab
 
-    .main.content
+		.section.showcase.container-fluid
+			.row.content
 
-      .header
-        .container
+				for item in showcase
+					+showcase_item(item)
 
-          .row.bar
-            a.logo(href='/') CodeLab
-
-          .row.intro
-            .feature Student Showcase
-            .details
-            .actions
-              a.button.how-it-works(href='/') Return to Home
-
-      .section.showcase.container-fluid
-        .row.content
-        - for (i = 0; i < showcase.length / 3; i++) {
-            - for (j = 0; j < 3; j++) {
-              .col-md-4.col-sm-6.col-xs-6
-                .item
-                  a(href='/'+ showcase[(i * 3) + j].alias)
-                    //- img(src='/showcase/'+ showcase[(i * 3) + j].alias)
-                    img(src='/site/images/no-preview.png')
-                    .title= showcase[(i * 3) + j].title
-                    .created-by= showcase[(i * 3) + j].created_by
-            - }
-        - }
-
-
-
-
-
-      .footer
-
-        .content
-          .logo
-          span &copy; #{(new Date).getFullYear()}
-
-
-if !production
-  script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
-
-
-
+		include _footer

@@ -13,6 +13,39 @@ $minor-action-color: #3A99D8;
   box-shadow: inset 0 0 0 4px #f00;
 }
 
+#error {
+	z-index: 999;
+	background: rgba(#F39E27, 0.72);
+	border: 2px solid #F39E27;
+	text-shadow: 0 1px 3px #000;
+	box-shadow: 0px 3px 18px rgba(#000, 0.6);
+	color: #fff;
+	top: 120px;
+	position: fixed;
+	left: 20%;
+	right: 20%;
+	display: none;
+	text-align: center;
+	padding: 16px 20px;
+	font-size: 15px;
+	border-radius: 4px;
+	opacity: 1;
+
+	strong, #reason {
+		display: inline;
+	}
+
+	strong {
+		font-weight: 600;
+		margin-right: 10px;
+	}
+
+	&.fade-out {
+		transition: opacity 1s;
+		opacity: 0;
+	}
+}
+
 #login-button {
 	float: right;
 	font-size: 18px;
@@ -318,7 +351,7 @@ html, body {
     top: -30px;
     bottom: -30px;
 		width: 150%;
-    transform: translate(-110%, 0);
+    transform: translate(-103%, 0);
   }
 
   img {
@@ -517,35 +550,50 @@ html, body {
 
 .showcase {
 
-  max-width: 1100px;
+  max-width: 1300px;
   
   .item {
-    padding: 0 10px 30px 10px;
+    padding: 0;
     text-align: center;
-    overflow: hidden;
+		overflow: hidden;
+		height: 300px;
+		margin-bottom: 40px;
+
+		transition: all 0.2s;
+		&:hover {
+			transform: scale(1.05, 1.05);
+		}
   }
 
   a {
-    color: #888;
+		color: #888;
+		text-decoration: none;
   }
 
   img {
     width: 100%;
   }
 
-  .title, .created-by {
-  }
+	.example {
+		height: 150px;
+		background: #eee;
+	}
 
   .title {
     color: #555;
     padding: 9px 0 0px 0;
-    font-size: 14.5px;
+    font-size: 17.5px;
   }
   
   .created-by {
     color: #888;
-    font-size: 12px;
-  }
+    font-size: 15px;
+	}
+	
+	.description {
+		padding: 5px 15px 0 15px;
+		font-size: 13px;
+	}
 
 }
 
@@ -894,5 +942,6 @@ html, body {
     opacity: 1;
   }
 }
+
 
 @import '_responsive';

@@ -24,6 +24,26 @@
 
 - slide:
     mode: popup
+
+    content: |
+      You're allowed to upload a file now
+
+    autoNext: false
+
+    validation:
+      uploadFile: verifyFileUploadIsImage
+
+    waitFor:
+      - ::event(file-uploaded, verifyUploadImageSuccess)
+
+    flags: +upload-file-dialog
+
+- slide:
+    mode: popup
+
+    actions:
+      - hide-all-dialogs
+
     content: |
       Great! Now that this file is open, let's look at a few things
 

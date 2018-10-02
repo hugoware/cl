@@ -321,6 +321,12 @@ function setActiveSlide(lesson, slide) {
 	slide.isLast = index === lastIndex;
 	slide.isCheckpoint = slide.allowBack !== true;
 
+	// broadcast all actions, if any
+	_.each(slide.actions, action => {
+		const parts = _.map(action.split(/,/g), _.trim);
+		broadcast.apply(null, parts);
+	});
+
 	// let other systems know the slide changed
 	broadcast('slide-changed', this, slide);
 }

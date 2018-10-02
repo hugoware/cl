@@ -55,8 +55,8 @@ $tab-bar-modified-indicator-size: 7px;
 		position: relative;
 		display: inline-block;
 		height: $workspace-tab-bar-height;
-		padding: 0 $workspace-tab-close-gap 0 $workspace-tab-name-gap;
-
+		padding: 0 ($workspace-tab-close-gap + 20px) 0 $workspace-tab-name-gap;
+		
 		.modified, .modified:before {
 			display: none;
 			width: $tab-bar-modified-indicator-size;
@@ -96,12 +96,17 @@ $tab-bar-modified-indicator-size: 7px;
 
 		.name {
 			padding: 0 $workspace-tab-name-close-gap 0 0;
+			max-width: 130px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 
 		.close {
 			opacity: 0.3;
 			@include animate('transform opacity', 0.2s);
 			margin: 0 $workspace-tab-bar-close-button-gap;
+			position: absolute;
 			
 			svg {
 				width: $workspace-tab-bar-close-button-size;

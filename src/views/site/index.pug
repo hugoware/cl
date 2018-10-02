@@ -1,259 +1,217 @@
-doctype html
-html(lang='en')
-	head
-		meta(charset='UTF-8')
-		meta(http-equiv='X-UA-Compatible', content='IE=edge')
-		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+extends _template
+
+block title
+	| CodeLab
+
+block content
+	script(type='text/javascript').
+		document.body.className = 'loading';
+
+	.loading
+		h1 Loading
+
+	#error(style='display: none;') 
+		strong Login error:
+		#reason Unable to log into website this is why
+
+	.main.content
+
+		.header
+			.container
+
+				.row.bar
+					#login-button Login
+					a.logo(href='/') CodeLab
+
+				.row.intro
+					.learn-to Learn To...
+					.feature
+						#feature-display Write Real Code
+						| &nbsp;
+					.details !{content.header_introduction}
+					.actions
+						a.button.how-it-works(href='#about') How It Works
+						a.button.try-demo(href='#demo') Watch a Demo
+						a.button.view-schedule(href='#schedule') Schedule &amp; Pricing
+
+		a.jump(name='about')
+
+		.section.about.container-fluid
+			.concept
+			.row.content
+				.col-md-5
+					//-   img(src='/site/images/concept.jpg')
+
+				.details.col-md-7
+					.description
+						h3 !{content.about_title}
+						p !{content.about_content}
+
+						//- .action
+						//-   a.button(href='/video') Watch the Video
+
+		.section.courses.container-fluid
+			.row.content
+				.col-md-5
+					.description
+						h3 !{content.courses_title}
+						p !{content.courses_content}
+
+						.action
+							a.button(href='/showcase') View Student Showcase
+				
+				.course-list.col-md-7
+					.container-fluid
+						.row
+							.course.code.col-md-6
+								.details
+									.category-icon.code-icon
+									.info
+										.name Basic Coding
+										.about Learn basic programming skills in a variety of languages.
+
+							.course.web.col-md-6
+								.details
+									.category-icon.web-icon
+									.info
+										.name Websites
+										.about Create public websites using HTML, CSS, and JavaScript.
+
+						.row
+							.course.game.col-md-6
+								.details
+									.category-icon.game-icon
+									.info
+										.name Games
+										.about Build games for phones, tablets, or desktop computers
+
+							.course.mobile.col-md-6
+								.details
+									.category-icon.mobile-icon
+									.info
+										.name Mobile Apps
+										.about Make apps that run on iPhone or Android devices
+
+
+		a.jump(name='demo')
+
+		.wrapper.tutorials
+			.section.tutorials.container-fluid
+				.row.content
+					.col-md-6
+
+					.details.col-md-6
+						.screenshot
+							img(src='/__codelab__/site/images/assistant.png')
+
+						.description
+							h3 !{content.tutorials_title}
+							p !{content.tutorials_content}
+
+							.action
+								a.button(href='/demo') Watch a Demo
+
+		a.jump(name='schedule')
+
+		.section.schedule.container-fluid
+			.row.content
+				.col-md-6
+					.description
+						h3 !{content.schedule_title}
+						p !{content.schedule_content}
+
+				.col-md-6
+					.time-slots
+						.step.first
+							.step-icon.icon-calendar
+							.about
+								h3 Choose a Day
+								p Pick the day of the week that you'd like to visit
+
+						.step
+							.step-icon.icon-clock
+							.about
+								h3 Choose a Time
+								p Find a open time that works best for your schedule
+
+						.step.last
+							.step-icon.icon-start
+							.about
+								h3 Get Started!
+								p Choose a seat and jump right into programming!
+
+				.sessions.col-md-12
+					.container-fluid
+						.row
+							for plan in content.plans
+								.col-sm-6
+									.pricing-table(class=plan.css + '-plan')
+										.price
+											.title= plan.title
+											.cost $!{plan.cost}
+											.term /mo
+
+										.summary= plan.summary
+
+										.features
+											for item in plan.features
+												.item
+													.icon(class=item.icon+'-icon')
+													.detail !{item.detail}
+
+						.footnote For additional information, #[a(href='/policies') view the CodeLab policies]
+
+									
+
+
+		.section.location.container-fluid
+			#map
+			.row.content
+				.col-md-6
+				
+				.form.col-md-6
+					.description
+						h3 !{content.reserve_title}
+						p !{content.reserve_content}
+
+						ul
+							li.where
+								.icon.map-icon
+								.info TBD 
+								//- Coppell, Texas
+							li.email
+								.icon.email-icon
+								.info 
+									a(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2') hello@codelabschool.com
+							li.phone
+								.icon.phone-icon
+								.info !{content.phone_number}
+
+						.action
+							a.button(href='https://goo.gl/forms/OpoHsFSfQk4b4JAC2') Reserve a Space
+
 		
-		title CodeLab
+		.section.faq.container-fluid
+			.row.content
+				.col-md-6
+					.description
+						h3 !{content.faq_title}
+						p !{content.faq_content}
 
-		link(rel='shortcut icon' href='/__codelab__/site/icons/favicon.ico' type='image/x-icon')
-		link(rel='icon' href='/__codelab__/site/icons/favicon.ico' type='image/x-icon')
-		link(rel='apple-touch-icon' sizes='57x57' href='/__codelab__/site/icons/apple-icon-57x57.png')
-		link(rel='apple-touch-icon' sizes='60x60' href='/__codelab__/site/icons/apple-icon-60x60.png')
-		link(rel='apple-touch-icon' sizes='72x72' href='/__codelab__/site/icons/apple-icon-72x72.png')
-		link(rel='apple-touch-icon' sizes='76x76' href='/__codelab__/site/icons/apple-icon-76x76.png')
-		link(rel='apple-touch-icon' sizes='114x114' href='/__codelab__/site/icons/apple-icon-114x114.png')
-		link(rel='apple-touch-icon' sizes='120x120' href='/__codelab__/site/icons/apple-icon-120x120.png')
-		link(rel='apple-touch-icon' sizes='144x144' href='/__codelab__/site/icons/apple-icon-144x144.png')
-		link(rel='apple-touch-icon' sizes='152x152' href='/__codelab__/site/icons/apple-icon-152x152.png')
-		link(rel='apple-touch-icon' sizes='180x180' href='/__codelab__/site/icons/apple-icon-180x180.png')
-		link(rel='icon' type='image/png' sizes='192x192' href='/__codelab__/site/icons/android-icon-192x192.png')
-		link(rel='icon' type='image/png' sizes='32x32' href='/__codelab__/site/icons/favicon-32x32.png')
-		link(rel='icon' type='image/png' sizes='96x96' href='/__codelab__/site/icons/favicon-96x96.png')
-		link(rel='icon' type='image/png' sizes='16x16' href='/__codelab__/site/icons/favicon-16x16.png')
-		link(rel='manifest' href='/__codelab__/site/icons/manifest.json')
+						.action
+							a.button(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2') Ask a Question
 
-		meta(name='msapplication-TileColor' content='#e24d49')
-		meta(name='msapplication-TileImage' content='/__codelab__/site/icons/ms-icon-144x144.png')
-		meta(name='theme-color' content='#e24d49')
-
-		link(rel='stylesheet', type='text/css', href='/__codelab__/site/index.css')
-
-		//- if lt IE 9
-			script(src='http://html5shiv.googlecode.com/svn/trunk/html5.js')
-			script(src='vendor/html5shiv.js')
-			script(src='vendor/respond.js')
-
-	body
-		script(type='text/javascript').
-			document.body.className = 'loading';
-
-		.loading
-			h1 Loading
-
-		.main.content
-
-			.header
-				.container
-
-					.row.bar
-						#login-button Login
-						a.logo(href='/') CodeLab
-
-
-					.row.intro
-						.learn-to Learn To...
-						.feature
-							#feature-display Write Real Code
-							| &nbsp;
-						.details !{content.header_introduction}
-						.actions
-							a.button.how-it-works(href='#about') How It Works
-							a.button.try-demo(href='#demo') Watch Demo
-							a.button.view-schedule(href='#schedule') View Schedule
-
-			a.jump(name='about')
-
-			.section.about.container-fluid
-				.concept
-				.row.content
-					.col-md-5
-						//-   img(src='/site/images/concept.jpg')
-
-					.details.col-md-7
-						.description
-							h3 !{content.about_title}
-							p !{content.about_content}
-
-							//- .action
-							//-   a.button(href='/video') Watch the Video
-
-			.section.courses.container-fluid
-				.row.content
-					.col-md-5
-						.description
-							h3 !{content.courses_title}
-							p !{content.courses_content}
-
-							.action
-								a.button(href='/showcase') View Student Showcase
-					
-					.course-list.col-md-7
-						.container-fluid
+				.sessions.col-md-6
+					.question-list.container-fluid
+						for item, i in content.faq
 							.row
-								.course.code.col-md-6
-									.details
-										.category-icon.code-icon
-										.info
-											.name Basic Coding
-											.about Learn basic programming skills in a variety of languages.
-
-								.course.web.col-md-6
-									.details
-										.category-icon.web-icon
-										.info
-											.name Websites
-											.about Create public websites using HTML, CSS, and JavaScript.
-
-							.row
-								.course.game.col-md-6
-									.details
-										.category-icon.game-icon
-										.info
-											.name Games
-											.about Build games for phones, tablets, or desktop computers
-
-								.course.mobile.col-md-6
-									.details
-										.category-icon.mobile-icon
-										.info
-											.name Mobile Apps
-											.about Make apps that run on iPhone or Android devices
+								.question(id='question-' + (i+1))
+									.title !{item.question}
+									.answer !{item.answer}
 
 
-			a.jump(name='demo')
+		include _footer
 
-			.wrapper.tutorials
-				.section.tutorials.container-fluid
-					.row.content
-						.col-md-6
-
-						.details.col-md-6
-							.screenshot
-								img(src='/__codelab__/site/images/assistant.png')
-
-							.description
-								h3 !{content.tutorials_title}
-								p !{content.tutorials_content}
-
-								.action
-									a.button(href='/demo') Watch a Demo
-
-			a.jump(name='schedule')
-
-			.section.schedule.container-fluid
-				.row.content
-					.col-md-6
-						.description
-							h3 !{content.schedule_title}
-							p !{content.schedule_content}
-
-					.col-md-6
-						.time-slots
-							.step
-								.step-icon.icon-calendar
-								.about
-									h3 Choose a Day
-									p Pick a day of the week that you'd like to visit CodeLab
-
-							.step
-								.step-icon.icon-clock
-								.about
-									h3 Choose a Time
-									p Find a open time that works best for your schedule
-
-							.step.last
-								.step-icon.icon-start
-								.about
-									h3 Get Started!
-									p Choose a seat and jump right into programming!
-
-					.sessions.col-md-12
-						.container-fluid
-							.row
-								for plan in content.plans
-									.col-sm-6
-										.pricing-table(class=plan.css + '-plan')
-											.price
-												.title= plan.title
-												.cost $!{plan.cost}
-												.term /mo
-
-											.summary= plan.summary
-
-											.features
-												for item in plan.features
-													.item
-														.icon(class=item.icon+'-icon')
-														.detail !{item.detail}
-
-							.footnote For additional information, #[a(href='/policies') view the CodeLab policies]
-
-										
-
-
-			.section.location.container-fluid
-				#map
-				.row.content
-					.col-md-6
-					
-					.form.col-md-6
-						.description
-							h3 !{content.reserve_title}
-							p !{content.reserve_content}
-
-							ul
-								li.where
-									.icon.map-icon
-									.info TBD 
-									//- Coppell, Texas
-								li.email
-									.icon.email-icon
-									.info 
-										a(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2') hello@codelabschool.com
-								li.phone
-									.icon.phone-icon
-									.info !{content.phone_number}
-
-							.action
-								a.button(href='https://goo.gl/forms/OpoHsFSfQk4b4JAC2') Reserve a Space
-
-			
-			.section.faq.container-fluid
-				.row.content
-					.col-md-6
-						.description
-							h3 !{content.faq_title}
-							p !{content.faq_content}
-
-							.action
-								a.button(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2') Ask a Question
-
-					.sessions.col-md-6
-						.question-list.container-fluid
-							for item, i in content.faq
-								.row
-									.question(id='question-' + (i+1))
-										.title !{item.question}
-										.answer !{item.answer}
-
-
-			.footer
-
-				.content
-					.logo
-					span CodeLab &copy; #{(new Date).getFullYear()}
-					span.separator |
-					a(href='/policies') Terms &amp; Conditions
-
-
-
+block scripts
 	script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyALR3vJM7iMzRxUeVLHIZMWGgc8qB8FLb8')
 	script(type='text/javascript' src='/__codelab__/site.js')
-
-if !production
-	script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
-
-
-

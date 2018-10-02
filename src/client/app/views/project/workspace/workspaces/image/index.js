@@ -30,7 +30,7 @@ export default class ImageViewer extends Component {
 
 		// replace the image
 		const domain = $state.getProjectDomain();
-		const url = domain + path;
+		const url = domain + encodeURI(path);
 
 		// attaches the image
 		this.busy = true;

@@ -197,8 +197,8 @@
 		@include clearfix;
 
 		.step {
-			padding: 20px 0 0 0;
-			width: 30%;
+			padding: 0 0 10px 0;
+			width: 33%;
 			float: left;
 			clear: none;
 			text-align: center;
@@ -216,10 +216,20 @@
 
 	}
 
+	.showcase {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
 }
 
 @media(max-width: 700px) {
-  @include breakpoint(#ff0, '700px');
+	@include breakpoint(#ff0, '700px');
+	
+	.showcase {
+		padding-left: 0;
+		padding-right: 0;
+	}
 
   .courses {
     padding: 30px 20px;
@@ -247,11 +257,16 @@
 		@include clearfix;
 
 		.step {
+			padding: 25px 0 0 0;
 			width: 100%;
 			border-bottom: 1px solid #ccc;
 
 			&.last {
 				border: none;
+			}
+
+			&.first {
+				padding: 0;
 			}
 		}
 
@@ -302,17 +317,18 @@
   }
 
   .pricing-table {
-    margin: 0 -15px;
+    // margin: 0 -15px;
     .price {
       text-align: left;
-      padding: 5px 20px;
+      padding: 15px 20px;
       .cost { font-size: 32px; }
       .term { font-size: 14px; }
     }
     .features {
       .detail { font-size: 16px; }
     }
-  }
+	}
+	
 
 }
 

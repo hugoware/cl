@@ -5,7 +5,7 @@ import Typed from './typed';
 function initTyped() {
 
   const label = document.getElementById('feature-display');
-  label.innerHTML = '';
+  label.innerHTML = '&nbsp;';
   new Typed('#feature-display', {
     strings: [
       'Create Websites',
@@ -36,19 +36,28 @@ function initMap() {
 }
 
 // prepares the login view
+let $pendingError;
 function initLogin() {
   const login = new Login();
 
   // handle login attempts
+  const container = document.getElementById('error');
+  const reason = document.getElementById('reason');
   const btn = document.getElementById('login-button');
   btn.onclick = () => {
     login.authenticate({
-      onSuccess: () => {
-        console.log('try login');
-        window.location.href = '/';
-      },
+      onSuccess: () => window.location.href = '/',
       onError: result => {
-        console.log('failed', result);
+				reason.innerText = result.error;
+				container.style.display = 'block';
+				container.className = '';
+				clearTimeout($pendingError);
+				$pendingError = setTimeout(() => {
+					container.className = 'fade-out';
+					$pendingError = setTimeout(() => {
+						container.style.display = 'none';
+					}, 1000);
+				}, 4000);
       }
     });
   };

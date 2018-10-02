@@ -1,81 +1,23 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='UTF-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    
-    title Policies / CodeLab
+extends _template
+include _header
 
-    link(rel='shortcut icon' href='/site/icons/favicon.ico' type='image/x-icon')
-    link(rel='icon' href='/site/icons/favicon.ico' type='image/x-icon')
-    link(rel='apple-touch-icon' sizes='57x57' href='/site/icons/apple-icon-57x57.png')
-    link(rel='apple-touch-icon' sizes='60x60' href='/site/icons/apple-icon-60x60.png')
-    link(rel='apple-touch-icon' sizes='72x72' href='/site/icons/apple-icon-72x72.png')
-    link(rel='apple-touch-icon' sizes='76x76' href='/site/icons/apple-icon-76x76.png')
-    link(rel='apple-touch-icon' sizes='114x114' href='/site/icons/apple-icon-114x114.png')
-    link(rel='apple-touch-icon' sizes='120x120' href='/site/icons/apple-icon-120x120.png')
-    link(rel='apple-touch-icon' sizes='144x144' href='/site/icons/apple-icon-144x144.png')
-    link(rel='apple-touch-icon' sizes='152x152' href='/site/icons/apple-icon-152x152.png')
-    link(rel='apple-touch-icon' sizes='180x180' href='/site/icons/apple-icon-180x180.png')
-    link(rel='icon' type='image/png' sizes='192x192' href='/site/icons/android-icon-192x192.png')
-    link(rel='icon' type='image/png' sizes='32x32' href='/site/icons/favicon-32x32.png')
-    link(rel='icon' type='image/png' sizes='96x96' href='/site/icons/favicon-96x96.png')
-    link(rel='icon' type='image/png' sizes='16x16' href='/site/icons/favicon-16x16.png')
-    link(rel='manifest' href='/site/icons/manifest.json')
+block title
+	| Policies / CodeLab
 
-    meta(name='msapplication-TileColor' content='#e24d49')
-    meta(name='msapplication-TileImage' content='/site/icons/ms-icon-144x144.png')
-    meta(name='theme-color' content='#e24d49')
+block content
+	.main.content
 
-    link(rel='stylesheet', type='text/css', href='/site/index.css')
+		+standard_header('CodeLab Policies')
+			| Rules, Terms, and Conditions for CodeLab
 
-    //- if lt IE 9
-      script(src='http://html5shiv.googlecode.com/svn/trunk/html5.js')
-      script(src='vendor/html5shiv.js')
-      script(src='vendor/respond.js')
+		.section.policies.container-fluid
+			for policy in content.policies
+				.row.content
+					.col-md-8.explanation
+							h3.title= policy.title
+							div !{policy.content}
+					.col-md-4.summary
+						h4 Basically, we're saying...
+						.simple !{policy.summary}
 
-  body
-    script(type='text/javascript').
-      document.body.className = 'loading';
-
-    .loading
-      h1 Loading
-
-    .main.content
-
-      .header
-        .container
-
-          .row.bar
-            a.logo(href='/') CodeLab
-
-          .row.intro
-            .feature CodeLab Policies
-            .details
-            .actions
-              a.button.how-it-works(href='/') Return to Home
-
-      .section.policies.container-fluid
-        for policy in content.policies
-          .row.content
-            .col-md-8.explanation
-                h3.title= policy.title
-                div !{policy.content}
-            .col-md-4.summary
-              h4 Basically, we're saying...
-              .simple !{policy.summary}
-
-
-      .footer
-
-        .content
-          .logo
-          span &copy; #{(new Date).getFullYear()}
-
-
-if !production
-  script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
-
-
-
+	include _footer

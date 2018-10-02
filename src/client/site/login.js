@@ -3,6 +3,8 @@ import $axios from 'axios';
 import $firebase from 'firebase/app';
 import 'firebase/auth';
 
+const DEFAULT_ERROR = 'There was an error attempting to log in. Please check your connection and try again.';
+
 export default class Login {
 
   // setup
@@ -28,20 +30,21 @@ export default class Login {
   async authenticate({ onSuccess, onError }) {
     const { provider } = this;
     const auth = $firebase.auth();
-    const attempt = await auth.signInWithPopup(provider);
+		const attempt = await auth.signInWithPopup(provider);
 
     // sign in with the pop up
     try {
       // set the token to the app to verify
       // that the login was really successful
       const token = attempt.credential.idToken;
-      const result = await $axios.post('/login', { token });
-      if (!result.data.success) onError('login-error')
+			const result = await $axios.post('/login', { token });
+			const data = result.data || { success: false, error: DEFAULT_ERROR }
+      if (!data.success) onError(data);
       else onSuccess();
     }
     // handle any errors
     catch (err) {
-      onError('login-error')
+      onError({ error: DEFAULT_ERROR })
     }
   }
 }

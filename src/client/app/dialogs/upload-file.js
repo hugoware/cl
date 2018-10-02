@@ -100,8 +100,17 @@ export default class UploadFileDialog extends Dialog {
 	onDrop = event => {
 		this.removeClass('show-drop-target');
 
-		// send of each file for upload
+		// make sure this is allowed to do
 		const files = [].slice.call(event.originalEvent.dataTransfer.files);
+		const selected = _.map(files, file => ({
+			name: file.name
+		}));
+
+		// make sure this can be uploaded
+		if (!$state.checkPermissions('UPLOAD_FILE', { files: selected }))
+			return cancelEvent(event);
+
+		// send of each file for upload
 		for (const file of files) {
 			const item = new FileUpload(file, this.parent);
 			item.appendTo(this.ui.uploads);
@@ -193,9 +202,11 @@ class FileUpload extends Component {
 				throw result;
 
 			// this worked
+			this.broadcast('file-uploaded', { success: true, file: this.file });
 			this.finish('success');
 		}
 		catch (err) {
+			this.broadcast('file-uploaded', { file: this.file });
 			this.finish('failed');
 			this.errorMessage.apply(err);
 		}

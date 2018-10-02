@@ -43,7 +43,7 @@ export default async function login(data = { }) {
 
 	// make sure something was found
 	if (results.length === 0)
-		throw 'user_not_found';
+		throw 'account_not_found';
 
 	// too many user
 	if (results.length > 1)

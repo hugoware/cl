@@ -1,0 +1,13 @@
+mixin standard_header(section)
+	.header
+		.container
+
+			.row.bar
+				a.logo(href='/') CodeLab
+
+			.row.intro
+				.feature #{section}
+				.details
+					block
+				.actions
+					a.button.how-it-works(href='/') Return to Home

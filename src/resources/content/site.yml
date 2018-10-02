@@ -43,10 +43,10 @@ faq_content: |
 
 plans:
   
-  - title: Remote Plan
+  - title: At Home Plan
     cost: 75
     css: remote
-    summary: Remote CodeLab access without provided computers and access to a Virtual Coach
+    summary: Home access to weekly CodeLab tutorials and a Virtual Coach
     features:
       - icon: clock
         detail: Lessons completed from home
@@ -55,7 +55,7 @@ plans:
         detail: Access to Virtual Coach
       
       - icon: tools
-        detail: Use CodeLab from home
+        detail: Use CodeLab Tutorials from home
 
       - icon: share
         detail: Share creations online
@@ -63,10 +63,10 @@ plans:
       # - icon: discount
       #   detail: Discounts available
 
-  - title: Standard Plan
+  - title: On-Site Plan
     cost: 200
     css: standard
-    summary: On-site CodeLab access with provided computers and a Code Coach
+    summary: On-site access to CodeLab with provided computers and a Code Coach
     features:
       - icon: clock
         detail: One 60 minute session per week
@@ -75,7 +75,7 @@ plans:
         detail: On-site Code Coach
 
       - icon: tools
-        detail: Use CodeLab from home
+        detail: Use all CodeLab features from home
 
       - icon: share
         detail: Share creations online

@@ -4,7 +4,7 @@ $file-browser-item-height: 36px;
 $file-browser-item-padding: 2px;
 $file-browser-icon-size: 18px;
 $file-browser-icon-padding: 5px;
-$file-browser-toggle-size: 10px;
+$file-browser-toggle-size: 9px;
 $file-browser-toggle-padding: 2px;
 $file-browser-children-bottom-padding: 5px;
 $file-browser-item-selection-color: #A0DEFF;
@@ -29,7 +29,7 @@ $action-item-icon-size: $action-item-height * 0.6;
 	@for $i from 1 through 35 {
 		&.depth-#{$i} > {
 			.item, .empty {
-				padding-left: 10px * $i;
+				padding-left: (10px * $i) + 30px;
 			}
 			
 			.children:before {
@@ -45,13 +45,20 @@ $action-item-icon-size: $action-item-height * 0.6;
 	}
 
 	.item {
+		padding: 0 0 0 30px;
 		&:hover {
 			background: rgba($file-browser-item-selection-color, 0.1);
 		}
 	}
 
+	&.is-folder .item {
+		padding: 0 0 0 43px;
+	}
+
 	.icon {
+		position: absolute;
 		padding: 0 $file-browser-icon-padding;
+		margin: 0 0 0 -30px;
 		svg {
 			margin-top: ($file-browser-item-height / 2) - ($file-browser-icon-size / 2);
 			width: $file-browser-icon-size;
@@ -60,6 +67,8 @@ $action-item-icon-size: $action-item-height * 0.6;
 	}
 
 	.toggle {
+		margin: 0 0 0 -40px;
+		position: absolute;
 		display: none;
 		padding: 0 $file-browser-toggle-padding;
 		@include animate('transform', 0.2s);
@@ -76,7 +85,6 @@ $action-item-icon-size: $action-item-height * 0.6;
 		text-overflow: ellipsis;
 		display: block;
 		float: left;
-		
 	}
 
 	.empty, .children {

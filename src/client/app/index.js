@@ -101,6 +101,7 @@ class App extends Component {
 		// events
 		this.listen('navigate', this.onNavigate);
 		this.listen('open-dialog', this.onShowDialog);
+		this.listen('hide-all-dialogs', this.onHideAllDialogs);
 
 		// establish operating system
 		const doc = Component.bind(document.body);
@@ -164,6 +165,10 @@ class App extends Component {
 		if (this.transitioning) return;
 		this.transitioning = true;
 
+		// since we're changing views, we shouldn't really
+		// ever have a dialog stay open
+		this.hideDialogs();
+
 		// check for the view first
 		if (!this.views[view])
 			view = 'missing';
@@ -206,16 +211,26 @@ class App extends Component {
 	onShowDialog = (key, options = { }) => {
 		key = _.camelCase(key);
 
-		// hide all dialogs now
-		_.each(this.dialogs, (dialog, id) => {
-			if (key !== id) dialog.hide(true);
-		});
+		// hide everything first
+		this.hideDialogs(key);
 
 		// find the dialog to display
 		// and then show it with options
 		const dialog = this.dialogs[key];
 		if (!dialog) console.warn(`no dialog found for ${key}`);
 		else dialog.show(options);
+	}
+
+	// hides all dialog windows
+	onHideAllDialogs = () => {
+		this.hideDialogs();
+	}
+
+	// hide all dialogs for the app
+	hideDialogs = exclude => {
+		_.each(this.dialogs, (dialog, id) => {
+			if (exclude !== id) dialog.hide(true);
+		});
 	}
 
 }

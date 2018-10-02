@@ -21,6 +21,20 @@
         "speak": ["Let's learn about unordered lists", "Start by opening the index.html file by double clicking on it"]
       }, {
         "mode": "popup",
+        "content": "<p>You're allowed to upload a file now</p>",
+        "autoNext": false,
+        "validation": {
+          "uploadFile": "verifyFileUploadIsImage"
+        },
+        "waitFor": ["::event(file-uploaded, verifyUploadImageSuccess)"],
+        "flags": {
+          "add": ["upload-file-dialog"]
+        },
+        "type": "slide",
+        "speak": ["You're allowed to upload a file now"]
+      }, {
+        "mode": "popup",
+        "actions": ["hide-all-dialogs"],
         "content": "<p>Great! Now that this file is open, let's look at a few things</p>",
         "type": "slide",
         "speak": ["Great! Now that this file is open, let's look at a few things"]
@@ -329,6 +343,35 @@
     });
 
     // checks that they've added enough list items to a zone
+    $define('verifyFileUploadIsImage', function (data) {
+      return $validate({ revertOnError: false }, function () {
+        var files = data.files;
+
+        // didn't work for some reason
+
+        if (!_.isArray(files)) return false;
+
+        // make sure it's valid
+        if (files.length !== 1) {
+          $speakMessage("For now, just upload a single image file to continue");
+          return false;
+        }
+
+        // get the data
+        var file = files[0] || {};
+
+        // make sure it's an image
+        if (!/(png|jpe?g|gif)$/.test(file.name)) {
+          $speakMessage("Only upload image files at this time. Try `png`, `jpg` or `gif` files");
+          return false;
+        }
+
+        // wait for the file to upload
+        $self.waitingForFile = file.name;
+      });
+    });
+
+    // checks that they've added enough list items to a zone
     $define('verifyHasEnoughListItems', { init: true }, function () {
 
       var requiredItems = 5;
@@ -404,6 +447,33 @@
         // passed validation
         $hideHint();
         $speakMessage('Looks great! You can move onto the next step now');
+      });
+    });
+
+    // checks that they've added enough list items to a zone
+    $define('verifyUploadImageSuccess', function (result) {
+      return $validate({ revertOnError: false }, function () {
+
+        // make sure it's for the correct file
+        if ($self.waitingForFile !== result.file.name) return false;
+
+        // failed to upload for some reason
+        if (!result.success) {
+          $speakMessage("Seems like something went wrong uploading your file. Go ahead and try again", 'sad');
+          return false;
+        }
+
+        // difficult to type name
+        if (/ /g.test($self.waitingForFile)) $speakMessage("It's sometimes difficult to work with a file name that has spaces in it. Consider uploading a new file without spaces in the name.", 'sad');
+
+        // very long name
+        else if (_.size($self.waitingForFile) > 20) $speakMessage("That's a fairly long file name. You might consider uploading an image with a shorter name to make it easier to type in.", 'sad');
+
+          // looks good
+          else $speakMessage("Perfect! Let's add this image to our web page!", 'happy');
+
+        // it worked, so let's move on
+        delete $self.waitingForFile;
       });
     });
   }
