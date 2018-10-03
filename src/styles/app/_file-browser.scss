@@ -46,6 +46,17 @@ $action-item-icon-size: $action-item-height * 0.6;
 
 	.item {
 		padding: 0 0 0 30px;
+		
+		&:before {
+			content: ' ';
+			display: block;
+			position: absolute;
+			right: 0;
+			width: 20px;
+			height: $file-browser-item-height;
+			@include gradient(rgba($file-browser-background, 0), rgba($file-browser-background, 1), 90deg);
+		}
+		
 		&:hover {
 			background: rgba($file-browser-item-selection-color, 0.1);
 		}
@@ -242,50 +253,5 @@ $action-item-icon-size: $action-item-height * 0.6;
 		}
 
 	}
-
-	// .project-data {
-	// 	background: rgba(#000, 0.1);
-	// 	color: #fff;
-	// 	padding: 15px 10px;
-	// 	margin-bottom: 5px;
-	// 	@include clearfix();
-
-	// 	> div {
-	// 		text-overflow: ellipsis;
-	// 		white-space: nowrap;
-	// 		overflow: hidden;
-	// 	}
-
-	// 	.name {
-	// 		font-size: 18px;
-	// 		padding: 0 0 8px 0;
-	// 	}
-
-	// 	.description {
-	// 		font-size: 14px;
-	// 		opacity: 0.3;
-	// 	}
-		
-	// 	.type {
-	// 		float: right;
-	// 		position: relative;
-	// 		top: -5px;
-	// 		background: rgba(#000, 0.2);
-	// 		padding: 5px;
-	// 		border-radius: 100px;
-			
-	// 		svg {
-	// 			@include uniform_size(24px);
-	// 			display: none;
-	// 		}
-	// 	}
-
-
-	// 	.options {
-	// 		height: 0;
-	// 		overflow: hidden;
-	// 	}
-
-	// }
 
 }

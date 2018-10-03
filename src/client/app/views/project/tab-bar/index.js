@@ -6,6 +6,7 @@ import Tab from './tab';
 import $state from '../../../state';
 import { requirePermission } from '../prevent';
 import { cancelEvent } from '../../../utils';
+import contentManager from '../../../content-manager'
 
 export default class TabBar extends Component {
 
@@ -92,7 +93,20 @@ export default class TabBar extends Component {
 			message: "Can't Close Files",
 			allowed: () => {
 				const tab = Component.getContext(event.target);
-				this.closeTab(tab, true);
+
+				// check for unsaved changes
+				if (tab.file.modified)
+					this.broadcast('open-dialog', 'unsaved-changes', {
+						file: tab.file,
+						reason: 'closing',
+						confirm: () => {
+							tab.file.modified = false;
+							this.closeTab(tab, true);
+						}
+					});
+
+				// just close it
+				else this.closeTab(tab, true);
 			}
 		});
 
@@ -128,6 +142,9 @@ export default class TabBar extends Component {
 		this.broadcast('close-file', tab.file);
 		this.tabs.removeItem(tab);
 		this.tabs.refresh();
+
+		// we need to remove the cached info
+		contentManager.remove(tab.file.path);
 
 		// if there's a new tab selected, update it
 		if (!!replace) {

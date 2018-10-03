@@ -99,4 +99,4 @@ function initQuestions() {
 window.addEventListener('load', initLogin);
 window.addEventListener('load', initQuestions);
 window.addEventListener('load', initTyped);
-window.addEventListener('load', initMap);
+// window.addEventListener('load', initMap);

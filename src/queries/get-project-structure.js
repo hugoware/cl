@@ -3,6 +3,9 @@ import $fsx from 'fs-extra';
 import $path from '../path';
 import { isTextContent } from '../utils';
 
+// case insentitive sorting
+const $sorter = new Intl.Collator('en');
+
 /**
  * gets all project information
  * @param {string} id the ID for the project

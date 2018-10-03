@@ -201,8 +201,14 @@ export default class FileBrowser extends Component {
 // reconstructs the file tree
 function rebuild(fileBrowser, node, children, depth = 0) {
 	_(children)
-		.orderBy(['isFolder', 'name'], ['desc', 'asc'])
-		.each(data => {
+		.map(data => ({
+			key: _.toLower(data.name),
+			isFolder: data.isFolder,
+			data
+		}))
+		.orderBy(['isFolder', 'key'], ['desc', 'asc'])
+		.each(record => {
+			const { data } = record;
 			
 			// create each item
 			const item = new FileBrowserItem();

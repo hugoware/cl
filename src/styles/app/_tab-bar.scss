@@ -64,15 +64,18 @@ $tab-bar-modified-indicator-size: 7px;
 			border-radius: $tab-bar-modified-indicator-size;
 		}
 		
-		&.is-modified .modified {
-			display: inline-block;
+		&.is-modified {
+			padding-left: $workspace-tab-name-gap + 12px;
+			.modified {
+				display: inline-block;
+			}
 		}
 		
 		.modified {
-			position: relative;
+			position: absolute;
 			@include animation(indicator-dot 3s infinite);
 			background : $tab-bar-modified-indicator-highlight-color;
-			margin: -3px 7px 0 0;
+			margin: 21px 0 0 -16px;
 			
 			&:before {
 				display: inline-block;

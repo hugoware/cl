@@ -57,6 +57,9 @@ import projectGameIcon from '../../icons/icon-project-game.svg';
 import projectMobileIcon from '../../icons/icon-project-mobile.svg';
 import projectCodeIcon from '../../icons/icon-project-code.svg';
 
+// misc icons
+import typeEmailIcon from '../../icons/type-email.svg';
+
 // avatars
 import defaultAvatarIcon from '../../icons/default-avatar.svg';
 import girl1AvatarIcon from '../../icons/girl-1.svg';
@@ -121,6 +124,8 @@ const $icons = {
 	projectMobileIcon,
 	projectCodeIcon,
 	projectGameIcon,
+
+	typeEmailIcon,
 
 	addFolderIcon,
 	addFileIcon,

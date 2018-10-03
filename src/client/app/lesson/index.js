@@ -166,6 +166,24 @@ export default class Lesson {
 		return state.zones[path];
 	}
 
+	/** finds special words and replaces them with the lesson words
+	 * @param {string} message the message to update
+	 * @return {string} the updated message
+	 */
+	replaceCustomWords = message => {
+		const isArray = _.isArray(message);
+		message = isArray ? message : [message];
+
+		// update each line
+		for (let i = 0, total = message.length; i < total; i++)
+			message[i] = message[i].replace(/\@{2}[^ ]+/g, match => {
+				return this.instance.state[match.substr(2)];
+			});
+
+		// give back the result
+		return isArray ? message : message[0];
+	}
+
 	/** navigates to a spcific slide, handles toggling
 	 * any state changes along the way
 	 * @param {number} index the slide number to navigate to

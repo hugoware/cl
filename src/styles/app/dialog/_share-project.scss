@@ -1,0 +1,126 @@
+
+.content.share-project {
+	
+	.people {
+		@include clearfix;
+
+		max-height: 165px;
+		position: relative;
+		overflow: auto;
+		
+		background: #fff;
+		border-radius: 5px;
+		box-shadow: inset 0 0 0 1px #ccc;
+
+		.list {
+			padding: 10px;
+			@include clearfix;
+		}
+
+		&.has-selection {
+			.person {
+				opacity: 0.5;
+			}
+		}
+
+		.person {
+			float: left;
+			width: 48%;
+			cursor: pointer;
+			border-radius: 4px;
+			margin: 0 0 8px 0;
+
+			&:hover {
+				background: #E8EBEC;
+			}
+
+			@include clearfix;
+
+			&.selected {
+				background: #359BD9;
+				color: #fff;
+				opacity: 1;
+				box-shadow: inset 0 0 0 1px rgba(#000, 0.3);
+				text-shadow: 0 1px 3px rgba(#000, 0.4);
+			}
+		}
+
+		.icon {
+			width: 45px;
+			position: relative;
+			float: left;
+			.mobile, .email {
+				display: none;
+			}
+		}
+		
+		.person.type-mobile .icon {
+			top: 9px;
+			left: 8px;
+			svg {
+				@include uniform-size(36px);
+			}
+		}
+
+		.person.type-email .icon {
+			top: 12px;
+			left: 10px;
+			svg {
+				@include uniform-size(32px);
+			}
+		}
+
+		.person:nth-child(odd) {
+			float: left;
+			clear: left;
+		}
+
+		.person:nth-child(even) {
+			float: right;
+			clear: right;
+		}
+
+		.detail {
+			float: left;
+			padding: 10px 20px 10px 10px;
+		}
+
+		.name {
+			font-weight: 600;
+			font-size: 18.5px;
+			width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			padding: 0 0 3px 0;
+		}
+
+		.target {
+			opacity: 0.5;
+			font-size: 15px;
+			font-style: italic;
+			display: none;
+		}
+
+	}
+
+	.person.type-mobile .mobile, 
+	.person.type-email .email {
+		display: block;
+	}
+
+	.people li {
+		float: left;
+	}
+
+	.select-all {
+		float: right;
+		color: #359cda;
+		cursor: pointer;
+	}
+
+	&.all-selected .select-all {
+		color: #354b5e;
+	}
+
+}

@@ -276,7 +276,11 @@
 
 @media(max-width: 600px) {
   @include breakpoint(#0f0, '600px');
-  $header-font-size: 18px;
+	$header-font-size: 18px;
+	
+	#login-button {
+		display: none;
+	}
 
   .time-slots .slot {
     padding-left: 0;

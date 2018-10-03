@@ -188,13 +188,29 @@
 
 		.form
 			label
-				span Message
-				.ui-text-input.full.multiline
-					textarea.description Check out my cool project! It's really neat!
+				.select-all Select All
+				span People
+				.people
+					.list
+
+				label
+					span Message
+					.ui-text-input.full.multiline
+						textarea.description Check out my cool project! It's really neat!
 
 		.actions
 			.action.confirm.primary Share Project
 			.action.cancel Cancel
+
++template('share-project-item')
+	.person
+		.icon
+			.mobile(icon='projectMobile')
+			.email(icon='typeEmail')
+		.detail
+			.name
+			.target.mobile Text Message
+			.target.email Email
 
 +template('dialog-remove-project')
 	.content(dialog-width='600').remove-project

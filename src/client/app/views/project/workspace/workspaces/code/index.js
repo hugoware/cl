@@ -42,6 +42,8 @@ export default class CodeEditor extends Component {
 		this.listen('execution-finished', this.onExecutionFinished);
 		this.listen('slide-changed', this.onSlideChanged);
 		this.listen('save-all', this.onSaveAll);
+		this.listen('save-target', this.onSaveTarget);
+		this.listen('close-file', this.onCloseFile);
 		this.listen('lesson-finished', this.onLessonFinished);
 		this.ui.save.on('click', this.onSaveChanges);
 
@@ -74,6 +76,11 @@ export default class CodeEditor extends Component {
 		return this.activeInstance && this.editor.activeInstance.file;
 	}
 
+	// need to discard the workspaces
+	onCloseFile = file => {
+		this.editor.deactivateFile(file.path);
+	}
+
 	// done with the lesson
 	onLessonFinished = () => {
 		this.editor.clearAllZones();
@@ -104,8 +111,14 @@ export default class CodeEditor extends Component {
 	}
 
 	// tries to save all open files
-	onSaveAll = event => {
+	onSaveAll = () => {
 		this.saveAll();
+	}
+
+	// handles saving a single file
+	onSaveTarget = file => {
+		console.log('wants to save', file);
+		this.saveTarget(file);
 	}
 
 	// handles when a project is opened
@@ -176,17 +189,34 @@ export default class CodeEditor extends Component {
 		if (!canSaveFile(this)) return;
 		if (this.busy) return;
 
-		// gather the data
+		// request the file save
 		const { file } = this.editor.activeInstance;
+		return await this.saveTarget(file.path);
+	}
+
+	/** saves a specific file
+	 * @param {string} path the file path to save
+	 */
+	saveTarget = async path => {
+
+		// find the file instance
+		const instance = _.find(this.editor.instances, item => item.file.path == path);
+		if (!instance) {
+			console.log('missing instance?');
+			return false;
+		}
+
+		// gather the data
+		const { file } = instance;
 		const content = this.editor.getContent(file);
-		const { path } = file;
+		path = file.path;
 
 		// try and update the project data
 		this.busy = true;
 		try {
 			await $state.saveFile(path, content);
 		}
-		catch(err) {
+		catch (err) {
 			console.log(err);
 		}
 		finally {

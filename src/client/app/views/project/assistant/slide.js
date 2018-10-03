@@ -47,10 +47,15 @@ export default class Slide extends Component {
 			'has-subtitle': 'subtitle' in slide,
 		});
 
+		// update as needed
+		const content = slide.content && $state.lesson.replaceCustomWords(slide.content);
+		const title = slide.title && $state.lesson.replaceCustomWords(slide.title);
+		const subtitle = slide.subtitle && $state.lesson.replaceCustomWords(slide.subtitle);
+
 		// set the content
-		this.ui.message.html(slide.content);
-		this.ui.title.text(slide.title);
-		this.ui.subtitle.text(slide.subtitle);
+		this.ui.message.html(content);
+		this.ui.title.text(title);
+		this.ui.subtitle.text(subtitle);
 
 		// check for hover definitions
 		applySnippets(this, $state.lesson);
@@ -73,6 +78,10 @@ export default class Slide extends Component {
 			'has-title': false,
 			'has-subtitle': false
 		});
+
+		// replace custom words
+		if ($state.lesson)
+			message = $state.lesson.replaceCustomWords(message);
 
 		// replace the content
 		const html = $convert.makeHtml(message);

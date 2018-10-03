@@ -34,13 +34,15 @@ export default class ImageViewer extends Component {
 
 		// attaches the image
 		this.busy = true;
+		this.ui.image.hide();
 		this.ui.image.attr('src', url);
 		this.ui.image.on('load', this.onImageLoad);
 	}
 
 	// handles when the image has finished loading
-	onImageLoad = event => {
+	onImageLoad = () => {
 		this.busy = false;
+		this.ui.image.show();
 	}
 
 	// fits the image to match the view size

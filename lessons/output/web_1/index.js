@@ -35,9 +35,9 @@
       }, {
         "mode": "popup",
         "actions": ["hide-all-dialogs"],
-        "content": "<p>Great! Now that this file is open, let's look at a few things</p>",
+        "content": "<p>Great! Now that the file <code>@@imageName</code> file is open, let's look at a few things</p>",
         "type": "slide",
-        "speak": ["Great! Now that this file is open, let's look at a few things"]
+        "speak": ["Great! Now that the file @@imageName file is open, let's look at a few things"]
       }, {
         "mode": "popup",
         "content": "<p>These are tags that wrap the unordered list</p>",
@@ -473,6 +473,7 @@
           else $speakMessage("Perfect! Let's add this image to our web page!", 'happy');
 
         // it worked, so let's move on
+        $state.imageName = $self.waitingForFile;
         delete $self.waitingForFile;
       });
     });

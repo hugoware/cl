@@ -15,7 +15,8 @@ export default async function handleRequest(request, response, project) {
 
 	// check for the file
 	const { id } = project;
-	const path = $path.removeLeadingSlash(request.path);
+	let path = decodeURI(request.path);
+	path = $path.removeLeadingSlash(path);
 	const source = $path.resolveProject(id);
 
 	// check the path
@@ -195,7 +196,7 @@ async function compile(path, source, cache, action) {
 		}
 
 		// llmit the time
-		const timeout = setTimeout(() => finalize('timeout'), 500);
+		const timeout = setTimeout(() => finalize('timeout'), 2000);
 
 		// handle results
 		thread.on('message', result => finalize(result.content));

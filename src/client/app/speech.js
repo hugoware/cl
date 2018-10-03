@@ -1,6 +1,7 @@
 
 import _ from 'lodash';
 import { listen, broadcast } from './events';
+import $state from './state';
 const available = 'speechSynthesis' in window;
 
 // activate text to speech
@@ -163,6 +164,10 @@ const $speech = {
 	 */
 	speak: message => {
 		$speech.stop();
+
+		// replace custom words
+		if ($state.lesson)
+			message = $state.lesson.replaceCustomWords(message);
 		
 		// speaking is not allowed
 		if (!$speech.enabled)

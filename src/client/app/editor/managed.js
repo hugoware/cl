@@ -186,6 +186,12 @@ export default class ManagedEditor {
 	 * @param {string} path the path of the file to remove
 	 */
 	deactivateFile = async path => {
+
+		// if this is the current file
+		if (this.activeInstance && this.activeInstance.file.path === path);
+			delete this.activeInstance;
+
+		// remove from other instances
 		for (let i = this.instances.length; i-- > 0;) {
 			if (this.instances[i].file.path === path)
 				this.instances.splice(i, 1);
