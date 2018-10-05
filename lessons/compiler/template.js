@@ -109,6 +109,17 @@
       $self[name] = action;
     }
 
+    // share all of the utility methods
+    $self.$html = $html;
+    $self.$ = $;
+    $self.$denyAccess = $denyAccess;
+    $self.$speakMessage = $speakMessage;
+    $self.$revertMessage = $revertMessage;
+    $self.$showHint = $showHint;
+    $self.$hideHint = $hideHint;
+    $self.$validate = $validate;
+    $self.$getZone = $getZone;
+
 		// attach required scripts
 		$SCRIPTS$
 	}

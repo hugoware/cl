@@ -281,20 +281,49 @@ export default class ManagedEditor {
 		});
 	}
 
+	/** sets the position of the cursor 
+	 * @param {number} row the row to focus to
+	 * @param {number} col the column to focus at
+	*/
+	setCursor = (row, col) => {
+		this.editor.focus();
+		this.editor.gotoLine(row, col, true);
+		this.editor.renderer.scrollToRow(row);
+	}
+
 	// sync zones to the current state
 	syncZones = instance => {
 		if (!instance || !$state.lesson) return;
 		
 		// update zones
+		let focusTo;
+		
+		// check each zone
 		const { zones } = instance;
-		_.each(zones, zone => zone.sync(true));
+		_.each(zones, zone => {
+			const wasEditing = zone.isEditable;
+
+			// sync
+			zone.sync(true);
+
+			// if now an editable zone, focus on it
+			if (!wasEditing && !zone.isEditable)
+				focusTo = zone.end;
+		});
+
+		// if a zone has been activated, focus on it
+		if (focusTo)
+			this.setCursor(focusTo.row, focusTo.col);
 	}
 
 	// deactivates all zones
-	clearZones = () => {
+	clearAllZones = () => {
 		_.each(this.instances, instance => {
 			_.each(instance.zones, zone => zone.clear());
 		});
+
+		// force a refresh
+		this.editor.resize();
 	}
 
 	/** finds an instance of a file using a path 

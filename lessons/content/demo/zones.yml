@@ -1,0 +1,67 @@
+html_tag_example:
+  start_tag:
+    start:
+      row: 0
+      col: 0
+    end:
+      row: 0
+      col: 4
+  end_tag:
+    start:
+      row: 0
+      col: 17
+    end:
+      row: 0
+      col: 22
+  content:
+    start:
+      row: 0
+      col: 4
+    end:
+      row: 0
+      col: 17
+  entire_tag:
+    start:
+      row: 0
+      col: 0
+    end:
+      row: 0
+      col: 22
+/index.html:
+  header_content:
+    start:
+      row: 8
+      col: 8
+    end:
+      row: 8
+      col: 16
+  paragraph:
+    start:
+      row: 10
+      col: 4
+    end:
+      row: 10
+      col: 11
+    collapsed: true
+  img_path:
+    start:
+      row: 12
+      col: 14
+    end:
+      row: 12
+      col: 14
+  img:
+    start:
+      row: 12
+      col: 4
+    end:
+      row: 12
+      col: 18
+    collapsed: true
+  paragraph_content:
+    start:
+      row: 10
+      col: 7
+    end:
+      row: 10
+      col: 7

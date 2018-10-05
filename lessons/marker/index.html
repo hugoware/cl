@@ -175,7 +175,7 @@
 
       // shortcut to open editing
       window.onmouseup = function(event) {
-        if (editor.selectionStart === editor.selectionEnd) return;
+        // if (editor.selectionStart === editor.selectionEnd) return;
         setTimeout(() => {
           nameInput.className = 'show';
           nameInput.value = '';

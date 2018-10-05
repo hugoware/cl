@@ -41,6 +41,7 @@ export default function processSlide(state, manifest, slide) {
 			// make sure this is real
 			const definition = state.dictionary[key];
 			if (!definition) throw `definition for ${key} is missing`;
+      manifest.definitions[key] = definition;
 
 			// without a display name, use the provided one
 			if (!display)

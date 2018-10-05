@@ -63,10 +63,13 @@ content = _.compact(content);
 const definitions = _.filter(content, item => 'definition' in item);
 const slides = _.filter(content, item => 'slide' in item || 'question' in item);
 
+// prepare a few items
+manifest.definitions = { };
+
 // process each category in order
-processDefinitions(state, manifest, definitions);
 processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
 processSlides(state, manifest, slides);
+processDefinitions(state, manifest, definitions);
 manifest.zones = zones;
 
 // include all scripts
@@ -133,4 +136,4 @@ $fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
 }));
   
 // notify this is done
-console.log('generated', JSON.stringify(manifest, null, 2));
+// console.log('generated', JSON.stringify(manifest, null, 2));

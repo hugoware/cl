@@ -175,10 +175,13 @@ export default class Lesson {
 		message = isArray ? message : [message];
 
 		// update each line
-		for (let i = 0, total = message.length; i < total; i++)
-			message[i] = message[i].replace(/\@{2}[^ ]+/g, match => {
-				return this.instance.state[match.substr(2)];
-			});
+		for (let i = 0, total = message.length; i < total; i++) {
+			if (_.isString(message[i]))
+				message[i] = message[i].replace(/\%[a-z0-9]+\%+/gi, match => {
+					match = match.substr(0, match.length - 1).substr(1);
+					return this.instance.state[match];
+				});
+		}
 
 		// give back the result
 		return isArray ? message : message[0];

@@ -1,0 +1,165 @@
+
+
+# dictionary definition
+definition:
+  id: html
+  name: The full name
+  aka: Optional alt name
+  define: |
+    The full explanation using Markdown
+
+
+# slide view
+slide:
+  mode: popup | overlay
+  emotion: happy | sad | surprised
+
+  # optional extras
+  title: Creating Web Pages - Part 1
+  subtitle: More About Tags
+
+  # tracks if the user can go back or not
+  checkpoint: true | false #defaults to true
+
+  # tracks if successfully passing the `waitFor` condition
+  # should immediately go to the next slide
+  autoNext: false
+
+  # basic markdown content
+  content: |
+    Regular line of `text` using markdown
+
+    Line that includes a definition for [define html] as an option
+
+    [hidden] Will speak this line, but not show it
+
+    [silent] Will show this line, but not speak it
+
+    [delay: 2000] Will wait 2 seconds before saying this line
+
+    [delay: 1000]
+
+    Delays can be on their own line
+
+    You can use percents to refer to state variables `%imageName%` and display them
+
+    [silent delay:500] You can use multiple commands per line
+
+    [snippet code_example]
+
+    [snippet code_example highlight:block_a block_b]
+
+    [once] will read a line only once - not implemented
+
+  # will toggle states
+  flags: +add-flag -remove-flag
+
+  # change files
+  files:
+    /index.html: unlock
+    /other.html: lock
+
+
+  # editable zones
+  zones:
+
+    # the name of the file
+    /index.html:
+      name_of_zone: edit | show | expand | collapse | hide
+
+
+  # additional validation to run beyond the 
+  # checking just the flag state
+  validation:
+    openFile: functionThatValidatesOpenFile
+
+
+  # broadcasts actions to all users
+  actions:
+    - hide-all-dialogs
+
+    # if providing arguments, separate with commas
+    # arguments will be JSON.parsed
+    - event-with-args, 100, true
+      
+
+  # waiting for events
+  waitFor:
+
+    # special selectors
+    - fileOpen(/index.html)
+    - fileBrowser(/index.html)
+
+    # waits for selector to match true
+    - .tab-bar .tab[file="/index.html"]
+
+    # interaction events
+    - .target ::click
+    - .target ::hover
+
+    # waiting for broadcasts
+    - ::event(event-name, optionalValidationFunction)
+
+    # waiting for the content to change
+    - ::event(modify-file, validateChanges)
+
+    # periodic validation
+    - ::validate(nameOfValidationFunction, optionalInterval)
+
+
+  highlights:
+
+    # highlights a file in the file-browser
+    - fileBrowser(/index.html)
+
+    # IDs are prefix with $ instead of #
+    - $id-selector .target
+
+
+  markers:
+    # - $file-browser [file="/main.css"] ::center
+    # - $file-browser ::center ::hover(2s) ::lead
+    # - $file-browser .actions .upload-file ::center
+    
+  highlights:
+    # - $file-browser
+    # - $file-browser [file="/controller.png"]
+    - $file-browser .actions .create-file
+
+  validation:
+    openFile: canOpenIndexHtml
+
+
+    
+# quiz mode screens
+question:
+  mode: popup | overlay
+  
+  # the number of possible answers to show
+  show: 4
+
+  # the question itself
+  title: What is the name of the `highlighted` block of code?
+
+  # markdown content following similar rules to slides
+  content: |
+    [snippet mary_example]
+
+  # optional hint
+  hint: |
+    This will give a hint below the selection list
+
+  # message to say after the answer has been selected to 
+  # sumarize the information for the question
+  explain: This is just a `summary message` to explain the final answer
+
+  # list of possible choices in markdown - the top answer
+  # is always the correct answer. Questions are shuffled when
+  # displayed on the screen
+  choices:
+    - this is `correct`
+    - This *is* incorrect
+    - This _is_ also wrong
+    - This ~shouldn't~ work
+    - This *is another* mix
+    - This _is_ failed

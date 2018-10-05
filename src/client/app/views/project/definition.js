@@ -59,7 +59,7 @@ export default class DefinitionPopUp extends Component {
 		// set some class info, as required
 		this.toggleClassMap({
 			show: true,
-			'has-aka': !!definition.aka
+			'has-aka': !!_.trim(definition.aka)
 		});
 
 		// set this as active

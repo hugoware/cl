@@ -9,6 +9,8 @@
 - slide:
     mode: popup
     content: |
+
+      Oh baby let's check out this virus together - what do you say?
       Let's learn about unordered lists
 
       Start by opening the `index.html` file by double clicking on it
@@ -45,7 +47,7 @@
       - hide-all-dialogs
 
     content: |
-      Great! Now that the file `@@imageName` file is open, let's look at a few things
+      Great! Now that the file `%imageName%` file is open, let's look at a few things
 
 - slide:
     mode: popup

@@ -3,232 +3,178 @@
 (function () {
 
   // returns the instance of this lesson
-  function web1Lesson(state, project, utils) {
+  function demoLesson(state, project, utils) {
     var $self = this;
     $self.data = {
-      "name": "Basics 1",
+      "name": "CodeLab Demo",
       "type": "web",
-      "description": "Introduction to building Web Pages",
+      "description": "An Introduction to the CodeLab Learning System",
       "lesson": [{
+        "mode": "overlay",
+        "title": "An Introduction to HTML",
+        "content": "<p>This brief tutorial will give you an introduction to using HTML to create web pages.</p>",
+        "type": "slide",
+        "speak": ["This brief tutorial will give you an introduction to using HTML to create web pages."]
+      }, {
+        "title": "An Introduction to HTML",
+        "mode": "overlay",
+        "content": "<p>This is an <span class=\"define\" type=\"html_element\" >HTML Element</span>. This is the most basic of HTML instructions.</p><div class=\"snippet\" type=\"html_tag_example\" />",
+        "type": "slide",
+        "speak": ["This is an HTML Element. This is the most basic of HTML instructions."]
+      }, {
+        "title": "An Introduction to HTML",
+        "mode": "overlay",
+        "content": "<p>The two highlighted blocks of code are known as <span class=\"define\" type=\"html_tag\" >HTML Tags</span></p><div class=\"snippet\" type=\"html_tag_example\" highlight=\"start_tag end_tag\"/><p>When these instructions are viewed in a web browser, it appears as a large, bold header.</p>",
+        "type": "slide",
+        "speak": ["The two highlighted blocks of code are known as HTML Tags", "When these instructions are viewed in a web browser, it appears as a large, bold header."]
+      }, {
+        "title": "An Introduction to HTML",
+        "mode": "overlay",
+        "content": "<p>The content in the middle is the words that will be displayed on the screen.</p><div class=\"snippet\" type=\"html_tag_example\" highlight=\"content\"/><p>In this example, the screen would display <strong>Hello, World</strong></p>",
+        "type": "slide",
+        "speak": ["The content in the middle is the words that will be displayed on the screen.", "In this example, the screen would display Hello, World"]
+      }, {
         "mode": "popup",
-        "content": "<p>Let's learn about unordered lists</p><p>Start by opening the <code>index.html</code> file by double clicking on it</p>",
-        "waitFor": ["fileOpen(/index.html)"],
-        "highlights": ["fileBrowser(/index.html)"],
+        "content": "<p>Let's make some changes to an HTML page. Let's start by opening the <code>index.html</code> page in the File Browser.</p>",
+        "waitFor": ["::fileOpen(/index.html)"],
+        "highlight": ["::fileBrowser(/index.html)"],
         "validation": {
-          "openFile": "canOpenIndexHtml"
+          "openFile": "::allowIfFile(/index.html, open-file)"
         },
         "type": "slide",
-        "speak": ["Let's learn about unordered lists", "Start by opening the index.html file by double clicking on it"]
+        "speak": ["Let's make some changes to an HTML page. Let's start by opening the index.html page in the File Browser."]
       }, {
         "mode": "popup",
-        "content": "<p>You're allowed to upload a file now</p>",
-        "autoNext": false,
-        "validation": {
-          "uploadFile": "verifyFileUploadIsImage"
-        },
-        "waitFor": ["::event(file-uploaded, verifyUploadImageSuccess)"],
-        "flags": {
-          "add": ["upload-file-dialog"]
-        },
-        "type": "slide",
-        "speak": ["You're allowed to upload a file now"]
-      }, {
-        "mode": "popup",
-        "actions": ["hide-all-dialogs"],
-        "content": "<p>Great! Now that the file <code>%imageName%</code> file is open, let's look at a few things</p>",
-        "type": "slide",
-        "speak": ["Great! Now that the file %imageName% file is open, let's look at a few things"]
-      }, {
-        "mode": "popup",
-        "content": "<p>These are tags that wrap the unordered list</p>",
-        "autoNext": false,
-        "waitFor": ["::event(modify-file, verifyHasEnoughListItems)"],
+        "content": "<p>Great! Try changing the header on this page to be a different greeting.</p>",
         "zones": {
           "/index.html": {
-            "ul_start_tag": "show",
-            "ul_end_tag": "show",
-            "ul_content": "edit"
+            "header_content": "edit"
           }
         },
+        "autoNext": false,
+        "waitFor": ["::event(modify-file, verifyHeaderContent)"],
         "type": "slide",
-        "speak": ["These are tags that wrap the unordered list"]
-      }, {
-        "mode": "overlay",
-        "show": 4,
-        "title": "What is the name of the <code>highlighted</code> block of code?",
-        "content": "<div class=\"snippet\" type=\"mary_example\" />",
-        "hint": "This is a longer example of what a hint might look like. This is going to span for a period longer than the other items on the page.\n",
-        "explain": "This is just a <code>summary message</code> to explain the final answer",
-        "choices": ["this is <code>correct</code>", "This <em>is</em> incorrect", "This <em>is</em> also wrong", "This ~shouldn't~ work", "This <em>is another</em> mix", "This <em>is</em> failed"],
-        "type": "question",
-        "speak": ["What is the name of the highlighted block of code?"],
-        "explained": "This is just a summary message to explain the final answer"
-      }, {
-        "mode": "overlay",
-        "show": 4,
-        "title": "This is another question about what you've learned?",
-        "hint": "It's really pretty obvious",
-        "explain": "This is just a <code>summary message</code> to explain the final answer",
-        "choices": ["this is <code>correct</code>", "This <em>is</em> incorrect", "This <em>is</em> also wrong", "This ~shouldn't~ work", "This <em>is another</em> mix", "This <em>is</em> failed"],
-        "type": "question",
-        "speak": ["This is another question about what you've learned?"],
-        "content": "",
-        "explained": "This is just a summary message to explain the final answer"
-      }, {
-        "checkpoint": true,
-        "mode": "popup",
-        "content": "<p>That's it! The lesson is finished!</p>",
-        "type": "slide",
-        "speak": ["That's it! The lesson is finished!"]
+        "speak": ["Great! Try changing the header on this page to be a different greeting."]
       }],
       "definitions": {
-        "html": {
-          "id": "html",
-          "name": "HTML",
-          "aka": "Hyper Text Markup Language",
-          "define": "This is the full def"
+        "html_element": {
+          "id": "html_element",
+          "name": "HTML Element",
+          "define": "This is about HTML elements"
+        },
+        "html_tag": {
+          "id": "html_tag",
+          "name": "HTML Tag",
+          "define": "This is about HTML elements - this is <code>&lt;</code> or <code>&gt;</code>"
         }
       },
       "snippets": {
-        "complex_tag": {
-          "content": "<div>\n  <h1>The Title</h1>\n  <p></p>\n</div>",
+        "html_img_example": {
+          "content": "",
           "type": "html"
         },
         "html_tag_example": {
-          "content": "<h1>This is an example of HTML</h1>",
+          "content": "<h1>Hello, World!</h1>",
           "type": "html"
-        },
-        "mary_example": {
-          "content": "function () {\n  console.log('reads the file');\n}",
-          "type": "javascript"
         }
       },
       "zones": {
+        "html_tag_example": {
+          "start_tag": {
+            "start": {
+              "row": 0,
+              "col": 0
+            },
+            "end": {
+              "row": 0,
+              "col": 4
+            }
+          },
+          "end_tag": {
+            "start": {
+              "row": 0,
+              "col": 17
+            },
+            "end": {
+              "row": 0,
+              "col": 22
+            }
+          },
+          "content": {
+            "start": {
+              "row": 0,
+              "col": 4
+            },
+            "end": {
+              "row": 0,
+              "col": 17
+            }
+          },
+          "entire_tag": {
+            "start": {
+              "row": 0,
+              "col": 0
+            },
+            "end": {
+              "row": 0,
+              "col": 22
+            }
+          }
+        },
         "/index$html": {
-          "ul_start_tag": {
+          "header_content": {
             "start": {
-              "row": 9,
-              "col": 4
-            },
-            "end": {
-              "row": 9,
+              "row": 8,
               "col": 8
+            },
+            "end": {
+              "row": 8,
+              "col": 16
             }
           },
-          "ul_end_tag": {
+          "paragraph": {
             "start": {
-              "row": 13,
+              "row": 10,
               "col": 4
             },
             "end": {
-              "row": 13,
-              "col": 9
+              "row": 10,
+              "col": 4
+            },
+            "collapsed": true,
+            "content": "<p></p>"
+          },
+          "img_path": {
+            "start": {
+              "row": 12,
+              "col": 0
+            },
+            "end": {
+              "row": 12,
+              "col": 0
             }
           },
-          "ul_content": {
+          "img": {
+            "start": {
+              "row": 12,
+              "col": 4
+            },
+            "end": {
+              "row": 12,
+              "col": 4
+            },
+            "collapsed": true,
+            "content": "<img src=\"\" />"
+          },
+          "paragraph_content": {
             "start": {
               "row": 10,
               "col": 0
             },
             "end": {
-              "row": 12,
-              "col": 36
-            },
-            "line": true
-          }
-        },
-        "complex_tag": {
-          "main_content": {
-            "start": {
-              "row": 1,
-              "col": 6
-            },
-            "end": {
-              "row": 1,
-              "col": 15
-            }
-          },
-          "paragraph_content": {
-            "start": {
-              "row": 2,
-              "col": 5
-            },
-            "end": {
-              "row": 2,
-              "col": 5
-            },
-            "collapsed": true,
-            "content": "The main content!"
-          }
-        },
-        "html_tag_example": {
-          "main_content": {
-            "start": {
-              "row": 0,
-              "col": 4
-            },
-            "end": {
-              "row": 0,
-              "col": 30
-            }
-          }
-        },
-        "mary_example": {
-          "read_file": {
-            "start": {
-              "row": 0,
-              "col": 9
-            },
-            "end": {
-              "row": 1,
-              "col": 6
-            }
-          },
-          "argument": {
-            "start": {
-              "row": 1,
-              "col": 14
-            },
-            "end": {
-              "row": 1,
-              "col": 30
-            }
-          },
-          "function_scope": {
-            "start": {
-              "row": 0,
+              "row": 10,
               "col": 0
-            },
-            "end": {
-              "row": 2,
-              "col": 1
-            },
-            "line": true
-          },
-          "function": {
-            "start": {
-              "row": 0,
-              "col": 9
-            },
-            "end": {
-              "row": 0,
-              "col": 9
-            },
-            "collapsed": true,
-            "content": "readTheFile"
-          },
-          "code_block": {
-            "start": {
-              "row": 1,
-              "col": 0
-            },
-            "end": {
-              "row": 1,
-              "col": 0
-            },
-            "collapsed": true,
-            "line": true,
-            "content": ""
+            }
           }
         }
       }
@@ -328,6 +274,17 @@
       _.assign(action, options);
       $self[name] = action;
     }
+
+    // share all of the utility methods
+    $self.$html = $html;
+    $self.$ = $;
+    $self.$denyAccess = $denyAccess;
+    $self.$speakMessage = $speakMessage;
+    $self.$revertMessage = $revertMessage;
+    $self.$showHint = $showHint;
+    $self.$hideHint = $hideHint;
+    $self.$validate = $validate;
+    $self.$getZone = $getZone;
 
     // attach required scripts
 
@@ -480,5 +437,5 @@
   }
 
   // registration function
-  window.registerLesson('web_1', web1Lesson);
+  window.registerLesson('demo', demoLesson);
 })();

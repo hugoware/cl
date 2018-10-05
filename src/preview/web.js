@@ -4,6 +4,10 @@ import $path from '../path';
 import $fsx from 'fs-extra';
 import { spawn as $spawn } from 'threads';
 
+// the amount of time to allow for compiling a
+// pug file before giving up
+const COMPILE_TIMEOUT = 3000;
+
 // common resources that require no processing
 const RESOURCES = [
 	'html', 'htm', 'css', 'js', 'txt',
@@ -196,7 +200,7 @@ async function compile(path, source, cache, action) {
 		}
 
 		// llmit the time
-		const timeout = setTimeout(() => finalize('timeout'), 2000);
+		const timeout = setTimeout(() => finalize('timeout'), COMPILE_TIMEOUT);
 
 		// handle results
 		thread.on('message', result => finalize(result.content));

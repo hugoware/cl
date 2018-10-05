@@ -1,0 +1,64 @@
+
+
+- slide:
+    mode: overlay
+    title: An Introduction to HTML
+    content: |
+      This brief tutorial will give you an introduction to using HTML to create web pages.
+
+
+- slide:
+    title: An Introduction to HTML
+    mode: overlay
+    content: |
+      This is an [define html_element]. This is the most basic of HTML instructions.
+
+      [snippet html_tag_example]
+
+
+- slide:
+    title: An Introduction to HTML
+    mode: overlay
+    content: |
+      The two highlighted blocks of code are known as [define html_tag HTML Tags]
+
+      [snippet html_tag_example highlight: start_tag end_tag]
+
+      When these instructions are viewed in a web browser, it appears as a large, bold header.
+
+- slide:
+    title: An Introduction to HTML
+    mode: overlay
+    content: |
+      The content in the middle is the words that will be displayed on the screen.
+
+      [snippet html_tag_example highlight: content]
+
+      In this example, the screen would display **Hello, World**
+
+- slide:
+    mode: popup
+    content: |
+      Let's make some changes to an HTML page. Let's start by opening the `index.html` page in the File Browser.
+
+    waitFor:
+      - ::fileOpen(/index.html)
+
+    highlight:
+      - ::fileBrowser(/index.html)
+
+    validation:
+      openFile: ::allowIfFile(/index.html, open-file)
+
+- slide:
+    mode: popup
+    content: |
+      Great! Try changing the header on this page to be a different greeting.
+
+    zones:
+      /index.html:
+        header_content: edit
+
+    autoNext: false
+    waitFor:
+      - ::event(modify-file, verifyHeaderContent)

@@ -27,9 +27,6 @@ export function evaluateSelector(selector) {
 	// be used for actions
 	const commands = {};
 
-	// check for special commands so we can minimize selectors
-	selector = selector.replace(/[a-zA-Z]+\([^\)]*\)( |$)+/g, executeFunctionSelector);
-
 	// remove all special rules that I added
 	selector = selector.replace(/:{2}[^\(]+\([^\)]*\)( |$)*/g, match => {
 		match = match.substr(2);
@@ -43,9 +40,14 @@ export function evaluateSelector(selector) {
 
 		// extract all arguments
 		const args = _.trim(parts).split(/ ?, ?/g);
-		commands[command] = args;
 
-		// remove it
+		// determine what to do with this result
+		const result = applyCustomCommand(command, args);
+		if (_.isString(result))
+			return result;
+
+		// else, assume this is an actual command
+		commands[result.command] = result.args;
 		return '';
 	});
 
@@ -108,8 +110,7 @@ function getSelectorArray(arg) {
 }
 
 // special commands
-function executeFunctionSelector(str) {
-	const { command, args } = parseFunctionSelector(str);
+function applyCustomCommand(command, args) {
 
 	// file openn
 	switch(command) {
@@ -119,23 +120,8 @@ function executeFunctionSelector(str) {
 		case 'fileBrowser':
 			return `#file-browser [file="${args[0]}"]`;
 
+		// nothing special, use as is
 		default:
-			return str;
+			return { command, args };
 	}
 }
-
-
-// special commands
-function parseFunctionSelector(str) {
-	const parts = str.split('(');
-	const command = parts[0];
-
-	// get the arguments
-	let args = parts.slice(1).join('(');
-	args = args.substr(0, args.length - 1);
-	args = _.map(args.split(','), _.trim);
-
-	// check the final
-	return { command, args };
-}
-
