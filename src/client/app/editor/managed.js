@@ -289,6 +289,7 @@ export default class ManagedEditor {
 		this.editor.focus();
 		this.editor.gotoLine(row, col, true);
 		this.editor.renderer.scrollToRow(row);
+		this.editor.resize();
 	}
 
 	// sync zones to the current state
@@ -301,14 +302,20 @@ export default class ManagedEditor {
 		// check each zone
 		const { zones } = instance;
 		_.each(zones, zone => {
-			const wasEditing = zone.isEditable;
+			const wasEditing = zone.zone.editable;
+			const wasCollapsed = zone.zone.collapsed;
 
-			// sync
-			zone.sync(true);
+			// sync the data for this zone
+			zone.sync();
 
 			// if now an editable zone, focus on it
-			if (!wasEditing && !zone.isEditable)
+			if (!wasEditing && zone.zone.editable)
 				focusTo = zone.end;
+
+			if (wasCollapsed && !zone.zone.collapsed) {
+				console.log('expanding zone', zone.id);
+			}
+
 		});
 
 		// if a zone has been activated, focus on it
@@ -389,6 +396,7 @@ function isEditAllowed(instance, options) {
 		const endAtStart = selectionEnd === zoneStart;
 		const endAtEnd = selectionEnd === zoneEnd;
 
+		// handling deleting backwards
 		if (isBackspace) {
 
 			// not a selection and is at the start of the
@@ -397,6 +405,7 @@ function isEditAllowed(instance, options) {
 				continue;
 
 		}
+		// handle deleting in place
 		else if (isDelete) {
 
 			// not a seleciton and trying to delete characters
@@ -405,6 +414,7 @@ function isEditAllowed(instance, options) {
 				continue;
 
 		}
+		// handle inserting new characters
 		else if (isInsert) {
 
 			if (hasNewLines && !zone.isMultiLine)
@@ -424,13 +434,20 @@ function isEditAllowed(instance, options) {
 
 // applies the update
 function updateZones(instance, options) {
-	const { selection, after, zones, updated, event, newline, isInsert, isBackspace, isDelete } = options;
+	const {
+		selection,
+		after,
+		zones,
+		updated,
+		lines,
+		newline
+	} = options;
 	const before = selection;
 
 	// check the diff for the events
 	// const insertedAtNewline = after.end.column;
 	const lineChanges = after.end.row - before.end.row;
-	const rev = updated.split(newline);
+	const revised = updated.split(newline);
 	
 	// start updating each line
 	// const ss = before.start;
@@ -442,6 +459,15 @@ function updateZones(instance, options) {
 	// start processing each zone
 	for(const id in zones) {
 		const zone = zones[id];
+
+		// if this is offset, get the parent
+		if (zone.offsetBy) {
+			const relativeTo = zones[zone.offsetBy];
+			if (relativeTo.isCollapsed) {
+				console.log('skipping', id, 'offet by', relativeTo);
+				continue;
+			}
+		}
 
 		// get some common checks done
 		const zs = zone.range.start;
@@ -459,7 +485,7 @@ function updateZones(instance, options) {
 		// moved down a row
 		if (ze.row >= se.row) {
 			ze.row += lineChanges;
-			ze.column = rev[ze.row].length;
+			ze.column += revised[ze.row].length - lines[ze.row].length;
 			updated = true;
 		}
 

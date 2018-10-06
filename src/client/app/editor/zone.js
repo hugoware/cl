@@ -36,6 +36,7 @@ export default class ManagedZone {
 
 	/** handles displaying the zone */
 	show = () => {
+		console.log('will show', this.id);
 		this.isActive = true;
 		this.zone.active = true;
 		this.marker.clazz = this.base + ' show';
@@ -43,6 +44,7 @@ export default class ManagedZone {
 	
 	/** handles hiding a zone */
 	hide = () => {
+		console.log('will hide', this.id);
 		this.isActive = false;
 		delete this.zone.active;
 		this.marker.clazz = this.base;
@@ -50,6 +52,7 @@ export default class ManagedZone {
 
 	/** handles displaying the zone */
 	edit = () => {
+		console.log('will edit', this.id);
 		if (this.isCollapsed) this.expand();
 		this.show();
 		this.isEditable = true;
@@ -58,12 +61,15 @@ export default class ManagedZone {
 	
 	/** handles hiding a zone */
 	lock = () => {
+		console.log('will lock', this.id);
+		this.hide();
 		this.isEditable = false;
 		this.zone.editable = false;
 	}
 
 	/** shows the content for a range */
 	collapse = () => {
+		console.log('will collapse', this.id);
 		if (this.isCollapsed) return;
 		this.isCollapsed = true;
 		this.zone.collapsed = true;
@@ -73,16 +79,13 @@ export default class ManagedZone {
 
 	/** expands the content for a range */
 	expand = () => {
+		console.log('will expand', this.id);
 		if (!this.isCollapsed) return;
 		this.isCollapsed = false;
 		delete this.zone.collapsed;
-		
-		// get the original start
-		const { row, column } = this.start;
 
 		// insert contetn and fix
-		this.session.insert(this.start, this.zone.content);
-		this.start.setPosition(row, column);
+		this.session.insert(this.range.start, this.zone.content);
 		delete this.zone.content;
 	}
 
@@ -103,6 +106,13 @@ export default class ManagedZone {
 	 * make sure they're aligned correctly
 	 */
 	sync = () => {
+		console.log('will change 3');
+
+		// check for collapse changes
+		if (!this.isCollapsed && this.zone.collapsed)
+			this.collapse();
+		else if (this.isCollapsed && !this.zone.collapsed)
+			this.expand();
 
 		// check for zone states
 		if (this.isEditable && !this.zone.editable)
@@ -115,12 +125,6 @@ export default class ManagedZone {
 			this.hide();
 		else if (!this.isActive && this.zone.active)
 			this.show();
-
-		// check for collapse changes
-		if (!this.isCollapsed && this.zone.collapsed)
-			this.collapse();
-		else if (this.isCollapsed && !this.zone.collapsed)
-			this.expand();
 
 		// sync styles and columns
 		this.update();

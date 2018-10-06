@@ -2,6 +2,7 @@
 
 import $ from 'jquery';
 import _ from 'lodash';
+import $uiSelectors from '../ui-selectors';
 
 /** evaluates an array of selectors or a single strinc
  * @param {string|string[]} selectors the selectors to process
@@ -114,11 +115,22 @@ function applyCustomCommand(command, args) {
 
 	// file openn
 	switch(command) {
+
+		// matches for a specific tab to be open
 		case 'fileOpen':
 			return `.tab-bar .tab[file="${args[0]}"]`;
 
+		// selects a specific item in the file browser
 		case 'fileBrowser':
 			return `#file-browser [file="${args[0]}"]`;
+
+		// action to select common UI elements
+		case 'ui': {
+			const selector = $uiSelectors[args[0]];
+			if (!selector)
+				throw `invalid ui selector: ${args[0]}`;
+			return selector;
+		}
 
 		// nothing special, use as is
 		default:

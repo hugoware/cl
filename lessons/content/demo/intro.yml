@@ -1,4 +1,22 @@
 
+- slide:
+    mode: popup
+    content: |
+      Open index.html
+
+    flags: +open-file
+
+
+- slide:
+    mode: popup
+    content: |
+      Testing
+
+    zones:
+      /index.html:
+        - button_example: expand
+        - button_content: edit
+
 
 - slide:
     mode: overlay
@@ -62,3 +80,68 @@
     autoNext: false
     waitFor:
       - ::event(modify-file, verifyHeaderContent)
+
+- slide:
+    mode: popup
+    content: |
+      Let's try that again with a different type of HTML element. This one will look like a button
+
+    zones:
+      /index.html:
+        - button_element: expand
+        - button_content: edit
+
+    autoNext: false
+    waitFor:
+      - ::event(modify-file, verifyHeaderContent)
+
+- slide:
+    mode: popup
+    content: |
+      Let's try uploading an image and adding it to the page!
+
+      Use the **Upload File** option to go to the next step
+
+    actions:
+      - deselect-items
+
+    zones:
+      /index.html:
+        header_content: lock
+
+    validation:
+      uploadFile: verifyFileUploadIsImage
+
+    waitFor:
+      - ::event(file-uploaded, verifyUploadImageSuccess)
+
+    highlight:
+      - ::ui(upload-file)
+
+
+    flags: +upload-file-dialog
+
+- slide:
+    mode: popup
+    content: |
+      Great! Let's add an image to the page
+
+    zones:
+      /index.html:
+        img: expand
+
+    flags: -upload-file-dialog
+
+- slide:
+    mode: popup
+    content: |
+      Type in the name of the image file - In this case, `/%uploadedFileName%`
+
+    zones:
+      /index.html:
+        img_path: edit
+
+    flags: -upload-file-dialog
+
+    waitFor:
+      - ::editing(verifyImageSrc)

@@ -26,7 +26,7 @@ $define('verifyUploadImageSuccess', result => {
       $speakMessage("Perfect! Let's add this image to our web page!", 'happy');
 
     // it worked, so let's move on
-    $state.imageName = $self.waitingForFile;
+    $state.uploadedFileName = $self.waitingForFile;
     delete $self.waitingForFile;
   });
 });

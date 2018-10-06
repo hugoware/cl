@@ -10,6 +10,26 @@
       "type": "web",
       "description": "An Introduction to the CodeLab Learning System",
       "lesson": [{
+        "mode": "popup",
+        "content": "<p>Open index.html</p>",
+        "flags": {
+          "add": ["open-file"]
+        },
+        "type": "slide",
+        "speak": ["Open index.html"]
+      }, {
+        "mode": "popup",
+        "content": "<p>Testing</p>",
+        "zones": {
+          "/index.html": [{
+            "button_example": "expand"
+          }, {
+            "button_content": "edit"
+          }]
+        },
+        "type": "slide",
+        "speak": ["Testing"]
+      }, {
         "mode": "overlay",
         "title": "An Introduction to HTML",
         "content": "<p>This brief tutorial will give you an introduction to using HTML to create web pages.</p>",
@@ -55,6 +75,66 @@
         "waitFor": ["::event(modify-file, verifyHeaderContent)"],
         "type": "slide",
         "speak": ["Great! Try changing the header on this page to be a different greeting."]
+      }, {
+        "mode": "popup",
+        "content": "<p>Let's try that again with a different type of HTML element. This one will look like a button</p>",
+        "zones": {
+          "/index.html": [{
+            "button_element": "expand"
+          }, {
+            "button_content": "edit"
+          }]
+        },
+        "autoNext": false,
+        "waitFor": ["::event(modify-file, verifyHeaderContent)"],
+        "type": "slide",
+        "speak": ["Let's try that again with a different type of HTML element. This one will look like a button"]
+      }, {
+        "mode": "popup",
+        "content": "<p>Let's try uploading an image and adding it to the page!</p><p>Use the <strong>Upload File</strong> option to go to the next step</p>",
+        "actions": ["deselect-items"],
+        "zones": {
+          "/index.html": {
+            "header_content": "lock"
+          }
+        },
+        "validation": {
+          "uploadFile": "verifyFileUploadIsImage"
+        },
+        "waitFor": ["::event(file-uploaded, verifyUploadImageSuccess)"],
+        "highlight": ["::ui(upload-file)"],
+        "flags": {
+          "add": ["upload-file-dialog"]
+        },
+        "type": "slide",
+        "speak": ["Let's try uploading an image and adding it to the page!", "Use the Upload File option to go to the next step"]
+      }, {
+        "mode": "popup",
+        "content": "<p>Great! Let's add an image to the page</p>",
+        "zones": {
+          "/index.html": {
+            "img": "expand"
+          }
+        },
+        "flags": {
+          "remove": ["upload-file-dialog"]
+        },
+        "type": "slide",
+        "speak": ["Great! Let's add an image to the page"]
+      }, {
+        "mode": "popup",
+        "content": "<p>Type in the name of the image file - In this case, <code>/%uploadedFileName%</code></p>",
+        "zones": {
+          "/index.html": {
+            "img_path": "edit"
+          }
+        },
+        "flags": {
+          "remove": ["upload-file-dialog"]
+        },
+        "waitFor": ["::editing(verifyImageSrc)"],
+        "type": "slide",
+        "speak": ["Type in the name of the image file - In this case, /%uploadedFileName%"]
       }],
       "definitions": {
         "html_element": {
@@ -132,49 +212,30 @@
               "col": 16
             }
           },
-          "paragraph": {
+          "button_example": {
             "start": {
-              "row": 10,
-              "col": 4
+              "row": 9,
+              "col": 0
             },
             "end": {
-              "row": 10,
-              "col": 4
+              "row": 9,
+              "col": 0
             },
             "collapsed": true,
-            "content": "<p></p>"
+            "line": true,
+            "content": "\n    <button></button>"
           },
-          "img_path": {
+          "button_content": {
             "start": {
-              "row": 12,
-              "col": 0
+              "row": 8,
+              "col": 13
             },
             "end": {
-              "row": 12,
-              "col": 0
-            }
-          },
-          "img": {
-            "start": {
-              "row": 12,
-              "col": 4
+              "row": 8,
+              "col": 13
             },
-            "end": {
-              "row": 12,
-              "col": 4
-            },
-            "collapsed": true,
-            "content": "<img src=\"\" />"
-          },
-          "paragraph_content": {
-            "start": {
-              "row": 10,
-              "col": 0
-            },
-            "end": {
-              "row": 10,
-              "col": 0
-            }
+            "offset": 13,
+            "offsetBy": "button_example"
           }
         }
       }
@@ -288,17 +349,6 @@
 
     // attach required scripts
 
-    $define('canOpenIndexHtml', function (file) {
-      return $validate({ revertOnError: false }, function () {
-
-        if (file.path !== '/index.html') {
-          $denyAccess("Can't Open This File", 'Open the index.html file to continue the lesson');
-          $speakMessage("You can't open that file just yet!\n\nMake sure to open `index.html` to continue the lesson.", 'surprised');
-          return false;
-        }
-      });
-    });
-
     // checks that they've added enough list items to a zone
     $define('verifyFileUploadIsImage', function (data) {
       return $validate({ revertOnError: false }, function () {
@@ -328,82 +378,44 @@
       });
     });
 
-    // checks that they've added enough list items to a zone
-    $define('verifyHasEnoughListItems', { init: true }, function () {
-
-      var requiredItems = 5;
-      var minimumLength = 3;
-
-      // tracking item count
-      var totalItems = 0;
-      var totalListItems = 0;
-
-      // make sure there's a valid zone
+    $define('verifyHeaderContent', { init: true }, function () {
       return $validate(function () {
 
-        var zone = $getZone('/index.html', 'ul_content', true);
-        if (!zone) {
-          $showHint('Fix the HTML errors to continue');
+        // get the current entered value
+        var content = $getZone('/index.html', 'header_content');
+        content = _.trim(content);
+
+        // make sure it's okay
+        if (/^welcome/i.test(content)) {
+          $showHint('Change the greeting to something different');
           return false;
         }
 
-        // check how many items are listed
-        var hasEmptyItem = void 0;
-        var hasShortItem = void 0;
-
-        // check each list item
-        zone.children().each(function (index, node) {
-          totalItems++;
-
-          // not a list item
-          if (!/^li$/i.test(node.tagName)) return;
-          totalListItems++;
-
-          // check the contents
-          var item = $html(node);
-          var text = _.trim(item.text());
-          if (text.length === 0) hasEmptyItem = true;
-          if (text.length < minimumLength) hasShortItem = true;
-        });
-
-        // update the message, if needed
-        if (totalListItems < requiredItems) {
-          var remaining = requiredItems - totalListItems;
-          var plural = remaining > 1 ? 's' : '';
-          $showHint("Enter " + remaining + " more list item" + plural);
+        if (content.length < 5) {
+          $showHint('Enter a longer greeting');
           return false;
         }
 
-        // check for other conditions
-        if (hasEmptyItem) {
-          $showHint("Add content to each list item");
-          return false;
-        }
-
-        if (hasShortItem) {
-          $showHint("Add at least " + minimumLength + " characters per list item");
-          return false;
-        }
-
-        // must only be list items
-        if (totalItems !== requiredItems) {
-          $showHint("Only use list items in this example");
-          return false;
-        }
-
-        // remove list items
-        zone.children('li').remove();
-
-        // check the remaining text
-        var text = _.trim(zone.html());
-        if (_.some(text)) {
-          $showHint('Only use `li` tags. Do not include any extra text');
-          return false;
-        }
-
-        // passed validation
         $hideHint();
-        $speakMessage('Looks great! You can move onto the next step now');
+        $speakMessage('Looks great!');
+      });
+    });
+
+    $define('verifyImageSrc', { init: true }, function () {
+      return $validate(function () {
+
+        // get the current entered value
+        var content = $getZone('/index.html', 'image_path');
+        content = _.trim(content);
+
+        // make sure it's okay
+        if (content !== $state.uploadedFileName) {
+          $showHint('Enter in the name of the image you uploaded');
+          return false;
+        }
+
+        $hideHint();
+        $speakMessage('Perfect! You can see that the image is showing!');
       });
     });
 
@@ -430,7 +442,7 @@
           else $speakMessage("Perfect! Let's add this image to our web page!", 'happy');
 
         // it worked, so let's move on
-        $state.imageName = $self.waitingForFile;
+        $state.uploadedFileName = $self.waitingForFile;
         delete $self.waitingForFile;
       });
     });

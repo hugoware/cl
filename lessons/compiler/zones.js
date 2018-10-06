@@ -25,6 +25,35 @@ function processFileZone(zone, id, source) {
   path = $path.resolve(source, `.${path}`);
   let content = $fs.readFileSync(path).toString();
 
+  _.each(zone, (item, id) => {
+    _.each(zone, (outer, outerId) => {
+
+      // skip itself
+      if (id === outerId) return;
+
+      // if contained within this zone, and the outer zone
+      // is also collapsed, then we need to get the offset
+      if (!outer.collapsed) return;
+
+      // capture each
+      const itemStartIndex = getIndex(content, item.start.row, item.start.col);
+      const itemEndIndex = getIndex(content, item.end.row, item.end.col);
+      const outerStartIndex = getIndex(content, outer.start.row, outer.start.col);
+      const outerEndIndex = getIndex(content, outer.end.row, outer.end.col);
+
+      // check for the containment
+      if (itemStartIndex >= outerStartIndex
+        && itemEndIndex >= outerStartIndex
+        && itemStartIndex < outerEndIndex
+        && itemEndIndex < outerEndIndex) {
+        item.offset = itemStartIndex - outerStartIndex;
+        item.offsetBy = outerId;
+      }
+
+    });
+
+  });
+
   // update the zones
   const result = applyCollapsedZones(zone, content);
 

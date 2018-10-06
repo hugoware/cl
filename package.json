@@ -8,6 +8,7 @@
     "prod-server": "nodemon ./dist/index.js --watch ./dist/version --delay 1.5 ./config.yml",
     "dev": "npm run database & npm run dev-server & npm run watch",
     "dev-server": "nodemon ./dist/index.js --watch dist/ --ignore 'dist/workbench.js' --ignore 'dist/resources/' --ignore 'dist/views/' --delay 1.5 -- ./config.dev.yml",
+    "dev-lessons": "babel-node ./scripts/compile-lesson.js",
     "database": "mongod --dbpath ./.data/codelab/",
     "watch": "./node_modules/.bin/gulp watch",
     "workbench": "babel-node ./src/workbench.js ./config.dev.yml",
@@ -42,7 +43,8 @@
     "run-sequence": "^2.2.1",
     "uglify-js": "^3.4.8",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.0"
   },
   "dependencies": {
     "ast-query": "^2.0.0",

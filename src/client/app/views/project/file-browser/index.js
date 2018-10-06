@@ -31,6 +31,7 @@ export default class FileBrowser extends Component {
 		this.listen('update-project', this.onUpdateProject);
 		this.listen('expand-folder', this.onExpandFolder);
 		this.listen('delete-items', this.onDeleteItems);
+		this.listen('deselect-items', this.onDeselectItems);
 		
 		// ui events
 		this.listen('window-resize', this.onWindowResize);

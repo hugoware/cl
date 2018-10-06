@@ -110,31 +110,34 @@ _.each($config.scripts.client, source => {
   const input = `src/client/${source}/index.js`;
   const action = `compile-client-${source}-scripts`;
   const watch = `watch-client-${source}-scripts`;
+
+  // common transformer
+  const transformer = $browserify(input, {
+    fast: true,
+    cache: { },
+    packageCache: { },
+  })
+  .transform('babelify', {
+    presets: [ 'es2015' ],
+    plugins: [
+      // 'convert-to-json',
+      ['inline-import', { 'extensions': [ '.txt', '.ts', '.html' ] }],
+      'transform-svg-import-to-string',
+      'transform-class-properties',
+      'async-to-promises'
+    ]
+  });
   
   // compiles the client script
   $gulp.task(action, () => {
     const output = $gulp.dest(`dist/resources/public`);
 
-    return $browserify(input, {
-      fast: true,
-      cache: { },
-      packageCache: { },
-    })
-    .transform('babelify', {
-      presets: [ 'es2015' ],
-      plugins: [
-        // 'convert-to-json',
-        ['inline-import', { 'extensions': [ '.txt', '.ts', '.html' ] }],
-        'transform-svg-import-to-string',
-        'transform-class-properties',
-        'async-to-promises'
-      ]
-    })
-    .bundle()
-    .on('error', displayError)
-    .pipe($source(`${source}.js`))
-    .pipe($buffer())
-    .pipe(output);
+    return transformer
+      .bundle()
+      .on('error', displayError)
+      .pipe($source(`${source}.js`))
+      .pipe($buffer())
+      .pipe(output);
   });
 
   // setup a watch
@@ -148,33 +151,34 @@ _.each($config.scripts.workers, source => {
   const input = `src/client/workers/${source}.js`;
   const action = `compile-worker-${source}-scripts`;
   const watch = `watch-worker-${source}-scripts`;
+  const transformer = $browserify(input, {
+    fast: true,
+    cache: { },
+    packageCache: { },
+  })
+  .transform('babelify', {
+    presets: [ 'es2015' ],
+    plugins: [
+      ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
+      'transform-class-properties',
+      'async-to-promises'
+    ]
+  })
+  .transform('browserify-shim', {
+    global: true,
+    'fs': 'global:LFS'
+  });
   
   // compiles the worker script
   $gulp.task(action, () => {
     const output = $gulp.dest(`dist/resources/public`);
 
-    return $browserify(input, {
-      fast: true,
-      cache: { },
-      packageCache: { },
-    })
-    .transform('babelify', {
-      presets: [ 'es2015' ],
-      plugins: [
-        ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
-        'transform-class-properties',
-        'async-to-promises'
-      ]
-    })
-    .transform('browserify-shim', {
-      global: true,
-      'fs': 'global:LFS'
-    })
-    .bundle()
-    .on('error', displayError)
-    .pipe($source(`${source}.js`))
-    .pipe($buffer())
-    .pipe(output);
+    return transformer
+      .bundle()
+      .on('error', displayError)
+      .pipe($source(`${source}.js`))
+      .pipe($buffer())
+      .pipe(output);
   });
 
   // setup a watch
@@ -189,34 +193,35 @@ _.each($config.scripts.viewers, source => {
   const input = `src/client/viewer/${source}/index.js`;
   const action = `compile-viewer-${source}-scripts`;
   const watch = `watch-viewer-${source}-scripts`;
+  const transformer = $browserify(input, {
+    fast: true,
+    cache: { },
+    packageCache: { },
+  })
+  .transform('babelify', {
+    presets: [ 'es2015' ],
+    plugins: [
+      ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
+      'transform-svg-import-to-string',
+      'transform-class-properties',
+      'async-to-promises'
+    ]
+  });
+  // .transform('browserify-shim', {
+  //   global: true,
+  //   'fs': 'global:LFS'
+  // });
   
   // compiles the viewer script
   $gulp.task(action, () => {
     const output = $gulp.dest(`dist/resources/public`);
 
-    return $browserify(input, {
-      fast: true,
-      cache: { },
-      packageCache: { },
-    })
-    .transform('babelify', {
-      presets: [ 'es2015' ],
-      plugins: [
-        ['inline-import', { 'extensions': [ '.txt', '.ts' ] }],
-        'transform-svg-import-to-string',
-        'transform-class-properties',
-        'async-to-promises'
-      ]
-    })
-    // .transform('browserify-shim', {
-    //   global: true,
-    //   'fs': 'global:LFS'
-    // })
-    .bundle()
-    .on('error', displayError)
-    .pipe($source(`${source}.js`))
-    .pipe($buffer())
-    .pipe(output);
+    return transformer
+      .bundle()
+      .on('error', displayError)
+      .pipe($source(`${source}.js`))
+      .pipe($buffer())
+      .pipe(output);
   });
 
   // setup a watch

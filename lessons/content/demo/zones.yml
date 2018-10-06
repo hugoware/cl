@@ -35,33 +35,19 @@ html_tag_example:
     end:
       row: 8
       col: 16
-  paragraph:
+  button_example:
     start:
-      row: 10
-      col: 4
+      row: 9
+      col: 0
     end:
       row: 10
-      col: 11
+      col: 21
     collapsed: true
-  img_path:
-    start:
-      row: 12
-      col: 14
-    end:
-      row: 12
-      col: 14
-  img:
-    start:
-      row: 12
-      col: 4
-    end:
-      row: 12
-      col: 18
-    collapsed: true
-  paragraph_content:
+    line: true
+  button_content:
     start:
       row: 10
-      col: 7
+      col: 12
     end:
       row: 10
-      col: 7
+      col: 12

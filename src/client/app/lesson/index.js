@@ -388,7 +388,22 @@ function notifyZoneUpdates(lesson, path, zones, invert) {
 	
 	// update the state for each zone
 	_.each(zones, (state, id) => {
+
+		// if this is an object, then an array of options was
+		// provided -- this is normally to make sure this happens
+		// in a certain sequence
+		if (_.isObject(state))
+			for (const key in state) {
+				id = key;
+				state = state[key];
+				break;
+			}
+
+		// find the zone to update
 		const zone = lesson.getZone(path, id);
+
+		// check the result
+		console.log('checking', id, state);
 		
 		// check the collapse state
 		if (/edit/.test(state))
@@ -407,6 +422,7 @@ function notifyZoneUpdates(lesson, path, zones, invert) {
 			zone.active = invert ? false : true;
 		else if (/hide/.test(state))
 			zone.active = invert ? true : false;
+
 	});
 
 }
