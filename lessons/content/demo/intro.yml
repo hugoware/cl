@@ -14,8 +14,13 @@
 
     zones:
       /index.html:
-        - button_example: expand
-        - button_content: edit
+        header_tag: expand
+        header_content: edit
+
+    cursor:
+      file: /index.html
+      zone: header_content
+      at: end
 
 
 - slide:

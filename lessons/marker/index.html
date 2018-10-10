@@ -197,14 +197,14 @@
 
         // check for flags
         let isCollapsed;
-        name = name.replace(/\!(c|collapsed?|hide)/gi, () => {
+        name = name.replace(/\!c/gi, () => {
           isCollapsed = true;
           return '';
         });
 
         // check for flags
         let isLine;
-        name = name.replace(/\!(l|line)/gi, () => {
+        name = name.replace(/\!l/gi, () => {
           isLine = true;
           return '';
         });
@@ -218,10 +218,10 @@
         var rangeEnd = editor.value.substr(0, editor.selectionEnd);
         var linesStart = rangeStart.split(/\n/g);
         var linesEnd = rangeEnd.split(/\n/g);
-        var rowStart = linesStart.length - 1;
-        var rowEnd = linesEnd.length - 1;
-        var columnStart = linesStart[linesStart.length - 1].length;
-        var columnEnd = linesEnd[linesEnd.length - 1].length;
+        var rowStart = (linesStart.length - 1) + 1;
+        var rowEnd = (linesEnd.length - 1) + 1;
+        var columnStart = (linesStart[linesStart.length - 1].length) + 1;
+        var columnEnd = (linesEnd[linesEnd.length - 1].length) + 1;
 
         // check if moving down a line
         // const lines = editor.value.split(/\n/g);

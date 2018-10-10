@@ -43,6 +43,7 @@ const DEFAULT_OPTIONS = {
 	showInvisibles: false,
 	copyWithEmptySelection: false,
 	scrollPastEnd: 0.5,
+	mergeUndoDeltas: true,
 	printMarginColumn: -1
 };
 

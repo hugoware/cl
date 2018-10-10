@@ -5,13 +5,10 @@ import $brace from 'brace';
 import { cancelEvent } from '../utils';
 import ManagedZone from './zone';
 import { listen , broadcast} from '../events';
+import ZoneMap from '../zone-map';
 
 // managing text ranges
 const Range = $brace.acequire('ace/range').Range;
-
-// empty collection
-const EMPTY_ZONES = { };
-const ROW_OFFSET = 1000000;
 
 // default options for new sessions
 const SESSION_OPTIONS = {
@@ -54,30 +51,64 @@ export default class ManagedEditor {
 
 		// keep in sync with lessons
 		listen('slide-changed', this.onSlideChanged);
+		listen('set-cursor', this.onSetCursor);
 
 		// setup event handlers
 		this.editor.commands.on('exec', this.onExecuteCommand);
+		this.editor.on('mousedown', () => this.isMouseDown = true);
+		this.editor.on('mouseup', () => this.isMouseDown = false);
 	}
 
 	// handles changing between lessons
 	onSlideChanged = () => {
+		if (!this.activeInstance) return;
+		const instance = this.activeInstance;
+
+		// check if the content changed
+		const map = instance.map;
+		if (!map) return;
+
+		// check for changes
+		if (instance.lastContentUpdate || 0 < map.lastUpdate)
+			instance.session.setValue(map.content);
+
+			// always sync cursor states
 		this.syncZones(this.activeInstance);
+		setTimeout(() => this.editor.resize());
+	}
+
+	/** changes the cursor for a file */
+	onSetCursor = (cursor, file) => {
+
+		// if referring to a file
+
+		// referring to a zone
+		if (_.isString(cursor)) {
+
+		}
+
 	}
 
 	// handle command requests
 	onExecuteCommand = event => {
+		console.log(event);
 		
 		// can freely edit files
 		if (!$state.lesson || $state.freeMode)
-			return true;
+		return true;
+		
+		// weird issue happenw when holding down the mouse
+		// it acts like a continued selection and will 
+		// insert and replace wherever the cursor is at
+		if (this.isMouseDown)
+			return cancelEvent(event);
 			
 		// make sure there's an instance to work with
 		const { command = { } } = event;
 		const instance = this.activeInstance;
 		if (!instance) return true;
+		const { map } = instance;
 
-		console.log('managed:', event.command.name, event);
-		
 		// keyboard nav is allowed always
 		if (/^goto(left|right)$/i.test(command.name)
 			|| /^goline(down|up)$/i.test(command.name)
@@ -98,51 +129,71 @@ export default class ManagedEditor {
 		if (/(removeword|removeline|copylines|removeto|movelines|splitline)/i.test(command.name))
 			return cancelEvent(event);
 
-		// make sure the file can even be changed
-		const canEditFile = $state.lesson.canEditFile(instance.file.path);
-		
-		// check the key used
-		const zones = instance.zones || EMPTY_ZONES;
-		
-		// without zones, just use the file status
-		if (zones.length === 0)
-			return !canEditFile ? cancelEvent(event) : true;
-
-		// gather up insertion information
-		const { session, content } = this.activeInstance;
-		const newline = session.doc.getNewLineCharacter();
-		const selection = this.editor.getSelectionRange();
-		const text = (event.args || '').toString();
-		const totalNewLines = text.split(newline).length - 1;
-		const hasNewLines = totalNewLines > 0;
-		const lines = content.split(newline);
-
-		// create the options to check with
-		const options = {
-			selection, event, zones,
-			hasNewLines, totalNewLines,
-			lines, newline,
-			isInsert: /insert/i.test(command.name),
-			isBackspace: /backspace/i.test(command.name),
-			isDelete: /del/i.test(command.name)
-		};
-
-		// check that this edit is allowed
-		const canEdit = isEditAllowed(this, options);
-		if (!canEdit) {
-			this.editor.setOptions({ enableBasicAutocompletion: false, enableLiveAutocompletion: false });
+		// handle undos
+		if (/(undo|redo)/i.test(command.name)) {
+			console.warn('PREVENTING UNDO IN ZONE');
 			return cancelEvent(event);
 		}
 
-		// execute?
-		this.editor.setOptions({ enableBasicAutocompletion: true, enableLiveAutocompletion: true });
-		command.exec(this.editor, event.args);
-		options.after = this.editor.getSelectionRange();
-		options.updated = this.activeInstance.content;
+		// make sure the file can even be changed
+		const canEditFile = $state.lesson.canEditFile(instance.file.path);
+		
+		// without zones, just use the file status
+		if (!map)
+			return !canEditFile ? cancelEvent(event) : true;
 
-		// apply the update - if the update fails
-		// then the even will be canceled
-		updateZones(this, options);
+		// gather up insertion information
+		const newline = instance.session.doc.getNewLineCharacter();
+		const text = (event.args || '').toString();
+		const includesNewLine = text.split(newline).length - 1;
+		
+		// create the options to check with
+		const isInsert = /insert/i.test(command.name);
+		const isBackspace = !isInsert && /backspace/i.test(command.name);
+		const isDelete = !isBackspace && /del/i.test(command.name);
+		const test = isInsert ? map.canInsert
+		: isBackspace ? map.canBackspace
+		: isDelete ? map.canDelete
+		: null;
+		
+		// not sure what the request is
+		if (!test)
+			return false;
+		
+		// test the action
+		const selection = this.editor.getSelectionRange();
+
+		// the zone-map works with 1 based index... my mistake
+		selection.start.row++;
+		selection.start.column++;
+		selection.end.row++;
+		selection.end.column++;
+
+		// test the range
+		const startIndex = map.getIndex(selection.start.row, selection.start.column);
+		const endIndex = map.getIndex(selection.end.row, selection.end.column);
+		const delta = startIndex === endIndex ? -1 : startIndex - endIndex;
+		const allowed = test(startIndex, endIndex, includesNewLine);
+
+		// if it's allowed, apply the change and then update
+		if (allowed) {
+			
+			// perform the action in the zonemap 
+			map.modify(
+				selection.start.row, selection.start.column,
+				selection.end.row, selection.end.column,
+				isInsert ? event.args : delta
+			);
+			
+			// apply the change to the editor
+			command.exec(this.editor, event.args);
+
+			// update all indexes
+			this.syncZones(instance);
+		}
+
+		// always cancel the event since it will be
+		// executed by success events
 		return cancelEvent(event);
 	}
 
@@ -240,21 +291,15 @@ export default class ManagedEditor {
 				// create the handler for content changes
 				session.on('change', this.onChanged);
 
-				// create all of the zones for this file
-				const zones = { };
-				if ($state.lesson) {
-
-					// create each zone
-					const availableZones = $state.lesson.getZones(file.path);
-					_.each(availableZones, (zone, id) => {
-						const instance = new ManagedZone(id, zone, session);
-						zones[id] = instance;
-					});
-				}
+				// the the map and zones for this file, if any
+				const map = $state.lesson.maps[file.path];
+				const zones = map && _.map(map.zones, (zone, id) => {
+					return new ManagedZone(id, zone, session);
+				});
 
 				// create the instance
 				instance = {
-					file, session, zones,
+					file, session, map, zones,
 
 					// helper to access content
 					get content() {
@@ -294,43 +339,51 @@ export default class ManagedEditor {
 
 	// sync zones to the current state
 	syncZones = instance => {
-		if (!instance || !$state.lesson) return;
-		
-		// update zones
-		let focusTo;
-		
-		// check each zone
+		if (!(instance && instance.map)) return;
+
+		// update each zone
 		const { zones } = instance;
 		_.each(zones, zone => {
-			const wasEditing = zone.zone.editable;
-			const wasCollapsed = zone.zone.collapsed;
-
-			// sync the data for this zone
 			zone.sync();
-
-			// if now an editable zone, focus on it
-			if (!wasEditing && zone.zone.editable)
-				focusTo = zone.end;
-
-			if (wasCollapsed && !zone.zone.collapsed) {
-				console.log('expanding zone', zone.id);
-			}
-
 		});
 
-		// if a zone has been activated, focus on it
-		if (focusTo)
-			this.setCursor(focusTo.row, focusTo.col);
+		// if (!instance || !$state.lesson) return;
+		
+		// // update zones
+		// let focusTo;
+		
+		// // check each zone
+		// const { zones } = instance;
+		// _.each(zones, zone => {
+		// 	const wasEditing = zone.zone.editable;
+		// 	const wasCollapsed = zone.zone.collapsed;
+
+		// 	// sync the data for this zone
+		// 	zone.sync();
+
+		// 	// if now an editable zone, focus on it
+		// 	if (!wasEditing && zone.zone.editable)
+		// 		focusTo = zone.end;
+
+		// 	if (wasCollapsed && !zone.zone.collapsed) {
+		// 		console.log('expanding zone', zone.id);
+		// 	}
+
+		// });
+
+		// // if a zone has been activated, focus on it
+		// if (focusTo)
+		// 	this.setCursor(focusTo.row, focusTo.col);
 	}
 
 	// deactivates all zones
 	clearAllZones = () => {
-		_.each(this.instances, instance => {
-			_.each(instance.zones, zone => zone.clear());
-		});
+		// _.each(this.instances, instance => {
+		// 	_.each(instance.zones, zone => zone.clear());
+		// });
 
-		// force a refresh
-		this.editor.resize();
+		// // force a refresh
+		// this.editor.resize();
 	}
 
 	/** finds an instance of a file using a path 
@@ -354,157 +407,157 @@ export default class ManagedEditor {
 
 }
 
-// creates a fake index
-function toIndex(range) {
-	return (range.row * ROW_OFFSET) + range.column;
-}
+// // creates a fake index
+// function toIndex(range) {
+// 	return (range.row * ROW_OFFSET) + range.column;
+// }
 
-// checks if an edit can be used
-function isEditAllowed(instance, options) {
+// // checks if an edit can be used
+// function isEditAllowed(instance, options) {
 
-	// check if this falls within range
-	const {
-		isBackspace, isDelete, isInsert,
-		zones, selection, hasNewLines, lines,
-	} = options;
+// 	// // check if this falls within range
+// 	// const {
+// 	// 	isBackspace, isDelete, isInsert,
+// 	// 	zones, selection, hasNewLines, lines,
+// 	// } = options;
 
-	// get the selection range
-	const selectionStart = toIndex(selection.start);
-	const selectionEnd = toIndex(selection.end);
+// 	// // get the selection range
+// 	// const selectionStart = toIndex(selection.start);
+// 	// const selectionEnd = toIndex(selection.end);
 	
-	// start checing each zone
-	for (const id in zones) {
-		const zone = zones[id];
+// 	// // start checing each zone
+// 	// for (const id in zones) {
+// 	// 	const zone = zones[id];
 		
-		// can't even be edited
-		if (!zone.isEditable) continue;
+// 	// 	// can't even be edited
+// 	// 	if (!zone.isEditable) continue;
 
-		// get the current index values
-		const zoneStart = toIndex(zone.range.start);
-		const zoneEnd = toIndex(zone.range.end);
+// 	// 	// get the current index values
+// 	// 	const zoneStart = toIndex(zone.range.start);
+// 	// 	const zoneEnd = toIndex(zone.range.end);
 		
-		// check if this is outside the range
-		if (selectionStart < zoneStart ||
-			selectionEnd < zoneStart ||
-			selectionStart > zoneEnd ||
-			selectionEnd > zoneEnd)
-			continue;
+// 	// 	// check if this is outside the range
+// 	// 	if (selectionStart < zoneStart ||
+// 	// 		selectionEnd < zoneStart ||
+// 	// 		selectionStart > zoneEnd ||
+// 	// 		selectionEnd > zoneEnd)
+// 	// 		continue;
 
-		// start checking special conditions
-		const startAtStart = selectionStart === zoneStart;
-		const startAtEnd = selectionStart === zoneEnd;
-		const endAtStart = selectionEnd === zoneStart;
-		const endAtEnd = selectionEnd === zoneEnd;
+// 	// 	// start checking special conditions
+// 	// 	const startAtStart = selectionStart === zoneStart;
+// 	// 	const startAtEnd = selectionStart === zoneEnd;
+// 	// 	const endAtStart = selectionEnd === zoneStart;
+// 	// 	const endAtEnd = selectionEnd === zoneEnd;
 
-		// handling deleting backwards
-		if (isBackspace) {
+// 	// 	// handling deleting backwards
+// 	// 	if (isBackspace) {
 
-			// not a selection and is at the start of the
-			// range, can't backspace any further
-			if (startAtStart && endAtStart)
-				continue;
+// 	// 		// not a selection and is at the start of the
+// 	// 		// range, can't backspace any further
+// 	// 		if (startAtStart && endAtStart)
+// 	// 			continue;
 
-		}
-		// handle deleting in place
-		else if (isDelete) {
+// 	// 	}
+// 	// 	// handle deleting in place
+// 	// 	else if (isDelete) {
 
-			// not a seleciton and trying to delete characters
-			// outside the range of the box
-			if (startAtEnd && endAtEnd)
-				continue;
+// 	// 		// not a seleciton and trying to delete characters
+// 	// 		// outside the range of the box
+// 	// 		if (startAtEnd && endAtEnd)
+// 	// 			continue;
 
-		}
-		// handle inserting new characters
-		else if (isInsert) {
+// 	// 	}
+// 	// 	// handle inserting new characters
+// 	// 	else if (isInsert) {
 
-			if (hasNewLines && !zone.isMultiLine)
-				continue;
+// 	// 		if (hasNewLines && !zone.isMultiLine)
+// 	// 			continue;
 
-		}
+// 	// 	}
 
-		// appears this is okay
-		return true;
+// 	// 	// appears this is okay
+// 	// 	return true;
 
-	}
+// 	// }
 
-	// failed all checks
-	return false;
+// 	// // failed all checks
+// 	// return false;
 	
-}
+// }
 
-// applies the update
-function updateZones(instance, options) {
-	const {
-		selection,
-		after,
-		zones,
-		updated,
-		lines,
-		newline
-	} = options;
-	const before = selection;
+// // applies the update
+// function updateZones(instance, options) {
+// 	// const {
+// 	// 	selection,
+// 	// 	after,
+// 	// 	zones,
+// 	// 	updated,
+// 	// 	lines,
+// 	// 	newline
+// 	// } = options;
+// 	// const before = selection;
 
-	// check the diff for the events
-	// const insertedAtNewline = after.end.column;
-	const lineChanges = after.end.row - before.end.row;
-	const revised = updated.split(newline);
+// 	// // check the diff for the events
+// 	// // const insertedAtNewline = after.end.column;
+// 	// const lineChanges = after.end.row - before.end.row;
+// 	// const revised = updated.split(newline);
 	
-	// start updating each line
-	// const ss = before.start;
-	const se = before.end;
+// 	// // start updating each line
+// 	// // const ss = before.start;
+// 	// const se = before.end;
 
-	// a list of actual changes to perform
-	const adjustments = [ ];
+// 	// // a list of actual changes to perform
+// 	// const adjustments = [ ];
 
-	// start processing each zone
-	for(const id in zones) {
-		const zone = zones[id];
+// 	// // start processing each zone
+// 	// for(const id in zones) {
+// 	// 	const zone = zones[id];
 
-		// if this is offset, get the parent
-		if (zone.offsetBy) {
-			const relativeTo = zones[zone.offsetBy];
-			if (relativeTo.isCollapsed) {
-				console.log('skipping', id, 'offet by', relativeTo);
-				continue;
-			}
-		}
+// 	// 	// if this is offset, get the parent
+// 	// 	if (zone.offsetBy) {
+// 	// 		const relativeTo = zones[zone.offsetBy];
+// 	// 		if (relativeTo.isCollapsed) {
+// 	// 			console.log('skipping', id, 'offet by', relativeTo);
+// 	// 			continue;
+// 	// 		}
+// 	// 	}
 
-		// get some common checks done
-		const zs = zone.range.start;
-		const ze = zone.range.end;
+// 	// 	// get some common checks done
+// 	// 	const zs = zone.range.start;
+// 	// 	const ze = zone.range.end;
 
-		// tracking if this was changed or not
-		let updated;
+// 	// 	// tracking if this was changed or not
+// 	// 	let updated;
 
-		// inserting rows
-		if (zs.row > se.row) {
-			zs.row += lineChanges;
-			updated = true;
-		}
+// 	// 	// inserting rows
+// 	// 	if (zs.row > se.row) {
+// 	// 		zs.row += lineChanges;
+// 	// 		updated = true;
+// 	// 	}
 
-		// moved down a row
-		if (ze.row >= se.row) {
-			ze.row += lineChanges;
-			ze.column += revised[ze.row].length - lines[ze.row].length;
-			updated = true;
-		}
+// 	// 	// moved down a row
+// 	// 	if (ze.row >= se.row) {
+// 	// 		ze.row += lineChanges;
+// 	// 		ze.column += revised[ze.row].length - lines[ze.row].length;
+// 	// 		updated = true;
+// 	// 	}
 
-		// if it was changed, refresh it
-		if (updated)
-			zone.update();
+// 	// 	// if it was changed, refresh it
+// 	// 	if (updated)
+// 	// 		zone.update();
 	
-	}
+// 	// }
 
-	// apply each adjustment
-	_(adjustments)
-		.map(adjust => {
-			adjust.cursor[adjust.type] += adjust.delta;
-			return adjust.zone;
-		})
-		.uniqBy('id')
-		.each(zone => zone.update());
+// 	// // apply each adjustment
+// 	// _(adjustments)
+// 	// 	.map(adjust => {
+// 	// 		adjust.cursor[adjust.type] += adjust.delta;
+// 	// 		return adjust.zone;
+// 	// 	})
+// 	// 	.uniqBy('id')
+// 	// 	.each(zone => zone.update());
 
-	// was successful
-	return true;
-}
+// 	// // was successful
+// 	// return true;
+// }
 

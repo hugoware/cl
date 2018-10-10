@@ -17,7 +17,9 @@
     "compile-lesson": "babel-node ./lessons/compiler/index.js",
     "deploy": "./scripts/deploy.sh",
     "marker": "electron ./lessons/marker/index.html",
-    "create-lesson": "./scripts/new-lesson.sh"
+    "create-lesson": "./scripts/new-lesson.sh",
+    "test": "./node_modules/.bin/jasmine --config=./jasmine.json",
+    "dev-tests": "nodemon -d 1 -L -w ./src -w ./tests --exec \"./node_modules/.bin/jasmine --config=./jasmine.json\""
   },
   "author": "",
   "license": "ISC",
@@ -39,6 +41,7 @@
     "gulp-sass": "^4.0.1",
     "gulp-uglify": "^3.0.0",
     "gulp-using": "^0.1.1",
+    "jasmine": "^3.2.0",
     "pump": "^3.0.0",
     "run-sequence": "^2.2.1",
     "uglify-js": "^3.4.8",

@@ -57,6 +57,8 @@ export default class CodeRunner {
 		__CODELAB__.consoleError = this.onConsoleError;
 		__CODELAB__.consolePrompt = this.onConsolePrompt;
 		__CODELAB__.consoleClear = this.onConsoleClear;
+		__CODELAB__.consoleSuccess = this.onConsoleSuccess;
+		__CODELAB__.consoleInfo = this.onConsoleInfo;
 		__CODELAB__.handleException = this.onHandleException;
 
 		// interface for external programs
@@ -93,6 +95,8 @@ export default class CodeRunner {
 	onConsoleLog = (...args) => this.writeOutput('', args)
 	onConsoleWarn = (...args) => this.writeOutput('warn', args)
 	onConsoleError = (...args) => this.writeOutput('error', args)
+	onConsoleSuccess = (...args) => this.writeOutput('success', args)
+	onConsoleInfo = (...args) => this.writeOutput('info', args)
 
 	// clears all messages
 	onConsoleClear = () => {

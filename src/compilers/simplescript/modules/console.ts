@@ -20,6 +20,14 @@ Console.warn = async (...args) => {
 	__CODELAB__.consoleWarn(...args);
 };
 
+Console.success = async (...args) => {
+	__CODELAB__.consoleSuccess(...args);
+};
+
+Console.info = async (...args) => {
+	__CODELAB__.consoleInfo(...args);
+};
+
 Console.error = async (...args) => {
 	__CODELAB__.consoleError(...args);
 };

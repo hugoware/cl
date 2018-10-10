@@ -8,8 +8,10 @@ import $state from '../state';
 import $api from '../api';
 import $focus from './focus';
 import $wait from './wait';
+import $lfs from '../lfs';
 import { load } from './loader';
 import { broadcast } from '../events';
+import ZoneMap from '../zone-map';
 
 // can't seem to use this anywhere in a playground
 window.cheerio = $cheerio;
@@ -66,7 +68,27 @@ export default class Lesson {
 		instance.state = state;
 		instance.modified = modified;
 
-		return new Lesson(instance);
+		// create the lesson
+		const lesson = new Lesson(instance);
+
+		// setup each ZoneMap
+		lesson.maps = { };
+		for (const id in instance.data.zones) {
+
+			// make sure it's a file
+			if (id[0] !== '/') continue;
+
+			// get the zone information
+			const path = id.replace(/\$/g, '.');
+			const zones = lesson.getZones(path)
+
+			// create the zone info
+			const content = await $lfs.read(path);
+			lesson.maps[path] = ZoneMap.create(content, zones);
+		}
+
+		// give back the result
+		return lesson;
 	}
 
 	// creates a new lesson
@@ -360,71 +382,64 @@ function applySlide(lesson, slide, invert) {
 	// check for flags
 	const { flags = { }, zones = { } } = slide;
 
+	// revert changes
 	if (invert) {
+
+		// state flags
 		_.each(flags.add, key => delete $state.flags[key]);
 		_.each(flags.remove, key => $state.flags[key] = true);
+
+		// change file states
 		_.each(slide.files, (flag, path) => {
 			if (flag === 'lock') lesson.files[path] = false;
 			else if (flag === 'unlock') lesson.files[path] = true;
 		});
+		
 	}
 	else {
+		// state flags
 		_.each(flags.add, key => $state.flags[key] = true);
 		_.each(flags.remove, key => delete $state.flags[key]);
+		
+		// change file states
 		_.each(slide.files, (flag, path) => {
 			if (flag === 'lock') lesson.files[path] = true;
 			else if (flag === 'unlock') lesson.files[path] = false;
 		});
 	}
-
-	// also broadcast zone updates
-	_.each(zones, (changes, path) => {
-		notifyZoneUpdates(lesson, path, changes, invert);
+	
+	// update each zone
+	console.log(slide.zones);
+	_.each(slide.zones, (zones, file) => {
+		const map = lesson.maps[file];
+		_.each(zones, (state, id) => {
+			updateZone(map, id, state, invert);
+		});
 	});
+
 }
 
-// check for each zone update
-function notifyZoneUpdates(lesson, path, zones, invert) {
-	
-	// update the state for each zone
-	_.each(zones, (state, id) => {
+// checks the state to determine what to do with a zone
+function updateZone(map, zone, state, invert) {
+	console.log('zone update', state, zone);
 
-		// if this is an object, then an array of options was
-		// provided -- this is normally to make sure this happens
-		// in a certain sequence
-		if (_.isObject(state))
-			for (const key in state) {
-				id = key;
-				state = state[key];
-				break;
-			}
+	// check the collapse state
+	if (/edit/.test(state))
+		map[invert ? 'lock' : 'edit'](zone);
+	else if (/lock/.test(state))
+		map[invert ? 'edit' : 'lock'](zone);
 
-		// find the zone to update
-		const zone = lesson.getZone(path, id);
+	// check the collapse state
+	if (/collapse/.test(state))
+		map[invert ? 'expand' : 'collapse'](zone);
+	else if (/expand/.test(state))
+		map[invert ? 'collapse' : 'expand'](zone);
 
-		// check the result
-		console.log('checking', id, state);
-		
-		// check the collapse state
-		if (/edit/.test(state))
-			zone.editable = invert ? false : true;
-		else if (/lock/.test(state))
-			zone.editable = invert ? true : false;
-		
-		// check the collapse state
-		if (/collapse/.test(state))
-			zone.collapsed = invert ? false : true;
-		else if (/expand/.test(state))
-			zone.collapsed = invert ? true : false;
-		
-		// check the visibility state
-		if (/show/.test(state))
-			zone.active = invert ? false : true;
-		else if (/hide/.test(state))
-			zone.active = invert ? true : false;
-
-	});
-
+	// check the visibility state
+	if (/show/.test(state))
+		map[invert ? 'hide' : 'show'](zone);
+	else if (/hide/.test(state))
+		map[invert ? 'show' : 'hide'](zone);
 }
 
 // marks a lesson as completed

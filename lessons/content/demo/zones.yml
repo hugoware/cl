@@ -28,26 +28,19 @@ html_tag_example:
       row: 0
       col: 22
 /index.html:
-  header_content:
-    start:
-      row: 8
-      col: 8
-    end:
-      row: 8
-      col: 16
-  button_example:
+  header_tag:
     start:
       row: 9
-      col: 0
+      col: 5
     end:
-      row: 10
-      col: 21
+      row: 9
+      col: 22
     collapsed: true
-    line: true
-  button_content:
+  header_content:
     start:
-      row: 10
-      col: 12
+      row: 9
+      col: 9
     end:
-      row: 10
-      col: 12
+      row: 9
+      col: 17
+    collapsed: true

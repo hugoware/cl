@@ -89,12 +89,30 @@ div, input {
 		color: #faa;
 	}
 
+	.line.success {
+		background: rgba(mix(#39CA74, #34363D, 50%), 0.66);
+		color: #ADFFCE;
+	}
+
+	.line.info {
+		background: rgba(mix(#3A99D8, #34363D, 50%), 0.66);
+		color: #CCEBFF;
+	}
+
 	.line.warn:nth-child(odd) {
 		background: darken(rgba(mix(#F2C52B, #34363D, 50%), 0.66), 7%);
 	}
 
 	.line.error:nth-child(odd) {
 		background: darken(rgba(mix(#DF3B32, #34363D, 50%), 0.66), 7%);
+	}
+
+	.line.success:nth-child(odd) {
+		background: darken(rgba(mix(#39CA74, #34363D, 50%), 0.66), 7%);
+	}
+
+	.line.info:nth-child(odd) {
+		background: darken(rgba(mix(#3A99D8, #34363D, 50%), 0.66), 7%);
 	}
 
 	.end {

@@ -21,11 +21,15 @@
         "mode": "popup",
         "content": "<p>Testing</p>",
         "zones": {
-          "/index.html": [{
-            "button_example": "expand"
-          }, {
-            "button_content": "edit"
-          }]
+          "/index.html": {
+            "header_tag": "expand",
+            "header_content": "edit"
+          }
+        },
+        "cursor": {
+          "file": "/index.html",
+          "zone": "header_content",
+          "at": "end"
         },
         "type": "slide",
         "speak": ["Testing"]
@@ -202,40 +206,20 @@
           }
         },
         "/index$html": {
-          "header_content": {
-            "start": {
-              "row": 8,
-              "col": 8
-            },
-            "end": {
-              "row": 8,
-              "col": 16
-            }
-          },
-          "button_example": {
+          "header_tag": {
             "start": {
               "row": 9,
-              "col": 0
-            },
-            "end": {
-              "row": 9,
-              "col": 0
+              "col": 5,
+              "index": 151
             },
             "collapsed": true,
-            "line": true,
-            "content": "\n    <button></button>"
+            "content": "<h1></h1>"
           },
-          "button_content": {
-            "start": {
-              "row": 8,
-              "col": 13
-            },
-            "end": {
-              "row": 8,
-              "col": 13
-            },
-            "offset": 13,
-            "offsetBy": "button_example"
+          "header_content": {
+            "collapsed": true,
+            "content": "Welcome!",
+            "offset": 4,
+            "parent": "header_tag"
           }
         }
       }
