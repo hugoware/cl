@@ -32,6 +32,7 @@ function processFileZone(zones, id, source) {
   // collapse each zones to create the default state
   let didCollapse;
   _.each(zones, (zone, id) => {
+    zone.id = id;
     if (zone.collapsed) {
       didCollapse = true;
       map.collapse(id);

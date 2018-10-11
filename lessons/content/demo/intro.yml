@@ -1,29 +1,5 @@
 
 - slide:
-    mode: popup
-    content: |
-      Open index.html
-
-    flags: +open-file
-
-
-- slide:
-    mode: popup
-    content: |
-      Testing
-
-    zones:
-      /index.html:
-        header_tag: expand
-        header_content: edit
-
-    cursor:
-      file: /index.html
-      zone: header_content
-      at: end
-
-
-- slide:
     mode: overlay
     title: An Introduction to HTML
     content: |
@@ -76,7 +52,30 @@
 - slide:
     mode: popup
     content: |
-      Great! Try changing the header on this page to be a different greeting.
+      Like with our previous example, you can see the start and ending tags
+
+    zones:
+      /index.html:
+        header_start_tag: show
+        header_end_tag: show
+
+- slide:
+    mode: popup
+    content: |
+      The words inbetween match the content on the page
+
+    zones:
+      /index.html:
+        header_content: show
+        header_start_tag: hide
+        header_end_tag: hide
+
+- slide:
+    mode: popup
+    content: |
+      Try and change the content to something new
+
+    cursor: header_content
 
     zones:
       /index.html:
@@ -86,6 +85,7 @@
     waitFor:
       - ::event(modify-file, verifyHeaderContent)
 
+
 - slide:
     mode: popup
     content: |
@@ -93,8 +93,10 @@
 
     zones:
       /index.html:
-        - button_element: expand
-        - button_content: edit
+        button_content: edit
+        header_content: hide
+
+    cursor: button_content
 
     autoNext: false
     waitFor:

@@ -60,6 +60,32 @@ slide:
     /other.html: lock
 
 
+  # focusing the cursor for the document
+  cursor:
+
+    # switch to a file first
+    file: /index.html
+
+    # uses the zone cursor
+    zone: header_content
+
+    # optional - otherwise, selects the entire zone
+    at: end | start
+
+    # set to a coordinate
+    row: 0
+    col: 0
+
+    # set to a range
+    start:
+      row: 0
+      col: 0
+
+    end:
+      row: 0
+      col: 0
+
+
   # editable zones
   zones:
 

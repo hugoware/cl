@@ -36,6 +36,7 @@ export default class ZoneMap {
 	edit = id => {
 		const zone = this.zones[id];
 		zone.allow = true;
+		zone.visible = true;
 
 		// expand, if needed
 		if (!zone.end)
@@ -48,6 +49,41 @@ export default class ZoneMap {
 	lock = id => {
 		const zone = this.zones[id];
 		delete zone.allow;
+	}
+
+
+	/** allows a zone to be displayed, even if it's not editable
+	 * @param {string} id the id of the zone to show
+	 */
+	show = id => {
+		const zone = this.zones[id];
+		zone.visible = true;
+
+		// expand, if needed
+		if (!zone.end)
+			this.expand(id);
+	}
+
+	/** sets the zone to be hidden
+	 * @param {string} id the id of the zone to hide
+	 */
+	hide = id => {
+		const zone = this.zones[id];
+		delete zone.allow;
+		delete zone.visible;
+	}
+
+	/** tries to find the zone in the specified range */
+	getZone = (startIndex, endIndex, onlyAllowed) => {
+		for (const id in this.zones) {
+			const zone = this.zones[id];
+			if (!(zone.start && zone.end) || ((onlyAllowed && !zone.allow)))
+				continue;
+
+			// make sure both segments fall within range
+			if (startIndex >= zone.start.index && endIndex <= zone.end.index)
+				return id;
+		}
 	}
 
 	/** collapses a zone so it cannot be accessed
@@ -132,27 +168,33 @@ export default class ZoneMap {
 	 * @param {number} endCol the column to end at
 	 * @param {string} [content] the content to insert, if any
 	 */
-	modify = (startRow, startCol, endRow, endCol, content) => {
-		const startIndex = this.getIndex(startRow, startCol);
-		const endIndex = this.getIndex(endRow, endCol);
+	modify = (relativeTo, startRow, startCol, endRow, endCol, content, isDelete, isBackspace) => {
+		let startIndex = this.getIndex(startRow, startCol);
+		let endIndex = this.getIndex(endRow, endCol);
 		const isInsert = _.isString(content);
-
-		// const range = endIndex - startIndex;
-		if (isInsert) insertContent(this, startIndex, endIndex, content);
-		else extractContent(this, startIndex, endIndex);
+		const length = isInsert ? content.length : 0;
+		const hasSelection = startIndex !== endIndex;
 		
-		// determine the character shift
+		// adjust the range to work with
+		if (!hasSelection && isBackspace) startIndex--;
+		if (!hasSelection && isDelete) endIndex++;
 		const range = startIndex - endIndex;
-		const delta = isInsert ? content.length + range
-			: _.isNumber(content) ? content
-			: range;
+		const delta = range + (isInsert ? length : 0);
+	
+		// remove any existing characters
+		if (range !== 0)
+			extractContent(this, startIndex, endIndex);
+		
+		// insert new characters
+		if (isInsert)
+			insertContent(this, startIndex, content);
 
 		// revise all zones
 		for (const id in this.zones) {
 			const zone = this.zones[id];
 
 			// update the tail and lead
-			if (zone.start && zone.start.index > startIndex)
+			if (relativeTo !== id && zone.start && zone.start.index >= startIndex)
 				zone.start.index += delta;
 
 			// adjust just the tail end
@@ -204,10 +246,10 @@ function expandZone(instance, id, skip) {
 		else {
 
 			// since each group is updated, get their new indexes
-			if (adjust.end && adjust.end.index > zone.start.index)
+			if (adjust.end && adjust.end.index >= zone.start.index)
 				adjust.end.index += length;
 
-			if (adjust.start && adjust.start.index > zone.start.index)
+			if (adjust.start && adjust.start.index >= zone.start.index)
 				adjust.start.index += length;
 
 		}
@@ -361,10 +403,10 @@ function collapseZone(instance, id) {
 		const adjust = instance.zones[alt];
 		
 		// since each group is updated, get their new indexes
-		if (adjust.end && adjust.end.index > zone.end.index)
+		if (adjust.end && adjust.end.index >= zone.end.index)
 		adjust.end.index -= length;
 		
-		if (adjust.start && adjust.start.index > zone.end.index)
+		if (adjust.start && adjust.start.index >= zone.end.index)
 		adjust.start.index -= length;
 		
 	}
@@ -401,6 +443,10 @@ function getContainedZones(instance, id) {
 
 		// check if contained inside of another zone
 		const compare = instance.zones[alt];
+
+		// if not possible to check
+		if (!(compare.end && compare.start))
+			continue;
 
 		// if this already has a parent, then there's
 		// nothing to do at this point

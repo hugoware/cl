@@ -33,14 +33,15 @@ export default class ManagedZone {
 		const { zone } = this;
 
 		// nothing to show
-		if (!(zone.start && zone.end)) {
+		if (!(zone.start && zone.end) || !zone.visible) {
 			this.marker.clazz = 'hide';
 			return;
 		}
 
 		// update the class
+		const show = zone.visible || zone.allow;
 		this.marker.type = zone.line ? 'fullLine' : 'text';
-		this.marker.clazz = `${this.base} ${zone.allow ? 'show' : 'hide'}`;
+		this.marker.clazz = `${this.base} ${show ? 'show' : 'hide'}`;
 
 		// sync the cursor positions
 		this.range.start.row = zone.start.row - 1;

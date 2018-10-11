@@ -358,6 +358,10 @@ function setActiveSlide(lesson, slide) {
 	const wait = slide.waitFor || slide.wait;
 	if (wait) $wait.waitFor(wait);
 
+	// check for setting the cursor
+	if (slide.cursor)
+		broadcast('set-cursor', slide.cursor);
+
 	// set a few other values
 	slide.isWaiting = _.some(wait);
 	slide.isFirst = index === 0;

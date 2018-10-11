@@ -66,12 +66,15 @@ export default class HintDisplay extends Component {
 		if (this.isHidingHint)
 			setTimeout(() => this.addClass('show'));
 		
+		// make sure to activate the hint even if
+		// the message itself didn't change
+		this.isHidingHint = false;
+
 		// already the same message
 		if (options.message === this._activeMessage)
 			return;
 
 		// update the message
-		this.isHidingHint = false;
 		this._activeMessage = options.message;
 		const html = $convert.makeHtml(options.message);
 		this.ui.message.html(html);

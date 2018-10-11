@@ -69,24 +69,30 @@ export default class ManagedEditor {
 		if (!map) return;
 
 		// check for changes
-		if (instance.lastContentUpdate || 0 < map.lastUpdate)
+		if (instance.lastContentUpdate || 0 < map.lastUpdate) {
+			let content = map.content;
+			content = content.split(/\n/g).join(instance.session.doc.getNewLineCharacter());
 			instance.session.setValue(map.content);
+		}
 
 			// always sync cursor states
 		this.syncZones(this.activeInstance);
 		setTimeout(() => this.editor.resize());
 	}
 
+	// HACK: the row for setCursor wants an extra line down from the
+	// exact same coordinates used by setRange - I don't know why
 	/** changes the cursor for a file */
-	onSetCursor = (cursor, file) => {
+	onSetCursor = cursor => {	
+		const { start, end } = parseCursorRequest(this, cursor);
+		if (!(start || end)) return;
 
-		// if referring to a file
-
-		// referring to a zone
-		if (_.isString(cursor)) {
-
-		}
-
+		setTimeout(() => {
+			if (start && end)
+				this.setRange(start, end);
+			else if (start)
+				this.setCursor(start.row + 1, start.column);
+		}, 100);
 	}
 
 	// handle command requests
@@ -130,8 +136,8 @@ export default class ManagedEditor {
 			return cancelEvent(event);
 
 		// handle undos
-		if (/(undo|redo)/i.test(command.name)) {
-			console.warn('PREVENTING UNDO IN ZONE');
+		if (/(undo|redo|cut|paste)/i.test(command.name)) {
+			console.warn('BLOCKED ADVANCED COMMAND');
 			return cancelEvent(event);
 		}
 
@@ -172,7 +178,7 @@ export default class ManagedEditor {
 		// test the range
 		const startIndex = map.getIndex(selection.start.row, selection.start.column);
 		const endIndex = map.getIndex(selection.end.row, selection.end.column);
-		const delta = startIndex === endIndex ? -1 : startIndex - endIndex;
+		const zone = map.getZone(startIndex, endIndex, true);
 		const allowed = test(startIndex, endIndex, includesNewLine);
 
 		// if it's allowed, apply the change and then update
@@ -180,16 +186,18 @@ export default class ManagedEditor {
 			
 			// perform the action in the zonemap 
 			map.modify(
+				zone,
 				selection.start.row, selection.start.column,
 				selection.end.row, selection.end.column,
-				isInsert ? event.args : delta
+				isInsert ? event.args : null,
+				isDelete, isBackspace
 			);
+
+			// update all zones
+			this.syncZones(instance);
 			
 			// apply the change to the editor
 			command.exec(this.editor, event.args);
-
-			// update all indexes
-			this.syncZones(instance);
 		}
 
 		// always cancel the event since it will be
@@ -331,9 +339,25 @@ export default class ManagedEditor {
 	 * @param {number} col the column to focus at
 	*/
 	setCursor = (row, col) => {
+		console.log('cursor:', row, col);
 		this.editor.focus();
 		this.editor.gotoLine(row, col, true);
 		this.editor.renderer.scrollToRow(row);
+		this.editor.resize();
+	}
+
+	/** sets the selected text range
+	 * @param {Position} start the starting selection range
+	 * @param {Position} end the ending selection range
+	 */
+	setRange = (start, end) => {
+		console.log('range:', start, end);
+		const range = new Range(start.row, start.column, end.row, end.column);
+		
+		// create the range and set the position
+		this.editor.focus();
+		this.editor.selection.setRange(range);
+		this.editor.renderer.scrollToRow(start.row);
 		this.editor.resize();
 	}
 
@@ -343,37 +367,7 @@ export default class ManagedEditor {
 
 		// update each zone
 		const { zones } = instance;
-		_.each(zones, zone => {
-			zone.sync();
-		});
-
-		// if (!instance || !$state.lesson) return;
-		
-		// // update zones
-		// let focusTo;
-		
-		// // check each zone
-		// const { zones } = instance;
-		// _.each(zones, zone => {
-		// 	const wasEditing = zone.zone.editable;
-		// 	const wasCollapsed = zone.zone.collapsed;
-
-		// 	// sync the data for this zone
-		// 	zone.sync();
-
-		// 	// if now an editable zone, focus on it
-		// 	if (!wasEditing && zone.zone.editable)
-		// 		focusTo = zone.end;
-
-		// 	if (wasCollapsed && !zone.zone.collapsed) {
-		// 		console.log('expanding zone', zone.id);
-		// 	}
-
-		// });
-
-		// // if a zone has been activated, focus on it
-		// if (focusTo)
-		// 	this.setCursor(focusTo.row, focusTo.col);
+		_.each(zones, zone => zone.sync());
 	}
 
 	// deactivates all zones
@@ -407,157 +401,64 @@ export default class ManagedEditor {
 
 }
 
-// // creates a fake index
-// function toIndex(range) {
-// 	return (range.row * ROW_OFFSET) + range.column;
-// }
+// evaluates a cursor position request
+function parseCursorRequest(instance, cursor) {
+	const { activeInstance } = instance;
+	if (!activeInstance) return;
 
-// // checks if an edit can be used
-// function isEditAllowed(instance, options) {
+	// string is a zone by default
+	if (_.isString(cursor))
+		cursor = { zone: cursor };
 
-// 	// // check if this falls within range
-// 	// const {
-// 	// 	isBackspace, isDelete, isInsert,
-// 	// 	zones, selection, hasNewLines, lines,
-// 	// } = options;
+	// setting the range
+	let start, end;
+	if (cursor.zone) {
 
-// 	// // get the selection range
-// 	// const selectionStart = toIndex(selection.start);
-// 	// const selectionEnd = toIndex(selection.end);
-	
-// 	// // start checing each zone
-// 	// for (const id in zones) {
-// 	// 	const zone = zones[id];
-		
-// 	// 	// can't even be edited
-// 	// 	if (!zone.isEditable) continue;
+		// no map to work with
+		const { map } = activeInstance;
+		if (!map) return;
+		const zone = map.zones[cursor.zone];
 
-// 	// 	// get the current index values
-// 	// 	const zoneStart = toIndex(zone.range.start);
-// 	// 	const zoneEnd = toIndex(zone.range.end);
-		
-// 	// 	// check if this is outside the range
-// 	// 	if (selectionStart < zoneStart ||
-// 	// 		selectionEnd < zoneStart ||
-// 	// 		selectionStart > zoneEnd ||
-// 	// 		selectionEnd > zoneEnd)
-// 	// 		continue;
+		// missing the zone required, or invalid
+		if (!zone || (zone && !zone.start))
+			return;
 
-// 	// 	// start checking special conditions
-// 	// 	const startAtStart = selectionStart === zoneStart;
-// 	// 	const startAtEnd = selectionStart === zoneEnd;
-// 	// 	const endAtStart = selectionEnd === zoneStart;
-// 	// 	const endAtEnd = selectionEnd === zoneEnd;
+		// place the cursor at the end of the zone
+		if (cursor.at === 'end')
+			start = { row: zone.end.row, column: zone.end.col };
 
-// 	// 	// handling deleting backwards
-// 	// 	if (isBackspace) {
+		// place the cursor at the start of the zone
+		else if (cursor.at === 'start')
+			start = { row: zone.start.row, column: zone.start.col };
 
-// 	// 		// not a selection and is at the start of the
-// 	// 		// range, can't backspace any further
-// 	// 		if (startAtStart && endAtStart)
-// 	// 			continue;
+		// select the entire zone range
+		else {
+			start = { row: zone.start.row, column: zone.start.col };
+			end = { row: zone.end.row, column: zone.end.col };
+		}
 
-// 	// 	}
-// 	// 	// handle deleting in place
-// 	// 	else if (isDelete) {
+	}
+	// check for row/columns
+	else if (cursor.at || cursor.start) {
+		const startAt = cursor.at || cursor.start;
+		start = { row: startAt.row, column: startAt.col };
+		end = cursor.end ? { row: cursor.end.row, column: cursor.end.col } : null;
+	}
+	// check for specific coordinates
+	else if (_.isNumber(cursor.row) && _.isNumber(cursor.col))
+		start = { row: cursor.row, column: cursor.col };
 
-// 	// 		// not a seleciton and trying to delete characters
-// 	// 		// outside the range of the box
-// 	// 		if (startAtEnd && endAtEnd)
-// 	// 			continue;
+	// fix to match the app coordinate offsets
+	if (start) {
+		start.row--;
+		start.column--;
+	}
 
-// 	// 	}
-// 	// 	// handle inserting new characters
-// 	// 	else if (isInsert) {
+	if (end) {
+		end.row--;
+		end.column--;
+	}
 
-// 	// 		if (hasNewLines && !zone.isMultiLine)
-// 	// 			continue;
-
-// 	// 	}
-
-// 	// 	// appears this is okay
-// 	// 	return true;
-
-// 	// }
-
-// 	// // failed all checks
-// 	// return false;
-	
-// }
-
-// // applies the update
-// function updateZones(instance, options) {
-// 	// const {
-// 	// 	selection,
-// 	// 	after,
-// 	// 	zones,
-// 	// 	updated,
-// 	// 	lines,
-// 	// 	newline
-// 	// } = options;
-// 	// const before = selection;
-
-// 	// // check the diff for the events
-// 	// // const insertedAtNewline = after.end.column;
-// 	// const lineChanges = after.end.row - before.end.row;
-// 	// const revised = updated.split(newline);
-	
-// 	// // start updating each line
-// 	// // const ss = before.start;
-// 	// const se = before.end;
-
-// 	// // a list of actual changes to perform
-// 	// const adjustments = [ ];
-
-// 	// // start processing each zone
-// 	// for(const id in zones) {
-// 	// 	const zone = zones[id];
-
-// 	// 	// if this is offset, get the parent
-// 	// 	if (zone.offsetBy) {
-// 	// 		const relativeTo = zones[zone.offsetBy];
-// 	// 		if (relativeTo.isCollapsed) {
-// 	// 			console.log('skipping', id, 'offet by', relativeTo);
-// 	// 			continue;
-// 	// 		}
-// 	// 	}
-
-// 	// 	// get some common checks done
-// 	// 	const zs = zone.range.start;
-// 	// 	const ze = zone.range.end;
-
-// 	// 	// tracking if this was changed or not
-// 	// 	let updated;
-
-// 	// 	// inserting rows
-// 	// 	if (zs.row > se.row) {
-// 	// 		zs.row += lineChanges;
-// 	// 		updated = true;
-// 	// 	}
-
-// 	// 	// moved down a row
-// 	// 	if (ze.row >= se.row) {
-// 	// 		ze.row += lineChanges;
-// 	// 		ze.column += revised[ze.row].length - lines[ze.row].length;
-// 	// 		updated = true;
-// 	// 	}
-
-// 	// 	// if it was changed, refresh it
-// 	// 	if (updated)
-// 	// 		zone.update();
-	
-// 	// }
-
-// 	// // apply each adjustment
-// 	// _(adjustments)
-// 	// 	.map(adjust => {
-// 	// 		adjust.cursor[adjust.type] += adjust.delta;
-// 	// 		return adjust.zone;
-// 	// 	})
-// 	// 	.uniqBy('id')
-// 	// 	.each(zone => zone.update());
-
-// 	// // was successful
-// 	// return true;
-// }
-
+	// give back the range
+	return { start, end };
+}

@@ -8,6 +8,11 @@ import Component from '../../../component';
 import Slide from './slide';
 import Question from './question';
 
+// minimum time per slide before allowing next
+// mostly to prevent double clicks
+const MINIMUM_MS_PER_SLIDE = $state.isLocal ? 0 : 1000;
+
+// speech options
 const SPEECH_ENABLEMENT_CONFIG = 'speech-enablement';
 const SPEECH_ENABLED = 'on';
 const SPEECH_DISABLED = 'off';
@@ -198,6 +203,13 @@ export default class Assistant extends Component {
 
 	// handle button navigation
 	onNext = async () => {
+
+		// don't allow clicking forward too fast
+		const now = +new Date;
+		if (this.nextNavigate > now) return;
+		this.nextNavigate = now + MINIMUM_MS_PER_SLIDE;
+
+		// go to the next slide
 		await $state.lesson.next();
 		this.refresh();
 	}

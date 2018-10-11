@@ -10,30 +10,6 @@
       "type": "web",
       "description": "An Introduction to the CodeLab Learning System",
       "lesson": [{
-        "mode": "popup",
-        "content": "<p>Open index.html</p>",
-        "flags": {
-          "add": ["open-file"]
-        },
-        "type": "slide",
-        "speak": ["Open index.html"]
-      }, {
-        "mode": "popup",
-        "content": "<p>Testing</p>",
-        "zones": {
-          "/index.html": {
-            "header_tag": "expand",
-            "header_content": "edit"
-          }
-        },
-        "cursor": {
-          "file": "/index.html",
-          "zone": "header_content",
-          "at": "end"
-        },
-        "type": "slide",
-        "speak": ["Testing"]
-      }, {
         "mode": "overlay",
         "title": "An Introduction to HTML",
         "content": "<p>This brief tutorial will give you an introduction to using HTML to create web pages.</p>",
@@ -69,7 +45,31 @@
         "speak": ["Let's make some changes to an HTML page. Let's start by opening the index.html page in the File Browser."]
       }, {
         "mode": "popup",
-        "content": "<p>Great! Try changing the header on this page to be a different greeting.</p>",
+        "content": "<p>Like with our previous example, you can see the start and ending tags</p>",
+        "zones": {
+          "/index.html": {
+            "header_start_tag": "show",
+            "header_end_tag": "show"
+          }
+        },
+        "type": "slide",
+        "speak": ["Like with our previous example, you can see the start and ending tags"]
+      }, {
+        "mode": "popup",
+        "content": "<p>The words inbetween match the content on the page</p>",
+        "zones": {
+          "/index.html": {
+            "header_content": "show",
+            "header_start_tag": "hide",
+            "header_end_tag": "hide"
+          }
+        },
+        "type": "slide",
+        "speak": ["The words inbetween match the content on the page"]
+      }, {
+        "mode": "popup",
+        "content": "<p>Try and change the content to something new</p>",
+        "cursor": "header_content",
         "zones": {
           "/index.html": {
             "header_content": "edit"
@@ -78,17 +78,17 @@
         "autoNext": false,
         "waitFor": ["::event(modify-file, verifyHeaderContent)"],
         "type": "slide",
-        "speak": ["Great! Try changing the header on this page to be a different greeting."]
+        "speak": ["Try and change the content to something new"]
       }, {
         "mode": "popup",
         "content": "<p>Let's try that again with a different type of HTML element. This one will look like a button</p>",
         "zones": {
-          "/index.html": [{
-            "button_element": "expand"
-          }, {
-            "button_content": "edit"
-          }]
+          "/index.html": {
+            "button_content": "edit",
+            "header_content": "hide"
+          }
         },
+        "cursor": "button_content",
         "autoNext": false,
         "waitFor": ["::event(modify-file, verifyHeaderContent)"],
         "type": "slide",
@@ -206,20 +206,90 @@
           }
         },
         "/index$html": {
-          "header_tag": {
+          "img_element": {
+            "start": {
+              "row": 12,
+              "col": 1,
+              "index": 175
+            },
+            "collapsed": true,
+            "line": true,
+            "id": "img_element",
+            "content": "\n    <img src=\"\" />"
+          },
+          "img_src": {
+            "content": "",
+            "offset": 15,
+            "parent": "img_element",
+            "id": "img_src"
+          },
+          "button_content": {
+            "id": "button_content",
+            "content": "Click Me!",
+            "offset": 8,
+            "parent": "button_element"
+          },
+          "header_element": {
             "start": {
               "row": 9,
               "col": 5,
               "index": 151
             },
-            "collapsed": true,
-            "content": "<h1></h1>"
+            "end": {
+              "row": 9,
+              "col": 22,
+              "index": 168
+            },
+            "id": "header_element"
           },
           "header_content": {
+            "start": {
+              "row": 9,
+              "col": 9,
+              "index": 155
+            },
+            "end": {
+              "row": 9,
+              "col": 17,
+              "index": 163
+            },
+            "id": "header_content"
+          },
+          "header_start_tag": {
+            "start": {
+              "row": 9,
+              "col": 5,
+              "index": 151
+            },
+            "end": {
+              "row": 9,
+              "col": 9,
+              "index": 155
+            },
+            "id": "header_start_tag"
+          },
+          "header_end_tag": {
+            "start": {
+              "row": 9,
+              "col": 17,
+              "index": 163
+            },
+            "end": {
+              "row": 9,
+              "col": 22,
+              "index": 168
+            },
+            "id": "header_end_tag"
+          },
+          "button_element": {
+            "start": {
+              "row": 11,
+              "col": 5,
+              "index": 174
+            },
             "collapsed": true,
-            "content": "Welcome!",
-            "offset": 4,
-            "parent": "header_tag"
+            "id": "button_element",
+            "content": "<button></button>"
           }
         }
       }

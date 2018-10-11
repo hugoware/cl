@@ -28,14 +28,36 @@ html_tag_example:
       row: 0
       col: 22
 /index.html:
-  header_tag:
+  img_element:
+    start:
+      row: 12
+      col: 1
+    end:
+      row: 13
+      col: 19
+    collapsed: true
+    line: true
+  img_src:
+    start:
+      row: 13
+      col: 15
+    end:
+      row: 13
+      col: 15
+  button_content:
+    start:
+      row: 11
+      col: 13
+    end:
+      row: 11
+      col: 22
+  header_element:
     start:
       row: 9
       col: 5
     end:
       row: 9
       col: 22
-    collapsed: true
   header_content:
     start:
       row: 9
@@ -43,4 +65,25 @@ html_tag_example:
     end:
       row: 9
       col: 17
+  header_start_tag:
+    start:
+      row: 9
+      col: 5
+    end:
+      row: 9
+      col: 9
+  header_end_tag:
+    start:
+      row: 9
+      col: 17
+    end:
+      row: 9
+      col: 22
+  button_element:
+    start:
+      row: 11
+      col: 5
+    end:
+      row: 11
+      col: 31
     collapsed: true
