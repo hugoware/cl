@@ -215,32 +215,8 @@ const $state = {
 
 	/** checks for the current content for a zone */
 	getZoneContent: (path, id) => {
-		const zone = $state.lesson.getZone(path, id);
-		const file = $state.findItemByPath(path);
-		const content = file.current || file.content;
-		const lines = content.split(/\r?\n/);
-
-		// start adding up each line before this zone
-		let start = zone.start.col;
-		let end = zone.end.col;
-		for (let i = 0, total = lines.length; i < total; i++) {
-			const len = lines[i].length + 1; // including the new line
-			
-			// it's adding up before both zones
-			if (zone.start.row > i) {
-				start += len;
-				end += len;
-			}
-			// it's just the last row
-			else if (zone.end.row > i)
-				end += len;
-
-			// no more new lines
-			else break;
-		}
-
-		// return the substring that matches the range
-		return content.substr(start, end - start);
+		const map = $state.lesson.getMap(path);
+		return map.getContent(id);
 	},
 
 	// /** finds a project item using an ID

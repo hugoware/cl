@@ -48,6 +48,7 @@ export default class ManagedEditor {
 	constructor(editor) {
 		this.instances = [ ];
 		this.editor = editor;
+		window.EDITOR = editor;
 
 		// keep in sync with lessons
 		listen('slide-changed', this.onSlideChanged);
@@ -97,7 +98,6 @@ export default class ManagedEditor {
 
 	// handle command requests
 	onExecuteCommand = event => {
-		console.log(event);
 		
 		// can freely edit files
 		if (!$state.lesson || $state.freeMode)
@@ -158,9 +158,9 @@ export default class ManagedEditor {
 		const isBackspace = !isInsert && /backspace/i.test(command.name);
 		const isDelete = !isBackspace && /del/i.test(command.name);
 		const test = isInsert ? map.canInsert
-		: isBackspace ? map.canBackspace
-		: isDelete ? map.canDelete
-		: null;
+			: isBackspace ? map.canBackspace
+			: isDelete ? map.canDelete
+			: null;
 		
 		// not sure what the request is
 		if (!test)
@@ -207,7 +207,7 @@ export default class ManagedEditor {
 
 	/** clear all undo actions for all files
 	*/
-	clearUndoHistory = path => {
+	clearUndoHistory = () => {
 		_.each(this.instances, instance => {
 			instance.session.getUndoManager().reset();
 		});
@@ -300,10 +300,14 @@ export default class ManagedEditor {
 				session.on('change', this.onChanged);
 
 				// the the map and zones for this file, if any
-				const map = $state.lesson.maps[file.path];
-				const zones = map && _.map(map.zones, (zone, id) => {
-					return new ManagedZone(id, zone, session);
-				});
+				let map;
+				let zones;
+				if ($state.lesson) {
+					map = $state.lesson.maps[file.path];
+					zones = map && _.map(map.zones, (zone, id) => {
+						return new ManagedZone(id, zone, session);
+					});
+				}
 
 				// create the instance
 				instance = {

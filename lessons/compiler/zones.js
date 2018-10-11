@@ -41,7 +41,6 @@ function processFileZone(zones, id, source) {
 
   // update the file
   if (didCollapse) {
-    console.log('gen', map.content);
     $fs.writeFileSync(path, map.content);
   }
 

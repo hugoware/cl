@@ -99,7 +99,7 @@
         "actions": ["deselect-items"],
         "zones": {
           "/index.html": {
-            "header_content": "lock"
+            "button_content": "hide"
           }
         },
         "validation": {
@@ -117,7 +117,7 @@
         "content": "<p>Great! Let's add an image to the page</p>",
         "zones": {
           "/index.html": {
-            "img": "expand"
+            "img_element": "expand"
           }
         },
         "flags": {
@@ -130,12 +130,14 @@
         "content": "<p>Type in the name of the image file - In this case, <code>/%uploadedFileName%</code></p>",
         "zones": {
           "/index.html": {
-            "img_path": "edit"
+            "img_src": "edit"
           }
         },
+        "actions": ["hide-all-dialogs"],
         "flags": {
           "remove": ["upload-file-dialog"]
         },
+        "cursor": "img_src",
         "waitFor": ["::editing(verifyImageSrc)"],
         "type": "slide",
         "speak": ["Type in the name of the image file - In this case, /%uploadedFileName%"]

@@ -114,7 +114,7 @@
 
     zones:
       /index.html:
-        header_content: lock
+        button_content: hide
 
     validation:
       uploadFile: verifyFileUploadIsImage
@@ -135,7 +135,7 @@
 
     zones:
       /index.html:
-        img: expand
+        img_element: expand
 
     flags: -upload-file-dialog
 
@@ -146,9 +146,14 @@
 
     zones:
       /index.html:
-        img_path: edit
+        img_src: edit
+
+    actions:
+      - hide-all-dialogs
 
     flags: -upload-file-dialog
+
+    cursor: img_src
 
     waitFor:
       - ::editing(verifyImageSrc)

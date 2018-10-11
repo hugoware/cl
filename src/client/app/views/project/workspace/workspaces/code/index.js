@@ -12,6 +12,10 @@ import { requirePermission } from '../../../prevent';
 // the amount of time to wait before compiling
 const COMPILER_DELAY = 300;
 
+// resize intervals
+const MAINTAIN_INTERVAL = 30;
+const MAINTAIN_DURATION = 1000;
+
 /** @typedef {Object} PendingUpdate
  * @param {number} next the next required update
  * @param {string} content the data that should be applied
@@ -33,11 +37,18 @@ export default class CodeEditor extends Component {
 		this.timers = { };
 		this.files = { };
 
+		// keep the editor view resizing whenever a window pops up
+		// that would change its height -- for example, the console
+		// this will not run unless a timestamp is set to provide 
+		// an time limit to refresh
+		this.__sync_view = setInterval(this.onMaintainEditorSize, MAINTAIN_INTERVAL);
+
 		// handle events
 		this.listen('reset', this.onReset);
 		this.listen('activate-file', this.onActivateFile);
 		this.listen('deactivate-file', this.onDeactivateFile);
 		this.listen('activate-project', this.onActivateProject);
+		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('rename-item', this.onRenameItem);
 		this.listen('execution-finished', this.onExecutionFinished);
 		this.listen('slide-changed', this.onSlideChanged);
@@ -45,6 +56,7 @@ export default class CodeEditor extends Component {
 		this.listen('save-target', this.onSaveTarget);
 		this.listen('close-file', this.onCloseFile);
 		this.listen('lesson-finished', this.onLessonFinished);
+		this.listen('project-errors', this.onProjectErrors);
 		this.ui.save.on('click', this.onSaveChanges);
 
 		/** @type {ManagedEditor} */
@@ -74,6 +86,12 @@ export default class CodeEditor extends Component {
 	 */
 	get activeFile() {
 		return this.activeInstance && this.editor.activeInstance.file;
+	}
+
+	// matches the editor size for a period of time
+	onMaintainEditorSize = () => {
+		if ((+new Date) > this.maintainSizeLimit) return;
+		this.editor.editor.resize();
 	}
 
 	// need to discard the workspaces
@@ -125,6 +143,12 @@ export default class CodeEditor extends Component {
 	onActivateProject = () => {
 		delete this.activeFile;
 		this.editor.clear();
+		this.activateMaintainSize();
+	}
+
+	// handle when the project is exited
+	onDeactivateProject = () => {
+		this.stopMaintainingSize();
 	}
 
 	// handles when a file is renamed
@@ -154,6 +178,7 @@ export default class CodeEditor extends Component {
 	// clear out all files
 	onReset = () => {
 		this.editor.clear();
+		this.stopMaintainingSize();
 	}
 
 	// queues up changes to the content manager
@@ -192,6 +217,11 @@ export default class CodeEditor extends Component {
 		// request the file save
 		const { file } = this.editor.activeInstance;
 		return await this.saveTarget(file.path);
+	}
+
+	// handled when the console log is displayed
+	onProjectErrors = () => {
+		this.activateMaintainSize();
 	}
 
 	/** saves a specific file
@@ -279,6 +309,16 @@ export default class CodeEditor extends Component {
 		instance.file.modified = true;
 		this.broadcast('modify-file', instance.file);
 		this.pending.content = content;
+	}
+
+	// start maintaining the editor size
+	activateMaintainSize = () => {
+		this.maintainSizeLimit = (+new Date) + MAINTAIN_DURATION;
+	}
+
+	// prevents sizes from maintaining
+	stopMaintainingSize = () => {
+		this.maintainSizeLimit = -1;
 	}
 
 }

@@ -30,6 +30,20 @@ export default class ZoneMap {
 		return map;
 	}
 
+	/** returns the content for a zone */
+	getContent = (id, allowCollapsed) => {
+		const zone = this.zones[id];
+
+		// returns the content for a zone
+		const isCollapsed = 'content' in zone;
+		if (!allowCollapsed && isCollapsed)
+			return _.trim(null);
+
+		// return the value, if possible
+		return isCollapsed ? zone.content
+			: this.content.substr(zone.start.index, zone.end.index - zone.start.index);
+	}
+
 	/** allows editing for a zone. Will also expand the zone if not ready
 	 * @param {string} id the id of the zone to allow editing
 	 */

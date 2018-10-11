@@ -174,6 +174,14 @@ export default class Lesson {
 		const zones = this.getZones(path);
 		return zones[id];
 	}
+
+	/** finds a zone map for the provided file
+	 * @param {string} path the file to find
+	 */
+	getMap = path => {
+		path = path.replace('$', '.');
+		return this.maps[path];
+	}
 	
 	/** returns all of the zones for a file */
 	getZones = path => {
