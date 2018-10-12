@@ -227,6 +227,9 @@ export default class Lesson {
 		// make sure the location is valid
 		if (index < 0 || index > lastIndex) 
 			return;
+
+		// leaving the active slide
+		broadcast('leave-slide');
 		
 		// determine the new position and the 
 		// delta required to navigate there

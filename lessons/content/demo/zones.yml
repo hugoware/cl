@@ -44,13 +44,6 @@ html_tag_example:
     end:
       row: 13
       col: 15
-  button_content:
-    start:
-      row: 11
-      col: 13
-    end:
-      row: 11
-      col: 22
   header_element:
     start:
       row: 9
@@ -79,11 +72,20 @@ html_tag_example:
     end:
       row: 9
       col: 22
-  button_element:
+  paragraph_content:
+    start:
+      row: 12
+      col: 1
+    end:
+      row: 14
+      col: 21
+    line: true
+  paragraph_element:
     start:
       row: 11
-      col: 5
+      col: 1
     end:
-      row: 11
-      col: 31
+      row: 15
+      col: 9
     collapsed: true
+    line: true

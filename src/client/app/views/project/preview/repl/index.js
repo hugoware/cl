@@ -1,6 +1,7 @@
 /// <reference path="../../../../types/index.js" />
 
 import _ from 'lodash';
+import $state from '../../../../state';
 import Component from '../../../../component';
 import $contentManager from '../../../../content-manager';
 import $keyboard from 'mousetrap';
@@ -126,6 +127,7 @@ export default class ReplMode extends Component {
 			// get the code
 			await $contentManager.compile('/main.ts', { silent: true });
 			const code = await $contentManager.get('/main.ts');
+			this.bridge.projectUrl = $state.getProjectDomain();
 			this.bridge.run(code);
 		}, 1000)
 

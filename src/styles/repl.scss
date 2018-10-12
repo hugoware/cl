@@ -3,11 +3,36 @@
 @import '_utils';
 @import './app/fonts';
 
+
+@include keyframes(shake_a) {
+	0% { transform: translate(1px, -1px) rotate(9deg); }
+	25% { transform: translate(-1px, -1px) rotate(-11deg); }
+	50% { transform: translate(-1px, 1px) rotate(13deg); }
+	75% { transform: translate(-1px, 1px) rotate(-9deg); }
+	100% { transform: translate(1px, -1px) rotate(9deg); }
+}
+
+@include keyframes(shake_b) {
+	0% { transform: translate(-1px, 1px) rotate(-11deg); }
+	25% { transform: translate(1px, 1px) rotate(12deg); }
+	50% { transform: translate(1px, -1px) rotate(-13deg); }
+	75% { transform: translate(-1px, -1px) rotate(9deg); }
+	100% { transform: translate(-1px, 1px) rotate(-11deg); }
+}
+
+@include keyframes(shake_c) {
+	0% { transform: translate(1px, -1px) rotate(-12deg); }
+	25% { transform: translate(-1px, 1px) rotate(8deg); }
+	50% { transform: translate(1px, 1px) rotate(-10deg); }
+	75% { transform: translate(1px, -1px) rotate(11deg); }
+	100% { transform: translate(1px, -1px) rotate(-12deg); }
+}
+
 div, input {
 	font-size: 17px;
 	font-family: monospace;
 	color: #fff;
-	text-shadow: 0 1px 4px rgba(#000, 0.4);
+	text-shadow: 0 1px 2px rgba(#000, 0.7);
 	font-family: $code-font;
 }
 
@@ -62,6 +87,11 @@ div, input {
 #output {
 	padding: 0;
 
+	.console-image {
+		max-width: 100%;
+		max-height: 300px;
+	}
+
 	.line {
 		padding: 8px 25px;
 	}
@@ -79,40 +109,49 @@ div, input {
 		@include align_vertical(50px);
 	}
 
+	$console-background-default: #34363D;
+	$console-background-warn: #F2C52B;
+	$console-background-error: #DF3B32;
+	$console-background-success: #39CA74;
+	$console-background-info: #33B1FF;
+	$default-background-mix: 50%;
+	$alt-row-background-darken: 7%;
+	$default-background-opacity: 0.4;
+
 	.line.warn {
-		background: rgba(mix(#F2C52B, #34363D, 50%), 0.66);
-		color: #ffa;
+		background: rgba(mix($console-background-warn, $console-background-default, $default-background-mix), $default-background-opacity);
+		color: rgb(255, 249, 67);
 	}
 
 	.line.error {
-		background: rgba(mix(#DF3B32, #34363D, 50%), 0.66);
-		color: #faa;
+		background: rgba(mix($console-background-error, $console-background-default, $default-background-mix), $default-background-opacity);
+		color: rgb(255, 126, 97);
 	}
 
 	.line.success {
-		background: rgba(mix(#39CA74, #34363D, 50%), 0.66);
-		color: #ADFFCE;
+		background: rgba(mix($console-background-success, $console-background-default, $default-background-mix), $default-background-opacity);
+		color: rgb(133, 255, 182);
 	}
 
 	.line.info {
-		background: rgba(mix(#3A99D8, #34363D, 50%), 0.66);
-		color: #CCEBFF;
+		background: rgba(mix($console-background-info, $console-background-default, $default-background-mix), $default-background-opacity);
+		color: rgb(172, 222, 255);
 	}
 
 	.line.warn:nth-child(odd) {
-		background: darken(rgba(mix(#F2C52B, #34363D, 50%), 0.66), 7%);
+		background: darken(rgba(mix($console-background-warn, $console-background-default, $default-background-mix), $default-background-opacity), $alt-row-background-darken);
 	}
 
 	.line.error:nth-child(odd) {
-		background: darken(rgba(mix(#DF3B32, #34363D, 50%), 0.66), 7%);
+		background: darken(rgba(mix($console-background-error, $console-background-default, $default-background-mix), $default-background-opacity), $alt-row-background-darken);
 	}
 
 	.line.success:nth-child(odd) {
-		background: darken(rgba(mix(#39CA74, #34363D, 50%), 0.66), 7%);
+		background: darken(rgba(mix($console-background-success, $console-background-default, $default-background-mix), $default-background-opacity), $alt-row-background-darken);
 	}
 
 	.line.info:nth-child(odd) {
-		background: darken(rgba(mix(#3A99D8, #34363D, 50%), 0.66), 7%);
+		background: darken(rgba(mix($console-background-info, $console-background-default, $default-background-mix), $default-background-opacity), $alt-row-background-darken);
 	}
 
 	.end {
@@ -120,6 +159,43 @@ div, input {
 		background: darken(#3B3E46, 4%) !important;
 		color: lighten(#23262A, 27%);
 		margin: 20px 0 0 0;
+	}
+
+	// rainbow colors
+	.rainbow { background: rgba(#000, 0.3); }
+	.color-r { color: rgb(247, 19, 19); }
+	.color-o { color: rgb(247, 170, 28); }
+	.color-y { color: rgb(242, 242, 23); }
+	.color-g { color: rgb(31, 244, 31); }
+	.color-b { color: rgb(49, 148, 255); }
+	.color-i { color: rgb(187, 103, 255); }
+	.color-v { color: #EE82EE; }
+
+	$shake-animation-time: 0.5s;
+	.shake {
+		font-style: italic;
+		span {
+			position: relative;
+			display: inline-block;
+			animation: shake_a $shake-animation-time infinite;
+		}
+
+		span:nth-child(3n+4) {
+			animation: shake_c $shake-animation-time infinite;
+		}
+		
+		span:nth-child(3n+3) {
+			animation: shake_b $shake-animation-time infinite;
+		}
+		
+		span:nth-child(3n+2) {
+			animation: shake_a $shake-animation-time infinite;
+		}
+		
+		span:first-child {
+			animation: none;
+		}
+
 	}
 	
 }

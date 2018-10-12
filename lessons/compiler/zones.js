@@ -26,8 +26,61 @@ function processFileZone(zones, id, source) {
   path = $path.resolve(source, `.${path}`);
   let content = $fs.readFileSync(path).toString();
 
+
   // create a zone map
   const map = ZoneMap.create(content, zones);
+
+  // util to get a zone length
+  function getLength(id) {
+    const zone = map.zones[id];
+    return zone.end.index - zone.start.index;
+  }
+
+  // gather each zone
+  const arranged = [ ];
+  for (const id in map.zones) {
+    arranged.push({ id, length: getLength(id) });
+  }
+
+  // collapse in order
+  _(arranged)
+    .sortBy('length')
+    .each(item => {
+      const zone = map.zones[item.id];
+      if (zone.collapsed) {
+        console.log('collapse', item.id);
+        map.collapse(item.id);
+      }
+    });
+
+
+
+
+  map.collapse('paragraph_content');
+  console.log('-------');
+  // console.log(map.zones);
+  map.collapse('paragraph_element');
+  console.log('-------');
+  // console.log(map.content);
+  console.log('-------');
+  console.log(map.zones);
+
+  // map.edit('paragraph_content');
+  map.expand('paragraph_element');
+  map.expand('paragraph_content');
+  // map.expand('paragraph_element');
+  console.log('-------');
+  console.log(map.content);
+  // map.collapse('img_element');
+
+  // map.modify('header_content', 9, 9, 9, 17, '55555');
+
+  // map.expand('button_content');
+
+  // console.log('-------');
+  // console.log(map.content);
+  // console.log('-------');
+  // console.log(map.zones);
 
   // collapse each zones to create the default state
   let didCollapse;
@@ -41,6 +94,7 @@ function processFileZone(zones, id, source) {
 
   // update the file
   if (didCollapse) {
+    // console.log('gen', map.content);
     $fs.writeFileSync(path, map.content);
   }
 

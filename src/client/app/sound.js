@@ -16,9 +16,14 @@ const $sounds = new Howl({
 
 // handles playing an audio file
 function play(key, options = { }) {
-	const id = $sounds.play(key);
-	if (_.isNumber(options.balance))
+	try {
+		const id = $sounds.play(key);
+		if (_.isNumber(options.balance))
 		$sounds.stereo(options.balance, id);
+	}
+	catch (err) {
+		// sound errors should never break the app
+	}
 }
 
 /** plays a notification noise 

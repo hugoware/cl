@@ -8,13 +8,25 @@ import protectCode from '../compilers/simplescript/protect';
 import { resolveImports, getErrorFile } from '../compilers/simplescript/modules';
 import { find } from '../storage/file-system/index';
 
+// common resources that require no processing
+const RESOURCES = [
+	'html', 'htm', 'css', 'js', 'txt',
+	'png', 'jpg', 'jpeg', 'gif'
+];
 
 // return web content as required
 export default async function handleRequest(request, response, project) {
 	const { id } = project;
+	const source = $path.resolveProject(id);
+
+	// check if this is for a resource file
+	const ext = $path.extalias(request.path);
+	if (_.includes(RESOURCES, ext)) {
+		const resource = $path.resolveProject(id, request.path);
+		return response.sendFile(resource);
+	}
 
 	// there are no look ups, just use the project as is
-	const source = $path.resolveProject(id);
 	const compiled = $path.resolveCache(`/projects/${id}/compiled.js`);
 
 	// check if already cached

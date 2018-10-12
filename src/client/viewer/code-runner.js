@@ -6,6 +6,11 @@ function trim(str) {
 	return (str || '').replace(/^(\n|\t|\s)*|(\n|\t|\s)*$/g, '');
 }
 
+// helpers
+$.isObject = obj => {
+	return obj instanceof Object || typeof obj === 'object';
+};
+
 // handles running code
 export default class CodeRunner {
 
@@ -59,6 +64,9 @@ export default class CodeRunner {
 		__CODELAB__.consoleClear = this.onConsoleClear;
 		__CODELAB__.consoleSuccess = this.onConsoleSuccess;
 		__CODELAB__.consoleInfo = this.onConsoleInfo;
+		__CODELAB__.consoleImage = this.onConsoleImage;
+		__CODELAB__.consoleRainbow = this.onConsoleRainbow;
+		__CODELAB__.consoleShake = this.onConsoleShake;
 		__CODELAB__.handleException = this.onHandleException;
 
 		// interface for external programs
@@ -97,6 +105,78 @@ export default class CodeRunner {
 	onConsoleError = (...args) => this.writeOutput('error', args)
 	onConsoleSuccess = (...args) => this.writeOutput('success', args)
 	onConsoleInfo = (...args) => this.writeOutput('info', args)
+	
+	// special version
+	onConsoleRainbow = (...args) => {
+		this.writeOutput('rainbow', args, (content, index) => {
+			
+			// only do rainbows to strings
+			if (!$.isString(args[index]))
+				return content;
+
+			// write the colors
+			let position = 0|(Math.random() * 10);
+			const colors = ['r', 'o', 'y', 'g', 'b', 'i', 'v'];
+			const container = document.createElement('span');
+			const parts = content.split('');
+			for (let i = 0, total = parts.length; i < total; i++) {
+				const dom = document.createElement('span');
+				dom.className = /\W/.test(parts[i]) ? '' : `color-${colors[++position % 7]}`;
+				dom.innerText = parts[i];
+				container.appendChild(dom);
+			}
+
+			return container;
+		});
+	}
+
+	// another special version
+	onConsoleShake = (...args) => {
+		this.writeOutput('shake', args, (content, index) => {
+			
+			// only do rainbows to strings
+			if (!$.isString(args[index]))
+				return content;
+
+			// write the colors
+			const container = document.createElement('span');
+			const lead = document.createElement('span');
+			container.append(lead);
+			const parts = content.split('');
+			for (let i = 0, total = parts.length; i < total; i++) {
+				const dom = document.createElement('span');
+				dom.innerText = parts[i];
+				container.appendChild(dom);
+			}
+
+			return container;
+		});
+	}
+
+	// creates an image
+	onConsoleImage = path => {
+		const img = document.createElement('img');
+		img.className = 'console-image loading';
+
+		// check if needing a prefix
+		path = trim(path);
+		if (path[0] === '/')
+			path = (__CODELAB__.projectUrl || window.location.href) + path;
+		
+		// when ready to show
+		img.onload = () => {
+			img.className = 'console-image';
+			this.scrollToBottom();
+		};
+			
+		// set the url
+		img.src = path;
+
+		// add the image
+		const node = this.nextNode('image');
+		node.appendChild(img);
+		this.scrollToBottom();
+	}
 
 	// clears all messages
 	onConsoleClear = () => {
@@ -203,9 +283,16 @@ export default class CodeRunner {
 		(window.top || window).dispatchEvent(event);
 	}
 
-	// writes output
-	writeOutput = (style, args) => {
-		args = $.isArray(args) ? args : [args];
+	// move to the bottom of the view after anytime
+	// a message is added to the screen
+	scrollToBottom = () => {
+		this.timing.setTimeout.call(window, function () {
+			window.scrollTo(0, Number.MAX_SAFE_INTEGER);
+		});
+	}
+
+	// grabs the next node
+	nextNode = style => {
 
 		// check if too many appended lines
 		if (++this.totalLines > MAX_CONSOLE_LINES) {
@@ -216,14 +303,69 @@ export default class CodeRunner {
 		// create the result
 		const line = document.createElement('div');
 		line.className = `${style || ''} line`;
-		line.innerText = args.join(' ');
 		this.ui.output.append(line);
 
-		// move to the bottom of the view after anytime
-		// a message is added to the screen
-		this.timing.setTimeout.call(window, function () {
-			window.scrollTo(0, Number.MAX_SAFE_INTEGER);
-		});
+		// move to the bottom of the output
+		this.scrollToBottom();
+		return line;
+	}
+
+	// writes output
+	writeOutput = (style, args, customize) => {
+		args = $.isArray(args) ? args : [args];
+		const node = this.nextNode(style);
+
+		// append each value
+		for (let i = 0; i < args.length; i++) {
+
+			// get the data to
+			let arg = args[i];
+			if ($.isArray(arg) || $.isObject(arg))
+				arg = JSON.stringify(arg, null, 2);
+
+			// attach this to the document
+			const content = customize ? customize(arg, i) : (arg || 'null').toString();
+			if ($.isString(content)) {
+				const item = document.createElement('span');
+				item.className = 'item';
+				node.innerText = content;
+			}
+			// anything else, assume DOM element?
+			else node.appendChild(content);
+
+		}
+
+		// update the scroll position
+		this.scrollToBottom();
+
+
+		// // check if too many appended lines
+		// if (++this.totalLines > MAX_CONSOLE_LINES) {
+		// 	const output = this.ui.output[0];
+		// 	output.removeChild(output.children[0]);
+		// }
+
+		// // create the result
+		// const line = document.createElement('div');
+		// line.className = `${style || ''} line`;
+
+		// // convert to text
+		// const render = [ ];
+		// for (let i = 0; i < args.length; i++) {
+		// 	let str = JSON.stringify(args[i], null, 2);
+		// 	if (customize) str = customize(str, i);
+		// 	render.push(str);
+		// }
+
+		// // append to the container
+		// line.innerText = render.join(' ');
+		// this.ui.output.append(line);
+
+		// // move to the bottom of the view after anytime
+		// // a message is added to the screen
+		// this.timing.setTimeout.call(window, function () {
+		// 	window.scrollTo(0, Number.MAX_SAFE_INTEGER);
+		// });
 	}
 
 	// resets the entire view

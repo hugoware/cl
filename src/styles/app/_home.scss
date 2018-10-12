@@ -235,7 +235,12 @@ $project-item-accent-gap: 3px;
 	&.is-lesson .open,
 	&.is-lesson.is-new .reset,
 	&.is-lesson .publish {
-		// display: none;
+		display: none;
+	}
+
+
+	@at-root .local .is-lesson .reset {
+		display: block !important;
 	}
 
 	&.is-lesson.is-finished .publish,

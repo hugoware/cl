@@ -34,6 +34,7 @@ export default class UserEvent {
 
 		// clear any timers
 		clearTimeout(this.__debounce);
+		clearTimeout(this.__delay);
 
 		// check for alt events
 		remove(this.__disposeListener);
@@ -52,17 +53,38 @@ function setupEvent(instance) {
 	const validator = commands.event[1];
 	const debounce = 0 | (commands.event[2] || 0);
 	const action = $state.lesson.getValidator(validator);
+
+	// validation process
+	const validate = args => action.apply($state.lesson.instance, args);
+	const finish = success => {
+		if (success && action.success) action.success();
+		onSuccess(success); 
+	};
 	
 	// handles validation
 	instance.onValidation = (...args) => {
+		clearTimeout(instance.__delay);
+		clearTimeout(instance.__debounce);
 
 		// perform with a delay to allow anything to catch up
-		clearTimeout(instance.__debounce);
 		instance.__debounce = setTimeout(() => {
+			let success = validate(args);
 
-			// check the validation
-			const success = action.apply($state.lesson.instance, args);
-			onSuccess(success);
+			// failures are reported right away
+			if (!success)
+				return finish(false);
+
+			// if there's a delay, that means we want to wait to see if
+			// the validation is still true after the required time limit
+			if (_.isNumber(action.delay)) {
+				instance.__delay = setTimeout(() => {
+					success = validate(args);
+					finish(success);
+				}, action.delay);
+			}
+			// give back the result right away
+			else finish(success);
+
 		}, debounce);
 	};
 

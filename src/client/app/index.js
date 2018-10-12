@@ -106,7 +106,11 @@ class App extends Component {
 		// establish operating system
 		const doc = Component.bind(document.body);
 		const isOSX = /mac/i.test(navigator.platform);
-		doc.toggleClassMap({ 'osx': isOSX, 'win': !isOSX });
+		doc.toggleClassMap({
+			'osx': isOSX,
+			'win': !isOSX,
+			'local': $state.isLocal
+		});
 
 	}
 

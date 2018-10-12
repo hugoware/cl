@@ -10,30 +10,6 @@
       "type": "web",
       "description": "An Introduction to the CodeLab Learning System",
       "lesson": [{
-        "mode": "overlay",
-        "title": "An Introduction to HTML",
-        "content": "<p>This brief tutorial will give you an introduction to using HTML to create web pages.</p>",
-        "type": "slide",
-        "speak": ["This brief tutorial will give you an introduction to using HTML to create web pages."]
-      }, {
-        "title": "An Introduction to HTML",
-        "mode": "overlay",
-        "content": "<p>This is an <span class=\"define\" type=\"html_element\" >HTML Element</span>. This is the most basic of HTML instructions.</p><div class=\"snippet\" type=\"html_tag_example\" />",
-        "type": "slide",
-        "speak": ["This is an HTML Element. This is the most basic of HTML instructions."]
-      }, {
-        "title": "An Introduction to HTML",
-        "mode": "overlay",
-        "content": "<p>The two highlighted blocks of code are known as <span class=\"define\" type=\"html_tag\" >HTML Tags</span></p><div class=\"snippet\" type=\"html_tag_example\" highlight=\"start_tag end_tag\"/><p>When these instructions are viewed in a web browser, it appears as a large, bold header.</p>",
-        "type": "slide",
-        "speak": ["The two highlighted blocks of code are known as HTML Tags", "When these instructions are viewed in a web browser, it appears as a large, bold header."]
-      }, {
-        "title": "An Introduction to HTML",
-        "mode": "overlay",
-        "content": "<p>The content in the middle is the words that will be displayed on the screen.</p><div class=\"snippet\" type=\"html_tag_example\" highlight=\"content\"/><p>In this example, the screen would display <strong>Hello, World</strong></p>",
-        "type": "slide",
-        "speak": ["The content in the middle is the words that will be displayed on the screen.", "In this example, the screen would display Hello, World"]
-      }, {
         "mode": "popup",
         "content": "<p>Let's make some changes to an HTML page. Let's start by opening the <code>index.html</code> page in the File Browser.</p>",
         "waitFor": ["::fileOpen(/index.html)"],
@@ -48,24 +24,11 @@
         "content": "<p>Like with our previous example, you can see the start and ending tags</p>",
         "zones": {
           "/index.html": {
-            "header_start_tag": "show",
-            "header_end_tag": "show"
+            "paragraph_content": "edit"
           }
         },
         "type": "slide",
         "speak": ["Like with our previous example, you can see the start and ending tags"]
-      }, {
-        "mode": "popup",
-        "content": "<p>The words inbetween match the content on the page</p>",
-        "zones": {
-          "/index.html": {
-            "header_content": "show",
-            "header_start_tag": "hide",
-            "header_end_tag": "hide"
-          }
-        },
-        "type": "slide",
-        "speak": ["The words inbetween match the content on the page"]
       }, {
         "mode": "popup",
         "content": "<p>Try and change the content to something new</p>",
@@ -89,8 +52,6 @@
           }
         },
         "cursor": "button_content",
-        "autoNext": false,
-        "waitFor": ["::event(modify-file, verifyHeaderContent)"],
         "type": "slide",
         "speak": ["Let's try that again with a different type of HTML element. This one will look like a button"]
       }, {
@@ -142,18 +103,7 @@
         "type": "slide",
         "speak": ["Type in the name of the image file - In this case, /%uploadedFileName%"]
       }],
-      "definitions": {
-        "html_element": {
-          "id": "html_element",
-          "name": "HTML Element",
-          "define": "This is about HTML elements"
-        },
-        "html_tag": {
-          "id": "html_tag",
-          "name": "HTML Tag",
-          "define": "This is about HTML elements - this is <code>&lt;</code> or <code>&gt;</code>"
-        }
-      },
+      "definitions": {},
       "snippets": {
         "html_img_example": {
           "content": "",
@@ -209,27 +159,18 @@
         },
         "/index$html": {
           "img_element": {
-            "start": {
-              "row": 12,
-              "col": 1,
-              "index": 175
-            },
             "collapsed": true,
             "line": true,
+            "content": "      This is a paragraph element\n      that can be ",
             "id": "img_element",
-            "content": "\n    <img src=\"\" />"
+            "offset": 44,
+            "parent": "paragraph_element"
           },
           "img_src": {
             "content": "",
-            "offset": 15,
+            "offset": 48,
             "parent": "img_element",
             "id": "img_src"
-          },
-          "button_content": {
-            "id": "button_content",
-            "content": "Click Me!",
-            "offset": 8,
-            "parent": "button_element"
           },
           "header_element": {
             "start": {
@@ -283,15 +224,23 @@
             },
             "id": "header_end_tag"
           },
-          "button_element": {
+          "paragraph_content": {
+            "line": true,
+            "id": "paragraph_content",
+            "content": "spread out over\n      multiple lines",
+            "offset": 8,
+            "parent": "paragraph_element"
+          },
+          "paragraph_element": {
             "start": {
               "row": 11,
-              "col": 5,
-              "index": 174
+              "col": 1,
+              "index": 170
             },
             "collapsed": true,
-            "id": "button_element",
-            "content": "<button></button>"
+            "line": true,
+            "id": "paragraph_element",
+            "content": "    <p>\n\n    </p>"
           }
         }
       }
@@ -378,6 +327,47 @@
       return asDom ? $html(html, { strict: strict !== false }) : html;
     }
 
+    // creates a validator function
+    function $validator(key, options) {
+
+      // create the primary validation function
+      var handler = function handler() {
+
+        // execute the validator
+        var result = void 0;
+        var exception = void 0;
+        try {
+          result = options.validate();
+        }
+        // failed to validate
+        catch (err) {
+          exception = true;
+          result = err;
+        }
+
+        // validation passed
+        if (_.isNil(result)) return true;
+
+        // if there was an error
+        try {
+
+          // handle error cases
+          if (exception && options.error) options.error(result);
+
+          // handle failure
+          else if (options.fail) options.fail(result);
+
+          // handle reverting
+          if (options.revertOnError) $revertMessage();
+        } finally {
+          return false;
+        }
+      };
+
+      // save the options
+      $self[key] = _.assign(handler, options);
+    }
+
     // append each action
     function $define(name, options, action) {
 
@@ -434,27 +424,43 @@
       });
     });
 
-    $define('verifyHeaderContent', { init: true }, function () {
-      return $validate(function () {
+    $validator('verifyHeaderContent', {
+
+      init: true,
+      delay: 1000,
+      revertOnError: true,
+
+      validate: function validate() {
 
         // get the current entered value
         var content = $getZone('/index.html', 'header_content');
         content = _.trim(content);
 
         // make sure it's okay
-        if (/^welcome/i.test(content)) {
-          $showHint('Change the greeting to something different');
-          return false;
+        var len = Math.min(7, content.length);
+        var current = content.substr(0, len).toLowerCase();
+        var base = 'welcome'.substr(0, len).toLowerCase();
+        if (current === base) {
+          return 'Change the greeting to something different';
         }
 
         if (content.length < 5) {
-          $showHint('Enter a longer greeting');
-          return false;
+          return 'Enter a longer greeting';
         }
 
+        // no need for hint
+        $hideHint();
+      },
+
+      fail: function fail(reason) {
+        $showHint(reason);
+      },
+
+      success: function success() {
         $hideHint();
         $speakMessage('Looks great!');
-      });
+      }
+
     });
 
     $define('verifyImageSrc', { init: true }, function () {

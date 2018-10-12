@@ -95,6 +95,55 @@
       return asDom ? $html(html, { strict: strict !== false }) : html;
     }
 
+
+    // creates a validator function
+    function $validator(key, options) {
+
+      // create the primary validation function
+      const handler = (...args) => {
+
+        // execute the validator
+        let result;
+        let exception;
+        try {
+          result = options.validate();
+        }
+        // failed to validate
+        catch(err) {
+          exception = true;
+          result = err;
+        }
+
+        // validation passed
+        if (_.isNil(result))
+          return true;
+
+        // if there was an error
+        try {
+
+          // handle error cases
+          if (exception && options.error)
+            options.error(result);
+          
+          // handle failure
+          else if (options.fail)
+            options.fail(result);
+
+          // handle reverting
+          if (options.revertOnError)
+            $revertMessage();
+        }
+        finally {
+          return false;
+        }
+
+      };
+
+      // save the options
+      $self[key] = _.assign(handler, options);
+    }
+
+
     // append each action
     function $define(name, options, action) {
 

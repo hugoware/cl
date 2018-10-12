@@ -410,6 +410,7 @@ function collapseZone(instance, id) {
 	// finalize the content
 	zone.content = extractContent(instance, zone.start.index, zone.end.index);
 	const length = zone.content.length;
+	console.log('is expecting', length);
 	
 	// need to shift all indexes
 	for (const alt in instance.zones) {
@@ -458,9 +459,9 @@ function getContainedZones(instance, id) {
 		// check if contained inside of another zone
 		const compare = instance.zones[alt];
 
-		// if not possible to check
-		if (!(compare.end && compare.start))
-			continue;
+		// // if not possible to check
+		// if (!(compare.end && compare.start))
+		// 	continue;
 
 		// if this already has a parent, then there's
 		// nothing to do at this point
@@ -474,8 +475,11 @@ function getContainedZones(instance, id) {
 		}
 
 		// check the indexes
-		const isStartWithinRange = zone.start.index < compare.start.index;
-		const isEndWithinRange = zone.end ? zone.end.index > compare.end.index : isStartWithinRange;
+		const start = compare.start.index;
+		const end = compare.end ? compare.end.index : start;
+
+		const isStartWithinRange = zone.start.index < start;
+		const isEndWithinRange = zone.end.index > end;
 		if (isStartWithinRange && isEndWithinRange)
 			contained.push(alt);
 	}

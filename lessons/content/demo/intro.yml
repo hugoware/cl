@@ -1,39 +1,39 @@
 
-- slide:
-    mode: overlay
-    title: An Introduction to HTML
-    content: |
-      This brief tutorial will give you an introduction to using HTML to create web pages.
+# - slide:
+#     mode: overlay
+#     title: An Introduction to HTML
+#     content: |
+#       This brief tutorial will give you an introduction to using HTML to create web pages.
 
 
-- slide:
-    title: An Introduction to HTML
-    mode: overlay
-    content: |
-      This is an [define html_element]. This is the most basic of HTML instructions.
+# - slide:
+#     title: An Introduction to HTML
+#     mode: overlay
+#     content: |
+#       This is an [define html_element]. This is the most basic of HTML instructions.
 
-      [snippet html_tag_example]
+#       [snippet html_tag_example]
 
 
-- slide:
-    title: An Introduction to HTML
-    mode: overlay
-    content: |
-      The two highlighted blocks of code are known as [define html_tag HTML Tags]
+# - slide:
+#     title: An Introduction to HTML
+#     mode: overlay
+#     content: |
+#       The two highlighted blocks of code are known as [define html_tag HTML Tags]
 
-      [snippet html_tag_example highlight: start_tag end_tag]
+#       [snippet html_tag_example highlight: start_tag end_tag]
 
-      When these instructions are viewed in a web browser, it appears as a large, bold header.
+#       When these instructions are viewed in a web browser, it appears as a large, bold header.
 
-- slide:
-    title: An Introduction to HTML
-    mode: overlay
-    content: |
-      The content in the middle is the words that will be displayed on the screen.
+# - slide:
+#     title: An Introduction to HTML
+#     mode: overlay
+#     content: |
+#       The content in the middle is the words that will be displayed on the screen.
 
-      [snippet html_tag_example highlight: content]
+#       [snippet html_tag_example highlight: content]
 
-      In this example, the screen would display **Hello, World**
+#       In this example, the screen would display **Hello, World**
 
 - slide:
     mode: popup
@@ -56,19 +56,28 @@
 
     zones:
       /index.html:
-        header_start_tag: show
-        header_end_tag: show
+        paragraph_content: edit
 
-- slide:
-    mode: popup
-    content: |
-      The words inbetween match the content on the page
+# - slide:
+#     mode: popup
+#     content: |
+#       Like with our previous example, you can see the start and ending tags
 
-    zones:
-      /index.html:
-        header_content: show
-        header_start_tag: hide
-        header_end_tag: hide
+#     zones:
+#       /index.html:
+#         header_start_tag: show
+#         header_end_tag: show
+
+# - slide:
+#     mode: popup
+#     content: |
+#       The words inbetween match the content on the page
+
+#     zones:
+#       /index.html:
+#         header_content: show
+#         header_start_tag: hide
+#         header_end_tag: hide
 
 - slide:
     mode: popup
@@ -98,9 +107,9 @@
 
     cursor: button_content
 
-    autoNext: false
-    waitFor:
-      - ::event(modify-file, verifyHeaderContent)
+    # autoNext: false
+    # waitFor:
+    #   - ::event(modify-file, verifyButton)
 
 - slide:
     mode: popup

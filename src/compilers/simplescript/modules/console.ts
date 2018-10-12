@@ -31,3 +31,16 @@ Console.info = async (...args) => {
 Console.error = async (...args) => {
 	__CODELAB__.consoleError(...args);
 };
+
+let $__too_many_images = 0;
+Console.image = async path => {
+	__CODELAB__.consoleImage(path);
+};
+
+Console.rainbow = async (...args) => {
+	__CODELAB__.consoleRainbow(...args);
+};
+
+Console.shake = async (...args) => {
+	__CODELAB__.consoleShake(...args);
+};
