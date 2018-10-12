@@ -20,6 +20,9 @@ export default class HintDisplay extends Component {
 		this.listen('finish-project', this.onFinishProject);
 		this.listen('show-hint', this.onShowHint);
 		this.listen('hide-hint', this.onHideHint);
+
+		// always looking for the cursor
+		this.selector = evaluateSelector('.ace_editor .ace_cursor');
 		
 		// handle refreshable events
 		window.addEventListener('resize', this.onAutoRefresh);
@@ -46,13 +49,8 @@ export default class HintDisplay extends Component {
 	onAutoRefresh = () => {
 
 		// don't do anything if already hiding
-		if (this.isHidingHint)
-			return;
-
-		// match the cursor position for now
-		const selector = evaluateSelector('.ace_editor .ace_cursor');
-		const bounds = selector.getBounds();
-		this.offset({ top: bounds.top, left: bounds.left });
+		if (this.isHidingHint) return;
+		this.refreshPosition();
 	}
 
 	// handles showing the hint
@@ -63,12 +61,15 @@ export default class HintDisplay extends Component {
 			return this.onHideHint();
 
 		// showing for the first time
-		if (this.isHidingHint)
-			setTimeout(() => this.addClass('show'));
+		if (this.isHidingHint && !this.selector.isMissing)
+			setTimeout(() => {
+				this.refreshPosition();
+				this.addClass('show');
+			}, 250);
 		
 		// make sure to activate the hint even if
 		// the message itself didn't change
-		this.isHidingHint = false;
+		this.isHidingHint = !this.selector.isMissing;
 
 		// already the same message
 		if (options.message === this._activeMessage)
@@ -84,6 +85,13 @@ export default class HintDisplay extends Component {
 	onHideHint = () => {
 		this.isHidingHint = true;
 		this.removeClass('show');
+	}
+
+	// match the cursor position for now
+	refreshPosition = () => {
+		this.selector.refresh();
+		const bounds = this.selector.getBounds();
+		this.offset({ top: bounds.top, left: bounds.left });
 	}
 
 }

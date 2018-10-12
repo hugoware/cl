@@ -83,7 +83,12 @@ export default class Lesson {
 			const zones = lesson.getZones(path)
 
 			// create the zone info
-			const content = await $lfs.read(path);
+			let content;
+			const existing = _.find(lesson.instance.modified, { path });
+			if (existing) content = existing.content;
+			else content = await $lfs.read(path);
+
+			// load the map
 			lesson.maps[path] = ZoneMap.create(content, zones);
 		}
 
@@ -357,6 +362,10 @@ function setActiveSlide(lesson, slide) {
 	$wait.clear();
 	$focus.clear();
 
+	// check for setting the cursor
+	if (slide.cursor)
+		broadcast('set-cursor', slide.cursor);
+
 	// check for markers
 	const markers = slide.markers || slide.marker;
 	if (markers) $focus.setMarker(markers);
@@ -368,10 +377,6 @@ function setActiveSlide(lesson, slide) {
 	// setup the wait events
 	const wait = slide.waitFor || slide.wait;
 	if (wait) $wait.waitFor(wait);
-
-	// check for setting the cursor
-	if (slide.cursor)
-		broadcast('set-cursor', slide.cursor);
 
 	// set a few other values
 	slide.isWaiting = _.some(wait);

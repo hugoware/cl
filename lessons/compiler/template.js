@@ -25,6 +25,32 @@
       return utils.$.apply(utils.$, arguments);
     }
 
+    // performs the oxford comma
+    function $oxford(items, conjunction) {
+      const total = items.length;
+
+      // determine the best
+      if (total === 1)
+        return items.join('')
+      else if (total == 2)
+        return items.join(` ${conjunction} `);
+
+      // return the result
+      else {
+        const last = items.pop();
+        return `${items.join(', ')}, ${conjunction} ${last}`;
+      }
+    }
+
+    // pluralizes a word
+    function $plural(count, single, plural, none, delimeter = '@') {
+      const value = Math.abs(count);
+      const message = value === 1 ? single
+        : value > 1 ? (plural ? plural : `${single}s`)
+        : none || plural;
+      return message.replace(delimeter, count);
+    }
+
     // shared functions
     function $denyAccess(message, explain) {
       if (_.isFunction($lesson.onDeny))
@@ -90,11 +116,14 @@
     }
 
     // gets a zone
-    function $getZone(file, id, asDom, strict) {
-      const html = utils.getZoneContent(file, id);
-      return asDom ? $html(html, { strict: strict !== false }) : html;
+    function $getZone(file, id, options = { }) {
+      let html = utils.getZoneContent(file, id);
+      if (options.trim !== false) html = _.trim(html);
+      return (options.toDom || options.asDom) ? $html(html) : html;
     }
 
+    // 
+    const $noop = { };
 
     // creates a validator function
     function $validator(key, options) {
@@ -121,17 +150,27 @@
         // if there was an error
         try {
 
-          // handle error cases
+          // handle reverting
+          if (options.revertOnError)
+            $revertMessage();
+
+          // doesn't want to do anything with validation
+          if (result === $noop)
+            return false;
+
+          // check for messages
           if (exception && options.error)
             options.error(result);
           
           // handle failure
-          else if (options.fail)
+          else if (_.isString(result) && options.fail)
             options.fail(result);
-
-          // handle reverting
-          if (options.revertOnError)
-            $revertMessage();
+          
+        }
+        // extreme case
+        catch(ex) {
+          $hideHint();
+          $revertMessage();
         }
         finally {
           return false;

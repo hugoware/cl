@@ -49,6 +49,7 @@
     validation:
       openFile: ::allowIfFile(/index.html, open-file)
 
+
 - slide:
     mode: popup
     content: |
@@ -56,28 +57,19 @@
 
     zones:
       /index.html:
-        paragraph_content: edit
+        header_start_tag: show
+        header_end_tag: show
 
-# - slide:
-#     mode: popup
-#     content: |
-#       Like with our previous example, you can see the start and ending tags
+- slide:
+    mode: popup
+    content: |
+      The words inbetween match the content on the page
 
-#     zones:
-#       /index.html:
-#         header_start_tag: show
-#         header_end_tag: show
-
-# - slide:
-#     mode: popup
-#     content: |
-#       The words inbetween match the content on the page
-
-#     zones:
-#       /index.html:
-#         header_content: show
-#         header_start_tag: hide
-#         header_end_tag: hide
+    zones:
+      /index.html:
+        header_content: show
+        header_start_tag: hide
+        header_end_tag: hide
 
 - slide:
     mode: popup
@@ -98,18 +90,43 @@
 - slide:
     mode: popup
     content: |
-      Let's try that again with a different type of HTML element. This one will look like a button
+      Let's try that again with a different type of HTML element. This one is a paragraph
 
     zones:
       /index.html:
-        button_content: edit
+        paragraph_element: show
         header_content: hide
 
-    cursor: button_content
+    cursor: paragraph_content
 
-    # autoNext: false
-    # waitFor:
-    #   - ::event(modify-file, verifyButton)
+- slide:
+    mode: popup
+    content: |
+      You'll notice that even though the text appears on multiple lines, it shows up as a single line in the preview
+
+    zones:
+      /index.html:
+        paragraph_element: hide
+        paragraph_content: show
+
+    cursor: paragraph_content
+
+- slide:
+    mode: popup
+    content: |
+      Try and change this paragraph to hold several more lines of text
+
+    zones:
+      /index.html:
+        paragraph_content: edit
+
+    cursor:
+      zone: paragraph_content
+      at: end
+
+    autoNext: false
+    waitFor:
+      - ::event(modify-file, verifyParagraphContent)
 
 - slide:
     mode: popup
@@ -123,7 +140,7 @@
 
     zones:
       /index.html:
-        button_content: hide
+        paragraph_content: hide
 
     validation:
       uploadFile: verifyFileUploadIsImage
@@ -166,3 +183,13 @@
 
     waitFor:
       - ::editing(verifyImageSrc)
+
+- slide:
+    mode: popup
+    content: |
+      You've just created a web page! It looks great
+      Now that you're done, why not share it with someone!
+
+    zones:
+      /index.html:
+        img_src: hide

@@ -4,6 +4,7 @@ import _ from 'lodash';
 const BACKSPACE = { isBackspace: true };
 const DELETE = { isDelete: true };
 const INSERT = { isInsert: true };
+const COMMENT = { isComment: true };
 
 export default class ZoneMap {
 
@@ -28,6 +29,48 @@ export default class ZoneMap {
 
 		// return the generated map
 		return map;
+	}
+
+	/** replaces the content used by the ZoneMap - normally in 
+	 * response to applying a change from the managed editor
+	 */
+	setContent = content => {
+		this.content = content;
+
+		// adapt to changes
+		syncDocument(this);
+		syncPositions(this);
+	}
+
+	/** adjust all zones using a delta
+	 * @param {string} relativeTo the zone that's being modified
+	 * @param {number} startRow the starting row to shift from
+	 * @param {number} startCol the starting column to shift from
+	 * @param {number} endRow the ending row to shift from (unused)
+	 * @param {number} endCol the ending column to shift from (unused)
+	 * @param {number} delta the delta range to adjust by
+	 */
+	shiftZones = (relativeTo, startRow, startCol, endRow, endCol, delta) => {
+		const startIndex = this.getIndex(startRow, startCol);
+
+		// revise all zones
+		for (const id in this.zones) {
+			const zone = this.zones[id];
+
+			// update the tail and lead
+			if (relativeTo !== id && zone.start && zone.start.index >= startIndex)
+				zone.start.index += delta;
+
+			// adjust just the tail end
+			if (zone.end && zone.end.index >= startIndex)
+				zone.end.index += delta;
+
+		}
+
+		// adapt to changes
+		syncDocument(this);
+		syncPositions(this);
+
 	}
 
 	/** returns the content for a zone */
@@ -175,52 +218,60 @@ export default class ZoneMap {
 		return evaluateRange(this, start, end, includesNewLine, DELETE);
 	}
 
-	/** changes the content for the document between two ranges
-	 * @param {number} startRow the start row to start from
-	 * @param {number} startCol the column to start from
-	 * @param {number} endRow the end row to end at
-	 * @param {number} endCol the column to end at
-	 * @param {string} [content] the content to insert, if any
+	/** checks if a range can be deleted (from the right)
+	 * @param {Position} start the starting cursor
+	 * @param {Position} [end] the ending range, if any
 	 */
-	modify = (relativeTo, startRow, startCol, endRow, endCol, content, isDelete, isBackspace) => {
-		let startIndex = this.getIndex(startRow, startCol);
-		let endIndex = this.getIndex(endRow, endCol);
-		const isInsert = _.isString(content);
-		const length = isInsert ? content.length : 0;
-		const hasSelection = startIndex !== endIndex;
-		
-		// adjust the range to work with
-		if (!hasSelection && isBackspace) startIndex--;
-		if (!hasSelection && isDelete) endIndex++;
-		const range = startIndex - endIndex;
-		const delta = range + (isInsert ? length : 0);
-	
-		// remove any existing characters
-		if (range !== 0)
-			extractContent(this, startIndex, endIndex);
-		
-		// insert new characters
-		if (isInsert)
-			insertContent(this, startIndex, content);
-
-		// revise all zones
-		for (const id in this.zones) {
-			const zone = this.zones[id];
-
-			// update the tail and lead
-			if (relativeTo !== id && zone.start && zone.start.index >= startIndex)
-				zone.start.index += delta;
-
-			// adjust just the tail end
-			if (zone.end && zone.end.index >= startIndex)
-				zone.end.index += delta;
-
-		}
-		
-		// adapt to changes
-		syncDocument(this);
-		syncPositions(this);
+	canToggleComment = (start, end) => {
+		return evaluateRange(this, start, end, false, COMMENT);
 	}
+
+	// /** changes the content for the document between two ranges
+	//  * @param {number} startRow the start row to start from
+	//  * @param {number} startCol the column to start from
+	//  * @param {number} endRow the end row to end at
+	//  * @param {number} endCol the column to end at
+	//  * @param {string} [content] the content to insert, if any
+	//  */
+	// modify = (relativeTo, startRow, startCol, endRow, endCol, content, isDelete, isBackspace) => {
+	// 	let startIndex = this.getIndex(startRow, startCol);
+	// 	let endIndex = this.getIndex(endRow, endCol);
+	// 	const isInsert = _.isString(content);
+	// 	const length = isInsert ? content.length : 0;
+	// 	const hasSelection = startIndex !== endIndex;
+		
+	// 	// adjust the range to work with
+	// 	if (!hasSelection && isBackspace) startIndex--;
+	// 	if (!hasSelection && isDelete) endIndex++;
+	// 	const range = startIndex - endIndex;
+	// 	const delta = range + (isInsert ? length : 0);
+	
+	// 	// remove any existing characters
+	// 	if (range !== 0)
+	// 		extractContent(this, startIndex, endIndex);
+		
+	// 	// insert new characters
+	// 	if (isInsert)
+	// 		insertContent(this, startIndex, content);
+
+	// 	// revise all zones
+	// 	for (const id in this.zones) {
+	// 		const zone = this.zones[id];
+
+	// 		// update the tail and lead
+	// 		if (relativeTo !== id && zone.start && zone.start.index >= startIndex)
+	// 			zone.start.index += delta;
+
+	// 		// adjust just the tail end
+	// 		if (zone.end && zone.end.index >= startIndex)
+	// 			zone.end.index += delta;
+
+	// 	}
+		
+	// 	// adapt to changes
+	// 	syncDocument(this);
+	// 	syncPositions(this);
+	// }
 
 }
 
@@ -270,6 +321,7 @@ function expandZone(instance, id, skip) {
 
 		delete zone.parent;
 		delete zone.content;
+		delete zone.collapsed;
 	}
 }
 
@@ -330,7 +382,7 @@ function syncPositions(instance) {
 }
 
 // tests if a range can be applied to the map
-function evaluateRange(instance, start, end, includesNewLine, { isInsert, isBackspace, isDelete }) {
+function evaluateRange(instance, start, end, includesNewLine, { isComment, isInsert, isBackspace, isDelete }) {
 	const hasRange = start !== end;
 
 	// make sure this is allowed
@@ -361,6 +413,11 @@ function evaluateRange(instance, start, end, includesNewLine, { isInsert, isBack
 			if (!hasRange)
 				if ((isBackspace && startAtStart) || (isDelete && endAtEnd))
 					continue;
+		}
+		// can't toggle comments in fields
+		else if (isComment) {
+			if (!zone.multiline)
+				continue;
 		}
 		// check for insert actions
 		else if (isInsert) {
@@ -410,7 +467,6 @@ function collapseZone(instance, id) {
 	// finalize the content
 	zone.content = extractContent(instance, zone.start.index, zone.end.index);
 	const length = zone.content.length;
-	console.log('is expecting', length);
 	
 	// need to shift all indexes
 	for (const alt in instance.zones) {

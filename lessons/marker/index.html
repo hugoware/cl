@@ -54,6 +54,18 @@
         content: 'cl';
       }
 
+      #status div.line.multiline:after {
+        content: 'ml';
+      }
+
+      #status div.collapsed.multiline:after {
+        content: 'cl';
+      }
+
+      #status div.collapsed.multiline.line:after {
+        content: 'cml';
+      }
+
       #status div:hover {
         background: rgba(255, 255, 255, 0.3);
         cursor: not-allowed;
@@ -160,6 +172,7 @@
           element.className = '';
           if (item.collapsed) element.className += ' collapsed';
           if (item.line) element.className += ' line';
+          if (item.multiline) element.className += ' multiline';
 
           const detail = `start:${item.start.row}:${item.start.col} -- end:${item.end.row}:${item.end.col}`;
           element.setAttribute('title', detail);
@@ -209,6 +222,13 @@
           return '';
         });
 
+        // check for flags
+        let isMultiline;
+        name = name.replace(/\!m/gi, () => {
+          isMultiline = true;
+          return '';
+        });
+
         // get the final name
         name = _.snakeCase(_.trim(name));
 
@@ -243,6 +263,12 @@
 
         if (isLine || rowStart !== rowEnd) {
           state.content[state.key][name].line = true;
+          // state.content[state.key][name].start.col = 0;
+          // state.content[state.key][name].end.col = 0;
+        }
+
+        if (isMultiline) {
+          state.content[state.key][name].multiline = true;
           // state.content[state.key][name].start.col = 0;
           // state.content[state.key][name].end.col = 0;
         }

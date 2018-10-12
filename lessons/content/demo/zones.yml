@@ -28,22 +28,6 @@ html_tag_example:
       row: 0
       col: 22
 /index.html:
-  img_element:
-    start:
-      row: 12
-      col: 1
-    end:
-      row: 13
-      col: 19
-    collapsed: true
-    line: true
-  img_src:
-    start:
-      row: 13
-      col: 15
-    end:
-      row: 13
-      col: 15
   header_element:
     start:
       row: 9
@@ -72,13 +56,21 @@ html_tag_example:
     end:
       row: 9
       col: 22
-  paragraph_content:
+  img_src:
     start:
-      row: 12
+      row: 17
+      col: 15
+    end:
+      row: 17
+      col: 15
+  img_element:
+    start:
+      row: 16
       col: 1
     end:
-      row: 14
-      col: 21
+      row: 17
+      col: 19
+    collapsed: true
     line: true
   paragraph_element:
     start:
@@ -89,3 +81,12 @@ html_tag_example:
       col: 9
     collapsed: true
     line: true
+  paragraph_content:
+    start:
+      row: 12
+      col: 1
+    end:
+      row: 14
+      col: 21
+    line: true
+    multiline: true

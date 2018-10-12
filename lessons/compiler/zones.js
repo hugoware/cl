@@ -26,72 +26,53 @@ function processFileZone(zones, id, source) {
   path = $path.resolve(source, `.${path}`);
   let content = $fs.readFileSync(path).toString();
 
-
   // create a zone map
   const map = ZoneMap.create(content, zones);
 
-  // util to get a zone length
-  function getLength(id) {
-    const zone = map.zones[id];
-    return zone.end.index - zone.start.index;
-  }
-
-  // gather each zone
-  const arranged = [ ];
+  const details = [ ];
   for (const id in map.zones) {
-    arranged.push({ id, length: getLength(id) });
+    const zone = map.zones[id];
+    details.push({ id, zone, length: zone.end.index - zone.start.index });
   }
 
-  // collapse in order
-  _(arranged)
+
+  // checks if a zone is inside of another - this makes it
+  // so that if a container is not marked as collapsed, it
+  // will still be collapsed if contained inside
+  function isContainedInAnother(check) {
+    for (let i = 0; i < details.length; i++) {
+      const other = details[i];
+      if (other.id === check.id) continue;
+
+      // if already collapsed, it can't be
+      // inside of this
+      if (!(other.zone.start && other.zone.end)) continue;
+      if (!(check.zone.start && check.zone.end)) continue;
+
+      // it's not collapsed
+      if (!other.zone.collapsed) continue;
+
+      // check the ranges
+      if (other.zone.start.index < check.zone.start.index && other.zone.end.index > check.zone.end.index)
+        return true;
+    }
+  }
+
+
+  let didCollapse;
+  _(details)
     .sortBy('length')
+    // .reverse()
     .each(item => {
-      const zone = map.zones[item.id];
-      if (zone.collapsed) {
-        console.log('collapse', item.id);
+      // if (isContainedInAnother(item) || item.zone.collapsed) {
+      if (isContainedInAnother(item) || item.zone.collapsed) {
+        didCollapse = true;
+        // console.log('collapse', item.id);
         map.collapse(item.id);
       }
-    });
+    })
 
-
-
-
-  map.collapse('paragraph_content');
-  console.log('-------');
-  // console.log(map.zones);
-  map.collapse('paragraph_element');
-  console.log('-------');
-  // console.log(map.content);
-  console.log('-------');
-  console.log(map.zones);
-
-  // map.edit('paragraph_content');
-  map.expand('paragraph_element');
-  map.expand('paragraph_content');
-  // map.expand('paragraph_element');
-  console.log('-------');
-  console.log(map.content);
-  // map.collapse('img_element');
-
-  // map.modify('header_content', 9, 9, 9, 17, '55555');
-
-  // map.expand('button_content');
-
-  // console.log('-------');
-  // console.log(map.content);
-  // console.log('-------');
-  // console.log(map.zones);
-
-  // collapse each zones to create the default state
-  let didCollapse;
-  _.each(zones, (zone, id) => {
-    zone.id = id;
-    if (zone.collapsed) {
-      didCollapse = true;
-      map.collapse(id);
-    }
-  });
-
+  
   // update the file
   if (didCollapse) {
     // console.log('gen', map.content);

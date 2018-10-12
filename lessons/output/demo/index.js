@@ -24,11 +24,24 @@
         "content": "<p>Like with our previous example, you can see the start and ending tags</p>",
         "zones": {
           "/index.html": {
-            "paragraph_content": "edit"
+            "header_start_tag": "show",
+            "header_end_tag": "show"
           }
         },
         "type": "slide",
         "speak": ["Like with our previous example, you can see the start and ending tags"]
+      }, {
+        "mode": "popup",
+        "content": "<p>The words inbetween match the content on the page</p>",
+        "zones": {
+          "/index.html": {
+            "header_content": "show",
+            "header_start_tag": "hide",
+            "header_end_tag": "hide"
+          }
+        },
+        "type": "slide",
+        "speak": ["The words inbetween match the content on the page"]
       }, {
         "mode": "popup",
         "content": "<p>Try and change the content to something new</p>",
@@ -44,23 +57,51 @@
         "speak": ["Try and change the content to something new"]
       }, {
         "mode": "popup",
-        "content": "<p>Let's try that again with a different type of HTML element. This one will look like a button</p>",
+        "content": "<p>Let's try that again with a different type of HTML element. This one is a paragraph</p>",
         "zones": {
           "/index.html": {
-            "button_content": "edit",
+            "paragraph_element": "show",
             "header_content": "hide"
           }
         },
-        "cursor": "button_content",
+        "cursor": "paragraph_content",
         "type": "slide",
-        "speak": ["Let's try that again with a different type of HTML element. This one will look like a button"]
+        "speak": ["Let's try that again with a different type of HTML element. This one is a paragraph"]
+      }, {
+        "mode": "popup",
+        "content": "<p>You'll notice that even though the text appears on multiple lines, it shows up as a single line in the preview</p>",
+        "zones": {
+          "/index.html": {
+            "paragraph_element": "hide",
+            "paragraph_content": "show"
+          }
+        },
+        "cursor": "paragraph_content",
+        "type": "slide",
+        "speak": ["You'll notice that even though the text appears on multiple lines, it shows up as a single line in the preview"]
+      }, {
+        "mode": "popup",
+        "content": "<p>Try and change this paragraph to hold several more lines of text</p>",
+        "zones": {
+          "/index.html": {
+            "paragraph_content": "edit"
+          }
+        },
+        "cursor": {
+          "zone": "paragraph_content",
+          "at": "end"
+        },
+        "autoNext": false,
+        "waitFor": ["::event(modify-file, verifyParagraphContent)"],
+        "type": "slide",
+        "speak": ["Try and change this paragraph to hold several more lines of text"]
       }, {
         "mode": "popup",
         "content": "<p>Let's try uploading an image and adding it to the page!</p><p>Use the <strong>Upload File</strong> option to go to the next step</p>",
         "actions": ["deselect-items"],
         "zones": {
           "/index.html": {
-            "button_content": "hide"
+            "paragraph_content": "hide"
           }
         },
         "validation": {
@@ -102,6 +143,16 @@
         "waitFor": ["::editing(verifyImageSrc)"],
         "type": "slide",
         "speak": ["Type in the name of the image file - In this case, /%uploadedFileName%"]
+      }, {
+        "mode": "popup",
+        "content": "<p>You've just created a web page! It looks great</p><p>Now that you're done, why not share it with someone!</p>",
+        "zones": {
+          "/index.html": {
+            "img_src": "hide"
+          }
+        },
+        "type": "slide",
+        "speak": ["You've just created a web page! It looks great", "Now that you're done, why not share it with someone!"]
       }],
       "definitions": {},
       "snippets": {
@@ -158,20 +209,6 @@
           }
         },
         "/index$html": {
-          "img_element": {
-            "collapsed": true,
-            "line": true,
-            "content": "      This is a paragraph element\n      that can be ",
-            "id": "img_element",
-            "offset": 44,
-            "parent": "paragraph_element"
-          },
-          "img_src": {
-            "content": "",
-            "offset": 48,
-            "parent": "img_element",
-            "id": "img_src"
-          },
           "header_element": {
             "start": {
               "row": 9,
@@ -182,8 +219,7 @@
               "row": 9,
               "col": 22,
               "index": 168
-            },
-            "id": "header_element"
+            }
           },
           "header_content": {
             "start": {
@@ -195,8 +231,7 @@
               "row": 9,
               "col": 17,
               "index": 163
-            },
-            "id": "header_content"
+            }
           },
           "header_start_tag": {
             "start": {
@@ -208,8 +243,7 @@
               "row": 9,
               "col": 9,
               "index": 155
-            },
-            "id": "header_start_tag"
+            }
           },
           "header_end_tag": {
             "start": {
@@ -221,15 +255,22 @@
               "row": 9,
               "col": 22,
               "index": 168
-            },
-            "id": "header_end_tag"
+            }
           },
-          "paragraph_content": {
+          "img_src": {
+            "content": "",
+            "offset": 15,
+            "parent": "img_element"
+          },
+          "img_element": {
+            "start": {
+              "row": 12,
+              "col": 1,
+              "index": 171
+            },
+            "collapsed": true,
             "line": true,
-            "id": "paragraph_content",
-            "content": "spread out over\n      multiple lines",
-            "offset": 8,
-            "parent": "paragraph_element"
+            "content": "\n    <img src=\"\" />"
           },
           "paragraph_element": {
             "start": {
@@ -239,8 +280,14 @@
             },
             "collapsed": true,
             "line": true,
-            "id": "paragraph_element",
             "content": "    <p>\n\n    </p>"
+          },
+          "paragraph_content": {
+            "line": true,
+            "multiline": true,
+            "content": "      This is a paragraph element\n      that can be spread out over\n      multiple lines",
+            "offset": 8,
+            "parent": "paragraph_element"
           }
         }
       }
@@ -262,6 +309,29 @@
     // a general selector function
     function $() {
       return utils.$.apply(utils.$, arguments);
+    }
+
+    // performs the oxford comma
+    function $oxford(items, conjunction) {
+      var total = items.length;
+
+      // determine the best
+      if (total === 1) return items.join('');else if (total == 2) return items.join(" " + conjunction + " ");
+
+      // return the result
+      else {
+          var last = items.pop();
+          return items.join(', ') + ", " + conjunction + " " + last;
+        }
+    }
+
+    // pluralizes a word
+    function $plural(count, single, plural, none) {
+      var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
+
+      var value = Math.abs(count);
+      var message = value === 1 ? single : value > 1 ? plural ? plural : single + "s" : none || plural;
+      return message.replace(delimeter, count);
     }
 
     // shared functions
@@ -322,10 +392,16 @@
     }
 
     // gets a zone
-    function $getZone(file, id, asDom, strict) {
+    function $getZone(file, id) {
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
       var html = utils.getZoneContent(file, id);
-      return asDom ? $html(html, { strict: strict !== false }) : html;
+      if (options.trim !== false) html = _.trim(html);
+      return options.toDom || options.asDom ? $html(html) : html;
     }
+
+    // 
+    var $noop = {};
 
     // creates a validator function
     function $validator(key, options) {
@@ -351,14 +427,22 @@
         // if there was an error
         try {
 
-          // handle error cases
+          // handle reverting
+          if (options.revertOnError) $revertMessage();
+
+          // doesn't want to do anything with validation
+          if (result === $noop) return false;
+
+          // check for messages
           if (exception && options.error) options.error(result);
 
           // handle failure
-          else if (options.fail) options.fail(result);
-
-          // handle reverting
-          if (options.revertOnError) $revertMessage();
+          else if (_.isString(result) && options.fail) options.fail(result);
+        }
+        // extreme case
+        catch (ex) {
+          $hideHint();
+          $revertMessage();
         } finally {
           return false;
         }
@@ -440,13 +524,9 @@
         var len = Math.min(7, content.length);
         var current = content.substr(0, len).toLowerCase();
         var base = 'welcome'.substr(0, len).toLowerCase();
-        if (current === base) {
-          return 'Change the greeting to something different';
-        }
+        if (current === base) return 'Change the greeting to something different';
 
-        if (content.length < 5) {
-          return 'Enter a longer greeting';
-        }
+        if (content.length < 5) return 'Enter a longer greeting';
 
         // no need for hint
         $hideHint();
@@ -463,22 +543,82 @@
 
     });
 
-    $define('verifyImageSrc', { init: true }, function () {
-      return $validate(function () {
+    $validator('verifyImageSrc', {
+      init: true,
+      delay: 300,
+
+      validate: function validate() {
 
         // get the current entered value
-        var content = $getZone('/index.html', 'image_path');
-        content = _.trim(content);
+        var content = $getZone('/index.html', 'image_path', { trim: false });
 
         // make sure it's okay
-        if (content !== $state.uploadedFileName) {
-          $showHint('Enter in the name of the image you uploaded');
-          return false;
+        if (content !== $state.uploadedFileName) return "Enter path to your image `" + $state.uploadedFileName + "` of the image you uploaded";
+      },
+
+      fail: function fail(reason) {
+        $showHint(reason);
+      },
+
+      success: function success() {
+        $hideHint();
+        $speakMessage('Great! You should see your image displayed in the preview now!');
+      }
+
+    });
+
+    $validator('verifyParagraphContent', {
+
+      init: true,
+      delay: 1000,
+      revertOnError: true,
+
+      validate: function validate() {
+        var REQUIRED_LINE_COUNT = 5;
+
+        // container for hints
+        var hint = [];
+
+        // get the current entered value
+        var content = $getZone('/index.html', 'paragraph_element', { asDom: true });
+
+        // make sure they're only using text
+        if (!content) {
+          $hideHint();
+          return $noop;
         }
 
+        // make sure they're only using text
+        var children = content.children('*');
+        if (children.length !== 1) return 'Only use text lines in this example';
+
+        // check for of the line data
+        var lines = _.trim(content.text()).split(/\n/g);
+        var tooShort = [];
+        _.each(lines, function (line, i) {
+          if (_.trim(line).length < 5) tooShort.push(index + 1);
+        });
+
+        // there was some problems with the lines
+        if (tooShort.length > 0) hint.push("Add more characters to " + $plural(tooShort.length, 'line') + " " + $oxford(tooShort, 'and'));
+
+        // make sure there are enough lines
+        var more = REQUIRED_LINE_COUNT - lines.length;
+        if (more > 0) hint.push("Add " + more + " more " + $plural(more, 'line'));
+
+        // if there's any messages, return them
+        if (hint.length !== 0) return hint.join('\n\n');
+      },
+
+      fail: function fail(reason) {
+        $showHint(reason);
+      },
+
+      success: function success() {
         $hideHint();
-        $speakMessage('Perfect! You can see that the image is showing!');
-      });
+        $speakMessage('Looks great!');
+      }
+
     });
 
     // checks that they've added enough list items to a zone

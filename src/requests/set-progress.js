@@ -10,9 +10,6 @@ export async function handle(socket, session, data = { }) {
 	const { user } = session;
 	const { projectId, progress } = data;
 
-	console.log("DONT FORGET");
-	return socket.ok(event, { success: true });
-
 	try {
 		// make sure they can access this project
 		const access = await getProjectAccess(projectId, user);

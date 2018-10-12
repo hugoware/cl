@@ -90,7 +90,11 @@ function setupEvent(instance) {
 
 	// if this wants to be executed immediately
 	if (action.init === true)
-		try { action(); } catch(ex) { /* don't crash */ }
+		try { 
+			setTimeout(action, 250); 
+		} catch(ex) {
+			/* don't crash */
+		}
 
 	// wait for this event
 	instance.__disposeListener = listen(event, instance.onValidation);

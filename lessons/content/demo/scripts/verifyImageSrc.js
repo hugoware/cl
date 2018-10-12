@@ -1,18 +1,26 @@
-$define('verifyImageSrc', { init: true }, () => {
-  return $validate(() => {
+
+$validator('verifyImageSrc', { 
+  init: true,
+  delay: 300,
+
+  validate: () => {
 
     // get the current entered value
-    let content = $getZone('/index.html', 'image_path');
-    content = _.trim(content);
+    const content = $getZone('/index.html', 'image_path', { trim: false });
 
     // make sure it's okay
-    if (content !== $state.uploadedFileName) {
-      $showHint('Enter in the name of the image you uploaded');
-      return false;
-    }
+    if (content !== $state.uploadedFileName)
+      return `Enter path to your image \`${$state.uploadedFileName}\` of the image you uploaded`;
 
+  },
+
+  fail: reason => {
+    $showHint(reason);
+  },
+
+  success: () => {
     $hideHint();
-    $speakMessage('Perfect! You can see that the image is showing!');
+    $speakMessage('Great! You should see your image displayed in the preview now!')
+  }
 
-  });
 });

@@ -54,6 +54,11 @@ export default class ManagedEditor {
 		listen('slide-changed', this.onSlideChanged);
 		listen('set-cursor', this.onSetCursor);
 
+		// prevent auto complete events when
+		// an entry is not allowed - check if there's
+		// a better way to handle this
+		this.editor.setOptions({ enableBasicAutocompletion: false, enableLiveAutocompletion: false });
+
 		// setup event handlers
 		this.editor.commands.on('exec', this.onExecuteCommand);
 		this.editor.on('mousedown', () => this.isMouseDown = true);
@@ -85,15 +90,20 @@ export default class ManagedEditor {
 	// exact same coordinates used by setRange - I don't know why
 	/** changes the cursor for a file */
 	onSetCursor = cursor => {	
-		const { start, end } = parseCursorRequest(this, cursor);
+		const result = parseCursorRequest(this, cursor);
+		if (!result) return;
+
+		// check for the range
+		const { start, end } = result;
 		if (!(start || end)) return;
 
+		// set the cursor position
 		setTimeout(() => {
 			if (start && end)
 				this.setRange(start, end);
 			else if (start)
-				this.setCursor(start.row + 1, start.column);
-		}, 100);
+				this.setCursor(start.row, start.column);
+		}, 200);
 	}
 
 	// handle command requests
@@ -145,7 +155,7 @@ export default class ManagedEditor {
 		const canEditFile = $state.lesson.canEditFile(instance.file.path);
 		
 		// without zones, just use the file status
-		if (!map)
+		if (!(map && canEditFile))
 			return !canEditFile ? cancelEvent(event) : true;
 
 		// gather up insertion information
@@ -157,9 +167,11 @@ export default class ManagedEditor {
 		const isInsert = /insert/i.test(command.name);
 		const isBackspace = !isInsert && /backspace/i.test(command.name);
 		const isDelete = !isBackspace && /del/i.test(command.name);
+		const isComment = !isDelete && /comment/i.test(command.name);
 		const test = isInsert ? map.canInsert
 			: isBackspace ? map.canBackspace
 			: isDelete ? map.canDelete
+			: isComment ? map.canToggleComment
 			: null;
 		
 		// not sure what the request is
@@ -183,21 +195,32 @@ export default class ManagedEditor {
 
 		// if it's allowed, apply the change and then update
 		if (allowed) {
-			
-			// perform the action in the zonemap 
-			map.modify(
+			this.editor.setOptions({ enableBasicAutocompletion: true, enableLiveAutocompletion: true });
+
+			// since this is allowed, we're going to execute the command first
+			// so we can compare the before and after and check if there were
+			// additional characters added -- for example, a new line that also
+			// performs and auto indent
+			const before = this.activeInstance.content;
+			command.exec(this.editor, event.args);
+
+			// when inserting new characters, check and see
+			// if this has extra characters that are not reported
+			// by the command args
+			const after = this.activeInstance.content;
+			const delta = after.length - before.length;
+
+			// perform the action in the zonemap
+			map.setContent(after);
+			map.shiftZones(
 				zone,
 				selection.start.row, selection.start.column,
 				selection.end.row, selection.end.column,
-				isInsert ? event.args : null,
-				isDelete, isBackspace
+				delta
 			);
 
 			// update all zones
-			this.syncZones(instance);
-			
-			// apply the change to the editor
-			command.exec(this.editor, event.args);
+			this.syncZones(instance);	
 		}
 
 		// always cancel the event since it will be
@@ -343,7 +366,6 @@ export default class ManagedEditor {
 	 * @param {number} col the column to focus at
 	*/
 	setCursor = (row, col) => {
-		console.log('cursor:', row, col);
 		this.editor.focus();
 		this.editor.gotoLine(row, col, true);
 		this.editor.renderer.scrollToRow(row);
@@ -355,7 +377,6 @@ export default class ManagedEditor {
 	 * @param {Position} end the ending selection range
 	 */
 	setRange = (start, end) => {
-		console.log('range:', start, end);
 		const range = new Range(start.row, start.column, end.row, end.column);
 		
 		// create the range and set the position
@@ -427,18 +448,22 @@ function parseCursorRequest(instance, cursor) {
 		if (!zone || (zone && !zone.start))
 			return;
 
+		// determine where to work from
+		const startAt = zone.start;
+		const endAt = zone.end || startAt;
+
 		// place the cursor at the end of the zone
 		if (cursor.at === 'end')
-			start = { row: zone.end.row, column: zone.end.col };
+			start = { row: endAt.row, column: endAt.col };
 
 		// place the cursor at the start of the zone
 		else if (cursor.at === 'start')
-			start = { row: zone.start.row, column: zone.start.col };
+			start = { row: startAt.row, column: startAt.col };
 
 		// select the entire zone range
 		else {
-			start = { row: zone.start.row, column: zone.start.col };
-			end = { row: zone.end.row, column: zone.end.col };
+			start = { row: startAt.row, column: startAt.col };
+			end = { row: endAt.row, column: endAt.col };
 		}
 
 	}
