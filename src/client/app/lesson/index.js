@@ -82,13 +82,8 @@ export default class Lesson {
 			const path = id.replace(/\$/g, '.');
 			const zones = lesson.getZones(path)
 
-			// create the zone info
-			let content;
-			const existing = _.find(lesson.instance.modified, { path });
-			if (existing) content = existing.content;
-			else content = await $lfs.read(path);
-
-			// load the map
+			// get the zone map
+			const content = await $lfs.read(path);
 			lesson.maps[path] = ZoneMap.create(content, zones);
 		}
 

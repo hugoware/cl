@@ -201,8 +201,22 @@ const $state = {
 					// hide speech options
 				}
 
+				// populate modified files
+				let modified = _.get(project, 'progress.modified', [ ]);
+				if (!_.isArray(modified)) modified = [ ];
+
+				// update all local files to use the current
+				// lesson modified versions
+				for (let i = 0; i < modified.length; i++) {
+					const file = modified[i];
+					console.log('repl', file);
+					await $lfs.write(file.path, file.content);
+				}
+
 				// load the lesson info
 				$state.lesson = await Lesson.load(project);
+
+				// ready to go
 				resolve();
 			}
 			// no lesson to perform

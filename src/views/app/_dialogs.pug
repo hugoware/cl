@@ -181,26 +181,36 @@
 				.clear Cancel
 
 +template('dialog-share-project')
-	.content(dialog-width='600').share-project
+	.content(dialog-width='600').share-project.multiview
 	
-		.title Share Project
-		.message Let your friends and family try out your project from their own devices
+		.view.unsent
+			.title Share Project
+			.message Let your friends and family try out your project from their own devices
 
-		.form
-			label
-				.select-all Select All
-				span People
-				.people
-					.list
-
+			.form
 				label
-					span Message
-					.ui-text-input.full.multiline
-						textarea.description Check out my cool project! It's really neat!
+					.select-all Select All
+					span People
+					.people
+						.list
 
-		.actions
-			.action.confirm.primary Share Project
-			.action.cancel Cancel
+					label
+						span Message
+						.ui-text-input.full.multiline
+							textarea.description Check out my cool project! It's really neat!
+		
+			.actions
+				.action.confirm.primary.share Share Project
+				.action.cancel Cancel
+
+		.view.sent
+			.title Project Sent!
+			.message The link to your project has been sent to the selected people!
+			.checkmark(icon='checkmark')
+
+			.actions
+				.action.cancel Close
+
 
 +template('share-project-item')
 	.person

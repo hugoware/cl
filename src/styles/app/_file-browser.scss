@@ -15,8 +15,20 @@ $action-item-icon-size: $action-item-height * 0.6;
 	color: #fff;
 	cursor: pointer;
 	overflow: hidden;
+	position: relative;
 
 	font-size: $file-browser-font-size;
+
+	&:before {
+		content: ' ';
+		display: block;
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		width: 5px;
+		background: $file-browser-background;
+	}
 
 	// don't allow text selection
 	-moz-user-select: -moz-none;
@@ -29,7 +41,7 @@ $action-item-icon-size: $action-item-height * 0.6;
 	@for $i from 1 through 35 {
 		&.depth-#{$i} > {
 			.item, .empty {
-				padding-left: (10px * $i) + 30px;
+				left: (10px * $i);
 			}
 			
 			.children:before {
@@ -46,23 +58,14 @@ $action-item-icon-size: $action-item-height * 0.6;
 
 	.item {
 		padding: 0 0 0 30px;
-		
-		&:before {
-			content: ' ';
-			display: block;
-			position: absolute;
-			right: 0;
-			width: 20px;
-			height: $file-browser-item-height;
-			@include gradient(rgba($file-browser-background, 0), rgba($file-browser-background, 1), 90deg);
-		}
+		position: relative;
 		
 		&:hover {
 			background: rgba($file-browser-item-selection-color, 0.1);
 		}
 	}
 
-	&.is-folder .item {
+	&.is-folder > .item {
 		padding: 0 0 0 43px;
 	}
 

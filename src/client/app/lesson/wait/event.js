@@ -51,38 +51,57 @@ function setupEvent(instance) {
 	// find the validation action
 	const event = commands.event[0];
 	const validator = commands.event[1];
-	const debounce = 0 | (commands.event[2] || 0);
 	const action = $state.lesson.getValidator(validator);
+	const debounce = (0 | (commands.event[2] || 0)) || action.debounce;
+	const hasDelay = _.isNumber(action.delay);
 
 	// validation process
 	const validate = args => action.apply($state.lesson.instance, args);
+	const cancel = () => {
+		clearTimeout(instance.__delay);
+		delete instance.__delay;
+	};
 	const finish = success => {
+		cancel();
 		if (success && action.success) action.success();
 		onSuccess(success); 
 	};
+
 	
 	// handles validation
 	instance.onValidation = (...args) => {
-		clearTimeout(instance.__delay);
 		clearTimeout(instance.__debounce);
 
 		// perform with a delay to allow anything to catch up
 		instance.__debounce = setTimeout(() => {
 			let success = validate(args);
 
+			// check if anything needs to be done
+			if (!!success === !!instance.success)
+				return;
+
+			// cache the result
+			instance.success = success;
+
 			// failures are reported right away
 			if (!success)
 				return finish(false);
 
 			// if there's a delay, that means we want to wait to see if
-			// the validation is still true after the required time limit
-			if (_.isNumber(action.delay)) {
+			// the validation is still true after the required time limite;
+			if (hasDelay) {
+
+				// already pending
+				if ('__delay' in instance) return;
+
+				// save the success delay
 				instance.__delay = setTimeout(() => {
 					success = validate(args);
 					finish(success);
 				}, action.delay);
+
 			}
-			// give back the result right away
+			// otherwise, the return is immediate
 			else finish(success);
 
 		}, debounce);

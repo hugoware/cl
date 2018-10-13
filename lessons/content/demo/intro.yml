@@ -109,8 +109,6 @@
         paragraph_element: hide
         paragraph_content: show
 
-    cursor: paragraph_content
-
 - slide:
     mode: popup
     content: |
@@ -182,7 +180,7 @@
     cursor: img_src
 
     waitFor:
-      - ::editing(verifyImageSrc)
+      - ::event(modify-file, verifyImageSrc)
 
 - slide:
     mode: popup

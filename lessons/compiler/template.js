@@ -144,8 +144,10 @@
         }
 
         // validation passed
-        if (_.isNil(result))
+        if (_.isNil(result)) {
+          if (options.hideHintOnSuccess) $hideHint();
           return true;
+        }
 
         // if there was an error
         try {
@@ -159,8 +161,10 @@
             return false;
 
           // check for messages
-          if (exception && options.error)
+          if (exception && options.error) {
+            console.warn('validation error:', key, ex);
             options.error(result);
+          }
           
           // handle failure
           else if (_.isString(result) && options.fail)
@@ -169,6 +173,7 @@
         }
         // extreme case
         catch(ex) {
+          console.warn('validation error:', key, ex);
           $hideHint();
           $revertMessage();
         }

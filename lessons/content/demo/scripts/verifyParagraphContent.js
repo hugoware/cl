@@ -6,6 +6,8 @@ $validator('verifyParagraphContent', {
   delay: 1000,
   revertOnError: true,
 
+  hideHintOnSuccess: true,
+
   validate: () => {
     const REQUIRED_LINE_COUNT = 5;
 
@@ -31,7 +33,7 @@ $validator('verifyParagraphContent', {
     const tooShort = [ ];
     _.each(lines, (line, i) => {
       if (_.trim(line).length < 5)
-        tooShort.push(index + 1);
+        tooShort.push(i + 1);
     });
 
     // there was some problems with the lines
@@ -43,9 +45,12 @@ $validator('verifyParagraphContent', {
     if (more > 0)
       hint.push(`Add ${more} more ${$plural(more, 'line')}`);
 
+    console.log('hint', hint);
+
     // if there's any messages, return them
     if (hint.length !== 0)
       return hint.join('\n\n');
+
 
   },
 

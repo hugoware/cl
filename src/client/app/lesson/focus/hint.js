@@ -23,6 +23,7 @@ export default class HintDisplay extends Component {
 
 		// always looking for the cursor
 		this.selector = evaluateSelector('.ace_editor .ace_cursor');
+		this.isHidingHint = true;
 		
 		// handle refreshable events
 		window.addEventListener('resize', this.onAutoRefresh);
@@ -54,14 +55,29 @@ export default class HintDisplay extends Component {
 	}
 
 	// handles showing the hint
-	onShowHint = (options) => {
+	onShowHint = options => {
 		
 		// hint is not required
 		if (options === null)
 			return this.onHideHint();
 
-		// showing for the first time
-		if (this.isHidingHint && !this.selector.isMissing)
+		// try and refresh
+		if (this.selector.isMissing) {
+
+			// try to find the selector again
+			this.selector.refresh();
+
+			// if it's still missing, don't show anything
+			if (this.selector.isMissing) {
+				this.onHideHint();
+				return;
+			}
+			// shift to the correct location
+			else this.refreshPosition();
+		}
+
+		// if it's hidden, then display
+		if (this.isHidingHint)
 			setTimeout(() => {
 				this.refreshPosition();
 				this.addClass('show');
@@ -69,7 +85,7 @@ export default class HintDisplay extends Component {
 		
 		// make sure to activate the hint even if
 		// the message itself didn't change
-		this.isHidingHint = !this.selector.isMissing;
+		this.isHidingHint = false;
 
 		// already the same message
 		if (options.message === this._activeMessage)
@@ -83,6 +99,7 @@ export default class HintDisplay extends Component {
 
 	// handles hiding the hint from view
 	onHideHint = () => {
+		if (this.isHidingHint) return;
 		this.isHidingHint = true;
 		this.removeClass('show');
 	}

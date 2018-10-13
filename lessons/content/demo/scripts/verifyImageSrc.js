@@ -2,15 +2,16 @@
 $validator('verifyImageSrc', { 
   init: true,
   delay: 300,
+  hideHintOnSuccess: true,
 
   validate: () => {
 
     // get the current entered value
-    const content = $getZone('/index.html', 'image_path', { trim: false });
+    const content = $getZone('/index.html', 'img_src', { trim: false });
 
     // make sure it's okay
-    if (content !== $state.uploadedFileName)
-      return `Enter path to your image \`${$state.uploadedFileName}\` of the image you uploaded`;
+    if (content !== `/${$state.uploadedFileName}`)
+      return `Enter the image path \`${$state.uploadedFileName}\``;
 
   },
 

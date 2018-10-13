@@ -76,7 +76,6 @@
             "paragraph_content": "show"
           }
         },
-        "cursor": "paragraph_content",
         "type": "slide",
         "speak": ["You'll notice that even though the text appears on multiple lines, it shows up as a single line in the preview"]
       }, {
@@ -140,7 +139,7 @@
           "remove": ["upload-file-dialog"]
         },
         "cursor": "img_src",
-        "waitFor": ["::editing(verifyImageSrc)"],
+        "waitFor": ["::event(modify-file, verifyImageSrc)"],
         "type": "slide",
         "speak": ["Type in the name of the image file - In this case, /%uploadedFileName%"]
       }, {
@@ -422,7 +421,10 @@
         }
 
         // validation passed
-        if (_.isNil(result)) return true;
+        if (_.isNil(result)) {
+          if (options.hideHintOnSuccess) $hideHint();
+          return true;
+        }
 
         // if there was an error
         try {
@@ -434,13 +436,17 @@
           if (result === $noop) return false;
 
           // check for messages
-          if (exception && options.error) options.error(result);
+          if (exception && options.error) {
+            console.warn('validation error:', key, ex);
+            options.error(result);
+          }
 
           // handle failure
           else if (_.isString(result) && options.fail) options.fail(result);
         }
         // extreme case
         catch (ex) {
+          console.warn('validation error:', key, ex);
           $hideHint();
           $revertMessage();
         } finally {
@@ -546,14 +552,15 @@
     $validator('verifyImageSrc', {
       init: true,
       delay: 300,
+      hideHintOnSuccess: true,
 
       validate: function validate() {
 
         // get the current entered value
-        var content = $getZone('/index.html', 'image_path', { trim: false });
+        var content = $getZone('/index.html', 'img_src', { trim: false });
 
         // make sure it's okay
-        if (content !== $state.uploadedFileName) return "Enter path to your image `" + $state.uploadedFileName + "` of the image you uploaded";
+        if (content !== "/" + $state.uploadedFileName) return "Enter the image path `" + $state.uploadedFileName + "`";
       },
 
       fail: function fail(reason) {
@@ -572,6 +579,8 @@
       init: true,
       delay: 1000,
       revertOnError: true,
+
+      hideHintOnSuccess: true,
 
       validate: function validate() {
         var REQUIRED_LINE_COUNT = 5;
@@ -596,7 +605,7 @@
         var lines = _.trim(content.text()).split(/\n/g);
         var tooShort = [];
         _.each(lines, function (line, i) {
-          if (_.trim(line).length < 5) tooShort.push(index + 1);
+          if (_.trim(line).length < 5) tooShort.push(i + 1);
         });
 
         // there was some problems with the lines
@@ -605,6 +614,8 @@
         // make sure there are enough lines
         var more = REQUIRED_LINE_COUNT - lines.length;
         if (more > 0) hint.push("Add " + more + " more " + $plural(more, 'line'));
+
+        console.log('hint', hint);
 
         // if there's any messages, return them
         if (hint.length !== 0) return hint.join('\n\n');

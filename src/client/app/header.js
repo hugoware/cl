@@ -67,18 +67,9 @@ export default class Header extends Component {
 
 	// open a new window with the project
 	onClickNewWindow = () => {
-		const hasModified = $state.hasUnsavedFiles();
-
-		// if modified, then show a confirmation
-		if (hasModified) {
-			this.broadcast('open-dialog', 'unsaved-changes', {
-				onlyHideOnSaveChanges: true,
-				reason: 'preview',
-				confirm: () => $state.openProjectPreviewWindow()
-			});
-		}
-		else $state.openProjectPreviewWindow();
-
+		this.verifyUnsaved($state.openProjectPreviewWindow, {
+			onlyHideOnSaveChanges: true
+		});
 	}
 
 	// show the project settings dialog
@@ -92,7 +83,11 @@ export default class Header extends Component {
 	onClickShareProject = () => {
 		if (!this.project) return;
 		const { id } = this.project;
-		this.broadcast('open-dialog', 'share-project', { id });
+		
+		// check for unsaved changes
+		this.verifyUnsaved(() => {
+			this.broadcast('open-dialog', 'share-project', { id });
+		});
 	}
 
 	// handles when a project name changes
@@ -105,6 +100,23 @@ export default class Header extends Component {
 	// allow sharing now
 	onFinishLesson = () => {
 		this.addClass('is-finished');
+	}
+
+	// shows the dialog to verify doing an
+	// action before performing an action
+	verifyUnsaved = (action, options) => {
+		const hasModified = $state.hasUnsavedFiles();
+
+		// if modified, then show a confirmation
+		if (hasModified) {
+			options = _.defaults({ }, options, {
+				reason: 'preview',
+				confirm: action
+			});
+
+			this.broadcast('open-dialog', 'unsaved-changes', options);
+		}
+		else action();
 	}
 
 }

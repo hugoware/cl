@@ -17,7 +17,10 @@ export default class ShareProjectDialog extends Dialog {
 			ui: {
 				error: '.error',
 				selectAll: '.select-all',
-				list: '.list'
+				list: '.list',
+
+				unsentView: '.view.unsent',
+				sentView: '.view.sent'
 			}
 		});
 
@@ -30,11 +33,11 @@ export default class ShareProjectDialog extends Dialog {
 
 		this.on('click', '.person', this.onSelectPerson);
 		this.ui.selectAll.on('click', this.onSelectAll);
-
 	}
 
 	onActivate = data => {
 		this.ui.selectAll.text(MESSAGE_SELECT_ALL);
+		this.setView(this.ui.unsentView);
 
 		this.people = [
 			{ id: '1', name: 'Dad', type: 'mobile' },
@@ -64,9 +67,19 @@ export default class ShareProjectDialog extends Dialog {
 		delete this.people;
 	}
 
-	// perform the send request
-	onConfirm = async () => {
-		
+
+	// set the sent view
+	onConfirm = () => {
+		this.busy = true;
+		setTimeout(() => {
+			this.busy = false;
+			this.setView(this.ui.sentView);
+		}, 500);
+	}
+
+	// after sending, closes the dialog
+	onOK = () => {
+		this.hide();
 	}
 
 	// handles when selecting a person
@@ -89,6 +102,13 @@ export default class ShareProjectDialog extends Dialog {
 
 		// update the dialog
 		this.refresh();
+	}
+
+	// sets the current view
+	setView = view => {
+		this.ui.unsentView.removeClass('current');
+		this.ui.sentView.removeClass('current');
+		view.addClass('current');
 	}
 
 	// update the component state

@@ -12,12 +12,14 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 	.actions {
 		height : $workspace-action-bar-height;
 		padding: 0 $workspace-action-padding;
+		white-space: nowrap;
 
 		.action {
 			margin: $workspace-action-top $workspace-action-margin 0 0;
 			background: $workspace-action-background-color;
 			height: $workspace-action-height;
 			padding: 0 3px 0 8px;
+			white-space: nowrap;
 
 			@include clearfix();
 
@@ -42,12 +44,21 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 			padding: 0 $workspace-action-padding;
 			line-height: $workspace-action-height;
 			font-size: 15px;
-			float: left;
+			// float: left;
+			display: inline-block;
+		}
+
+		.shortcut {
+			float: right;
 		}
 
 		.icon {
-			float: left;
-			@include uniform_size($workspace-action-icon-size);
+			display: inline-block;
+			// background: #f00;
+			// float: left;
+			// @include uniform_size($workspace-action-icon-size);
+			position: relative;
+			top: -3px;
 			svg {
 				@include uniform_size($workspace-action-icon-size);
 				top: ($workspace-action-height - $workspace-action-icon-size) / 2;

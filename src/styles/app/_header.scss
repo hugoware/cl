@@ -1,6 +1,7 @@
 
 
 #header {
+	white-space: nowrap;
 
 	// icons
 	&.is-type-web .web,
@@ -34,7 +35,7 @@
 	}
 
 	&.is-lesson .lesson {
-		display: block;
+		display: inline-block;
 	}
 
 	.type div {
@@ -126,7 +127,7 @@
 	.settings .tip { right: 60px; }
 
 	.lesson {
-		float: left;
+		// float: left;
 		@include align_vertical($header-height * 0.5);
 		margin: (($header-height * 0.5) / 2) 0 0 40px;
 		padding: 0 15px;
@@ -139,7 +140,8 @@
 	}
 	
 	.icon {
-		float: left;
+		// float: left;
+		display: inline-block;
 		position: relative;
 		top: ($header-height * 0.4) / 2;
 	}
@@ -157,7 +159,8 @@
 		font-weight: 600;
 		position: relative;
 		left: 15px;
-		float: left;
+		display: inline-block;
+		// float: left;
 	}
 
 }
