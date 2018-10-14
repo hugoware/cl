@@ -11,20 +11,36 @@
 		display: block !important;
 	}
 
+	.actions .action {
+		display: none;
+	}
+
+	@at-root {
+		.is-home #header .actions .sign-out {
+			display: block;
+		}
+
+		.is-project #header.has-project .actions {
+			.open-in-window, .settings, .share-project {
+				display: block;
+			}
+		}
+	}
+
 	// option access
 	&.is-lesson {
 		.open-in-window, .settings, .share-project {
-			display: none;
+			display: none !important;
 		}
 	}
 
 	&.is-lesson.is-finished {
 		.open-in-window, .share-project {
-			display: block;
+			display: block !important;
 		}
 	}
 
-	.actions, .project-data {
+	.project-data {
 		display: none;
 	}
 

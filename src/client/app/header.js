@@ -16,6 +16,7 @@ export default class Header extends Component {
 				newWindow: '.open-in-window',
 				shareProject: '.share-project',
 				projectSettings: '.settings',
+				signOut: '.sign-out',
 			}
 		});
 
@@ -30,6 +31,13 @@ export default class Header extends Component {
 		this.ui.projectSettings.on('click', this.onClickProjectSettings);
 		this.ui.newWindow.on('click', this.onClickNewWindow);
 		this.ui.shareProject.on('click', this.onClickShareProject);
+		this.ui.signOut.on('click', this.onSignOut);
+	}
+
+	// log out of the app
+	onSignOut = () => {
+		this.xhr({ url: '/signout', method: 'post' })
+			.then(() => window.location = '/');
 	}
 
 	// clear the view
@@ -61,6 +69,7 @@ export default class Header extends Component {
 
 	// clear the header data
 	onDeactivateProject = () => {
+		this.removeClass('is-lesson is-finished');
 		this.removeClass('has-project');
 		delete this.project;
 	}

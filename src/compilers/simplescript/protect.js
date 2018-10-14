@@ -17,7 +17,7 @@ export default function protectCode(code, options = { }) {
 	} = options;
 
 	// parse the tree first
-	const tree = $esprima.parseModule(code, { });
+	const tree = $esprima.parseModule(code, { tolerant: true });
 
 	// apply safety features
 	walkTree(tree, protectNode, { applyAsync, protectBlockedUI });

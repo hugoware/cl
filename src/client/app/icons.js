@@ -25,6 +25,7 @@ import gifIcon from '../../icons/icon-gif.svg';
 import jpgIcon from '../../icons/icon-jpg.svg';
 import svgIcon from '../../icons/icon-svg.svg';
 import checkmarkIcon from '../../icons/checkmark.svg';
+import signOutIcon from '../../icons/sign-out.svg';
 
 import moveItemsIcon from '../../icons/icon-move-items.svg';
 import trashIcon from '../../icons/icon-trash.svg';
@@ -153,7 +154,9 @@ const $icons = {
 	jpgIcon,
 	gifIcon,
 	unknownIcon,
+
 	checkmarkIcon,
+	signOutIcon,
 
 	// avatars
 	defaultAvatarIcon,

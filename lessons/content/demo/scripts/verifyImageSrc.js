@@ -21,7 +21,7 @@ $validator('verifyImageSrc', {
 
   success: () => {
     $hideHint();
-    $speakMessage('Great! You should see your image displayed in the preview now!')
+    $speakMessage('Great! You should see your image displayed in the preview now!', 'happy');
   }
 
 });

@@ -3,12 +3,10 @@ extends _template
 block title
 	| CodeLab
 
-block content
-	script(type='text/javascript').
-		document.body.className = 'loading';
+block head
+	link(rel='stylesheet', type='text/css', href='/__codelab__/site/index.css')
 
-	.loading
-		h1 Loading
+block content
 
 	#error(style='display: none;') 
 		strong Login error:
@@ -213,5 +211,5 @@ block content
 		include _footer
 
 block scripts
-	script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyALR3vJM7iMzRxUeVLHIZMWGgc8qB8FLb8')
+	//- script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyALR3vJM7iMzRxUeVLHIZMWGgc8qB8FLb8')
 	script(type='text/javascript' src='/__codelab__/site.js')

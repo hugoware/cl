@@ -100,6 +100,7 @@ export default class HomeView extends View {
 	// decides the best view to display
 	setDefaultView = () => {
 		this.setView('projects');
+		// this.setView('lessons');
 	}
 
 	// handle errors

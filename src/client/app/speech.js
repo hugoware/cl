@@ -11,10 +11,7 @@ if (available)
 		$speech.ready = _.some($speech.voices);
 
 		// set the default voice
-		$speech.configure({
-			voice: /google us english/i,
-			pitch: 1
-		});
+		$speech.configure({ style: 'female' });
 
 		// trigger anything that might be waiting
 		if ($speech.init.pending)
@@ -55,9 +52,14 @@ function next() {
 	// create the speech
 	try {
 		const talk = new SpeechSynthesisUtterance();
-		talk.lang = 'en-US';
-		talk.voice = $speech.config.voice;
-		talk.pitch = $speech.config.pitch;
+		const voice = getVoice($speech.config.style);
+
+		// couldn't find a voice to use, just skip
+		if (!voice) return;
+
+		// set the voice params
+		talk.voice = voice;
+		talk.lang = voice.lang;
 		talk.rate = 1;
 		talk.text = command;
 		
@@ -117,17 +119,6 @@ const $speech = {
 	/** updates the configuration for the voice */
 	configure: options => {
 		_.assign($speech.config, options);
-
-		// set the voice to use
-		if (options.voice) {
-
-			// finds the preferred voice
-			$speech.voice = _.filter($speech.voices, voice => {
-				if (voice.name.match(options.voice))
-					$speech.config.voice = voice;
-			});
-		}
-
 	},
 
 	/** stops the current speech attempt */
@@ -139,10 +130,14 @@ const $speech = {
 				broadcast('speech-ended', $speech.active)
 		}
 		// clean up
-		finally {  
+		finally {
 			delete $speech.active;
 			$speech.synth.cancel();
 		}
+
+		return new Promise(resolve => {
+			setTimeout(() => resolve(), 10);
+		});
 	},
 
 
@@ -190,6 +185,34 @@ const $speech = {
 
 };
 
+// tries to find the preferred voice
+function getVoice(type) {
+	let fallback1;
+	let fallback2;
+
+	// get the voice set preferred
+	const prefer = type === 'female'
+		? [ /google us/i, /samantha/i, /victoria/i ]
+		: [ /google uk english male/i, /alex/i, /fred/i ];
+
+	// check each voice
+	for (let i = 0, total = $speech.voices.length; i < total; i++) {
+		const voice = $speech.voices[i];
+
+		// if it's the primary match, then we're done
+		if (voice.name.match(prefer[0]))
+			return voice;
+
+		// check alt options
+		if (voice.name.match(prefer[1]))
+			fallback1 = voice;
+		else if (voice.name.match(prefer[2]))
+			fallback2 = voice;
+	}
+
+	// didn't find primary, return something
+	return fallback1 || fallback2;
+}
 
 // stop the text
 listen('window-unload', () => {

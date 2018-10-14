@@ -16,14 +16,16 @@ const $sounds = new Howl({
 
 // handles playing an audio file
 function play(key, options = { }) {
-	try {
-		const id = $sounds.play(key);
-		if (_.isNumber(options.balance))
-		$sounds.stereo(options.balance, id);
-	}
-	catch (err) {
+	// hack - seems like sounds can conflict with speech
+	setTimeout(() => {
+		try {
+			const id = $sounds.play(key);
+			if (_.isNumber(options.balance))
+			$sounds.stereo(options.balance, id);
+		}
 		// sound errors should never break the app
-	}
+		catch (err) { }
+	});
 }
 
 /** plays a notification noise 

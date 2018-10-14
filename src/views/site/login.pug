@@ -1,0 +1,27 @@
+extends _template
+
+block title
+	| CodeLab
+
+block head
+	link(rel='stylesheet', type='text/css', href='/__codelab__/site/login.css')
+
+block content
+	script(type='text/javascript').
+		document.body.className = 'loading';
+		
+	#background
+	#app-login
+		
+		#logo CodeLab
+		div
+
+		#error(style='display: none;')
+			strong Login Error
+			#reason Unable to log into website this is why
+
+		div
+		#login-button Login
+	
+block scripts
+	script(type='text/javascript' src='/__codelab__/site.js')

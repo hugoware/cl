@@ -3,6 +3,9 @@ import _ from 'lodash';
 import io from 'socket.io-client';
 import Promise from 'bluebird';
 
+// globalize
+window.Promise = Promise;
+
 // normal time to wait for a request
 const DEFAULT_TIMEOUT = 5000;
 

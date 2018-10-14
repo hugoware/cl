@@ -29,7 +29,7 @@ export default function processSlide(state, manifest, slide) {
 		const props = [ ];
 
 		// replace inline dictionary works
-		line = line.replace(/\[define ?[^\]]+\]/, match => {
+		line = line.replace(/\[define ?[^\]]+\]/g, match => {
 			let value = _.trim(match.substr(7));
 			value = value.replace(/\]$/g, '');
 			const parts = value.split(/ /);

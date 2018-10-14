@@ -45,8 +45,6 @@ $validator('verifyParagraphContent', {
     if (more > 0)
       hint.push(`Add ${more} more ${$plural(more, 'line')}`);
 
-    console.log('hint', hint);
-
     // if there's any messages, return them
     if (hint.length !== 0)
       return hint.join('\n\n');
@@ -60,7 +58,7 @@ $validator('verifyParagraphContent', {
 
   success: () => {
     $hideHint();
-    $speakMessage('Looks great!');
+    $speakMessage("Looks great! When you're finished making changes click **Next** to continue.", 'happy');
   }
 
 });

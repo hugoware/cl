@@ -1,6 +1,9 @@
 import Login from './login';
 import Typed from './typed';
 
+// is theis the login string
+const isAppLogin = /__login__/.test(window.location.href);
+
 // prepare the typed header
 function initTyped() {
 
@@ -38,29 +41,48 @@ function initMap() {
 // prepares the login view
 let $pendingError;
 function initLogin() {
-  const login = new Login();
+	let isLoggingIn;
+	const container = document.getElementById('error');
+	const reason = document.getElementById('reason');
+	const btn = document.getElementById('login-button');
+
+	// create the login
+	const mode = isAppLogin ? 'redirect' : 'popup';
+	const login = new Login(mode);
+
+	// hide the loading class
+	login.onReady = () => {
+		if (isLoggingIn) return;
+		document.body.className = '';
+	};
+	
+	// successful login attempts
+	login.onSuccess = () => {
+		isLoggingIn = true;
+		window.location.href = '/';
+	};
+
+	// failed login attempts
+	login.onError = result => {
+		reason.innerText = result.error;
+		container.style.display = 'block';
+		container.className = '';
+		clearTimeout($pendingError);
+		$pendingError = setTimeout(() => {
+			container.className = 'fade-out';
+			$pendingError = setTimeout(() => {
+				container.style.display = 'none';
+			}, 1000);
+		}, 4000);
+	};
 
   // handle login attempts
-  const container = document.getElementById('error');
-  const reason = document.getElementById('reason');
-  const btn = document.getElementById('login-button');
-  btn.onclick = () => {
-    login.authenticate({
-      onSuccess: () => window.location.href = '/',
-      onError: result => {
-				reason.innerText = result.error;
-				container.style.display = 'block';
-				container.className = '';
-				clearTimeout($pendingError);
-				$pendingError = setTimeout(() => {
-					container.className = 'fade-out';
-					$pendingError = setTimeout(() => {
-						container.style.display = 'none';
-					}, 1000);
-				}, 4000);
-      }
-    });
-  };
+	btn.onclick = () => {
+		if (/loading/i.test(document.body.className)) return;
+		login.authenticate();
+	};
+
+	login.preauthenticate();
 
 }
 
@@ -97,6 +119,6 @@ function initQuestions() {
 
 // load each separately (just in case of errors)
 window.addEventListener('load', initLogin);
-window.addEventListener('load', initQuestions);
-window.addEventListener('load', initTyped);
+if (!isAppLogin) window.addEventListener('load', initQuestions);
+if (!isAppLogin) window.addEventListener('load', initTyped);
 // window.addEventListener('load', initMap);

@@ -32,7 +32,7 @@ $validator('verifyHeaderContent', {
 
   success: () => {
     $hideHint();
-    $speakMessage('Looks great!');
+    $speakMessage("Looks great! When you're finished making changes click **Next** to continue.", 'happy');
   }
 
 });

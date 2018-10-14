@@ -13,3 +13,15 @@
   name: HTML Tag
   define: |
     This is about HTML elements - this is `<` or `>`
+
+- id: html_file
+  name: HTML File
+  define: |
+    A bunch of instructions
+
+- id: html_attribute
+  name: HTML Attribute
+  define: |
+    Something different for html stuff
+
+    `<img src="something" />`

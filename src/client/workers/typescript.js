@@ -37,8 +37,8 @@ async function compileFile(file) {
 			noResolve: true,
 			strictFunctionTypes: true,
 			removeComments: false,
-			target: 'ES5',
-			lib: 'ES2015'
+			target: 'ES6',
+			// lib: 'ES2015'
 		});
 
 		// share the generated code

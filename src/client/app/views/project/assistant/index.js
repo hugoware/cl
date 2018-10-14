@@ -220,7 +220,7 @@ export default class Assistant extends Component {
 	}
 
 	// refresh the display for this slide
-	refresh = () => {
+	refresh = async () => {
 
 		// lesson has been disabled
 		if (!$state.lesson) return;
@@ -262,19 +262,23 @@ export default class Assistant extends Component {
 		this.views.slide.hasUsedOverrideMessage = false;
 		view.refresh(slide);
 
-		// speak, if possible
+		// wait for speaking to stop
+		await $speech.stop();
+
+		// start speaking
 		this.speak(slide.speak);
+		this.nextAllowRevertTime = (+new Date) + 1000;
 	}
 
 	// returns the message to the original state
 	onRevert = () => {
+		if (this.nextAllowRevertTime > +new Date) return;
 		this.views.slide.revert();
 		$speech.stop();
 	}
 
 	// handles updating hint messages
 	onHint = options => {
-		console.log('trying to show hint');
 		this.broadcast('show-hint', options);
 	}
 

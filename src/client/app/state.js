@@ -209,7 +209,6 @@ const $state = {
 				// lesson modified versions
 				for (let i = 0; i < modified.length; i++) {
 					const file = modified[i];
-					console.log('repl', file);
 					await $lfs.write(file.path, file.content);
 				}
 

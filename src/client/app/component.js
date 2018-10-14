@@ -350,7 +350,12 @@ export default class Component {
       options.complete = resolve;
       this.$.animate(props, options);
     });
-  }
+	}
+	
+	/** performs an ajax request */
+	xhr = (...args) => {
+		return $.ajax(...args);
+	}
 
   /** tries to find the nearest matching selector to this component, including itself
    * @param {string} find the selector to search for

@@ -12,13 +12,14 @@
 					.name(bind='name')
 
 			.sections
-				.section.projects(bind='showProjects')
-					.name Projects
-					.count(bind='projectCount')
 					
 				.section.lessons(bind='showLessons')
 					.name Lessons
 					.count(bind='lessonCount')
+					
+				.section.projects(bind='showProjects')
+					.name Projects
+					.count(bind='projectCount')
 
 		.content
 			.projects(bind='projectsView')

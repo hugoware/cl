@@ -1,0 +1,88 @@
+@import '../_reset';
+@import '../_utils';
+@import '_fonts';
+
+$theme-color: #118CF8;
+
+#background {
+	background: url(/__codelab__/site/images/login-background.jpg);
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	position: fixed;
+}
+
+body, html {
+	background: $theme-color;
+	font-family: $basic-font;
+}
+
+body {
+	opacity: 1;
+	@include animate('opacity', 1.4s);
+	&.loading {
+		opacity: 0.4;
+	}
+}
+
+#app-login {
+	width: 500px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -75%);
+	text-align: center;
+	position: absolute;
+	z-index: 1;
+}
+
+#logo {
+	$logo-scale: 0.375;
+	$logo-width: 1040px * $logo-scale; 
+	$logo-height: 228px * $logo-scale;
+	background: url(/__codelab__/site/images/logo.png) no-repeat;
+	background-size: $logo-width $logo-height;
+	width: $logo-width;
+	height: $logo-height;
+	display: inline-block;
+	overflow: hidden;
+	text-indent: -100%;
+}
+
+#error {
+	margin: 25px 0 15px 0;
+	display: inline-block;
+	background: rgba(#fff, 0.2);
+	padding: 20px 30px;
+	border-radius: 3px;
+	color: #fff;
+	line-height: 1.4em;
+	display: none;
+
+	strong {
+		font-weight: 600;
+		padding: 0 0 5px 0;
+		display: block;
+	}
+}
+
+#login-button {
+	color: #fff;
+
+	font-size: 22px;
+	padding: 16px 29px;
+	box-shadow: inset 0 0 0 4px #fff;
+	display: inline-block;
+	border-radius: 50px;
+
+	cursor: pointer;
+	margin: 45px 0 0 0;
+	@include animate('background', 0.3s);
+
+	&:hover {
+		background: rgba(#000, 0.3);
+	}
+}

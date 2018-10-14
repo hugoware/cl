@@ -1,44 +1,43 @@
 
-# - slide:
-#     mode: overlay
-#     title: An Introduction to HTML
-#     content: |
-#       This brief tutorial will give you an introduction to using HTML to create web pages.
+- slide:
+    mode: overlay
+    title: An Introduction to HTML
+    content: |
+      This brief tutorial will give you an introduction to using HTML to create web pages.
+
+- slide:
+    title: An Introduction to HTML
+    mode: overlay
+    content: |
+      This is an [define html_element]. This is the most basic of HTML instructions.
+
+      [snippet html_tag_example]
 
 
-# - slide:
-#     title: An Introduction to HTML
-#     mode: overlay
-#     content: |
-#       This is an [define html_element]. This is the most basic of HTML instructions.
+- slide:
+    title: An Introduction to HTML
+    mode: overlay
+    content: |
+      The two highlighted blocks of code are known as [define html_tag HTML Tags]
 
-#       [snippet html_tag_example]
+      [snippet html_tag_example highlight: start_tag end_tag]
 
+      When these instructions are viewed in a web browser, it appears as a large, bold header.
 
-# - slide:
-#     title: An Introduction to HTML
-#     mode: overlay
-#     content: |
-#       The two highlighted blocks of code are known as [define html_tag HTML Tags]
+- slide:
+    title: An Introduction to HTML
+    mode: overlay
+    content: |
+      The content in the middle are the words that will be displayed on the screen.
 
-#       [snippet html_tag_example highlight: start_tag end_tag]
+      [snippet html_tag_example highlight: content]
 
-#       When these instructions are viewed in a web browser, it appears as a large, bold header.
-
-# - slide:
-#     title: An Introduction to HTML
-#     mode: overlay
-#     content: |
-#       The content in the middle is the words that will be displayed on the screen.
-
-#       [snippet html_tag_example highlight: content]
-
-#       In this example, the screen would display **Hello, World**
+      In this example, the screen would display **"Hello, World"**
 
 - slide:
     mode: popup
     content: |
-      Let's make some changes to an HTML page. Let's start by opening the `index.html` page in the File Browser.
+      Let's make some changes to an HTML page. Start by opening the `index.html` file by [define double_clicking double clicking] on it.
 
     waitFor:
       - ::fileOpen(/index.html)
@@ -49,11 +48,15 @@
     validation:
       openFile: ::allowIfFile(/index.html, open-file)
 
+- slide:
+    mode: popup
+    content: |
+      This is an [define html_file]. The instructions you see on this page are used to create the [define output output] in the [define preview_area].
 
 - slide:
     mode: popup
     content: |
-      Like with our previous example, you can see the start and ending tags
+      Like with the example at the start of the lesson, you can see that an [define html_element] is made up of start and ending tags.
 
     zones:
       /index.html:
@@ -63,7 +66,7 @@
 - slide:
     mode: popup
     content: |
-      The words inbetween match the content on the page
+      The words between the two tags are the content, which you can see displayed in the [define preview_area].
 
     zones:
       /index.html:
@@ -74,7 +77,7 @@
 - slide:
     mode: popup
     content: |
-      Try and change the content to something new
+      Try to change the content of this tag to a different greeting. For example: `Hello, World!`.
 
     cursor: header_content
 
@@ -90,7 +93,7 @@
 - slide:
     mode: popup
     content: |
-      Let's try that again with a different type of HTML element. This one is a paragraph
+      Let's try that again with a different type of [define html_element]. This element is a **paragraph** which is written using `p` tags.
 
     zones:
       /index.html:
@@ -102,7 +105,7 @@
 - slide:
     mode: popup
     content: |
-      You'll notice that even though the text appears on multiple lines, it shows up as a single line in the preview
+      You'll notice that even though the text appears on multiple lines, it shows up as a single line in the [define preview_area].
 
     zones:
       /index.html:
@@ -112,7 +115,7 @@
 - slide:
     mode: popup
     content: |
-      Try and change this paragraph to hold several more lines of text
+      Try and change this paragraph to hold several more lines of text. You can make it say whatever you want.
 
     zones:
       /index.html:
@@ -129,9 +132,18 @@
 - slide:
     mode: popup
     content: |
-      Let's try uploading an image and adding it to the page!
+      So far, all of the [define html_element HTML Elements] we've learned about have had a start and ending tag. However, some elements don't have text content. For example, an **image file**.
 
-      Use the **Upload File** option to go to the next step
+    zones:
+      /index.html:
+        paragraph_content: hide
+
+- slide:
+    mode: popup
+    content: |
+      Let's start by uploading an image that we can add to this page.
+
+      Click the **Upload File** option and then drag an image file into the upload area.
 
     actions:
       - deselect-items
@@ -149,13 +161,12 @@
     highlight:
       - ::ui(upload-file)
 
-
     flags: +upload-file-dialog
 
 - slide:
     mode: popup
     content: |
-      Great! Let's add an image to the page
+      Now let's add an image to this page. This is done using the `img` [define html_element].
 
     zones:
       /index.html:
@@ -163,31 +174,67 @@
 
     flags: -upload-file-dialog
 
+    actions:
+      - hide-all-dialogs
+
 - slide:
     mode: popup
     content: |
-      Type in the name of the image file - In this case, `/%uploadedFileName%`
+      Unlike the other [define html_element HTML Elements], this element doesn't have content that goes between tags, but instead uses an [define html_attribute].
+
+- slide:
+    mode: popup
+    content: |
+      Let's set the source of the image element to be the file that you uploaded. In this case, `/%uploadedFileName%`.
 
     zones:
       /index.html:
         img_src: edit
 
-    actions:
-      - hide-all-dialogs
-
-    flags: -upload-file-dialog
-
-    cursor: img_src
-
     waitFor:
       - ::event(modify-file, verifyImageSrc)
 
+    autoNext: false
+
+- slide:
+    mode: overlay
+    title: HTML Review
+    content: |
+      Let's review what we've learned so far!
+
+- question:
+    mode: overlay
+    
+    # the number of possible answers to show
+    show: 4
+
+    title: The following code is an example of an... ?
+
+    content: |
+      [snippet html_tag_example]
+
+    hint: |
+      This is a key element to creating web pages!
+
+    # message to say after the answer has been selected to 
+    # sumarize the information for the question
+    explain: An HTML Element is made up of HTML Tags. Sometimes an element has a start and end tag, and sometimes it only has a single tag.
+
+    choices:
+      - ... HTML Element
+      - ... HTML Nugget
+      - ... HTML Widget
+      - ... HTML Command
+
+
 - slide:
     mode: popup
+    emotion: happy
     content: |
-      You've just created a web page! It looks great
-      Now that you're done, why not share it with someone!
+      Well done! You've just created your first web page!
+
+      There's a lot more to learn when it comes to creating web pages, but you're off to a great start!
 
     zones:
       /index.html:
-        img_src: hide
+        img_src: lock

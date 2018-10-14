@@ -10,18 +10,47 @@
       "type": "web",
       "description": "An Introduction to the CodeLab Learning System",
       "lesson": [{
+        "mode": "overlay",
+        "title": "An Introduction to HTML",
+        "content": "<p>This brief tutorial will give you an introduction to using HTML to create web pages.</p>",
+        "type": "slide",
+        "speak": ["This brief tutorial will give you an introduction to using HTML to create web pages."]
+      }, {
+        "title": "An Introduction to HTML",
+        "mode": "overlay",
+        "content": "<p>This is an <span class=\"define\" type=\"html_element\" >HTML Element</span>. This is the most basic of HTML instructions.</p><div class=\"snippet\" type=\"html_tag_example\" />",
+        "type": "slide",
+        "speak": ["This is an HTML Element. This is the most basic of HTML instructions."]
+      }, {
+        "title": "An Introduction to HTML",
+        "mode": "overlay",
+        "content": "<p>The two highlighted blocks of code are known as <span class=\"define\" type=\"html_tag\" >HTML Tags</span></p><div class=\"snippet\" type=\"html_tag_example\" highlight=\"start_tag end_tag\"/><p>When these instructions are viewed in a web browser, it appears as a large, bold header.</p>",
+        "type": "slide",
+        "speak": ["The two highlighted blocks of code are known as HTML Tags", "When these instructions are viewed in a web browser, it appears as a large, bold header."]
+      }, {
+        "title": "An Introduction to HTML",
+        "mode": "overlay",
+        "content": "<p>The content in the middle are the words that will be displayed on the screen.</p><div class=\"snippet\" type=\"html_tag_example\" highlight=\"content\"/><p>In this example, the screen would display <strong>\"Hello, World\"</strong></p>",
+        "type": "slide",
+        "speak": ["The content in the middle are the words that will be displayed on the screen.", "In this example, the screen would display \"Hello, World\""]
+      }, {
         "mode": "popup",
-        "content": "<p>Let's make some changes to an HTML page. Let's start by opening the <code>index.html</code> page in the File Browser.</p>",
+        "content": "<p>Let's make some changes to an HTML page. Start by opening the <code>index.html</code> file by <span class=\"define\" type=\"double_clicking\" >double clicking</span> on it.</p>",
         "waitFor": ["::fileOpen(/index.html)"],
         "highlight": ["::fileBrowser(/index.html)"],
         "validation": {
           "openFile": "::allowIfFile(/index.html, open-file)"
         },
         "type": "slide",
-        "speak": ["Let's make some changes to an HTML page. Let's start by opening the index.html page in the File Browser."]
+        "speak": ["Let's make some changes to an HTML page. Start by opening the index.html file by double clicking on it."]
       }, {
         "mode": "popup",
-        "content": "<p>Like with our previous example, you can see the start and ending tags</p>",
+        "content": "<p>This is an <span class=\"define\" type=\"html_file\" >HTML File</span>. The instructions you see on this page are used to create the <span class=\"define\" type=\"output\" >output</span> in the <span class=\"define\" type=\"preview_area\" >Preview Area</span>.</p>",
+        "type": "slide",
+        "speak": ["This is an HTML File. The instructions you see on this page are used to create the output in the Preview Area."]
+      }, {
+        "mode": "popup",
+        "content": "<p>Like with the example at the start of the lesson, you can see that an <span class=\"define\" type=\"html_element\" >HTML Element</span> is made up of start and ending tags.</p>",
         "zones": {
           "/index.html": {
             "header_start_tag": "show",
@@ -29,10 +58,10 @@
           }
         },
         "type": "slide",
-        "speak": ["Like with our previous example, you can see the start and ending tags"]
+        "speak": ["Like with the example at the start of the lesson, you can see that an HTML Element is made up of start and ending tags."]
       }, {
         "mode": "popup",
-        "content": "<p>The words inbetween match the content on the page</p>",
+        "content": "<p>The words between the two tags are the content, which you can see displayed in the <span class=\"define\" type=\"preview_area\" >Preview Area</span>.</p>",
         "zones": {
           "/index.html": {
             "header_content": "show",
@@ -41,10 +70,10 @@
           }
         },
         "type": "slide",
-        "speak": ["The words inbetween match the content on the page"]
+        "speak": ["The words between the two tags are the content, which you can see displayed in the Preview Area."]
       }, {
         "mode": "popup",
-        "content": "<p>Try and change the content to something new</p>",
+        "content": "<p>Try to change the content of this tag to a different greeting. For example: <code>Hello, World!</code>.</p>",
         "cursor": "header_content",
         "zones": {
           "/index.html": {
@@ -54,10 +83,10 @@
         "autoNext": false,
         "waitFor": ["::event(modify-file, verifyHeaderContent)"],
         "type": "slide",
-        "speak": ["Try and change the content to something new"]
+        "speak": ["Try to change the content of this tag to a different greeting. For example: Hello, World!."]
       }, {
         "mode": "popup",
-        "content": "<p>Let's try that again with a different type of HTML element. This one is a paragraph</p>",
+        "content": "<p>Let's try that again with a different type of <span class=\"define\" type=\"html_element\" >HTML Element</span>. This element is a <strong>paragraph</strong> which is written using <code>p</code> tags.</p>",
         "zones": {
           "/index.html": {
             "paragraph_element": "show",
@@ -66,10 +95,10 @@
         },
         "cursor": "paragraph_content",
         "type": "slide",
-        "speak": ["Let's try that again with a different type of HTML element. This one is a paragraph"]
+        "speak": ["Let's try that again with a different type of HTML Element. This element is a paragraph which is written using p tags."]
       }, {
         "mode": "popup",
-        "content": "<p>You'll notice that even though the text appears on multiple lines, it shows up as a single line in the preview</p>",
+        "content": "<p>You'll notice that even though the text appears on multiple lines, it shows up as a single line in the <span class=\"define\" type=\"preview_area\" >Preview Area</span>.</p>",
         "zones": {
           "/index.html": {
             "paragraph_element": "hide",
@@ -77,10 +106,10 @@
           }
         },
         "type": "slide",
-        "speak": ["You'll notice that even though the text appears on multiple lines, it shows up as a single line in the preview"]
+        "speak": ["You'll notice that even though the text appears on multiple lines, it shows up as a single line in the Preview Area."]
       }, {
         "mode": "popup",
-        "content": "<p>Try and change this paragraph to hold several more lines of text</p>",
+        "content": "<p>Try and change this paragraph to hold several more lines of text. You can make it say whatever you want.</p>",
         "zones": {
           "/index.html": {
             "paragraph_content": "edit"
@@ -93,10 +122,20 @@
         "autoNext": false,
         "waitFor": ["::event(modify-file, verifyParagraphContent)"],
         "type": "slide",
-        "speak": ["Try and change this paragraph to hold several more lines of text"]
+        "speak": ["Try and change this paragraph to hold several more lines of text. You can make it say whatever you want."]
       }, {
         "mode": "popup",
-        "content": "<p>Let's try uploading an image and adding it to the page!</p><p>Use the <strong>Upload File</strong> option to go to the next step</p>",
+        "content": "<p>So far, all of the <span class=\"define\" type=\"html_element\" >HTML Elements</span> we've learned about have had a start and ending tag. However, some elements don't have text content. For example, an <strong>image file</strong>.</p>",
+        "zones": {
+          "/index.html": {
+            "paragraph_content": "hide"
+          }
+        },
+        "type": "slide",
+        "speak": ["So far, all of the HTML Elements we've learned about have had a start and ending tag. However, some elements don't have text content. For example, an image file."]
+      }, {
+        "mode": "popup",
+        "content": "<p>Let's start by uploading an image that we can add to this page.</p><p>Click the <strong>Upload File</strong> option and then drag an image file into the upload area.</p>",
         "actions": ["deselect-items"],
         "zones": {
           "/index.html": {
@@ -112,10 +151,10 @@
           "add": ["upload-file-dialog"]
         },
         "type": "slide",
-        "speak": ["Let's try uploading an image and adding it to the page!", "Use the Upload File option to go to the next step"]
+        "speak": ["Let's start by uploading an image that we can add to this page.", "Click the Upload File option and then drag an image file into the upload area."]
       }, {
         "mode": "popup",
-        "content": "<p>Great! Let's add an image to the page</p>",
+        "content": "<p>Now let's add an image to this page. This is done using the <code>img</code> <span class=\"define\" type=\"html_element\" >HTML Element</span>.</p>",
         "zones": {
           "/index.html": {
             "img_element": "expand"
@@ -124,36 +163,92 @@
         "flags": {
           "remove": ["upload-file-dialog"]
         },
+        "actions": ["hide-all-dialogs"],
         "type": "slide",
-        "speak": ["Great! Let's add an image to the page"]
+        "speak": ["Now let's add an image to this page. This is done using the img HTML Element."]
       }, {
         "mode": "popup",
-        "content": "<p>Type in the name of the image file - In this case, <code>/%uploadedFileName%</code></p>",
+        "content": "<p>Unlike the other <span class=\"define\" type=\"html_element\" >HTML Elements</span>, this element doesn't have content that goes between tags, but instead uses an <span class=\"define\" type=\"html_attribute\" >HTML Attribute</span>.</p>",
+        "type": "slide",
+        "speak": ["Unlike the other HTML Elements, this element doesn't have content that goes between tags, but instead uses an HTML Attribute."]
+      }, {
+        "mode": "popup",
+        "content": "<p>Let's set the source of the image element to be the file that you uploaded. In this case, <code>/%uploadedFileName%</code>.</p>",
         "zones": {
           "/index.html": {
             "img_src": "edit"
           }
         },
-        "actions": ["hide-all-dialogs"],
-        "flags": {
-          "remove": ["upload-file-dialog"]
-        },
-        "cursor": "img_src",
         "waitFor": ["::event(modify-file, verifyImageSrc)"],
+        "autoNext": false,
         "type": "slide",
-        "speak": ["Type in the name of the image file - In this case, /%uploadedFileName%"]
+        "speak": ["Let's set the source of the image element to be the file that you uploaded. In this case, /%uploadedFileName%."]
+      }, {
+        "mode": "overlay",
+        "title": "HTML Review",
+        "content": "<p>Let's review what we've learned so far!</p>",
+        "type": "slide",
+        "speak": ["Let's review what we've learned so far!"]
+      }, {
+        "mode": "overlay",
+        "show": 4,
+        "title": "The following code is an example of an… ?",
+        "content": "<div class=\"snippet\" type=\"html_tag_example\" />",
+        "hint": "This is a key element to creating web pages!\n",
+        "explain": "An HTML Element is made up of HTML Tags. Sometimes an element has a start and end tag, and sometimes it only has a single tag.",
+        "choices": ["… HTML Element", "… HTML Nugget", "… HTML Widget", "… HTML Command"],
+        "type": "question",
+        "speak": ["The following code is an example of an… ?"],
+        "explained": "An HTML Element is made up of HTML Tags. Sometimes an element has a start and end tag, and sometimes it only has a single tag."
       }, {
         "mode": "popup",
-        "content": "<p>You've just created a web page! It looks great</p><p>Now that you're done, why not share it with someone!</p>",
+        "emotion": "happy",
+        "content": "<p>Well done! You've just created your first web page!</p><p>There's a lot more to learn when it comes to creating web pages, but you're off to a great start!</p>",
         "zones": {
           "/index.html": {
-            "img_src": "hide"
+            "img_src": "lock"
           }
         },
         "type": "slide",
-        "speak": ["You've just created a web page! It looks great", "Now that you're done, why not share it with someone!"]
+        "speak": ["Well done! You've just created your first web page!", "There's a lot more to learn when it comes to creating web pages, but you're off to a great start!"]
       }],
-      "definitions": {},
+      "definitions": {
+        "html_element": {
+          "id": "html_element",
+          "name": "HTML Element",
+          "define": "This is about HTML elements"
+        },
+        "html_tag": {
+          "id": "html_tag",
+          "name": "HTML Tag",
+          "define": "This is about HTML elements - this is <code>&lt;</code> or <code>&gt;</code>"
+        },
+        "double_clicking": {
+          "id": "double_clicking",
+          "name": "Double Click",
+          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it&apos;s tapping the screen twice quickly."
+        },
+        "html_file": {
+          "id": "html_file",
+          "name": "HTML File",
+          "define": "A bunch of instructions"
+        },
+        "output": {
+          "id": "output",
+          "name": "Output",
+          "define": "The results from a computer program based on input"
+        },
+        "preview_area": {
+          "id": "preview_area",
+          "name": "Preview Area",
+          "define": "The right side of the screen that shows the current output of the project being worked on"
+        },
+        "html_attribute": {
+          "id": "html_attribute",
+          "name": "HTML Attribute",
+          "define": "Something different for html stuff"
+        }
+      },
       "snippets": {
         "html_img_example": {
           "content": "",
@@ -544,7 +639,7 @@
 
       success: function success() {
         $hideHint();
-        $speakMessage('Looks great!');
+        $speakMessage("Looks great! When you're finished making changes click **Next** to continue.", 'happy');
       }
 
     });
@@ -569,7 +664,7 @@
 
       success: function success() {
         $hideHint();
-        $speakMessage('Great! You should see your image displayed in the preview now!');
+        $speakMessage('Great! You should see your image displayed in the preview now!', 'happy');
       }
 
     });
@@ -615,8 +710,6 @@
         var more = REQUIRED_LINE_COUNT - lines.length;
         if (more > 0) hint.push("Add " + more + " more " + $plural(more, 'line'));
 
-        console.log('hint', hint);
-
         // if there's any messages, return them
         if (hint.length !== 0) return hint.join('\n\n');
       },
@@ -627,7 +720,7 @@
 
       success: function success() {
         $hideHint();
-        $speakMessage('Looks great!');
+        $speakMessage("Looks great! When you're finished making changes click **Next** to continue.", 'happy');
       }
 
     });

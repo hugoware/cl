@@ -42,6 +42,7 @@ $dialog-action-danger-background: #e64b3f;
 $dialog-action-danger-hover-background: darken($dialog-action-danger-background, 10%);
 
 // formatting
+$hint-code-color: lighten(#00B2FF, 15%);
 $inline-code-light-background-primary-color: #00B2FF;
 
 // file uploads

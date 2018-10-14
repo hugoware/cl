@@ -424,7 +424,6 @@ function applySlide(lesson, slide, invert) {
 	}
 	
 	// update each zone
-	console.log(slide.zones);
 	_.each(slide.zones, (zones, file) => {
 		const map = lesson.maps[file];
 		_.each(zones, (state, id) => {
@@ -436,7 +435,6 @@ function applySlide(lesson, slide, invert) {
 
 // checks the state to determine what to do with a zone
 function updateZone(map, zone, state, invert) {
-	console.log('zone update', state, zone);
 
 	// check the collapse state
 	if (/edit/.test(state))

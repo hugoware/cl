@@ -4,12 +4,14 @@ include _header
 block title
 	| Showcase / CodeLab
 
+block head
+	link(rel='stylesheet', type='text/css', href='/__codelab__/site/index.css')
+
 mixin showcase_item(item)
 	.col-md-4.col-sm-6.col-xs-10.col-xs-offset-1.col-sm-offset-0
 		.item(class='type-'+ item.type)
 			a(href='//' + item.id + '.codelabschool.com/' target='_app_'+ item.id)
-				.example
-					img(src='/thumbnail/'+ item.id)
+				.thumbnail(style='background-image: url(/__codelab__/showcase/'+ item.id +'.png)')
 				.title= item.title
 				.created-by= item.created_by
 				.description= item.description

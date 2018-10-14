@@ -574,9 +574,12 @@ html, body {
     width: 100%;
   }
 
-	.example {
+	.thumbnail {
 		height: 150px;
+		display: block;
 		background: #eee;
+		background-position: 50% 50%;
+		background-size: auto 100%;
 	}
 
   .title {
