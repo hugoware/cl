@@ -11,9 +11,9 @@ mixin showcase_item(item)
 	.col-md-4.col-sm-6.col-xs-10.col-xs-offset-1.col-sm-offset-0
 		.item(class='type-'+ item.type)
 			a(href='//' + item.id + '.codelabschool.com/' target='_app_'+ item.id)
-				.thumbnail(style='background-image: url(/__codelab__/showcase/'+ item.id +'.png)')
+				.thumbnail(style='background-image: url(/__codelab__/showcase/'+ item.id +'.jpg)')
 				.title= item.title
-				.created-by= item.created_by
+				.created-by Made by #{item.created_by}
 				.description= item.description
 
 block content
