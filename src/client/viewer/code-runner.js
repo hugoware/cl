@@ -1,5 +1,13 @@
 import $ from 'cash-dom';
+import CodeInterpreter from './interpreter';
+
 const MAX_CONSOLE_LINES = 300;
+const DEFAULT_OPTIONS = {
+	outputSelector: '#output',
+	inputSelector: '#input',
+	errorSelector: '#error',
+	questionSelector: '#question',
+};
 
 // trims a string
 function trim(str) {
@@ -11,70 +19,57 @@ $.isObject = obj => {
 	return obj instanceof Object || typeof obj === 'object';
 };
 
+// $.isFunction = obj => {
+// 	return obj instanceof Function || typeof obj === 'function';
+// }
+
 // handles running code
 export default class CodeRunner {
 
 	/** loads a new code runner instance */
-	static create = action => {
+	static create = (options, action) => {
+
+		// no options were provided
+		if ($.isFunction(options)) {
+			action = options;
+			options = DEFAULT_OPTIONS;
+		}
+
+		// read the runner
 		$(() => {
 			const instance = new CodeRunner();
-			instance.init();
+			instance.init(options);
 			if (action) action(instance);
 		});
 	}
 
 	// initializes the runner
-	init = () => {
+	init = options => {
 		window.__CODELAB__ = {};
 
+		// console input
+		this.stdout = [ ];
+		this.stdin = [ ];
+		
 		// UI elements
 		this.ui = {
 			doc: $(document.body),
 
 			// ui elements
-			output: $('#output'),
-			input: $('#input'),
-			error: $('#error'),
-			question: $('#question'),
+			output: $(options.outputSelector),
+			input: $(options.inputSelector),
+			error: $(options.errorSelector),
+			question: $(options.questionSelector),
 		};
 
 		// link up inputs
 		this.ui.input.on('keyup', this.onInput);
-
-		// tracking intervals and timeouts
-		this.timing = {
-
-			// cache active timers
-			active: { intervals: [], timeouts: [] },
-
-			// capture existing methods
-			setInterval: window.setInterval,
-			setTimeout: window.setTimeout,
-		};
-
-		// replace timer functions
-		window.setInterval = this.setInterval;
-		window.setTimeout = this.setTimeout;
-
-		// setup handlers
-		__CODELAB__.consoleLog = this.onConsoleLog;
-		__CODELAB__.consoleWarn = this.onConsoleWarn;
-		__CODELAB__.consoleError = this.onConsoleError;
-		__CODELAB__.consolePrompt = this.onConsolePrompt;
-		__CODELAB__.consoleClear = this.onConsoleClear;
-		__CODELAB__.consoleSuccess = this.onConsoleSuccess;
-		__CODELAB__.consoleInfo = this.onConsoleInfo;
-		__CODELAB__.consoleImage = this.onConsoleImage;
-		__CODELAB__.consoleRainbow = this.onConsoleRainbow;
-		__CODELAB__.consoleShake = this.onConsoleShake;
-		__CODELAB__.handleException = this.onHandleException;
 
 		// interface for external programs
 		__CODELAB__.load = this.onLoad;
 		__CODELAB__.run = this.onRun;
 		__CODELAB__.end = this.onEnd;
 		__CODELAB__.clear = this.onClear;
-
 	}
 
 	// resets the view
@@ -90,11 +85,34 @@ export default class CodeRunner {
 
 	// kicks off running code
 	onRun = code => {
-		eval(code);
+		this.interpreter = new CodeInterpreter(code);
+		this.interpreter.on('finished', this.onEnd);
+		
+		// create handlers
+		this.interpreter.on('console-log', this.onConsoleLog);
+		this.interpreter.on('console-warn', this.onConsoleWarn);
+		this.interpreter.on('console-info', this.onConsoleInfo);
+		this.interpreter.on('console-error', this.onConsoleError);
+		this.interpreter.on('console-success', this.onConsoleSuccess);
+		this.interpreter.on('console-shake', this.onConsoleShake);
+		this.interpreter.on('console-rainbow', this.onConsoleRainbow);
+		this.interpreter.on('console-ask', this.onConsoleAsk);
+		this.interpreter.on('console-image', this.onConsoleImage);
+		this.interpreter.on('console-clear', this.onConsoleClear);
+		this.interpreter.on('set-timeout', this.onDelay);
+		
+		// start running the code
+		this.interpreter.run();
 	}
 
 	// handles ending execution
 	onEnd = () => {
+		
+		// check for ending callbacks
+		if ($.isFunction(this.options.onEnd))
+			this.options.onEnd(this);
+
+		// finish the program
 		this.notify('execution-finished');
 		this.writeOutput('end', 'Program finished...')
 	}
@@ -159,13 +177,21 @@ export default class CodeRunner {
 		img.className = 'console-image loading';
 
 		// check if needing a prefix
-		path = trim(path);
+		const requestedPath = path = trim(path);
 		if (path[0] === '/')
-			path = (__CODELAB__.projectUrl || window.location.href) + path;
+			path = (this.projectUrl || window.location.href) + path;
 		
 		// when ready to show
 		img.onload = () => {
 			img.className = 'console-image';
+			this.interpreter.resume();
+			this.scrollToBottom();
+		};
+
+		img.onerror = () => {
+			img.parentNode.removeChild(img);
+			this.writeOutput('error', `failed to load: ${requestedPath}`);
+			this.interpreter.resume();
 			this.scrollToBottom();
 		};
 			
@@ -208,8 +234,10 @@ export default class CodeRunner {
 
 	// handle input entry
 	onCommit = value => {
-		if (!__CODELAB__.onPromptCallback)
+		if (!this.interpreter.paused)
 			return;
+		// if (!__CODELAB__.onPromptCallback)
+		// 	return;
 
 		// invoke the callback
 		try {
@@ -226,19 +254,25 @@ export default class CodeRunner {
 			if (/^\-?\d+(\.\d?)?$/.test(value))
 				value = parseFloat(value);
 
+			// save to the output
+			this.stdin.push(value);
+
 			// give back the value
-			__CODELAB__.onPromptCallback(value);
+			this.interpreter.resume(value);
 		}
 		// always clean up
 		finally {
-			delete __CODELAB__.onPromptCallback;
 			return false;
 		}
 	}
 
 	// when a user asks for input
-	onConsolePrompt = (question, callback) => {
+	onConsoleAsk = (question, callback) => {
 		question = trim(question);
+
+		// notify of asked values
+		if (this.options.onAsk)
+			this.options.onAsk(question);
 
 		// asking for user input
 		this.ui.doc.addClass('needs-input');
@@ -254,26 +288,45 @@ export default class CodeRunner {
 		// handle the callback
 		this.ui.input.text('');
 		this.ui.input[0].focus();
-		__CODELAB__.onPromptCallback = callback;
+	}
+
+	// handles timeout delays
+	onDelay = (time, unit) => {
+		this.interpreter.pause();
+		
+		// determine the time
+		time = isNaN(time) ? 0 : 0 | time;
+		if (/(s|seconds?)/i.test(unit))
+			time *= 1000;
+		else if (/(m|minutes?)/i.test(unit))
+			time *= 60000;
+
+		// resume the work
+		setTimeout(() => this.interpreter.resume(), time);
 	}
 
 	// some shortcuts
 	clear = () => this.onClear()
 	load = msg => this.onLoad(msg)
-	run = code => this.onRun(code)
 	end = () => this.onEnd()
+	run = (code, options = { }) => {
+		this.options = options;
 
-	// capture all interval setting
-	setInterval = (...args) => {
-		const id = this.timing.setInterval.apply(window, args);
-		this.timing.active.intervals.push(id);
+		// starts the run process
+		this.onRun(code);
 	}
 
-	// capture all timeouts
-	setTimeout = (...args) => {
-		const id = this.timing.setTimeout.apply(window, args);
-		this.timing.active.timeouts.push(id);
-	}
+	// // capture all interval setting
+	// setInterval = (...args) => {
+	// 	const id = this.timing.setInterval.apply(window, args);
+	// 	this.timing.active.intervals.push(id);
+	// }
+
+	// // capture all timeouts
+	// setTimeout = (...args) => {
+	// 	const id = this.timing.setTimeout.apply(window, args);
+	// 	this.timing.active.timeouts.push(id);
+	// }
 
 	// raises an event, if possible
 	notify = (name, ...args) => {
@@ -286,8 +339,9 @@ export default class CodeRunner {
 	// move to the bottom of the view after anytime
 	// a message is added to the screen
 	scrollToBottom = () => {
-		this.timing.setTimeout.call(window, function () {
-			window.scrollTo(0, Number.MAX_SAFE_INTEGER);
+		const output = this.ui.output[0];
+		setTimeout.call(window, function () {
+			output.scrollTo(0, Number.MAX_SAFE_INTEGER);
 		});
 	}
 
@@ -315,6 +369,9 @@ export default class CodeRunner {
 		args = $.isArray(args) ? args : [args];
 		const node = this.nextNode(style);
 
+		// adds a new line of arguments
+		this.stdout.push(args);
+
 		// append each value
 		for (let i = 0; i < args.length; i++) {
 
@@ -337,35 +394,6 @@ export default class CodeRunner {
 
 		// update the scroll position
 		this.scrollToBottom();
-
-
-		// // check if too many appended lines
-		// if (++this.totalLines > MAX_CONSOLE_LINES) {
-		// 	const output = this.ui.output[0];
-		// 	output.removeChild(output.children[0]);
-		// }
-
-		// // create the result
-		// const line = document.createElement('div');
-		// line.className = `${style || ''} line`;
-
-		// // convert to text
-		// const render = [ ];
-		// for (let i = 0; i < args.length; i++) {
-		// 	let str = JSON.stringify(args[i], null, 2);
-		// 	if (customize) str = customize(str, i);
-		// 	render.push(str);
-		// }
-
-		// // append to the container
-		// line.innerText = render.join(' ');
-		// this.ui.output.append(line);
-
-		// // move to the bottom of the view after anytime
-		// // a message is added to the screen
-		// this.timing.setTimeout.call(window, function () {
-		// 	window.scrollTo(0, Number.MAX_SAFE_INTEGER);
-		// });
 	}
 
 	// resets the entire view
@@ -373,22 +401,25 @@ export default class CodeRunner {
 		this.ui.doc.removeClass('has-question has-error');
 
 		// reset the state
-		delete __CODELAB__.onPromptCallback;
+		delete this.options;
+		this.stdout = [ ];
+		this.stdin = [ ];
 
 		// reset the line count
 		this.totalLines = 0;
 
-		// remove all timers and intervals
-		const { intervals, timeouts } = this.timing.active;
-		const max = Math.max(intervals.length, timeouts.length);
-		for (let i = max; i-- > 0;) {
-			clearTimeout(timeouts[i]);
-			clearInterval(intervals[i]);
-			timeouts.splice(i, 1);
-			intervals.splice(i, 1);
-		}
+		// // remove all timers and intervals
+		// const { intervals, timeouts } = this.timing.active;
+		// const max = Math.max(intervals.length, timeouts.length);
+		// for (let i = max; i-- > 0;) {
+		// 	clearTimeout(timeouts[i]);
+		// 	clearInterval(intervals[i]);
+		// 	timeouts.splice(i, 1);
+		// 	intervals.splice(i, 1);
+		// }
 
 		// clear the console messages, etc
+		this.ui.doc.removeClass('has-question needs-input');
 		this.ui.output.empty();
 	}
 

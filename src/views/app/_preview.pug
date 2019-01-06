@@ -21,7 +21,15 @@
 			.action.run-scripts.with-shortcut
 				.label Run Code
 				+shortcut('mod', 'Enter')
-		.window
-			iframe.output
+		#repl.window
+			.exception
+				h1 Code Exception
+				p Looks like there was an error while running that code!
+				#error TypeError: Unable to find the function called Console.log
 
-		
+			pre#output
+			#command
+				#question Please enter your name
+				#input(contenteditable='true' spellcheck='false')
+
+	

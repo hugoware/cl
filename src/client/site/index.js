@@ -4,6 +4,14 @@ import Typed from './typed';
 // is theis the login string
 const isAppLogin = /__login__/.test(window.location.href);
 
+// generic cancel function
+function cancelEvent(event) {
+	if (event.stopPropagation) event.stopPropagation();
+	if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+	event.cancelBubble = true;
+	return false;
+}
+
 // prepare the typed header
 function initTyped() {
 
@@ -25,6 +33,33 @@ function initTyped() {
   });
 }
 
+
+// prepare the video link
+function initVideo() {
+	const view = document.getElementById('demo-overlay');
+	const link = document.getElementById('demo-link');
+
+	// display the demo view
+	function showDemo(event) {
+		view.className = 'display';
+		setTimeout(() => { 
+			view.className = 'display show';
+			view.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/nqFSwtKNhy0?autoplay=1&amp;rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+		}, 10);
+
+		return cancelEvent(event);
+	}
+	
+	// handles hiding the demo
+	function hideDemo() {
+		view.className = '';
+		view.innerHTML = '';
+	}
+
+	// setup handlers
+	link.onclick = showDemo;
+	view.onclick = hideDemo;
+}
 
 // prepare the map view
 function initMap() {
@@ -119,6 +154,11 @@ function initQuestions() {
 
 // load each separately (just in case of errors)
 window.addEventListener('load', initLogin);
-if (!isAppLogin) window.addEventListener('load', initQuestions);
-if (!isAppLogin) window.addEventListener('load', initTyped);
-// window.addEventListener('load', initMap);
+
+// main page
+if (!isAppLogin) {
+	window.addEventListener('load', initQuestions);
+	window.addEventListener('load', initTyped);
+	window.addEventListener('load', initVideo);
+	// window.addEventListener('load', initMap);
+}

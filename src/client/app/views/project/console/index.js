@@ -20,6 +20,12 @@ export default class Console extends Component {
 		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('project-errors', this.onProjectErrors);
 
+		// error console is always visible -- maybe do a better job with scrolling and
+		// keeping line focus?
+		const doc = Component.bind(document.body);
+		// doc.toggleClass('console-visible', result.hasErrors);
+		doc.toggleClass('console-visible', true);
+
 	}
 
 	// clears all errors
@@ -46,13 +52,13 @@ export default class Console extends Component {
 	/** @param {ProjectErrorState} result */
 	update = result => {
 
-		// toggle if the console is visible or not
-		const doc = Component.bind(document.body);
-		doc.toggleClass('console-visible', result.hasErrors);
-
 		// handle messages
-		if (!result.hasErrors)
-			return this.ui.messages.empty();
+		if (!result.hasErrors) {
+			this.ui.messages.empty();
+			// move the heading back to the top
+			this.ui.heading.prependTo(this.ui.messages);
+			return;
+		}
 
 		// get everything in alphabetical order
 		const keys = _.keys(result.all);

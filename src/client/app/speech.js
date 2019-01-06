@@ -1,5 +1,6 @@
 
 import _ from 'lodash';
+import $ from 'jquery';
 import { listen, broadcast } from './events';
 import $state from './state';
 const available = 'speechSynthesis' in window;
@@ -7,15 +8,17 @@ const available = 'speechSynthesis' in window;
 // activate text to speech
 if (available)
 	speechSynthesis.onvoiceschanged = () => {
-		$speech.voices = speechSynthesis.getVoices();
-		$speech.ready = _.some($speech.voices);
+		$(() => {
+			$speech.voices = speechSynthesis.getVoices();
+			$speech.ready = _.some($speech.voices);
 
-		// set the default voice
-		$speech.configure({ style: 'female' });
+			// set the default voice
+			$speech.configure({ style: 'female' });
 
-		// trigger anything that might be waiting
-		if ($speech.init.pending)
-			$speech.init.pending();
+			// trigger anything that might be waiting
+			if ($speech.init.pending)
+				$speech.init.pending();
+		});
 	};
 
 // proceeed to the next line of dialogue

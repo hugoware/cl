@@ -1,8 +1,10 @@
-
+import _ from 'lodash';
 import Component from '../../component';
 import { evaluateSelector } from '../../utils/selector';
 import $showdown from 'showdown';
 const $convert = new $showdown.Converter();
+
+const MISSING_BOUNDS = { left: 0, top: 0, right: 0 };
 
 export default class HintDisplay extends Component {
 
@@ -22,7 +24,11 @@ export default class HintDisplay extends Component {
 		this.listen('hide-hint', this.onHideHint);
 
 		// always looking for the cursor
-		this.selector = evaluateSelector('.ace_editor .ace_cursor');
+		this.cursor = evaluateSelector('.ace_editor .ace_cursor');
+		this.position = evaluateSelector('.ace_editor .focus_point');
+
+		// set defaults
+		this.selector = this.cursor;
 		this.isHidingHint = true;
 		
 		// handle refreshable events
@@ -56,10 +62,23 @@ export default class HintDisplay extends Component {
 
 	// handles showing the hint
 	onShowHint = options => {
+		console.log('hint', options);
 		
 		// hint is not required
 		if (options === null)
 			return this.onHideHint();
+
+		// there's a range to use
+		if (_.isNumber(options.start)) {
+			this.broadcast('set-editor-focus-point', options);
+			this.selector = this.position;
+			this.isFocusPoint = true;
+		}
+		// choose the location
+		else {
+			this.selector = this.cursor;
+			this.isFocusPoint = false;
+		}
 
 		// try and refresh
 		if (this.selector.isMissing) {
@@ -107,8 +126,12 @@ export default class HintDisplay extends Component {
 	// match the cursor position for now
 	refreshPosition = () => {
 		this.selector.refresh();
-		const bounds = this.selector.getBounds();
-		this.offset({ top: bounds.top, left: bounds.left });
+		const bounds = this.selector.getBounds() || MISSING_BOUNDS;
+		const { left } = bounds;
+		const right = isNaN(bounds.right) ? left : bounds.right;
+		const mid = (left + right) / 2;
+		const top = bounds.top + (this.isFocusPoint ? 10 : 0);
+		this.offset({ top, left: mid });
 	}
 
 }

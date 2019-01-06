@@ -3,6 +3,15 @@
 @import '_icons';
 @import './_bootstrap';
 
+@mixin video_size($video-width) {
+	$video-height: $video-width * 0.5625;
+	@at-root #demo-overlay iframe {
+		width: $video-width;
+		height: $video-height;
+		margin: ($video-height * -0.7) 0 0 ($video-width * -0.5);
+	}
+}
+
 $theme-color: #118CF8;
 // $theme-color: #3A99D8;
 $default-action-color: #39CA74;
@@ -12,6 +21,26 @@ $minor-action-color: #3A99D8;
 .debug {
   box-shadow: inset 0 0 0 4px #f00;
 }
+
+#demo-overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	z-index: 9999;
+	background: rgba(#000, 0.7);
+
+	
+	iframe {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		box-shadow: 0 2px 15px #000;
+		@include video_size(560px);
+	}
+}
+
 
 #error {
 	z-index: 999;

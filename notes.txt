@@ -1,10 +1,20 @@
+* PUBLIC SITE
+- Revise to remove physical location
+- Adjust pricing plan to include only online
+- Needs sign up process
+	- email registration
 
+* APP
+- Account Management
+	- trial period
+	- upgrade account
+	- card management
+- Lesson Release Cycle
+- Lesson Track Selection
+- Creating a file doesn't select it for the Action bar
 
-- include a "free mode" from console in case of emergencies - allow any action until deactivated to fix lessons that get stuck
-
-xx - matching file names not replaced when loading a project
-
-
--- save changes worked even though it shouldn't have in locked mode
--- saving with collapsed areas need to capture a moment to reinsert all text before sending it to the server
-xx -- compiling isn't working anymore
+- Reevaluate transpile
+	- error logging
+	- is transpile even needed?
+	- importing files
+	- auto complete?

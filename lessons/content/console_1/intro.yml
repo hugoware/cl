@@ -1,0 +1,25 @@
+- slide:
+    mode: popup
+    content: |
+      Let's start working on code examples - open the file `main.ts`
+
+    waitFor:
+      - ::fileOpen(/main.ts)
+
+    highlight:
+      - ::fileBrowser(/main.ts)
+
+    validation:
+      openFile: ::allowIfFile(/main.ts, open-file)
+
+- slide:
+    mode: popup
+    content: |
+      create the object
+
+      [snippet declare_variables]
+
+
+    runValidation: verifyObject
+    events:
+      - modify-file, verifyObjectSyntax, {preview:true}

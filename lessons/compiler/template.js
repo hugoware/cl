@@ -14,6 +14,9 @@
     var $project = project;
     var $state = state;
 
+    // access to code syntax and content validator
+    const $codeValidator = utils.$validate;
+
     // parses a string of html
     function $html(str, options) {
       return _.isString(str) ? utils.$html((str || '').toString(), options)
@@ -55,6 +58,12 @@
     function $denyAccess(message, explain) {
       if (_.isFunction($lesson.onDeny))
         $lesson.onDeny({ message, explain });
+    }
+
+    // shared functions
+    function $approveSlide(message, emotion) {
+      if (_.isFunction($lesson.onApprove))
+        $lesson.onApprove({ message, emotion });
     }
 
     // speaks a message using the assistant
@@ -117,9 +126,16 @@
 
     // gets a zone
     function $getZone(file, id, options = { }) {
-      let html = utils.getZoneContent(file, id);
-      if (options.trim !== false) html = _.trim(html);
-      return (options.toDom || options.asDom) ? $html(html) : html;
+      let code = utils.getZoneContent(file, id);
+      if (options.trim !== false) code = _.trim(code);
+      return (options.toDom || options.asDom) ? $html(code) : code;
+    }
+
+    // gets a zone
+    function $getFile(file, options = { }) {
+      let code = utils.getFileContent(file, options);
+      if (options.trim !== false) code = _.trim(code);
+      return (options.toDom || options.asDom) ? $html(code) : code;
     }
 
     // 
@@ -135,7 +151,7 @@
         let result;
         let exception;
         try {
-          result = options.validate();
+          result = options.validate(...args);
         }
         // failed to validate
         catch(err) {
@@ -206,12 +222,15 @@
     $self.$html = $html;
     $self.$ = $;
     $self.$denyAccess = $denyAccess;
+    $self.$approveSlide = $approveSlide;
     $self.$speakMessage = $speakMessage;
     $self.$revertMessage = $revertMessage;
     $self.$showHint = $showHint;
     $self.$hideHint = $hideHint;
     $self.$validate = $validate;
     $self.$getZone = $getZone;
+    $self.$getFile = $getFile;
+    $self.$codeValidator = $codeValidator;
 
 		// attach required scripts
 		$SCRIPTS$

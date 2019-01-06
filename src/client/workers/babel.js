@@ -1,6 +1,6 @@
 
-importScripts('/__codelab__/typescript/typescriptServices.js');
-import protectCode from '../../compilers/simplescript/protect';
+importScripts('/__codelab__/babel.min.js');
+// import protectCode from '../../compilers/simplescript/protect';
 import { resolveImports, getErrorFile } from '../../compilers/simplescript/modules';
 
 // import $ts from 'typescript/lib/typescriptServices';
@@ -34,14 +34,16 @@ async function compileFile(file) {
 
 		console.log('gen')
 		
+		const compiled = Babel.transform(code, { presets: ['es2015'] }).code;
+
 		// compile to typescript
-		const compiled = ts.transpile(code, {
-			noResolve: true,
-			strictFunctionTypes: true,
-			removeComments: false,
-			target: 'ES5',
-			// lib: 'ES2015'
-		});
+		// const compiled = ts.transpile(code, {
+		// 	noResolve: true,
+		// 	strictFunctionTypes: true,
+		// 	removeComments: false,
+		// 	target: 'ES5',
+		// 	// lib: 'ES2015'
+		// });
 
 		// share the generated code
 		self.postMessage(['compile:ok', { success: true, content: compiled }]);
@@ -49,24 +51,24 @@ async function compileFile(file) {
 	// check for errors
 	catch (err) {
 
+		const { loc = { } } = err;
 		let line;
-		let column;
-		let message;
+		let column = loc.column;
+		let message = err.message;
 		let source = file;
+
+		// try clean up
+		message = message.replace(/\(\d+\:\d+\)[^$]*/g, '');
 
 		// this was an error importing a module
 		if (err.isImportError) {
-			line = err.line;
-			column = err.column;
+			line = loc.line;
 			source = err.file;
-			message = err.toString();
 		}
 		// needs to resolve the actual file and error
 		else {
 			const offset = getErrorFile(code, err.index);
-			line = err.lineNumber - offset;
-			column = err.column;
-			message = err.description;
+			line = loc.line - offset;
 		}
 
 		// try and determine the real line number

@@ -155,6 +155,7 @@ export default class Assistant extends Component {
 		// set the speech handler
 		$state.lesson.instance.onSpeak = this.onSpeak;
 		$state.lesson.instance.onRevert = this.onRevert;
+		$state.lesson.instance.onApprove = this.onApprove;
 		$state.lesson.instance.onHint = this.onHint;
 
 		// check for existing progress
@@ -270,6 +271,21 @@ export default class Assistant extends Component {
 		this.nextAllowRevertTime = (+new Date) + 1000;
 	}
 
+	// handles moving to the next slide
+	onApprove = (message, emotion, options = { }) => {
+
+		// all done - automatically continue
+		if ($state.lesson.slide.autoNext)
+			return this.onNext();
+
+		// release the waiting 
+		this.toggleClass('is-waiting', false);
+		
+		// say the message, if anything
+		if (message)
+			this.onSpeak({ message, emotion });
+	}
+
 	// returns the message to the original state
 	onRevert = () => {
 		if (this.nextAllowRevertTime > +new Date) return;
@@ -293,8 +309,10 @@ export default class Assistant extends Component {
 		this.views.slide.show();
 
 		// don't do this twice on accident
-		if (this.views.slide.isUsingOverrideMessage)
-			return;
+		const matchesExisting = this.views.slide.overrideMessage === message;
+		if (this.views.slide.isUsingOverrideMessage) {
+			if (matchesExisting) return;
+		}
 
 		// TODO: this is kinda ugly -- to get the formatted
 		// text we're grabbing the text value from the node
@@ -305,17 +323,18 @@ export default class Assistant extends Component {
 		this.views.slide.setContent(message);
 		this.views.slide.isUsingOverrideMessage = true;
 		this.views.slide.hasUsedOverrideMessage = true;
+		this.views.slide.overrideMessage = message;
 
 		// speak and update the emotion, if any
 		if ('emotion' in options)
 			this.setEmotion(options.emotion);
 
 		// check if speaking
-		if (isSwitchingToOverride) {
+		if (isSwitchingToOverride || !matchesExisting) {
 
 			// this is the first time this has happened
 			// so speak the first attempt
-			if (!hasUsedOverrideMessage) {
+			if (!hasUsedOverrideMessage || !matchesExisting) {
 				const speak = this.views.slide.ui.message.text();
 				this.speak([ speak ]);
 			}

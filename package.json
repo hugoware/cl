@@ -24,6 +24,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/standalone": "^7.2.5",
     "@types/express": "^4.16.0",
     "@types/fs-extra": "^5.0.4",
     "babel-core": "^6.26.3",
@@ -61,11 +62,13 @@
     "browserify-shim": "^3.8.14",
     "cash-dom": "^2.3.5",
     "cheerio": "^1.0.0-rc.2",
+    "code-validator": "github:hugoware/code-validator",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "dexie": "^2.0.4",
     "escodegen": "^1.11.0",
     "esprima": "^4.0.1",
+    "ev": "github:hugoware/code-validator",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "fast-xml-parser": "^3.12.5",
@@ -75,6 +78,7 @@
     "gulp-util": "^3.0.8",
     "howler": "^2.0.15",
     "jquery": "^3.3.1",
+    "js-interpreter": "^1.4.6",
     "js-yaml": "^3.12.0",
     "lodash": "^4.17.10",
     "measure-text": "0.0.4",
@@ -101,7 +105,11 @@
     "webshot": "^0.18.0",
     "xmlchecker": "^0.1.0"
   },
-  "browserify": {},
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
   "browserify-shim": {
     "fs": "global:LFS"
   }

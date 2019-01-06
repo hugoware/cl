@@ -34,7 +34,8 @@
 // }
 
 @media(min-width: 992px) {
-  @include breakpoint(#f00, '992px');
+	@include breakpoint(#f00, '992px');
+	@include video_size(860px);
 
   .description {
     max-width: 500px;
@@ -56,7 +57,8 @@
 }
 
 @media(max-width: 991px) {
-  @include breakpoint(#f70, '992px');
+	@include breakpoint(#f70, '992px');
+	@include video_size(670px);
 
   .info {
     padding-left: 40px;
@@ -225,6 +227,7 @@
 
 @media(max-width: 700px) {
 	@include breakpoint(#ff0, '700px');
+	@include video_size(560px);
 	
 	.showcase {
 		padding-left: 0;
@@ -277,6 +280,8 @@
 @media(max-width: 600px) {
   @include breakpoint(#0f0, '600px');
 	$header-font-size: 18px;
+
+	@include video_size(320px);
 	
 	#login-button {
 		display: none;

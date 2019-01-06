@@ -4,7 +4,16 @@ import _ from 'lodash';
 import $state from '../../../../state';
 import Component from '../../../../component';
 import $contentManager from '../../../../content-manager';
+import CodeRunner from '../../../../../viewer/code-runner';
 import $keyboard from 'mousetrap';
+
+// TODO: this is hacky -- fix this up later
+if (!document.getElementById('babel-script')) {
+	const babel = document.createElement('script');
+	babel.setAttribute('id', 'babel-script');
+	babel.src = '/__codelab__/babel.min.js';
+	document.body.appendChild(babel);
+}
 
 // main content view
 import $view from './view.html';
@@ -26,7 +35,15 @@ export default class ReplMode extends Component {
 		});
 
 		// the previewer instance
-		this.preview = preview;
+		// this.preview = preview;
+		CodeRunner.create({
+			outputSelector: '#repl #output',
+			inputSelector: '#repl #input',
+			errorSelector: '#repl #error',
+			questionSelector: '#repl #question',
+		}, instance => {
+			this.runner = instance;
+		});
 
 		// handle script requests
 		this.ui.runScripts.on('click', this.onRunScripts);
@@ -47,22 +64,22 @@ export default class ReplMode extends Component {
 		this.ui.file.val(value);
 	}
 
-	/** access to the output window
-	 * @type {HTMLElement} the preview DOM element
-	 */
-	get output() {
-		return this.context.document.body;
-	}
+	// /** access to the output window
+	//  * @type {HTMLElement} the preview DOM element
+	//  */
+	// get output() {
+	// 	return this.context.document.body;
+	// }
 
-	/** returns the window context for the preview */
-	get context() {
-		return this.ui.output[0].contentWindow;
-	}
+	// /** returns the window context for the preview */
+	// get context() {
+	// 	return this.ui.output[0].contentWindow;
+	// }
 
-	/** access to helper scripts for the main window */
-	get bridge() {
-		return this.context.__CODELAB__;
-	}
+	// /** access to helper scripts for the main window */
+	// get bridge() {
+	// 	return this.context.__CODELAB__;
+	// }
 
 	// handles starting a new project
 	onActivateProject = async project => {
@@ -88,8 +105,8 @@ export default class ReplMode extends Component {
 
 	// clear the view, as needed
 	clear() {
-		if (this.bridge)
-			this.bridge.clear();
+		if (this.runner)
+			this.runner.clear();
 	}
 
 	// handles deactivating a project entirely
@@ -117,19 +134,32 @@ export default class ReplMode extends Component {
 
 	// handles running
 	onRunScripts = () => {
+		this.runner.clear();
+		this.runner.projectUrl = $state.getProjectDomain();
 
-		// need to decide correct file -- wait for compile
-		this.bridge.load('Running /main.ts ...');
+		// check for slide code execution validators
+		let validator;
+		if ($state.lesson) {
+			const { slide } = $state.lesson;
+			validator = $state.lesson.getValidator(slide.runValidation);
+		}
 
-		// wait a moment before starting
+		// delay before running just by a moment
+		this.runner.load('Running /main.ts ...');
 		setTimeout(async () => {
 
 			// get the code
 			await $contentManager.compile('/main.ts', { silent: true });
 			const code = await $contentManager.get('/main.ts');
-			this.bridge.projectUrl = $state.getProjectDomain();
-			this.bridge.run(code);
-		}, 1000)
+
+			// check the run attempt
+			if (validator) {
+				validator({ runner: this.runner, code });
+			}
+			// just run normally
+			else this.runner.run(code);
+
+		}, 600);
 
 	}
 

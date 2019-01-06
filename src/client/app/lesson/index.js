@@ -9,8 +9,9 @@ import $api from '../api';
 import $focus from './focus';
 import $wait from './wait';
 import $lfs from '../lfs';
+import { CodeValidator } from 'code-validator';
 import { load } from './loader';
-import { broadcast } from '../events';
+import { broadcast, listen, ignore } from '../events';
 import ZoneMap from '../zone-map';
 
 // can't seem to use this anywhere in a playground
@@ -34,28 +35,14 @@ export default class Lesson {
 			// libraries
 			_, $: $jquery,
 
+			// code validator helper
+			$validate: CodeValidator.eval,
+
 			// parsing html snippets
-			$html: (str, options = { }) => {
-				
-				// just converting a cheerio object
-				if (_.isObject(str))
-					return $cheerio(str);
+			$html: toCheerioObject,
 
-				// failed validation
-				str = `<root>${str}</root>`;
-				try {
-					$xml.check(`<?xml version="1.0" ?>${str}`); 
-				}
-				catch (err) {
-					return null;
-				}
-
-				// parse the html
-				return $cheerio(str, {
-					withDomLvl1: false,
-					xmlMode: true
-				});
-			},
+			// reads a file
+			getFileContent: $state.getFileContent,
 
 			// other utilities
 			getZoneContent: $state.getZoneContent
@@ -67,7 +54,7 @@ export default class Lesson {
 		instance.project = project;
 		instance.state = state;
 		instance.modified = modified;
-
+		
 		// create the lesson
 		const lesson = new Lesson(instance);
 
@@ -88,6 +75,7 @@ export default class Lesson {
 		}
 
 		// give back the result
+		window.LESSON = lesson;
 		return lesson;
 	}
 
@@ -97,6 +85,9 @@ export default class Lesson {
 
 		// lock and unlock states for files
 		this.files = { };
+
+		// tracking slide events
+		this.events = [ ];
 
 		// by default, start so that a navigation
 		// should happen
@@ -159,6 +150,16 @@ export default class Lesson {
 	 * @returns {function} the validation function
 	 */
 	getValidator = key => {
+		return this.instance[key];
+	}
+
+	// not sure if this is going to be a thing or not
+	// but not everything is a validator
+	/** finds an action by name for the lesson
+	 * @param {string} key the name of the action
+	 * @returns {function} the function
+	 */
+	getAction = key => {
 		return this.instance[key];
 	}
 
@@ -359,7 +360,7 @@ function setActiveSlide(lesson, slide) {
 
 	// check for setting the cursor
 	if (slide.cursor)
-		broadcast('set-cursor', slide.cursor);
+		broadcast('set-editor-cursor', slide.cursor);
 
 	// check for markers
 	const markers = slide.markers || slide.marker;
@@ -383,6 +384,25 @@ function setActiveSlide(lesson, slide) {
 	_.each(slide.actions, action => {
 		const parts = _.map(action.split(/,/g), _.trim);
 		broadcast.apply(null, parts);
+	});
+
+	// set the events for this slide
+	_.each(lesson.events, ignore);
+	_.each(slide.events, params => {
+		params = _.map(params.split(','), _.trim);
+		const key = params.shift();
+		const action = lesson.getAction(params.shift());
+		const args = _.map(params, arg => {
+			console.log('convert to args', arg);
+			return arg;
+		});
+
+		// listen for events
+		listen(key, (...event) => {
+			const pass = [].concat(args).concat(event);
+			action(...pass);
+		});
+		
 	});
 
 	// let other systems know the slide changed
@@ -477,4 +497,29 @@ async function endLesson(lesson) {
 		});
 	}
 
+}
+
+
+
+// creates a cheerio object for validation
+function toCheerioObject(str, options = {}) {
+
+	// just converting a cheerio object
+	if (_.isObject(str))
+		return $cheerio(str);
+
+	// failed validation
+	str = `<root>${str}</root>`;
+	try {
+		$xml.check(`<?xml version="1.0" ?>${str}`);
+	}
+	catch (err) {
+		return null;
+	}
+
+	// parse the html
+	return $cheerio(str, {
+		withDomLvl1: false,
+		xmlMode: true
+	});
 }

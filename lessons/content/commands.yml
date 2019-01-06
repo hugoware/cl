@@ -107,6 +107,11 @@ slide:
     # if providing arguments, separate with commas
     # arguments will be JSON.parsed
     - event-with-args, 100, true
+
+  # listens for events - will dispose when
+  # leaving the slide
+  events:
+    - event-name, functionToCall, ...args
       
 
   # waiting for events
@@ -133,28 +138,23 @@ slide:
     - ::validate(nameOfValidationFunction, optionalInterval)
 
 
+  # shows a point on screen for a selector
+  markers:
+    - $file-browser [file="/main.css"] ::center
+    - $file-browser ::center ::hover(2s) ::lead
+    - $file-browser .actions .upload-file ::center
+    
+  # highlights an area on the screen
   highlights:
-
     # highlights a file in the file-browser
     - fileBrowser(/index.html)
 
     # IDs are prefix with $ instead of #
     - $id-selector .target
 
-
-  markers:
-    # - $file-browser [file="/main.css"] ::center
-    # - $file-browser ::center ::hover(2s) ::lead
-    # - $file-browser .actions .upload-file ::center
-    
-  highlights:
-    # - $file-browser
-    # - $file-browser [file="/controller.png"]
+    - $file-browser
+    - $file-browser [file="/controller.png"]
     - $file-browser .actions .create-file
-
-  validation:
-    openFile: canOpenIndexHtml
-
 
     
 # quiz mode screens

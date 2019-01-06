@@ -232,6 +232,17 @@ const $state = {
 		return map.getContent(id);
 	},
 
+	/** gets the current content for a file path */
+	getFileContent: (path, options) => {
+		const file = $state.paths[path];
+		if (!file) return '';
+
+		// check what to use
+		let content = file.current || file.content;
+		if (options.useCached) content = file.content;
+		return content;
+	},
+
 	// /** finds a project item using an ID
 	//  * @param {string} id the ID of the item to find
 	//  * @returns {ProjectItem}

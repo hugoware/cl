@@ -52,7 +52,8 @@ export default class ManagedEditor {
 
 		// keep in sync with lessons
 		listen('slide-changed', this.onSlideChanged);
-		listen('set-cursor', this.onSetCursor);
+		listen('set-editor-cursor', this.onSetCursor);
+		listen('set-editor-focus-point', this.onSetFocusPoint);
 
 		// prevent auto complete events when
 		// an entry is not allowed - check if there's
@@ -104,6 +105,46 @@ export default class ManagedEditor {
 			else if (start)
 				this.setCursor(start.row, start.column);
 		}, 200);
+	}
+
+	// sets the focus point position
+	onSetFocusPoint = position => {
+		const instance = this.activeInstance;
+		const { session, content } = instance;
+		const { doc, focusPoint } = session;
+		const total = content.length - 1;
+
+		// get the index
+		let startAt = Math.min(total, position.start);
+		let endAt = Math.max(startAt, Math.min(total, position.end - 1));
+
+		// if this is a newline, then move forward by one more
+		const char = content.substr(startAt, endAt);
+		const isNewLine = instance.session.doc.getNewLineCharacter() === char;
+		if (isNewLine) {
+			startAt++;
+			endAt++;
+		}
+		
+		// update the position
+		const end = doc.indexToPosition(endAt);
+		const start = endAt !== startAt ? doc.indexToPosition(startAt) : end;
+
+		// make sure the line numbers match
+		if (position.line !== start.row) {
+			start.row = end.row = position.line;
+			start.col = end.col = 0;
+		}
+
+		// update the range
+		focusPoint.range.start.row = start.row;
+		focusPoint.range.start.column = start.column;
+		focusPoint.range.end.row = end.row;
+		focusPoint.range.end.column = end.column;
+
+		// make sure they don't match
+		if (end.column === start.column);
+			focusPoint.range.end.column++;
 	}
 
 	// handle command requests
@@ -321,6 +362,12 @@ export default class ManagedEditor {
 
 				// create the handler for content changes
 				session.on('change', this.onChanged);
+
+				// used when needing to focus on something that's not a zone
+				const focus = new Range(0, 0, 0, 1);
+				const index = session.addMarker(focus);
+				session.focusPoint = session.getMarkers()[index];
+				session.focusPoint.clazz = 'focus_point text';
 
 				// the the map and zones for this file, if any
 				let map;
