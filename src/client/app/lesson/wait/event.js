@@ -3,6 +3,7 @@ import $ from 'jquery';
 import $state from '../../state';
 import { listen, remove } from '../../events';
 const $context = $(document.body);
+const ALWAYS_VALID = () => true;
 
 // waits for a user interaction
 export default class UserEvent {
@@ -51,7 +52,7 @@ function setupEvent(instance) {
 	// find the validation action
 	const event = commands.event[0];
 	const validator = commands.event[1];
-	const action = $state.lesson.getValidator(validator);
+	const action = $state.lesson.getValidator(validator) || ALWAYS_VALID;
 	const debounce = (0 | (commands.event[2] || 0)) || action.debounce;
 	const hasDelay = _.isNumber(action.delay);
 

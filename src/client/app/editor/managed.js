@@ -37,7 +37,7 @@ const $languages = {
 	vb: 'vb',
 	lua: 'lua',
 	js: 'javascript',
-	ts: 'typescript',
+	ts: 'javascript',
 	py: 'python',
 	plain: 'plain'
 };
@@ -109,6 +109,8 @@ export default class ManagedEditor {
 
 	// sets the focus point position
 	onSetFocusPoint = position => {
+		if (!this.activeInstance) return;
+
 		const instance = this.activeInstance;
 		const { session, content } = instance;
 		const { doc, focusPoint } = session;
@@ -119,8 +121,9 @@ export default class ManagedEditor {
 		let endAt = Math.max(startAt, Math.min(total, position.end - 1));
 
 		// if this is a newline, then move forward by one more
-		const char = content.substr(startAt, endAt);
-		const isNewLine = instance.session.doc.getNewLineCharacter() === char;
+		const range = content.substr(position.start, position.end - position.start);
+		const empty = _.trim(range).length === 0;
+		const isNewLine = instance.session.doc.getNewLineCharacter() === range;
 		if (isNewLine) {
 			startAt++;
 			endAt++;
@@ -137,14 +140,13 @@ export default class ManagedEditor {
 		}
 
 		// update the range
+		focusPoint.clazz = `focus_point text ${empty ? '' : 'highlighted'}`;
 		focusPoint.range.start.row = start.row;
 		focusPoint.range.start.column = start.column;
 		focusPoint.range.end.row = end.row;
 		focusPoint.range.end.column = end.column;
+		focusPoint.range.end.column++;
 
-		// make sure they don't match
-		if (end.column === start.column);
-			focusPoint.range.end.column++;
 	}
 
 	// handle command requests
@@ -305,6 +307,14 @@ export default class ManagedEditor {
 		this.editor.setValue('');
 	}
 
+	/** resets the active file to a prior state */
+	resetFile = file => {
+		// reset zones??
+		this.editor.setValue(file.current, 1);
+		this.editor.clearSelection();
+		this.editor.focus();
+	}
+
 	/** removes a file from the editor
 	 * @param {string} path the path of the file to remove
 	 */
@@ -325,6 +335,11 @@ export default class ManagedEditor {
 	activateFile = async file => {
 		return new Promise(async resolve => {
 			let instance = this.getInstance(file.path);
+
+			// disable brace matching when using a lesson
+			// to help improve code comparisons and help students
+			// learn to remember both sides of bracing
+			this.editor.setBehavioursEnabled(!$state.lesson);
 
 			// if already open
 			if (this.activeInstance && this.activeInstance.file.path === file.path)

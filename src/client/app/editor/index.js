@@ -62,7 +62,8 @@ class EditorManager {
 		const editor = createEditor(container, {
 			enableBasicAutocompletion: true, // [{ getCompletions }],
 			enableSnippets: false,
-			enableLiveAutocompletion: true
+			enableLiveAutocompletion: true,
+			copyWithEmptySelection: false
 		});
 
 		// create the editor instance

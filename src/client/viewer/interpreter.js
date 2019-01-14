@@ -9,6 +9,9 @@ export default class CodeInterpreter {
 		// tracking events
 		this.events = {};
 
+		// check that there's some code here
+		this.hasCode = (code || '').toString().replace(/\W+/g, '').length > 0;
+
 		// create the code execution
 		this.interpreter = new Interpreter(code, (interpreter, scope) => {
 			this.scope = scope;
@@ -37,6 +40,7 @@ export default class CodeInterpreter {
 		});
 	}
 
+	// holds execution
 	pause() {
 		this.paused = true;
 	}
@@ -44,7 +48,6 @@ export default class CodeInterpreter {
 	// continues execution
 	resume() {
 
-		// tie
 		const isPaused = !!this.paused;
 		if (!isPaused)
 			console.warn('resume without pause?');
@@ -104,15 +107,43 @@ export default class CodeInterpreter {
 
 	// executes the code until set to wait
 	run() {
-		const limit = ts(1000);
-		while (true) {
-			if (ts() > limit) throw 'script timeout';
-			this.finished = !this.interpreter.step();
-			if (this.finished || this.paused) break;
+		const limit = ts(2000);
+
+		// checks for an error flag and throws an exception - this
+		// could be caused by parser errors
+		if (this.error) {
+			this.finished = true;
+
+			// raise the error
+			this.triggerEvent('error', [ this.error ]);
+			return;
 		}
 
-		if (this.finished)
-			this.triggerEvent('finished');
+		// handle any errors
+		try {
+			while (true) {
+				
+				// code has run for too long without response
+				if (ts() > limit) {
+					const error = new Error('Execution timeout: The running code appears to be stuck in an infinite loop or recursive function.');
+					error.timeout = true;
+					throw error;
+				}
+
+				// running till finished
+				this.finished = !this.interpreter.step();
+				if (this.finished || this.paused) break;
+			}
+			
+			// finished running
+			if (this.finished)
+				this.triggerEvent('finished');
+		}
+		// handle errors
+		catch (ex) {
+			this.finished = true;
+			this.triggerEvent('error', [ ex ]);
+		}
 	}
 
 }

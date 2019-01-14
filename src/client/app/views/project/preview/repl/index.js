@@ -7,6 +7,8 @@ import $contentManager from '../../../../content-manager';
 import CodeRunner from '../../../../../viewer/code-runner';
 import $keyboard from 'mousetrap';
 
+const EMPTY_BOUNDS = { top: 0, bottom: 0 };
+
 // TODO: this is hacky -- fix this up later
 if (!document.getElementById('babel-script')) {
 	const babel = document.createElement('script');
@@ -27,7 +29,7 @@ export default class ReplMode extends Component {
 
 			ui: {
 				filePath: '.file-path',
-				output: '.window iframe.output',
+				output: '#repl.window',
 
 				// actions
 				runScripts: '.run-scripts'
@@ -37,13 +39,23 @@ export default class ReplMode extends Component {
 		// the previewer instance
 		// this.preview = preview;
 		CodeRunner.create({
+			containerSelector: '#repl',
 			outputSelector: '#repl #output',
 			inputSelector: '#repl #input',
 			errorSelector: '#repl #error',
 			questionSelector: '#repl #question',
 		}, instance => {
+			
+			// save the runner instance
 			this.runner = instance;
+
+			// setup a default error handler
+			this.runner.handleException = this.onHandleException;
 		});
+
+
+		// global events
+		this.listen('assistant-updated', this.onAssistantUpdated);
 
 		// handle script requests
 		this.ui.runScripts.on('click', this.onRunScripts);
@@ -81,6 +93,12 @@ export default class ReplMode extends Component {
 	// 	return this.context.__CODELAB__;
 	// }
 
+	// handles exception messages
+	onHandleException = ex => {
+		console.log('handle ex', ex);
+		this.runner.fail(ex);
+	}
+
 	// handles starting a new project
 	onActivateProject = async project => {
 		this.reset();
@@ -109,6 +127,25 @@ export default class ReplMode extends Component {
 			this.runner.clear();
 	}
 
+	// handle updates
+	onAssistantUpdated = () => {
+
+		// this is an additonal step to make sure that the assistant
+		// doesn't covert up the code window
+		const relativeTo = Component.select('#assistant .panel')[0];
+
+		// get the overlap area
+		const bounds = relativeTo ? relativeTo.getBoundingClientRect() : EMPTY_BOUNDS;
+		
+		// adjust the height
+		let height = bounds.bottom - bounds.top;
+		if (height > 0) height -= 30;
+
+		// update the view
+		this.ui.output.css({ bottom: `${height}px` });
+
+	}
+
 	// handles deactivating a project entirely
 	onDeactivateProject = () => {
 		this.clear();
@@ -124,6 +161,14 @@ export default class ReplMode extends Component {
 	onActivateFile = async (file, viewOnly) => {
 		this.activeFile = file;
 		this.filePath = file.path;		
+	}
+
+	// handles successful code executions
+	onCodeExecutionApproval = (options = {}) => {
+		if ($state.lesson)
+			$state.createRestorePoint();
+
+		this.broadcast('code-execution-approval', options)
 	}
 
 	// handles replacing the content of the view if 
@@ -145,21 +190,35 @@ export default class ReplMode extends Component {
 		}
 
 		// delay before running just by a moment
-		this.runner.load('Running /main.ts ...');
+		const fileName = '/main.ts';
+		this.runner.load(`Running ${fileName} ...`);
 		setTimeout(async () => {
 
-			// get the code
-			await $contentManager.compile('/main.ts', { silent: true });
-			const code = await $contentManager.get('/main.ts');
+			// compile the code -- save any errors
+			// directly to the runner. When `.run` is called
+			// that error will be thrown right away
+			await $contentManager.compile(fileName, {
+				onError: ex => this.runner.error = ex,
+				silent: true
+			});
 
-			// check the run attempt
+			// get the code to execute
+			const code = await $contentManager.get(fileName);
+
+			// handle the correct path
 			if (validator) {
-				validator({ runner: this.runner, code });
+
+				// run with the validator
+				validator({
+					onSuccess: this.onCodeExecutionApproval,
+					runner: this.runner,
+					code
+				});
 			}
-			// just run normally
+			// this is
 			else this.runner.run(code);
 
-		}, 600);
+		}, 100);
 
 	}
 

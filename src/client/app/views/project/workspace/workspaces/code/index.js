@@ -29,7 +29,8 @@ export default class CodeEditor extends Component {
 
 			ui: {
 				editor: '.editor',
-				save: '.save'
+				save: '.save',
+				reset: '.reset',
 			}
 		});
 
@@ -58,9 +59,11 @@ export default class CodeEditor extends Component {
 		this.listen('lesson-finished', this.onLessonFinished);
 		this.listen('project-errors', this.onProjectErrors);
 		this.ui.save.on('click', this.onSaveChanges);
+		this.ui.reset.on('click', this.onResetFile);
 
 		/** @type {ManagedEditor} */
-		this.editor = $editor.createInstance(this.ui.editor[0]);
+		const disableBraceMatching = !!$state.lesson;
+		this.editor = $editor.createInstance(this.ui.editor[0], { disableBraceMatching });
 		this.editor.onChanged = this.onContentChange;
 
 		// allow keyboard shortcuts
@@ -88,6 +91,13 @@ export default class CodeEditor extends Component {
 		return this.activeInstance && this.editor.activeInstance.file;
 	}
 
+	/** can this reset files or not
+	 * @returns {bool}
+	 */
+	get canResetFiles() {
+		return $state.lesson && !!this.activeFile;
+	}
+
 	// matches the editor size for a period of time
 	onMaintainEditorSize = () => {
 		if ((+new Date) > this.maintainSizeLimit) return;
@@ -108,6 +118,7 @@ export default class CodeEditor extends Component {
 	onSlideChanged = () => {
 		this.editor.clearUndoHistory();
 		this.editor.editor.resize(true);
+		this.updateResetAction();
 	}
 
 	// focus selection on the editor, if any
@@ -199,6 +210,8 @@ export default class CodeEditor extends Component {
 		// update the view
 		if (instance.selection)
 			this.editor.setSelection(instance.selection);
+
+		this.updateResetAction();
 	}
 
 	// handles deleting an active file instance
@@ -222,6 +235,42 @@ export default class CodeEditor extends Component {
 	// handled when the console log is displayed
 	onProjectErrors = () => {
 		this.activateMaintainSize();
+	}
+
+	// reset the contents for a file
+	onResetFile = () => {
+		if (!this.canResetFiles) return;
+
+		// replace the content for the file
+		const file = this.activeFile;
+		const { restore } = file;
+		if (!_.isString(restore)) return;
+		
+		// replace the content
+		file.current = restore;
+		this.editor.resetFile(file);
+
+		// refreshes the hint, if any
+		this.broadcast('modify-file', file);
+		setTimeout(() => this.broadcast('refresh-hint', file), 25);
+
+		// update the saved version of the file
+		contentManager.update(file.path, file.current);
+	}
+
+	// shows a restore button if a file has a restore state
+	updateResetAction = () => {
+
+		// this won't happen without a lesson
+		if (!this.canResetFiles)
+			return this.removeClass('has-reset');
+
+		// show the reset button if this file
+		// has an available restore state
+		this.toggleClassMap({
+			'has-reset': !!this.activeFile.restore
+		});
+
 	}
 
 	/** saves a specific file

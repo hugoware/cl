@@ -15,7 +15,7 @@
     var $state = state;
 
     // access to code syntax and content validator
-    const $codeValidator = utils.$validate;
+    const $validateCode = utils.$validate;
 
     // parses a string of html
     function $html(str, options) {
@@ -230,8 +230,17 @@
     $self.$validate = $validate;
     $self.$getZone = $getZone;
     $self.$getFile = $getFile;
-    $self.$codeValidator = $codeValidator;
+    $self.$validateCode = $validateCode;
 
+    // create some common messages
+    _.assign($speakMessage, {
+      MATCH_EXAMPLE: () =>
+        $speakMessage("Almost there! The code ran successfully, but you need to finish matching the example!", 'happy'),
+      EXECUTION_ERROR: () =>
+        $speakMessage('Oops! It appears there was an error running that code!', 'surprised')
+    });
+
+    
 		// attach required scripts
 		$SCRIPTS$
 	}

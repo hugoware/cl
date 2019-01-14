@@ -4,6 +4,7 @@ import _ from 'lodash';
 import $sound from '../../../sound';
 import $state from '../../../state';
 import $speech from '../../../speech';
+import $wait from '../../../lesson/wait';
 import Component from '../../../component';
 import Slide from './slide';
 import Question from './question';
@@ -54,6 +55,8 @@ export default class Assistant extends Component {
 		this.listen('assistant-speak', this.onSpeak);
 		this.listen('lesson-finished', this.onFinishLesson);
 		this.listen('save-file', this.onSaveFile);
+		this.listen('modify-file', this.onModifyFile);
+		this.listen('code-execution-approval', this.onCodeExecutionApproval);
 		this.on('click', '.next', this.onNext);
 		this.on('click', '.previous', this.onPrevious);
 
@@ -101,16 +104,19 @@ export default class Assistant extends Component {
 	// hides the assistant
 	onReset = () => {
 		this.removeClass('leave');
+		this.notifyAssistantUpdate();
 	}
 
 	// display the popup message again
 	onRestorePopUp = () => {
 		this.removeClass('hide-popup');
+		this.notifyAssistantUpdate();
 	}
-
+	
 	// hides the popup message
 	onHidePopUp = () => {
 		this.addClass('hide-popup');
+		this.notifyAssistantUpdate();
 	}
 
 	// sync the lesson state
@@ -118,6 +124,11 @@ export default class Assistant extends Component {
 		if ($state.lesson)
 			$state.lesson.saveProgress();
 	}
+
+	// code execution approval can allow the
+	// assistant to move forward
+	onCodeExecutionApproval = () =>
+		this.onApprove();
 
 	/** changes the speech enablement mode
 	 * @param {boolean} enabled should speech be enabled or not
@@ -136,11 +147,22 @@ export default class Assistant extends Component {
 			$speech.stop();
 	}
 
+	// if the file is changed, always revert any
+	// success messages
+	onModifyFile = () => {
+		this.addClass('is-waiting');
+		this.views.slide.hideFollowUp();
+		$wait.reactivate();
+	}
+
 	// finished with the assistant
 	onFinishLesson = () => {
 		this.addClass('leave');
 		$speech.stop();
-		setTimeout(this.hide, 1000);
+		setTimeout(() => {
+			this.hide();
+			this.notifyAssistantUpdate();
+		}, 1000);
 	}
 
 	// activates
@@ -160,15 +182,15 @@ export default class Assistant extends Component {
 
 		// check for existing progress
 		let index = 0;
-		let files = [ ];
-		const { progress } = $state.project;
-		if (progress) {
-			files = _.isArray(progress.files) ? progress.files : [ ];
+		// let files = [ ];
+		// const { progress } = $state.project;
+		// if (progress) {
+		// 	files = _.isArray(progress.files) ? progress.files : [ ];
 
-			// set the starting frame
-			index = 0 | (progress.index || 0);
-			if (isNaN(index)) index = 0;
-		}
+		// 	// set the starting frame
+		// 	index = 0 | (progress.index || 0);
+		// 	if (isNaN(index)) index = 0;
+		// }
 
 		// go to the correct frame
 		await $state.lesson.go(index);
@@ -177,21 +199,21 @@ export default class Assistant extends Component {
 		this.refresh();
 		this.show();
 
-		// check for files to open
-		const active = progress.activeFile || files[0];
+		// // check for files to open
+		// const active = progress.activeFile || files[0];
 
-		// activate the main file, if possible
-		if (active) {
-			const file = $state.findItemByPath(active);
-			if (file) this.broadcast('activate-file', file);
-		}
+		// // activate the main file, if possible
+		// if (active) {
+		// 	const file = $state.findItemByPath(active);
+		// 	if (file) this.broadcast('activate-file', file);
+		// }
 
-		// just open remaining files
-		for (let i = files.length; i-- > 0;)
-			if (files[i] !== active) {
-				const file = $state.findItemByPath(files[i]);
-				if (file) this.broadcast('open-file', file);
-			}
+		// // just open remaining files
+		// for (let i = files.length; i-- > 0;)
+		// 	if (files[i] !== active) {
+		// 		const file = $state.findItemByPath(files[i]);
+		// 		if (file) this.broadcast('open-file', file);
+		// 	}
 
 	}
 
@@ -199,6 +221,7 @@ export default class Assistant extends Component {
 	onDeactivateProject = () => {
 		if ($speech.active) $speech.stop();
 		this.slideIndex = null;
+		this.notifyAssistantUpdate();
 		this.hide();
 	}
 
@@ -220,6 +243,11 @@ export default class Assistant extends Component {
 		this.refresh();
 	}
 
+	// let the app know the assistant changed
+	notifyAssistantUpdate = () => {
+		setTimeout(() => this.broadcast('assistant-updated'), 0);
+	}
+
 	// refresh the display for this slide
 	refresh = async () => {
 
@@ -228,6 +256,7 @@ export default class Assistant extends Component {
 
 		// make sure the popup is visible
 		this.removeClass('hide-popup');
+		this.notifyAssistantUpdate();
 
 		// make sure the slide changed
 		const index = $state.lesson.index;
@@ -255,6 +284,9 @@ export default class Assistant extends Component {
 		// pick the emotion, if any
 		this.setEmotion(slide.emotion);
 
+		// hide the follow up message, if any
+		this.views.slide.hideFollowUp();
+
 		// show the correct view
 		_.each(this.views, view => view.hide());
 		view.show();
@@ -273,13 +305,17 @@ export default class Assistant extends Component {
 
 	// handles moving to the next slide
 	onApprove = (message, emotion, options = { }) => {
+		console.log('try approve');
 
 		// all done - automatically continue
-		if ($state.lesson.slide.autoNext)
+		if ($state.lesson.slide.autoNext !== false)
 			return this.onNext();
 
 		// release the waiting 
-		this.toggleClass('is-waiting', false);
+		this.toggleClassMap({
+			'is-waiting': false,
+			'has-follow-up': !!message
+		});
 		
 		// say the message, if anything
 		if (message)
@@ -290,6 +326,7 @@ export default class Assistant extends Component {
 	onRevert = () => {
 		if (this.nextAllowRevertTime > +new Date) return;
 		this.views.slide.revert();
+		this.notifyAssistantUpdate();
 		$speech.stop();
 	}
 
@@ -302,6 +339,9 @@ export default class Assistant extends Component {
 	onSpeak = (options = { }) => {
 		const message = _.trim(options.message);
 		if (!_.some(message)) return;
+
+		// let others know the assistant has updated
+		this.notifyAssistantUpdate();
 
 		// force the slide mode if something is requesting
 		// a speech message
@@ -320,7 +360,7 @@ export default class Assistant extends Component {
 		// replace the content
 		const isSwitchingToOverride = !this.views.slide.isUsingOverrideMessage;
 		const hasUsedOverrideMessage = !!this.views.slide.hasUsedOverrideMessage;
-		this.views.slide.setContent(message);
+		this.views.slide.setContent(message, true);
 		this.views.slide.isUsingOverrideMessage = true;
 		this.views.slide.hasUsedOverrideMessage = true;
 		this.views.slide.overrideMessage = message;
@@ -335,7 +375,7 @@ export default class Assistant extends Component {
 			// this is the first time this has happened
 			// so speak the first attempt
 			if (!hasUsedOverrideMessage || !matchesExisting) {
-				const speak = this.views.slide.ui.message.text();
+				const speak = this.views.slide.getMessage();
 				this.speak([ speak ]);
 			}
 

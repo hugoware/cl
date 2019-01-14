@@ -22,10 +22,10 @@
 				.label Run Code
 				+shortcut('mod', 'Enter')
 		#repl.window
-			.exception
+			#error
 				h1 Code Exception
 				p Looks like there was an error while running that code!
-				#error TypeError: Unable to find the function called Console.log
+				.message TypeError: Unable to find the function called Console.log
 
 			pre#output
 			#command

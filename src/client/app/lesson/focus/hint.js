@@ -20,6 +20,7 @@ export default class HintDisplay extends Component {
 		this.listen('reset', this.onReset);
 		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('finish-project', this.onFinishProject);
+		this.listen('refresh-hint', this.onRefreshHint);
 		this.listen('show-hint', this.onShowHint);
 		this.listen('hide-hint', this.onHideHint);
 
@@ -54,15 +55,19 @@ export default class HintDisplay extends Component {
 
 	// updates the marker position
 	onAutoRefresh = () => {
+		this.onRefreshHint();
+	}
+	
+	// updates the marker position
+	onRefreshHint = () => {
 
 		// don't do anything if already hiding
 		if (this.isHidingHint) return;
-		this.refreshPosition();
+		setTimeout(this.refreshPosition);
 	}
 
 	// handles showing the hint
 	onShowHint = options => {
-		console.log('hint', options);
 		
 		// hint is not required
 		if (options === null)
@@ -73,9 +78,16 @@ export default class HintDisplay extends Component {
 			this.broadcast('set-editor-focus-point', options);
 			this.selector = this.position;
 			this.isFocusPoint = true;
+			this.refreshPosition();
 		}
 		// choose the location
 		else {
+
+			// clears the current focus, if any
+			if (this.isFocusPoint) {
+				this.broadcast('hide-editor-focus-point');
+			}
+
 			this.selector = this.cursor;
 			this.isFocusPoint = false;
 		}
@@ -100,7 +112,7 @@ export default class HintDisplay extends Component {
 			setTimeout(() => {
 				this.refreshPosition();
 				this.addClass('show');
-			}, 250);
+			}, 50);
 		
 		// make sure to activate the hint even if
 		// the message itself didn't change
@@ -121,17 +133,44 @@ export default class HintDisplay extends Component {
 		if (this.isHidingHint) return;
 		this.isHidingHint = true;
 		this.removeClass('show');
+
+		// HACK: just select and remove the class
+		if (this.isFocusPoint) {
+			setTimeout(() => {
+				const element = this.position.get();
+				element.removeClass('highlighted');
+			}, 50);
+		}
 	}
 
 	// match the cursor position for now
 	refreshPosition = () => {
 		this.selector.refresh();
-		const bounds = this.selector.getBounds() || MISSING_BOUNDS;
+
+		// ensure the bounds to use
+		let bounds = this.selector.getBounds();
+		if (!bounds && this.isFocusPoint)
+			bounds = this.focusPoint;
+		if (!bounds)
+			bounds = MISSING_BOUNDS;
+
+		// calculate the position
 		const { left } = bounds;
 		const right = isNaN(bounds.right) ? left : bounds.right;
 		const mid = (left + right) / 2;
-		const top = bounds.top + (this.isFocusPoint ? 10 : 0);
-		this.offset({ top, left: mid });
+		const top = bounds.top;
+		const loc = { top, left: mid };
+
+		// for the focus point, save the position
+		// this is used when the focus point is removed
+		// but still needs an origin point
+		if (this.isFocusPoint)
+			this.focusPoint = location;
+
+		this.offset({
+			top: loc.top + (this.isFocusPoint ? 10 : 0),
+			left: loc.left
+		});
 	}
 
 }

@@ -82,6 +82,11 @@ export function clear() {
 
 }
 
+// allow wait for events to start working again
+function reactivate() {
+	$success = null;
+}
+
 // handle a successful attempt to move to the next slide
 function handleResult(success) {
 	if (success === $success) return;
@@ -102,5 +107,6 @@ function processQueue() {
 // share functions
 export default {
 	clear,
-	waitFor
+	waitFor,
+	reactivate
 };

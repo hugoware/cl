@@ -25,7 +25,7 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 
 			border-radius: 3px;
 			box-shadow: 0 1px 4px #000;
-			
+
 			position: relative;
 			display: inline-block;
 
@@ -35,6 +35,11 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 			&:hover {
 				background: lighten($workspace-action-background-color, 10%);
 				transform: scale(1.05, 1.05);
+			}
+
+			svg g,
+			svg path {
+				fill: #fff;
 			}
 
 		}
@@ -65,6 +70,18 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 				position: relative;
 			}
 		}
+
+		// special
+		.action.reset {
+			background: #8C49AB;
+			float: right;
+			display: none;
+		}
+
+	}
+
+	.code-editor.has-reset .action.reset {
+		display: block !important;
 	}
 
 	.editors {

@@ -42,6 +42,12 @@ export default class Workspace extends Component {
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onClearWorkspace);
 		this.listen('clear-workspace', this.onClearWorkspace);
+		this.listen('refresh-workspace', this.onRefreshWorkspace);
+	}
+
+	// handles creating resetable points
+	onRefreshWorkspace = () => {
+
 	}
 
 	// clears all workspaces

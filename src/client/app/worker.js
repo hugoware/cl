@@ -13,7 +13,7 @@ const $workers = {
 	'js': 'babel',
 	'ts': 'babel',
 	'babel': 'babel',
-	'typescript': 'babel',
+	// 'typescript': 'babel',
 	// 'rb': 'ruby',
 	// 'ruby': 'ruby',
 	// 'css': 'css',
@@ -106,7 +106,6 @@ export default async function getWorker({ name, file }) {
 	return null;
 	
 	// load the worker
-	console.log('load worker:', name);
 	return new Promise(async (resolve) => {
 
 		// check the cache first

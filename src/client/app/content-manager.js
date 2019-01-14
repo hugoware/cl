@@ -61,7 +61,7 @@ export async function update(path, content) {
 }
 
 // tries to compile a file, if possible
-export function compile(path, { silent } = { }) {
+export function compile(path, { silent, onError } = { }) {
 
 	// create a handler for when the work is ready to use
 	const notifyFinished = !silent 
@@ -89,6 +89,7 @@ export function compile(path, { silent } = { }) {
 		if (!result.success) {
 			$errorManager.add(path, result.error);
 			$compiled[path] = { lastCompile, content: result.content || '' };
+			if (onError) onError(result.error);
 		}
 		// the compile worked
 		else {

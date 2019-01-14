@@ -54,11 +54,13 @@ export default class CodeRunner {
 		// UI elements
 		this.ui = {
 			doc: $(document.body),
-
+			
 			// ui elements
+			container: $(options.containerSelector),
 			output: $(options.outputSelector),
 			input: $(options.inputSelector),
 			error: $(options.errorSelector),
+			errorMessage: $(`${options.errorSelector} .message`),
 			question: $(options.questionSelector),
 		};
 
@@ -71,6 +73,15 @@ export default class CodeRunner {
 		__CODELAB__.end = this.onEnd;
 		__CODELAB__.clear = this.onClear;
 	}
+
+	// finds and output value
+	getOutput = (index, position) => {
+		const row = this.stdout[index] || [];
+		return isNaN(position) ? row : row[position];
+	}
+
+	// finds a value from stdin
+	getInput = index => this.stdin[index]
 
 	// resets the view
 	onClear = () => {
@@ -87,6 +98,7 @@ export default class CodeRunner {
 	onRun = code => {
 		this.interpreter = new CodeInterpreter(code);
 		this.interpreter.on('finished', this.onEnd);
+		this.interpreter.on('error', this.onError);
 		
 		// create handlers
 		this.interpreter.on('console-log', this.onConsoleLog);
@@ -100,6 +112,9 @@ export default class CodeRunner {
 		this.interpreter.on('console-image', this.onConsoleImage);
 		this.interpreter.on('console-clear', this.onConsoleClear);
 		this.interpreter.on('set-timeout', this.onDelay);
+
+		// copy any existing errors before running
+		this.interpreter.error = this.error;
 		
 		// start running the code
 		this.interpreter.run();
@@ -115,6 +130,23 @@ export default class CodeRunner {
 		// finish the program
 		this.notify('execution-finished');
 		this.writeOutput('end', 'Program finished...')
+	}
+
+	// handles ending execution
+	onError = ex => {
+		
+		// check for ending callbacks
+		if ($.isFunction(this.options.onError))
+			this.options.onError(this, ex);
+
+		// updte error message
+		this.ui.error.addClass('has-error');
+		const message = ex.message || ex.toString();
+		this.ui.errorMessage.text(message);
+
+		// finish the program
+		this.notify('execution-finished');
+		this.writeOutput('end', 'Program error...')
 	}
 
 	// capture printed lines
@@ -306,11 +338,17 @@ export default class CodeRunner {
 	}
 
 	// some shortcuts
+	fail = () => this.writeOutput('end', 'Program error...')
 	clear = () => this.onClear()
 	load = msg => this.onLoad(msg)
 	end = () => this.onEnd()
 	run = (code, options = { }) => {
 		this.options = options;
+
+		// this had some sort of compile error
+		// preventing this from running
+		if (options.ex)
+			return this.onError(options.ex);
 
 		// starts the run process
 		this.onRun(code);
@@ -339,10 +377,7 @@ export default class CodeRunner {
 	// move to the bottom of the view after anytime
 	// a message is added to the screen
 	scrollToBottom = () => {
-		const output = this.ui.output[0];
-		setTimeout.call(window, function () {
-			output.scrollTo(0, Number.MAX_SAFE_INTEGER);
-		});
+		setTimeout(() => this.ui.container[0].scrollTop = Number.MAX_SAFE_INTEGER);
 	}
 
 	// grabs the next node
@@ -375,17 +410,16 @@ export default class CodeRunner {
 		// append each value
 		for (let i = 0; i < args.length; i++) {
 
-			// get the data to
-			let arg = args[i];
-			if ($.isArray(arg) || $.isObject(arg))
-				arg = JSON.stringify(arg, null, 2);
-
 			// attach this to the document
-			const content = customize ? customize(arg, i) : (arg || 'null').toString();
+			const arg = args[i];
+			const content = customize ? customize(arg, i) : getValue(arg);
+
+			// write the content
 			if ($.isString(content)) {
+				const lead = i > 0 ? ' ' : '';
 				const item = document.createElement('span');
 				item.className = 'item';
-				node.innerText = content;
+				node.innerText = `${lead}${content}`;
 			}
 			// anything else, assume DOM element?
 			else node.appendChild(content);
@@ -398,7 +432,8 @@ export default class CodeRunner {
 
 	// resets the entire view
 	reset = () => {
-		this.ui.doc.removeClass('has-question has-error');
+		this.ui.doc.removeClass('has-question');
+		this.ui.error.removeClass('has-error');
 
 		// reset the state
 		delete this.options;
@@ -407,6 +442,9 @@ export default class CodeRunner {
 
 		// reset the line count
 		this.totalLines = 0;
+
+		// clear any errors
+		delete this.error;
 
 		// // remove all timers and intervals
 		// const { intervals, timeouts } = this.timing.active;
@@ -424,3 +462,16 @@ export default class CodeRunner {
 	}
 
 }
+
+// gets a display value for an argument
+function getValue(obj) {
+	if (obj === null && typeof obj === 'object') obj = 'null';
+	else if (obj === undefined && typeof obj === 'undefined') obj = 'undefined';
+
+	// check for complex values
+	else if ($.isArray(obj) || $.isObject(obj))
+		obj = JSON.stringify(obj, null, 2);
+
+	return obj.toString();
+}
+

@@ -15,11 +15,30 @@
 - slide:
     mode: popup
     content: |
-      create the object
+      Declare the following three variables
 
       [snippet declare_variables]
 
+    
+    persistContent: true
+    autoNext: false
 
     runValidation: verifyObject
     events:
-      - modify-file, verifyObjectSyntax, {preview:true}
+      - modify-file, verifyObjectSyntax
+
+- slide:
+    mode: popup
+    content: |
+      Let's print them out and see what they say
+
+      [snippet log_variables]
+
+    runValidation: verifyLog
+    events:
+      - modify-file, verifyLogSyntax
+
+- slide:
+    mode: overlay
+    content: |
+      This is the end of the lesson

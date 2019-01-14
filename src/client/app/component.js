@@ -51,6 +51,14 @@ const PROXIED_RETURN_METHODS = [
 
 export default class Component {
 
+  /** shortcut for using the jQuery $ selector
+	 * @param {string} selector the html selector to use
+   * @returns {JQuery} the matched element, if any
+   */
+  static select(selector) {
+    return $(selector);
+	}
+	
   /** shortcut to test the `is` condition for an element
    * @param {JQuery|Component|HTMLElement} element the element to test
    * @param {string} selector the test to perform

@@ -94,8 +94,25 @@ const $state = {
 		return _.find($state.files, 'isActive');
 	},
 
+	// creates an in-memory restore point for files
+	createRestorePoint: () => {
+
+		// save each restore point
+		_.each($state.files, file => {
+			if (file.hasContent)
+				file.restore = file.current || file.content;
+		});
+
+	},
+
 	/** clears all project data and notifies the app */
 	clearProject: () => {
+
+		// cleanup
+		if ($state.lesson)
+			$state.lesson.dispose();
+
+		// reset
 		$state.project = null;
 		$state.lesson = null;
 		$state.paths = { };
@@ -709,6 +726,13 @@ async function syncProject(children = [ ], parent, relativeTo) {
 
 }
 
+// clean up all lesson data
+function disposeLesson() {
+	if (!$state.lesson) return;
+	$state.lesson.dispose();
+	delete $state.lesson;
+}
+
 // clean up open files
 listen('activate-file', file => {
 	_.each($state.files, file => file.isActive = false);
@@ -727,9 +751,8 @@ listen('close-file', file => {
 	file.isActive = false;
 });
 
-// remove lessons
-listen('lesson-finished', () => {
-	delete $state.lesson;
-});
+// handle lesson cleanup
+listen('deactivate-project', disposeLesson)
+listen('lesson-finished', disposeLesson);
 
 export default $state;

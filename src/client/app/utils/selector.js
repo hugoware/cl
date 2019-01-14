@@ -64,6 +64,11 @@ export function evaluateSelector(selector) {
 		hasSelector,
 		hasCommands,
 
+		// gives back the element
+		get() {
+			return $(selector)
+		},
+
 		// update the position of the selected element
 		refresh: () => {
 

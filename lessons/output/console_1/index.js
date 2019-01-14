@@ -21,20 +21,41 @@
         "speak": ["Let's start working on code examples - open the file main.ts"]
       }, {
         "mode": "popup",
-        "content": "<p>create the object</p><div class=\"snippet\" type=\"declare_variables\" />",
+        "content": "<p>Declare the following three variables</p><div class=\"snippet\" type=\"declare_variables\" />",
+        "persistContent": true,
+        "autoNext": false,
         "runValidation": "verifyObject",
-        "events": ["modify-file, verifyObjectSyntax, {preview:true}"],
+        "events": ["modify-file, verifyObjectSyntax"],
         "type": "slide",
-        "speak": ["create the object"]
+        "speak": ["Declare the following three variables"]
+      }, {
+        "mode": "popup",
+        "content": "<p>Let's print them out and see what they say</p><div class=\"snippet\" type=\"log_variables\" />",
+        "runValidation": "verifyLog",
+        "events": ["modify-file, verifyLogSyntax"],
+        "type": "slide",
+        "speak": ["Let's print them out and see what they say"]
+      }, {
+        "mode": "overlay",
+        "content": "<p>This is the end of the lesson</p>",
+        "type": "slide",
+        "speak": ["This is the end of the lesson"]
       }],
       "definitions": {},
       "snippets": {
         "declare_variables": {
           "content": "const a = 300;\nconst b = false;\nconst c = 'hello';",
           "type": "javascript"
+        },
+        "log_variables": {
+          "content": "console.log(a);\nconsole.log(b);\nconsole.log(c);",
+          "type": "javascript"
         }
       },
       "zones": {
+        "log_variables": {
+          "all": {}
+        },
         "declare_variables": {
           "all": {
             "start": {
@@ -60,7 +81,7 @@
     var $state = state;
 
     // access to code syntax and content validator
-    var $codeValidator = utils.$validate;
+    var $validateCode = utils.$validate;
 
     // parses a string of html
     function $html(str, options) {
@@ -260,67 +281,174 @@
     $self.$validate = $validate;
     $self.$getZone = $getZone;
     $self.$getFile = $getFile;
-    $self.$codeValidator = $codeValidator;
+    $self.$validateCode = $validateCode;
 
-    // attach required scripts
-
-    // make sure code is in a valid format
-    $define('verifyObjectSyntax', function () {
-
-      var code = $getFile('/main.ts', { trim: false });
-      var error = $codeValidator(code, function (test) {
-        return test.declare('const').id('a').symbol('=').num(300).symbol(';').newline().declare('const').id('b').symbol('=').bool(false).symbol(';').newline().declare('const').id('c').symbol('=').str('hello').symbol(';').end();
-      });
-
-      // check for errors
-      if (error) {
-        $showHint(error.error, error);
-        return error;
-      } else {
-        $hideHint();
+    // create some common messages
+    _.assign($speakMessage, {
+      MATCH_EXAMPLE: function MATCH_EXAMPLE() {
+        return $speakMessage("Almost there! The code ran successfully, but you need to finish matching the example!", 'happy');
+      },
+      EXECUTION_ERROR: function EXECUTION_ERROR() {
+        return $speakMessage('Oops! It appears there was an error running that code!', 'surprised');
       }
     });
 
-    // checks the code execution
-    $define('verifyObject', function (_ref) {
-      var runner = _ref.runner,
-          code = _ref.code;
+    // attach required scripts
 
+    // checks the logged values
+    var syntax_verifyLog = function syntax_verifyLog(test) {
+      var variableOrder = [];
 
-      // if not correct syntax, 
-      var error = $self.verifyObjectSyntax();
-      if (error) {
-        $speakMessage('You still have some syntax errors to fix before running this code');
-        return;
+      // adds a result value
+      test.includeResult({ variableOrder: variableOrder });
+
+      // checks if a variable has already been logged
+      function checkIfVariableUsed(id) {
+        if (_.includes(variableOrder, id)) {
+          var allowed = _.difference(['a', 'b', 'c'], variableOrder);
+          var vars = _.map(allowed, function (id) {
+            return "`" + id + "`";
+          });
+          var phrase = $oxford(vars, 'or');
+          return "Expected " + phrase;
+        }
+
+        variableOrder.push(id);
       }
+
+      // test for the required logs
+      test.newline().id('console').symbol('.').id('log').symbol('(').id('a', 'b', 'c', checkIfVariableUsed).symbol(')').symbol(';').newline().id('console').symbol('.').id('log').symbol('(').id('a', 'b', 'c', checkIfVariableUsed).symbol(')').symbol(';').newline().id('console').symbol('.').id('log').symbol('(').id('a', 'b', 'c', checkIfVariableUsed).symbol(')').symbol(';');
+    };
+
+    // make sure code is in a valid format
+    $define('verifyLogSyntax', function () {
+      var code = $getFile('/main.ts', { trim: false });
+      var result = $validateCode(code, syntax_verifyObject, syntax_verifyLog);
+
+      // check for errors
+      if (result.error) $showHint(result.error.message, result.error);else $hideHint();
+      return result;
+    });
+
+    // checks the code execution
+    $define('verifyLog', function (_ref) {
+      var runner = _ref.runner,
+          code = _ref.code,
+          onSuccess = _ref.onSuccess;
+
 
       // execute and test the code
       runner.run(code, {
+
+        onError: $speakMessage.EXECUTION_ERROR,
+
+        onEnd: function onEnd() {
+          var hasA = void 0,
+              hasB = void 0,
+              hasC = void 0,
+              hasMismatch = void 0;
+
+          // check each variable
+          _.each(['a', 'b', 'c'], function (name, i) {
+
+            // stop if there's already an error
+            if (hasMismatch) return;
+
+            // compare the values
+            var logged = runner.getOutput(i + 1, 0);
+            if (name === 'a') {
+              hasA = true;
+              if (logged !== 300) {
+                hasMismatch = true;
+                $speakMessage('Expected `a` to be logged as `300`', 'sad');
+              }
+            } else if (name === 'b') {
+              hasB = true;
+              if (logged !== false) {
+                hasMismatch = true;
+                $speakMessage('Expected `b` to be logged as `false`', 'sad');
+              }
+            } else if (name === 'c') {
+              hasC = true;
+              if (logged !== 'hello') {
+                hasMismatch = true;
+                $speakMessage('Expected `c` to be logged as `hello`', 'sad');
+              }
+            }
+          });
+
+          // there was a result error
+          if (hasMismatch) return;
+
+          // make sure all variables were used
+          if (!(hasA && hasB && hasC)) return $speakMessage("Seems like you're missing a few variables", 'sad');
+
+          // check the syntax
+          var syntax = $self.verifyLogSyntax();
+          if (syntax.error) return $speakMessage.MATCH_EXAMPLE();
+
+          // success
+          $speakMessage('That looks great! You can see your values printed in the output area on the right');
+          onSuccess();
+        }
+
+      });
+    });
+
+    // require variables
+    var syntax_verifyObject = function syntax_verifyObject(test) {
+      return test.declare('const').id('a').symbol('=').num(300).symbol(';').newline().declare('const').id('b').symbol('=').bool(false).symbol(';').newline().declare('const').id('c').symbol('=').str('hello').symbol(';');
+    };
+
+    // make sure code is in a valid format
+    $define('verifyObjectSyntax', function () {
+      var code = $getFile('/main.ts', { trim: false });
+      var result = $validateCode(code, syntax_verifyObject);
+
+      // check for errors
+      if (result.error) $showHint(result.error.message, result.error);else $hideHint();
+      return result;
+    });
+
+    // checks the code execution
+    $define('verifyObject', function (_ref2) {
+      var runner = _ref2.runner,
+          code = _ref2.code,
+          onSuccess = _ref2.onSuccess;
+
+
+      // execute and test the code
+      runner.run(code, {
+        onError: $speakMessage.EXECUTION_ERROR,
 
         onEnd: function onEnd() {
 
           var a = runner.interpreter.get('a');
           if (a !== 300) {
-            if (_.isNil(a)) $speakMessage('You need to declare a variable `"a"` with a number value of `300`');else if (!_.isNumber(a)) $speakMessage('The variable `"a"` should be the number `300`');else $speakMessage('The variable `"a"` should be `300`, but the variable you declared equals to `' + a + '`', 'surprised');
+            if (_.isNil(a)) $speakMessage('You need to declare a variable `a` with a number value of `300`');else if (!_.isNumber(a)) $speakMessage('The variable `a` should be the number `300`');else $speakMessage('The variable `a` should be `300`, but the variable you declared equals to `' + a + '`', 'surprised');
             return;
           }
 
           var b = runner.interpreter.get('b');
           if (b !== false) {
-            if (_.isNil(b)) $speakMessage('You need to declare a variable `"b"` with a boolean value of `false`');else if (!_.isBoolean(b)) $speakMessage('The variable `"b"` should be the boolean `false`');else $speakMessage('The variable `"b"` should be `false`, but the variable you declared equals to `' + b + '`', 'surprised');
+            if (_.isNil(b)) $speakMessage('You need to declare a variable `b` with a boolean value of `false`');else if (!_.isBoolean(b)) $speakMessage('The variable `b` should be the boolean `false`');else $speakMessage('The variable `b` should be `false`, but the variable you declared equals to `' + b + '`', 'surprised');
             return;
           }
 
           var c = runner.interpreter.get('c');
           if (c !== 'hello') {
-            if (_.isNil(c)) $speakMessage('You need to declare a variable `"c"` with a string value of `hello`');else if (!_.isString(c)) $speakMessage('The variable `"c"` should be the string `hello`');else $speakMessage('The variable `"c"` should be `hello`, but the variable you declared equals to `' + c + '`', 'surprised');
+            if (_.isNil(c)) $speakMessage('You need to declare a variable `c` with a string value of `hello`');else if (!_.isString(c)) $speakMessage('The variable `c` should be the string `hello`');else $speakMessage('The variable `c` should be `hello`, but the variable you declared equals to `' + c + '`', 'surprised');
             return;
           }
 
-          // console.log('finished');
-          // console.log(runner);
-          // 
+          // since the values are all correct, we also should check
+          // that the code is entered correctly
+          var syntax = $self.verifyObjectSyntax();
+          if (syntax.error) return $speakMessage.MATCH_EXAMPLE();
+
+          // notify the success
           $speakMessage('looks great!');
+          onSuccess();
         }
 
       });

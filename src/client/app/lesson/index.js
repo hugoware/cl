@@ -11,7 +11,7 @@ import $wait from './wait';
 import $lfs from '../lfs';
 import { CodeValidator } from 'code-validator';
 import { load } from './loader';
-import { broadcast, listen, ignore } from '../events';
+import { broadcast, listen, remove } from '../events';
 import ZoneMap from '../zone-map';
 
 // can't seem to use this anywhere in a playground
@@ -28,8 +28,8 @@ export default class Lesson {
 		const type = await load(project.lesson);
 
 		// get the data
-		const { progress = { } } = project;
-		const { state = { }, modified = [ ] } = progress;
+		const state = { };
+		const modified = [ ];
 		const utils = {
 
 			// libraries
@@ -277,7 +277,7 @@ export default class Lesson {
 
 		// continue to the next lesson
 		await this.go(this.index + 1);
-		await this.saveProgress();
+		// await this.saveProgress();
 	}
 	
 	/** navigates to the previous slide */
@@ -327,6 +327,9 @@ export default class Lesson {
 	dispose = () => {
 		$wait.clear();
 		$focus.clear();
+
+		// cleanup watcher events
+		disposeSlideEvents(this);
 	}
 
 }
@@ -371,11 +374,13 @@ function setActiveSlide(lesson, slide) {
 	if (highlights) $focus.setHighlight(highlights);
 
 	// setup the wait events
-	const wait = slide.waitFor || slide.wait;
+	let wait = slide.waitFor || slide.wait;
+		
+	// register wait events
 	if (wait) $wait.waitFor(wait);
 
 	// set a few other values
-	slide.isWaiting = _.some(wait);
+	slide.isWaiting = _.some(wait) || !!slide.runValidation;
 	slide.isFirst = index === 0;
 	slide.isLast = index === lastIndex;
 	slide.isCheckpoint = slide.allowBack !== true;
@@ -387,7 +392,21 @@ function setActiveSlide(lesson, slide) {
 	});
 
 	// set the events for this slide
-	_.each(lesson.events, ignore);
+	disposeSlideEvents(lesson);
+	registerSlideEvents(lesson, slide);
+
+	// let other systems know the slide changed
+	broadcast('slide-changed', lesson, slide);
+}
+
+// clears all slide events
+function disposeSlideEvents(lesson) {
+	for (let i = lesson.events.length; i-- > 0;)
+		remove(lesson.events.shift());
+}
+
+// setup all events
+function registerSlideEvents(lesson, slide) {
 	_.each(slide.events, params => {
 		params = _.map(params.split(','), _.trim);
 		const key = params.shift();
@@ -398,17 +417,16 @@ function setActiveSlide(lesson, slide) {
 		});
 
 		// listen for events
-		listen(key, (...event) => {
+		const id = listen(key, (...event) => {
 			const pass = [].concat(args).concat(event);
 			action(...pass);
 		});
-		
+
+		// save the event
+		lesson.events.push(id);
+
 	});
-
-	// let other systems know the slide changed
-	broadcast('slide-changed', this, slide);
 }
-
 
 // applies the flags for a slide
 function applySlide(lesson, slide, invert) {

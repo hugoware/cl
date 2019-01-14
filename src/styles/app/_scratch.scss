@@ -2,4 +2,9 @@
 .focus_point {
 	position: absolute;
 	white-space: pre;
+
+	&.highlighted {
+		border-bottom: 2px dotted #f00;
+		background: rgba(#f00, 0.3);
+	}
 }

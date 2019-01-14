@@ -1,3 +1,6 @@
+log_variables: 
+  all: { }
+
 declare_variables:
   all:
     start:

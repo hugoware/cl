@@ -1,6 +1,5 @@
 
 importScripts('/__codelab__/babel.min.js');
-// import protectCode from '../../compilers/simplescript/protect';
 import { resolveImports, getErrorFile } from '../../compilers/simplescript/modules';
 
 // import $ts from 'typescript/lib/typescriptServices';
@@ -28,22 +27,7 @@ async function compileFile(file) {
 		
 		// replace modules with imports
 		code = resolveImports(file, files);
-		
-		// apply apply code protection (loop safety, async simplification)
-		// const protect = protectCode(code);
-
-		console.log('gen')
-		
 		const compiled = Babel.transform(code, { presets: ['es2015'] }).code;
-
-		// compile to typescript
-		// const compiled = ts.transpile(code, {
-		// 	noResolve: true,
-		// 	strictFunctionTypes: true,
-		// 	removeComments: false,
-		// 	target: 'ES5',
-		// 	// lib: 'ES2015'
-		// });
 
 		// share the generated code
 		self.postMessage(['compile:ok', { success: true, content: compiled }]);
