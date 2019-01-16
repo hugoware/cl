@@ -1,6 +1,6 @@
 
 +template('home-view')
-	#home.view
+	#home.view.is-empty
 		.nav
 			.about
 				.avatar
@@ -22,18 +22,28 @@
 					.count(bind='projectCount')
 
 		.content
-			.projects(bind='projectsView')
+
+			.projects
 				.heading
-					h2 Projects
+					h2.title(bind='title')
 					.actions
-						.action.create-project(bind='createProject') Create Project
+						.action.create-project Create Project
 
-				.list(bind='projectList')
+					.filter
+						.item.default(data-filter='all') All
+						.item(data-filter='web') Web
+						.item(data-filter='code') Code
+						.item.projects-only(data-filter='game') Games
+						.item.projects-only(data-filter='mobile') Mobile
 
-			.lessons(bind='lessonsView')
-				.heading
-					h2 Lessons
-				.list(bind='lessonList')
+				.empty
+					h2 No #[span.for-lesson Lessons] #[span.for-project Projects] Found
+					p It doesn't appear that you have any #[span.for-lesson lessons] #[span.for-project projects] of this type available.
+
+					.actions.for-project
+						.create-project Create a new Project
+
+				.list(bind='list')
 
 
 +template('project-item')

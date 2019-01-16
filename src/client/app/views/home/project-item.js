@@ -27,6 +27,7 @@ export default class ProjectItem extends Component {
 
 		// populate data
 		this.attr('data-id', data.id);
+		this.attr('data-type', data.type);
 		this.addClass(`type-${data.type}`);
 		this.ui.name.text(data.name);
 		this.ui.description.text(data.description);

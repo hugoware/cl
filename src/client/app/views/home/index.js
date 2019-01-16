@@ -10,6 +10,10 @@ import HomeProjectItem from './project-item';
 import AvatarSelection from './avatar-select';
 import Component from '../../component';
 
+// tracking the last view between switching
+let $previousView = null;
+let $previousFilter = null;
+
 export default class HomeView extends View {
 
 	constructor() {
@@ -18,9 +22,15 @@ export default class HomeView extends View {
 
 			ui: {
 				about: '.about',
-				createProject: '.actions .action.create-project'
+				createProject: '.actions .create-project',
+				filterOptions: '.filter .item',
+				defaultFilterOption: '.filter .item.default',
 			}
 		});
+
+		// set the default filter
+		this.clearFilter($previousFilter);
+		this.on('click', '.filter .item', this.onUpdateFilter);
 
 		// add the avatar selector
 		this.avatarSelection = new AvatarSelection();
@@ -59,17 +69,32 @@ export default class HomeView extends View {
 		return !!(this.data && _.some(this.data.lessons))
 	}
 
+	/** returns the total number of projects
+	 * @returns {number}
+	 */
+	get projectCount() {
+		return _.size(_.get(this.data, 'projects'));
+	}
+
+	/** returns the total number of lessons
+	 * @returns {number}
+	 */
+	get lessonCount() {
+		return _.size(_.get(this.data, 'lessons'))
+	}
+
 	/** set the current view */
 	async onActivate() {
 		this.busy = true;
-		this.removeClass('projects lessons');
+		this.clearFilter();
 
 		// get the summary for this view
 		try {
 			this.data = await $api.request('get-home-summary');
 
-			// update the available items
-			this.refreshProjectLists();
+			// update some info
+			this.ui.projectCount.text(this.projectCount);
+			this.ui.lessonCount.text(this.lessonCount);
 
 			// set the user stats
 			const { first, avatar } = this.data.user;
@@ -91,16 +116,88 @@ export default class HomeView extends View {
 			.append(icon);
 	}
 
+	// handles filter updates
+	onUpdateFilter = event => {
+		const filter = event.target.getAttribute('data-filter');
+		this.setFilter(filter === 'all' ? null : filter);
+	}
+
+	// removes the current filter
+	clearFilter = () => {
+		this.setFilter(null);
+	}
+
+	// sets a new filter
+	setFilter = filter => {
+		this.removeClass('filter-web filter-game filter-mobile filter-code');
+		this.ui.filterOptions.removeClass('selected');
+
+		// save the filter
+		$previousFilter = filter;
+		
+		// use the default
+		if (!filter) {
+			this.ui.defaultFilterOption.addClass('selected');
+			this.find('.project-item').show();
+		}
+		// there's a filter value
+		else {
+			const item = this.find(`[data-filter="${filter}"]`)
+			item.addClass('selected');
+
+			// hide all items
+			this.find('.project-item').hide();
+
+			// then show the correct values
+			const matching = this.find(`.project-item[data-type="${filter}"]`);
+			matching.show();
+
+		}
+
+		// lastly, make sure something is visible
+		const items = this.find('.project-item:visible');
+		this.toggleClass('is-empty', items.length === 0);
+	}
+
 	// clears the active view
 	setView = view => {
-		this.removeClass('loading no-projects no-lessons projects lessons');
-		setTimeout(() => this.addClass(view), 0);
+		$previousView = view;
+		const isProjects = view === 'projects';
+		const isLessons = view === 'lessons';
+		const title = isProjects ? 'Projects' : 'Lessons';
+
+		// animate the change?
+		this.removeClass('is-ready');
+		setTimeout(() => {
+			this.addClass('is-ready');
+			this.toggleClassMap({
+				'is-projects': isProjects,
+				'is-lessons': isLessons
+			});
+
+			// set the title
+			this.ui.title.text(title);
+
+			// remove existing items
+			this.ui.list.empty();
+			const source = this.data[view];
+
+			// add each project item
+			_.each(source, data => {
+				const item = new HomeProjectItem(data);
+				item.appendTo(this.ui.list);
+			});
+
+			// apply the filter, if any
+			this.setFilter($previousFilter);
+
+		}, 300);
+
 	}
 
 	// decides the best view to display
 	setDefaultView = () => {
-		this.setView('projects');
-		// this.setView('lessons');
+		this.setView($previousView || 'projects');
 	}
 
 	// handle errors
@@ -120,6 +217,8 @@ export default class HomeView extends View {
 	onSelectProject = event => {
 		if (this.busy) return;
 		this.busy = true;
+
+		this.removeClass('is-ready');
 		const id = getProjectId(event);
 		$nav.go(`project/${id}`);
 	}
@@ -134,7 +233,6 @@ export default class HomeView extends View {
 	// tries to remove a project entry
 	onOpenInNewWindow = async event => {
 		const id = getProjectId(event);
-		console.log('try open');
 		$state.openProjectPreviewWindow({ id });
 		return cancelEvent(event);
 	}
@@ -199,23 +297,27 @@ export default class HomeView extends View {
 
 	// updates the view for project items
 	refreshProjectLists = () => {
-		// remove existing items
-		this.ui.projectList.empty();
-		this.ui.lessonList.empty();
 
-		// add each item
-		_.each({
-			lessons: this.ui.lessonList,
-			projects: this.ui.projectList
-		}, (list, source) => {
 
-			// add each project item
-			const projects = this.data[source];
-			_.each(projects, project => {
-				const item = new HomeProjectItem(project);
-				item.appendTo(list);
-			});
-		});
+		
+		
+		// // remove existing items
+		// this.ui.projectList.empty();
+		// this.ui.lessonList.empty();
+
+		// // add each item
+		// _.each({
+		// 	lessons: this.ui.lessonList,
+		// 	projects: this.ui.projectList
+		// }, (list, source) => {
+
+		// 	// add each project item
+		// 	const projects = this.data[source];
+		// 	_.each(projects, project => {
+		// 		const item = new HomeProjectItem(project);
+		// 		item.appendTo(list);
+		// 	});
+		// });
 	}
 
 }

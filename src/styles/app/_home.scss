@@ -4,9 +4,77 @@ $home-content-padding: 40px;
 $project-item-accent-height: 6px;
 $project-item-accent-gap: 3px;
 
+@mixin __create_action_button {
+	@include align_vertical(40px);
+	color: #fff;
+	background: #29BB9C;
+	padding: 0 20px;
+	cursor: pointer;
+	border-radius: 3px;
+	box-shadow: inset 0 0 0 1px rgba(#fff, 0.3), 0 1px 3px #000;
+	white-space: nowrap;
+
+	@include animate('background, transform', 0.2s);
+	
+	&:hover {
+		background: lighten(#29BB9C, 10%);
+		transform: scale(1.1, 1.1);
+	}
+}
+
 #home {
 	$sidebar-item-hover-background: lighten($sidebar-background, 20%);
 	$sidebar-item-selected-background: lighten($sidebar-background, 10%);
+	
+	&.is-empty .empty {
+		display: block;
+	}
+
+	.empty .for-project,
+	.empty .for-lesson {
+		display: none;
+	}
+	
+	.empty {
+		display: none;
+		color: #ccc;
+		text-shadow: 0 1px 3px #000;
+
+		margin: 0 40px 0 0;
+		padding: 35px;
+		border: 1px solid $footer-background;
+		background: rgba(#000, 0.1);
+		border-radius: 4px;
+
+		h2 {
+			font-size: 28px;
+			padding: 0 0 15px 0;
+		}
+
+		p {
+			font-size: 18px;
+			line-height: 1.4em;
+			color: #999;
+		}
+
+		.actions {
+			padding: 45px 0 0 0;
+		}
+		
+		.create-project {
+			@include __create_action_button();
+			text-shadow: none;
+		}
+	}
+
+	&.is-projects .empty .for-project,
+	&.is-lessons .empty .for-lesson {
+		display: inline-block;
+	}
+
+	&.is-ready .content {
+		opacity: 1;
+	}
 
 	.about {
 		@include clearfix();
@@ -94,8 +162,44 @@ $project-item-accent-gap: 3px;
 		}
 	}
 
+	.filter {
+		clear: left;
+		float: left;
+		padding: 25px 0 0 0;
+		@include clearfix();
+
+		.item {
+			cursor: pointer;
+			display: inline-block;
+			@include align_vertical(38px);
+			font-size: 16px;
+			background: rgba(#000, 0.4);
+			color: #888;
+			padding: 0 20px;
+			border-radius: 4px;
+			margin-right: 10px;
+			
+			@include animate('background-color, color, transform');
+			
+			&:hover {
+				background: rgba(#000, 0.8);
+				color: #fff;
+				transform: scale(1.1, 1.1);
+			}
+			
+			&.selected, &.selected:hover {
+				box-shadow: inset 0 0 0 1px rgba(#fff, 0.3);
+				color: #fff;
+				background: $header-background;
+			}
+		}
+	}
+
 	// list of project items
 	.content {
+		@include animate('opacity', 200ms);
+		opacity: 0;
+
 		position: absolute;
 		top: $home-content-padding;
 		left: $home-sidebar-width;
@@ -103,11 +207,6 @@ $project-item-accent-gap: 3px;
 		bottom: 0;
 		overflow: auto;
 		padding: 0 0 ($home-content-padding * 2) $home-content-padding;
-
-		> div {
-			opacity: 0;
-			display: none;
-		}
 
 		.heading {
 			padding: 0 0 40px 0;
@@ -128,34 +227,45 @@ $project-item-accent-gap: 3px;
 			}
 	
 			.action {
-				@include align_vertical(40px);
-				color: #fff;
-				background: #29BB9C;
-				padding: 0 20px;
-				cursor: pointer;
-				border-radius: 3px;
-				box-shadow: inset 0 0 0 1px rgba(#fff, 0.3), 0 1px 3px #000;
-				white-space: nowrap;
-
-				@include animate('background, transform', 0.2s);
-				
-				&:hover {
-					background: lighten(#29BB9C, 10%);
-					transform: scale(1.1, 1.1);
-				}
+				@include __create_action_button;
 			}
 		}
 
 
 	}
 
-	&.projects .sections .projects,
-	&.lessons .sections .lessons {
+	.sections {
+		.section {
+			@include clearfix();
+
+			.name {
+				float: left;
+				font-size: 18px;
+			}
+
+			.count {
+				font-size: 12.5px;
+				font-weight: bold;
+				float: right;
+				padding: 4px 12px;
+				border-radius: 100px;
+				background: rgba(#fff, 0.2)
+			}
+		}
+	}
+
+	&.is-projects .sections .projects,
+	&.is-lessons .sections .lessons {
 		background: $sidebar-item-selected-background;
 	}
 
-	&.projects .content .projects,
-	&.lessons .content .lessons {
+	&.is-lessons .actions,
+	&.is-lessons .projects-only {
+		display: none;
+	}
+
+	&.is-projects .content .projects,
+	&.is-lessons .content .lessons {
 		opacity: 1;
 		display: block;
 	}

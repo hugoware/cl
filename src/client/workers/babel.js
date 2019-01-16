@@ -21,7 +21,7 @@ async function compileFile(file) {
 
 		// load all files used
 		const files = { };
-		await $lfs.pull(['.ts'], item => {
+		await $lfs.pull(['.ts', '.js'], item => {
 			files[item.path] = item.content;
 		});
 		
