@@ -98,6 +98,23 @@ export default class Component {
   static locate(element, find) {
     const target = $(element);
     return target.is(find) ? target : target.closest(find);
+	}
+	
+  /** finds the nearest parent matching a selector in relationship to the provided element 
+   * @param {JQuery|Component|HTMLElement|string} element the element to try and search from
+   * @param {string} find the selector to try and locate
+   * @returns {JQuery}
+  */
+  static within(element, find) {
+		let target = $(element);
+		let safety = 255;
+		do {
+			if (target.is(find)) return true;
+			target = target.parent();
+			if (target.length <= 0) return false;
+		}
+		while (--safety > 0);
+		throw new Error('Exceeded parent search');
   }
 
   /** gets or creates a component from the argument

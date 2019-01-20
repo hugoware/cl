@@ -1,0 +1,15 @@
+
+web:
+  - web_1
+  - web_2
+  - web_3
+
+code:
+  - console_1
+  - console_2
+  - console_3
+
+game:
+  - game_1
+  - game_2
+  - game_3

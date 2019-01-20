@@ -25,16 +25,18 @@
 
 			.projects
 				.heading
-					h2.title(bind='title')
 					.actions
 						.action.create-project Create Project
 
+					h2.title(bind='title')
+					p.description(bind='description')
+
 					.filter
-						.item.default(data-filter='all') All
-						.item(data-filter='web') Web
-						.item(data-filter='code') Code
+						.item.projects-only.default(data-filter='all') All
+						.item(data-filter='code') Basic Coding
+						.item(data-filter='web') Websites
 						.item.projects-only(data-filter='game') Games
-						.item.projects-only(data-filter='mobile') Mobile
+						.item.projects-only(data-filter='mobile') Mobile Apps
 
 				.empty
 					h2 No #[span.for-lesson Lessons] #[span.for-project Projects] Found
@@ -48,6 +50,10 @@
 
 +template('project-item')
 	.project-item
+		.locked
+			.info
+				h2 This lesson is locked!
+				p Complete the previous lesson to unlock to this lesson
 		.bar
 		.type
 			.web(icon='projectWeb')
@@ -57,13 +63,13 @@
 			.mobile(icon='projectMobile')
 
 		.details
+			.lesson(bind='lesson')
 			.name(bind='name')
 			.description(bind='description')
 
 		.modified-at
-			.is-new New
+			.is-new Available
 			.is-finished Complete
-			.in-progress In Progress
 			.time
 				span Updated 
 				span(bind='modifiedAt')

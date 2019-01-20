@@ -1,15 +1,14 @@
 
-import $fsx from 'fs-extra';
 import log from '../log';
 import $database from '../storage/database';
-import { resolveLesson } from '../path';
+import createLesson from '../actions/create-lesson';
 
 /**
  * gets all project information
  * @param {string} id the ID for the project
  * @returns {object} general project data
  */
-export default async function getProjectData(id) {
+export default async function getProjectData(ownerId, id) {
 	return new Promise(async (resolve, reject) => {
 		const results = await $database.projects.find({ id })
 			.project({
@@ -19,10 +18,11 @@ export default async function getProjectData(id) {
 				name: 1,
 				description: 1,
 				lesson: 1,
-				progress: 1,
+				done: 1,
+				finished: 1,
+				active: 1,
 				ownerId: 1,
 				modifiedAt: 1,
-				finished: 1,
 			})
 			.toArray();
 
@@ -31,18 +31,27 @@ export default async function getProjectData(id) {
 		if (!project)
 			return reject('project_not_found');
 
-		// verify this is a real lesson
-		if (project.lesson) {
-			const path = resolveLesson(project.lesson)
-			const exists = await $fsx.exists(path);
-			
-			// remove lesson info if the lesson no longer exists
-			if (!exists) {
-				delete project.lesson;
-				delete project.progress;
-			}
+		// if this is a lesson, but it's not active, then
+		// we need to reject the request - this could happen
+		// if someone knows to type in the project URL
+		const isLesson = !!project.lesson;
+		if (isLesson && !project.active)
+			return reject('lesson_not_active');
+
+		// if this is a normal project, or the lesson is
+		// all done, then just use it normally
+		if (!isLesson || (isLesson && project.done)) {
+			delete project.lesson;
+			return resolve(project);
 		}
 
+		// since this is a lesson, and we aren't trying to
+		// track progress across sessions, make sure to reset
+		// all file changes and progress
+		const result = await createLesson(project.lesson, ownerId);
+		console.log(result);
+		
+		// give back the project data
 		resolve(project);
 	})
 	.catch(err => {

@@ -217,8 +217,21 @@ $project-item-accent-gap: 3px;
 				float: left;
 				font-size: 46px;
 				color: #fff;
-				opacity: 0.6;
+				opacity: 0.9;
 				text-shadow: 0 2px 8px rgba(#000, 0.5);
+				padding: 0 0 19px 0;
+			}
+
+			p {
+				clear: left;
+				float: left;
+				padding: 0 0 15px 0;
+				color: #888;
+				font-size: 18.5px
+			}
+
+			h2, p {
+				text-shadow: 0 1px 2px #000;
 			}
 	
 			.actions {
@@ -259,7 +272,7 @@ $project-item-accent-gap: 3px;
 		background: $sidebar-item-selected-background;
 	}
 
-	&.is-lessons .actions,
+	&.is-lessons .heading .actions,
 	&.is-lessons .projects-only {
 		display: none;
 	}
@@ -289,6 +302,10 @@ $project-item-accent-gap: 3px;
 		color: #fff;
 		border-radius: 30px;
 		font-weight: normal;
+	}
+
+	&.is-lesson.is-new .actions {
+		display: none;
 	}
 
 	&.is-lesson.is-new .is-new,
@@ -331,13 +348,17 @@ $project-item-accent-gap: 3px;
 	.bar {
 		display: block;
 		position: absolute;
-		background: #F1C631;
 		left: $project-item-accent-gap;
 		right: $project-item-accent-gap;
 		top: $project-item-accent-gap;
 		height: $project-item-accent-height;
 		border-radius: 3px 3px 0 0;
 	}
+	
+	&.type-web .bar { background: #E64B3F; }
+	&.type-code .bar { background: #9A5DB4; }
+	&.type-game .bar { background: #26BB9D; }
+	&.type-mobile .bar { background: #F1C631; }
 
 	&.is-project .reset,
 	&.is-lesson .remove,
@@ -358,7 +379,7 @@ $project-item-accent-gap: 3px;
 		display: block;
 	}
 
-	@include animate('transform', 0.2s);
+	@include animate('transform, opacity', 0.2s);
 
 	&:hover {
 		transform: scale(1.025, 1.025);
@@ -384,7 +405,7 @@ $project-item-accent-gap: 3px;
 
 	.name {
 		font-size: 23px;
-		padding: 6px 0 22px 0;
+		padding: 6px 0 9px 0;
 		text-overflow: ellipsis;
 		word-wrap: none;
 		white-space: nowrap;
@@ -395,6 +416,7 @@ $project-item-accent-gap: 3px;
 	.description {
 		$description-font-size: 17px;
 		padding: 0 0 5px 0;
+		margin-bottom: 15px;
 		font-size: $description-font-size;
 		opacity: 0.6;
 		position: relative;
@@ -415,6 +437,79 @@ $project-item-accent-gap: 3px;
 		}
 	}
 
+
+	&.is-lesson .description {
+		margin-bottom: 2px;
+	}
+
+	// adjustments for lesson items
+	.lesson, .locked {
+		display: none;
+	}
+
+	.locked {
+		display: none;
+		position: absolute;
+		left: 2px;
+		right: 2px;
+		top: 2px;
+		bottom: 2px;
+		border-radius: 4px;
+		background: rgba(#2F3238, 0.95);
+
+		color: #fff;
+		text-shadow: 0 1px 2px #000;
+		z-index: 10;
+
+		h2 {
+			font-size: 21px; 
+			padding: 0 0 10px 0;
+		}
+
+		p {
+			font-size: 15px;
+			opacity: 0.8;
+			line-height: 1.3em;
+		}
+
+		.info {
+			padding: 50px;
+		}
+	}
+
+	&.is-locked {
+		opacity: 0.5;
+
+		.locked {
+			@include animate('opacity');
+			display: block;
+			opacity: 0;
+		}
+	
+		&:hover, &:hover .locked {
+			opacity: 1;
+		}
+	}
+	
+
+	&.is-lesson {
+		.lesson {
+			display: block;
+			font-size: 16px;
+			padding: 0 0 6px 0;
+			font-weight: bold;
+			opacity: 0.4;
+		}
+		.name {
+			padding-top: 0px;
+			padding-bottom: 8px;
+		}
+
+		.description &:before {
+			display: none !important;
+		}
+	}
+
 	.modified-at {
 		position: absolute;
 		font-size: 12.5px;
@@ -426,6 +521,12 @@ $project-item-accent-gap: 3px;
 		.time {
 			opacity: 0.3;
 			clear: both;
+		}
+	}
+
+	&.is-locked {
+		.actions, .modified-at {
+			display: none;
 		}
 	}
 

@@ -1,6 +1,7 @@
 
 import _ from 'lodash';
 import $database from '../storage/database';
+import $lessons from '../storage/lessons';
 import $date from '../utils/date';
 
 /** Handles getting summary information for a user
@@ -35,9 +36,9 @@ export default async function get(id) {
 					type: 1,
 					lesson: 1,
 					description: 1,
-					state: 1,
-					started: 1,
-					finished: 1,
+					sequence: 1,
+					active: 1,
+					done: 1,
 					modifiedAt: 1
 				})
 				.toArray();
@@ -46,17 +47,25 @@ export default async function get(id) {
 			results = $date.sort(results, 'modifiedAt');
 
 			// create public version of the record
-			const projects = _.map(results, project => ({
-				id: project.id,
-				type: project.type,
-				name: project.name,
-				started: project.started,
-				finished: project.finished,
-				description: project.description,
-				lesson: !!project.lesson,
-				state: getLessonState(!!project.lesson, project.state),
-				modifiedAt: $date.timeAgo(project.modifiedAt)
-			}));
+			const projects = _.map(results, project => {
+				const record = {
+					id: project.id,
+					type: project.type,
+					name: project.name,
+					description: project.description,
+					modifiedAt: $date.timeAgo(project.modifiedAt),
+					lesson: !!project.lesson
+				};
+
+				// if this is a lesson, update the state
+				if (record.lesson) {
+					record.done = project.done;
+					record.active = project.active;
+					record.sequence = project.sequence;
+				}
+
+				return record;
+			});
 
 			// make a list of lessons
 			const lessons = [ ];

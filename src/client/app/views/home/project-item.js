@@ -29,15 +29,25 @@ export default class ProjectItem extends Component {
 		this.attr('data-id', data.id);
 		this.attr('data-type', data.type);
 		this.addClass(`type-${data.type}`);
+
+		// bind text
 		this.ui.name.text(data.name);
 		this.ui.description.text(data.description);
+		this.ui.lesson.text(`Lesson #${data.number}`);
 		this.ui.modifiedAt.text(data.modifiedAt);
+
+		const isLesson = !!data.lesson;
+		const isDone = !!data.done;
+		const isActive = !!data.active;
+
+		// toggle view
 		this.toggleClassMap({
-			'is-lesson': data.lesson,
-			'is-new': !data.started && !data.finished,
-			'in-progress': !!data.started && !data.finished,
-			'is-finished': !!data.finished,
-			'is-project': !data.lesson,
+			// 'in-progress': !!data.started && !data.finished,
+			'is-locked': isLesson && !isActive,
+			'is-lesson': isLesson,
+			'is-new': !isDone && isActive,
+			'is-finished': isDone && isActive,
+			'is-project': !isLesson,
 		});
 
 	}

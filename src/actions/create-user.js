@@ -48,12 +48,15 @@ export default async function createUser(data) {
 			// update all fields
 			data = _.assign({ }, { first, last, email, type }, {
 				id,
-				progress: { track: 'core', core: 0 },
+				progress: { },
 				createdAt: now,
 				modifiedAt: now,
 				systemAccessUntil,
 				publicAccessUntil
 			});
+
+			// syncs all lesson access
+			$lesson.syncLessons(id, data.progress);
 
 			// make sure this 
 			await $database.users.insertOne(data);

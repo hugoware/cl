@@ -10,6 +10,9 @@ import HomeProjectItem from './project-item';
 import AvatarSelection from './avatar-select';
 import Component from '../../component';
 
+const LESSON_FILTERS = ['code', 'web'];
+const DEFAULT_LESSON_FILTER = LESSON_FILTERS[0];
+
 // tracking the last view between switching
 let $previousView = null;
 let $previousFilter = null;
@@ -90,7 +93,8 @@ export default class HomeView extends View {
 
 		// get the summary for this view
 		try {
-			this.data = await $api.request('get-home-summary');
+			const data = await $api.request('get-home-summary');
+			applyData(this, data);
 
 			// update some info
 			this.ui.projectCount.text(this.projectCount);
@@ -164,7 +168,15 @@ export default class HomeView extends View {
 		$previousView = view;
 		const isProjects = view === 'projects';
 		const isLessons = view === 'lessons';
+
 		const title = isProjects ? 'Projects' : 'Lessons';
+		const description = isProjects
+			? 'Projects are your own personal creations'
+			: 'Lessons are tutorials that teach you new skills';
+
+		// set the default filter
+		if (isLessons && !(_.includes(LESSON_FILTERS, $previousFilter)))
+			$previousFilter = DEFAULT_LESSON_FILTER;
 
 		// animate the change?
 		this.removeClass('is-ready');
@@ -177,6 +189,7 @@ export default class HomeView extends View {
 
 			// set the title
 			this.ui.title.text(title);
+			this.ui.description.text(description);
 
 			// remove existing items
 			this.ui.list.empty();
@@ -187,6 +200,16 @@ export default class HomeView extends View {
 				const item = new HomeProjectItem(data);
 				item.appendTo(this.ui.list);
 			});
+
+			// const extra = new HomeProjectItem({
+			// 	number: 2,
+			// 	name: 'Using Variables',
+			// 	description: 'First steps on using variables to write better programs',
+			// 	modifiedAt: '2 Minutes Ago',
+			// 	type: 'code',
+			// 	locked: true,
+			// 	lesson: true
+			// });
 
 			// apply the filter, if any
 			this.setFilter($previousFilter);
@@ -215,6 +238,12 @@ export default class HomeView extends View {
 		this.broadcast('open-dialog', 'create-project')
 
 	onSelectProject = event => {
+
+		// make sure it's not locked
+		if (Component.within(event.target, '.locked'))
+			return;
+
+		// mark as busy before transitioning
 		if (this.busy) return;
 		this.busy = true;
 
@@ -295,31 +324,6 @@ export default class HomeView extends View {
 		context.refresh();
 	}
 
-	// updates the view for project items
-	refreshProjectLists = () => {
-
-
-		
-		
-		// // remove existing items
-		// this.ui.projectList.empty();
-		// this.ui.lessonList.empty();
-
-		// // add each item
-		// _.each({
-		// 	lessons: this.ui.lessonList,
-		// 	projects: this.ui.projectList
-		// }, (list, source) => {
-
-		// 	// add each project item
-		// 	const projects = this.data[source];
-		// 	_.each(projects, project => {
-		// 		const item = new HomeProjectItem(project);
-		// 		item.appendTo(list);
-		// 	});
-		// });
-	}
-
 }
 
 // finds a project ID
@@ -333,4 +337,18 @@ function getProjectData(event, instance) {
 	const id = getProjectId(event);
 	const { projects, lessons } = instance.data;
 	return _.find(projects, { id }) || _.find(lessons, { id });
+}
+
+// revise data for UI
+function applyData(instance, data) {
+	instance.data = data;
+
+	// descending order
+	data.lessons = _.sortBy(data.lessons, 'sequence');
+	
+	// update each of the numbers
+	const numbers = { };
+	_.each(data.lessons, lesson => {
+		lesson.number = numbers[lesson.type] = (numbers[lesson.type] || 0) + 1; 
+	});
 }

@@ -8,12 +8,13 @@ import getProjectStructure from '../queries/get-project-structure'
 export const event = 'get-project-data';
 export const authenticate = true;
 
-export async function handle(socket, session, id) {
+export async function handle(socket, session, lessonId) {
 	try {
 
 		// gather project info
-		const data = await getProjectData(id);
-		const structure = await getProjectStructure(id);
+		const ownerId = session.user;
+		const data = await getProjectData(ownerId, lessonId);
+		const structure = await getProjectStructure(lessonId);
 
 		_.merge(data, structure);
 		socket.ok(event, data);

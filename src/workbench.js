@@ -1,5 +1,6 @@
 import $config from './config';
 import $database from './storage/database';
+import $lessons from './storage/lessons';
 
 // import User from './models/user';
 
@@ -12,16 +13,17 @@ import { handleError } from './utils';
 // import writeFile, { WriteFileOptions } from './actions/write-file';
 // import createFolder, { CreateFolderOptions } from './actions/create-folder';
 // import writeFile from './actions/write-file';
-import compileFile from './actions/compile-file';
-import compileProject from './actions/compile-project';
+// import compileFile from './actions/compile-file';
+// import compileProject from './actions/compile-project';
 
 
 // handles running the test
 async function run() {
 
 	try {
-		const result = await compileProject('mk1234', 'style.scss');
-		console.log('finsie', result);
+		const result = await $lessons.syncLessonAccess('hugo')
+		// const result = await compileProject('mk1234', 'style.scss');
+		// console.log('finsie', result);
 	}
 	catch (err) {
 		console.log(err);
@@ -152,6 +154,7 @@ async function run() {
 	//load the default conifg
 	const path = require('path').resolve(process.argv[2]);
 	await $config.init(path);
+	await $lessons.init();
 
 	// load the database when needed
 	await $database.init();
