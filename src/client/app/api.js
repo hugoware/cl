@@ -1,7 +1,5 @@
 
-import _ from 'lodash';
-import io from 'socket.io-client';
-import Promise from 'bluebird';
+import { _, Promise, SocketIO } from './lib';
 
 // globalize
 window.Promise = Promise;
@@ -18,7 +16,7 @@ const $listening = { }
 */
 export async function init(namespace, args) {
   return new Promise((resolve, reject) => {
-		$socket = io(namespace, args);
+		$socket = SocketIO(namespace, args);
     $socket.on('connect', async () => {
       try {
         const connect = await request('authenticate');

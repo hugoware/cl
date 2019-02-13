@@ -1,5 +1,5 @@
 
-import _ from 'lodash';
+import { _ } from '../lib';
 import Component from '../component';
 import DropDownItem from './dropdown-item';
 import {cancelEvent} from '../utils/index';

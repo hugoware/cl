@@ -1,250 +1,117 @@
 
-(function() {
+// import controllers
+$IMPORTS$
 
-	// returns the instance of this lesson
-	function $LESSON_TYPE$Lesson(state, project, utils) {
-    var $self = this;
-    $self.data = $DATA$;
+// performs the oxford comma
+function $oxford(items, conjunction) {
+	const total = items.length;
 
-    // share imported utils
-    var _ = utils._;
-    
-    // shared variables
-    var $lesson = $self;
-    var $project = project;
-    var $state = state;
+	// determine the best
+	if (total === 1)
+		return items.join('')
+	else if (total == 2)
+		return items.join(` ${conjunction} `);
 
-    // access to code syntax and content validator
-    const $validateCode = utils.$validate;
+	// return the result
+	else {
+		const last = items.pop();
+		return `${items.join(', ')}, ${conjunction} ${last}`;
+	}
+}
 
-    // parses a string of html
-    function $html(str, options) {
-      return _.isString(str) ? utils.$html((str || '').toString(), options)
-        : utils.$html(str);
-    }
+// pluralizes a word
+function $plural(count, single, plural, none, delimeter = '@') {
+	const value = Math.abs(count);
+	const message = value === 1 ? single
+		: value > 1 ? (plural ? plural : `${single}s`)
+			: none || plural;
+	return message.replace(delimeter, count);
+}
 
-    // a general selector function
-    function $() {
-      return utils.$.apply(utils.$, arguments);
-    }
+// lesson controller
+class $LESSON_TYPE$Lesson {
 
-    // performs the oxford comma
-    function $oxford(items, conjunction) {
-      const total = items.length;
+	// setup the lesson
+	constructor(project, lesson, api, utils) {
+		this.state = { };
+		this.lesson = lesson;
+		this.project = project;
+		this.api = api;
 
-      // determine the best
-      if (total === 1)
-        return items.join('')
-      else if (total == 2)
-        return items.join(` ${conjunction} `);
+		// core lesson data
+		this.data = $DATA$;
 
-      // return the result
-      else {
-        const last = items.pop();
-        return `${items.join(', ')}, ${conjunction} ${last}`;
-      }
-    }
+		// other utilities
+		utils.plural = $plural;
+		utils.oxford = $oxford;
 
-    // pluralizes a word
-    function $plural(count, single, plural, none, delimeter = '@') {
-      const value = Math.abs(count);
-      const message = value === 1 ? single
-        : value > 1 ? (plural ? plural : `${single}s`)
-        : none || plural;
-      return message.replace(delimeter, count);
-    }
+		// share utility function
+		const _ = window._ = utils._;
+		utils._.assign(_, utils);
 
-    // shared functions
-    function $denyAccess(message, explain) {
-      if (_.isFunction($lesson.onDeny))
-        $lesson.onDeny({ message, explain });
-    }
+		// expose API tools
+		this.assistant = api.assistant;
+		this.screen = api.screen;
+    this.progress = api.progress;
+    this.content = api.content;
+		this.editor = api.editor;
 
-    // shared functions
-    function $approveSlide(message, emotion) {
-      if (_.isFunction($lesson.onApprove))
-        $lesson.onApprove({ message, emotion });
-    }
+		// setup controllers
+		this.controllers = { };
 
-    // speaks a message using the assistant
-    function $speakMessage(message, emotion) {
-      if (_.isFunction($lesson.onSpeak))
-        $lesson.onSpeak({ message, emotion, isOverride: true });
-    }
+		// setup each included entry
+		const refs = {
+			$REFS$
+		};
 
-    // returns the message to the prior content
-    function $revertMessage() {
-      if (_.isFunction($lesson.onRevert))
-        $lesson.onRevert();
-    }
+		// setup each reference
+		_.each(refs, (ref, key) => {
+			if (ref.controller) this.controllers[key] = ref;
+			else _.assign(this, ref);
+		});
 
-    // handles displaying a hint
-    function $showHint(str, options) {
-      if (!_.isFunction($lesson.onHint)) return;
-      options = options || { };
-      options.message = str;
-      $lesson.onHint(options);
-    }
-
-    // handles hiding hints
-    function $hideHint() {
-      if (_.isFunction($lesson.onHint))
-        $lesson.onHint(null);
-    }
-
-    // runs a series of actions until one
-    // of them returns false
-    function $validate() {
-      const actions = [].slice.call(arguments);
-
-      // check for extra options
-      let options = { };
-      if (!_.isFunction(actions[0]))
-        options = actions.shift();
-
-      // run each action
-      for (let i = 0, total = actions.length; i < total; i++) {
-        const action = actions[i];
-
-        // perform each action
-        try {
-          if (action() === false)
-            throw 'validation failed';
-        }
-
-        // for errors, just fail
-        catch(err) {
-          if (options.revertOnError !== false)
-            $revertMessage();
-          return false;
-        }
-      }
-
-      // was successful
-      return true;
-    }
-
-    // gets a zone
-    function $getZone(file, id, options = { }) {
-      let code = utils.getZoneContent(file, id);
-      if (options.trim !== false) code = _.trim(code);
-      return (options.toDom || options.asDom) ? $html(code) : code;
-    }
-
-    // gets a zone
-    function $getFile(file, options = { }) {
-      let code = utils.getFileContent(file, options);
-      if (options.trim !== false) code = _.trim(code);
-      return (options.toDom || options.asDom) ? $html(code) : code;
-    }
-
-    // 
-    const $noop = { };
-
-    // creates a validator function
-    function $validator(key, options) {
-
-      // create the primary validation function
-      const handler = (...args) => {
-
-        // execute the validator
-        let result;
-        let exception;
-        try {
-          result = options.validate(...args);
-        }
-        // failed to validate
-        catch(err) {
-          exception = true;
-          result = err;
-        }
-
-        // validation passed
-        if (_.isNil(result)) {
-          if (options.hideHintOnSuccess) $hideHint();
-          return true;
-        }
-
-        // if there was an error
-        try {
-
-          // handle reverting
-          if (options.revertOnError)
-            $revertMessage();
-
-          // doesn't want to do anything with validation
-          if (result === $noop)
-            return false;
-
-          // check for messages
-          if (exception && options.error) {
-            console.warn('validation error:', key, ex);
-            options.error(result);
-          }
-          
-          // handle failure
-          else if (_.isString(result) && options.fail)
-            options.fail(result);
-          
-        }
-        // extreme case
-        catch(ex) {
-          console.warn('validation error:', key, ex);
-          $hideHint();
-          $revertMessage();
-        }
-        finally {
-          return false;
-        }
-
-      };
-
-      // save the options
-      $self[key] = _.assign(handler, options);
-    }
-
-
-    // append each action
-    function $define(name, options, action) {
-
-      // no options were provided
-      if (_.isFunction(options)) {
-        action = options;
-        options = null;
-      }
-
-      // save the actions
-      _.assign(action, options);
-      $self[name] = action;
-    }
-
-    // share all of the utility methods
-    $self.$html = $html;
-    $self.$ = $;
-    $self.$denyAccess = $denyAccess;
-    $self.$approveSlide = $approveSlide;
-    $self.$speakMessage = $speakMessage;
-    $self.$revertMessage = $revertMessage;
-    $self.$showHint = $showHint;
-    $self.$hideHint = $hideHint;
-    $self.$validate = $validate;
-    $self.$getZone = $getZone;
-    $self.$getFile = $getFile;
-    $self.$validateCode = $validateCode;
-
-    // create some common messages
-    _.assign($speakMessage, {
-      MATCH_EXAMPLE: () =>
-        $speakMessage("Almost there! The code ran successfully, but you need to finish matching the example!", 'happy'),
-      EXECUTION_ERROR: () =>
-        $speakMessage('Oops! It appears there was an error running that code!', 'surprised')
-    });
-
-    
-		// attach required scripts
-		$SCRIPTS$
+		// debugging
+		if (/localhost/gi.test(window.location.origin))
+			window.LESSON = this;
 	}
 
-	// registration function
-	window.registerLesson('$LESSON_ID$', $LESSON_TYPE$Lesson);
-})();
+	// returns the active controller
+	get controller() {
+		const { slide } = this.lesson;
+		return slide && this.controllers[slide.controller];
+	}
+
+	// executes an action if available
+	invoke(action, ...args) {
+		if (!this.respondsTo(action)) return null;
+		action = toActionName(action);
+		const { controller } = this;
+		return controller[action].apply(this, args);
+	}
+
+	// checks if there's an action for this event
+	respondsTo(action) {
+		action = toActionName(action);
+		const { controller } = this;
+		return !!controller && controller[action];
+	}
+
+	timeout(action, time) {
+
+	}
+
+	interval(action, time) {
+		
+	}
+
+}
+
+// converts to an invoke action name
+function toActionName(name) {
+	if (!/on[A-Z]/.test(name))
+		name = `on${name.charAt(0).toUpperCase()}${name.substr(1)}`;
+	return name;
+}
+
+// register the lesson for use
+window.registerLesson('$LESSON_ID$', $LESSON_TYPE$Lesson);

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import $config from './config';
 import $server from './server';
 import $database from './storage/database';
+import $lessons from './storage/lessons';
 import $path from './path';
 import { resolveError } from './utils';
 
@@ -15,6 +16,9 @@ async function init() {
 		
 		// starts the database
 		await $database.init();
+		
+		// preload lesson content
+		await $lessons.init();
 		
 		// loads the server config
 		await $server.init();

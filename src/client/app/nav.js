@@ -1,6 +1,6 @@
 
 import { broadcast } from './events';
-import _ from 'lodash';
+import { _ } from './lib';
 import $state from './state';
 
 class Nav {

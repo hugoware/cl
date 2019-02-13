@@ -1,8 +1,7 @@
-import _ from 'lodash';
-import $randomcolor from 'randomcolor';
+import { _, url, RandomColor } from '../lib';
+
 import $lfs from '../lfs';
 import $state from '../state'
-import $url from 'url';
 
 /** cancels an even from firing any further
  * @param {JQuery.Event} event the event to cancel
@@ -146,11 +145,11 @@ export function getFileInfo(fileName) {
 }
 
 /** extracts a file path from a url
- * @param {string} url the url to extract from
+ * @param {string} path the url to extract from
  * @returns {string} the file path found
  */
 export function resolvePathFromUrl(path, relativeTo) {
-	path = $url.resolve(relativeTo + '/', path);
+	path = url.resolve(relativeTo + '/', path);
 	return $lfs.normalizePath(path);
 }
 
@@ -184,5 +183,5 @@ export function randomColor(basedOn = Math.random()) {
  */
 export function semiRandomColor(str) {
 	const seed = Math.abs(hashString(str));
-	return $randomcolor({ seed, format: 'hex' });
+	return RandomColor({ seed, format: 'hex' });
 }

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from '../../lib';
 import $api from '../../api';
 import $nav from '../../nav';
 import $state from '../../state';
@@ -79,6 +79,16 @@ export default class HomeView extends View {
 		return _.size(_.get(this.data, 'projects'));
 	}
 
+	/** returns the total number of projects
+	 * @returns {number}
+	 */
+	get hasPendingLessons() {
+		const lessons = _.get(this.data, 'lessons');
+		const total = _.size(lessons);
+		const pending = _.filter(lessons, 'done').length;
+		return (total || 0) !== (pending || 0);
+	}
+
 	/** returns the total number of lessons
 	 * @returns {number}
 	 */
@@ -99,6 +109,7 @@ export default class HomeView extends View {
 			// update some info
 			this.ui.projectCount.text(this.projectCount);
 			this.ui.lessonCount.text(this.lessonCount);
+			this.toggleClass('has-pending-lessons', this.hasPendingLessons);
 
 			// set the user stats
 			const { first, avatar } = this.data.user;
@@ -123,7 +134,7 @@ export default class HomeView extends View {
 	// handles filter updates
 	onUpdateFilter = event => {
 		const filter = event.target.getAttribute('data-filter');
-		this.setFilter(filter === 'all' ? null : filter);
+		this.setFilter(filter === 'all' ? null : filter, this.isLessonsSection);
 	}
 
 	// removes the current filter
@@ -132,8 +143,8 @@ export default class HomeView extends View {
 	}
 
 	// sets a new filter
-	setFilter = filter => {
-		this.removeClass('filter-web filter-game filter-mobile filter-code');
+	setFilter = (filter, isLessonsSection) => {
+		this.removeClass('filter-web filter-game filter-mobile filter-code no-lessons');
 		this.ui.filterOptions.removeClass('selected');
 
 		// save the filter
@@ -156,6 +167,11 @@ export default class HomeView extends View {
 			const matching = this.find(`.project-item[data-type="${filter}"]`);
 			matching.show();
 
+			// if none of them are locked, then that means we don't
+			// have any pending locked lessons
+			if (isLessonsSection && !matching.is('.is-locked') && !matching.is('.is-new'))
+				this.addClass('no-lessons');
+
 		}
 
 		// lastly, make sure something is visible
@@ -169,6 +185,10 @@ export default class HomeView extends View {
 		const isProjects = view === 'projects';
 		const isLessons = view === 'lessons';
 
+		// track the view
+		this.isLessonsSection = isLessons;
+
+		// update page info
 		const title = isProjects ? 'Projects' : 'Lessons';
 		const description = isProjects
 			? 'Projects are your own personal creations'
@@ -201,18 +221,8 @@ export default class HomeView extends View {
 				item.appendTo(this.ui.list);
 			});
 
-			// const extra = new HomeProjectItem({
-			// 	number: 2,
-			// 	name: 'Using Variables',
-			// 	description: 'First steps on using variables to write better programs',
-			// 	modifiedAt: '2 Minutes Ago',
-			// 	type: 'code',
-			// 	locked: true,
-			// 	lesson: true
-			// });
-
 			// apply the filter, if any
-			this.setFilter($previousFilter);
+			this.setFilter($previousFilter, isLessons);
 
 		}, 300);
 

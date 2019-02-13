@@ -1,5 +1,4 @@
-import $ from 'jquery';
-import _ from 'lodash';
+import { $, _ } from './lib';
 
 /** helper for text selection, including contenteditables */
 $.fn.selectText = function() {

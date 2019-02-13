@@ -1,10 +1,12 @@
 /// <reference path="../../../types/index.js" />
 
-import _ from 'lodash';
+import { _ } from '../../../lib';
 import $sound from '../../../sound';
 import $state from '../../../state';
 import $speech from '../../../speech';
 import $wait from '../../../lesson/wait';
+
+import generateMessage from '../../../message-generator';
 import Component from '../../../component';
 import Slide from './slide';
 import Question from './question';
@@ -51,14 +53,19 @@ export default class Assistant extends Component {
 		this.listen('reset', this.onReset);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
-		this.listen('slide-wait-for-result', this.onSlideWaitForResult);
-		this.listen('assistant-speak', this.onSpeak);
+		// this.listen('slide-wait-for-result', this.onSlideWaitForResult);
 		this.listen('lesson-finished', this.onFinishLesson);
-		this.listen('save-file', this.onSaveFile);
-		this.listen('modify-file', this.onModifyFile);
-		this.listen('code-execution-approval', this.onCodeExecutionApproval);
+		// this.listen('save-file', this.onSaveFile);
+		// this.listen('modify-file', this.onModifyFile);
+		// this.listen('code-execution-approval', this.onCodeExecutionApproval);
+		this.listen('slide-changed', this.onSlideChanged);
+		this.listen('set-message', this.onSetMessage);
+		this.listen('set-emotion', this.onSetEmotion);
+		this.listen('block-next', this.onBlockNext);
+		this.listen('allow-next', this.onAllowNext);
+
 		this.on('click', '.next', this.onNext);
-		this.on('click', '.previous', this.onPrevious);
+		// this.on('click', '.previous', this.onPrevious);
 
 		// set the speech enablement
 		this.ui.showPanel.on('mouseover', this.onRestorePopUp);
@@ -78,17 +85,17 @@ export default class Assistant extends Component {
 		return slide.isQuestion ? this.views.question : this.views.slide
 	}
 
-	// decides what to do with a result
-	onSlideWaitForResult = success => {
+	// // decides what to do with a result
+	// onSlideWaitForResult = success => {
 		
-		// just enable/disable the next button
-		if ($state.lesson.slide.autoNext === false)
-			this.toggleClass('is-waiting', !success);
+	// 	// just enable/disable the next button
+	// 	if ($state.lesson.slide.autoNext === false)
+	// 		this.toggleClass('is-waiting', !success);
 
-		// go to the next slide
-		else if (success)
-			this.onNext();
-	}
+	// 	// go to the next slide
+	// 	else if (success)
+	// 		this.onNext();
+	// }
 
 	// enables speech
 	onEnableSpeech = () => {
@@ -104,31 +111,31 @@ export default class Assistant extends Component {
 	// hides the assistant
 	onReset = () => {
 		this.removeClass('leave');
-		this.notifyAssistantUpdate();
+		// this.notifyAssistantUpdate();
 	}
 
 	// display the popup message again
 	onRestorePopUp = () => {
 		this.removeClass('hide-popup');
-		this.notifyAssistantUpdate();
+		// this.notifyAssistantUpdate();
 	}
 	
 	// hides the popup message
 	onHidePopUp = () => {
 		this.addClass('hide-popup');
-		this.notifyAssistantUpdate();
+		// this.notifyAssistantUpdate();
 	}
 
-	// sync the lesson state
-	onSaveFile = () => {
-		if ($state.lesson)
-			$state.lesson.saveProgress();
-	}
+	// // sync the lesson state
+	// onSaveFile = () => {
+	// 	if ($state.lesson)
+	// 		$state.lesson.saveProgress();
+	// }
 
-	// code execution approval can allow the
-	// assistant to move forward
-	onCodeExecutionApproval = () =>
-		this.onApprove();
+	// // code execution approval can allow the
+	// // assistant to move forward
+	// onCodeExecutionApproval = () =>
+	// 	this.onApprove();
 
 	/** changes the speech enablement mode
 	 * @param {boolean} enabled should speech be enabled or not
@@ -147,13 +154,16 @@ export default class Assistant extends Component {
 			$speech.stop();
 	}
 
-	// if the file is changed, always revert any
-	// success messages
-	onModifyFile = () => {
-		this.addClass('is-waiting');
-		this.views.slide.hideFollowUp();
-		$wait.reactivate();
-	}
+	// // if the file is changed, always revert any
+	// // success messages
+	// onModifyFile = (...args) => {
+
+	// 	$state.lesson.invoke('contentChanged', ...args); 
+	// 	console.log(this.lesson);
+	// 	// this.addClass('is-waiting');
+	// 	// this.views.slide.hideFollowUp();
+	// 	// $wait.reactivate();
+	// }
 
 	// finished with the assistant
 	onFinishLesson = () => {
@@ -161,7 +171,7 @@ export default class Assistant extends Component {
 		$speech.stop();
 		setTimeout(() => {
 			this.hide();
-			this.notifyAssistantUpdate();
+			// this.notifyAssistantUpdate();
 		}, 1000);
 	}
 
@@ -174,11 +184,11 @@ export default class Assistant extends Component {
 		this.toggleClass('active', hasLesson);
 		if (!hasLesson) return;
 
-		// set the speech handler
-		$state.lesson.instance.onSpeak = this.onSpeak;
-		$state.lesson.instance.onRevert = this.onRevert;
-		$state.lesson.instance.onApprove = this.onApprove;
-		$state.lesson.instance.onHint = this.onHint;
+		// // set the speech handler
+		// $state.lesson.instance.onSetMessage = this.onSetMessage;
+		// $state.lesson.instance.onRevert = this.onRevert;
+		// $state.lesson.instance.onApprove = this.onApprove;
+		// $state.lesson.instance.onHint = this.onHint;
 
 		// check for existing progress
 		let index = 0;
@@ -221,7 +231,7 @@ export default class Assistant extends Component {
 	onDeactivateProject = () => {
 		if ($speech.active) $speech.stop();
 		this.slideIndex = null;
-		this.notifyAssistantUpdate();
+		// this.notifyAssistantUpdate();
 		this.hide();
 	}
 
@@ -238,15 +248,15 @@ export default class Assistant extends Component {
 		this.refresh();
 	}
 	
-	onPrevious = async () => {
-		await $state.lesson.previous();
-		this.refresh();
-	}
+	// onPrevious = async () => {
+	// 	await $state.lesson.previous();
+	// 	this.refresh();
+	// }
 
-	// let the app know the assistant changed
-	notifyAssistantUpdate = () => {
-		setTimeout(() => this.broadcast('assistant-updated'), 0);
-	}
+	// // let the app know the assistant changed
+	// notifyAssistantUpdate = () => {
+	// 	setTimeout(() => this.broadcast('assistant-updated'), 0);
+	// }
 
 	// refresh the display for this slide
 	refresh = async () => {
@@ -254,141 +264,135 @@ export default class Assistant extends Component {
 		// lesson has been disabled
 		if (!$state.lesson) return;
 
-		// make sure the popup is visible
-		this.removeClass('hide-popup');
-		this.notifyAssistantUpdate();
+		// // make sure the popup is visible
+		// this.removeClass('hide-popup');
+		// // this.notifyAssistantUpdate();
 
-		// make sure the slide changed
-		const index = $state.lesson.index;
-		if (index === this.slideIndex) return;
-		this.slideIndex = index;
+		// // make sure the slide changed
+		// const index = $state.lesson.index;
+		// if (index === this.slideIndex) return;
+		// this.slideIndex = index;
 
 		// update slide content
 		const { slide } = $state.lesson;
-		const { view } = this;
+		// const { view } = this;
 
-		// determine the mode to use
-		const mode = slide.mode || 'popup';
+		// // determine the mode to use
+		// const mode = slide.mode || 'popup';
+		// this.toggleClassMap({
+		// 	popup: mode === 'popup',
+		// 	overlay: mode === 'overlay',
+		// 	// 'is-last': slide.isLast,
+		// 	// 'is-first': slide.isFirst,
+		// 	// 'is-waiting': slide.isWaiting,
+		// 	// 'is-checkpoint': slide.isCheckpoint,
+		// });
+
+		// // pick the emotion, if any
+		// // this.onSetEmotion(slide.emotion);
+
+		// // // hide the follow up message, if any
+		// // this.views.slide.hideFollowUp();
+
+		
+
+		// // update the content
+		// view.refresh(slide);
+
+		// // this.views.slide.hasUsedOverrideMessage = false;
+
+		// // wait for speaking to stop
+		// await $speech.stop();
+
+		// // start speaking
+		// this.speak(slide.speak);
+		// this.nextAllowRevertTime = (+new Date) + 1000;
+	}
+
+	// // handles moving to the next slide
+	// onApprove = (message, emotion, options = { }) => {
+
+	// 	// all done - automatically continue
+	// 	if ($state.lesson.slide.autoNext !== false)
+	// 		return this.onNext();
+
+	// 	// release the waiting 
+	// 	this.toggleClassMap({
+	// 		'is-waiting': false,
+	// 		'has-follow-up': !!message
+	// 	});
+		
+	// 	// say the message, if anything
+	// 	if (message)
+	// 		this.onSetMessage({ message, emotion });
+	// }
+
+	// // returns the message to the original state
+	// onRevert = () => {
+	// 	if (this.nextAllowRevertTime > +new Date) return;
+	// 	this.views.slide.revert();
+	// 	this.notifyAssistantUpdate();
+	// 	$speech.stop();
+	// }
+
+	// // handles updating hint messages
+	// onHint = options => {
+	// 	this.broadcast('show-hint', options);
+	// }
+
+	onSlideChanged = slide => {
+
+		// set the view type
+		const isPopup = slide.mode !== 'overlay';
 		this.toggleClassMap({
-			popup: mode === 'popup',
-			overlay: mode === 'overlay',
-			'is-last': slide.isLast,
-			'is-first': slide.isFirst,
-			'is-waiting': slide.isWaiting,
-			'is-checkpoint': slide.isCheckpoint,
+			popup: isPopup,
+			overlay: !isPopup,
 		});
 
-		// update labels as needed
-		this.find('.next').text(slide.isLast ? 'Finish' : 'Next');
-
-		// pick the emotion, if any
-		this.setEmotion(slide.emotion);
-
-		// hide the follow up message, if any
-		this.views.slide.hideFollowUp();
-
 		// show the correct view
+		const { view } = this;
 		_.each(this.views, view => view.hide());
 		view.show();
 
-		// update the content
-		this.views.slide.hasUsedOverrideMessage = false;
-		view.refresh(slide);
-
-		// wait for speaking to stop
-		await $speech.stop();
-
-		// start speaking
-		this.speak(slide.speak);
-		this.nextAllowRevertTime = (+new Date) + 1000;
-	}
-
-	// handles moving to the next slide
-	onApprove = (message, emotion, options = { }) => {
-		console.log('try approve');
-
-		// all done - automatically continue
-		if ($state.lesson.slide.autoNext !== false)
-			return this.onNext();
-
-		// release the waiting 
-		this.toggleClassMap({
-			'is-waiting': false,
-			'has-follow-up': !!message
-		});
+		// update labels as needed
+		this.find('.next').text(slide.isLast ? 'Finish' : 'Next');
 		
-		// say the message, if anything
-		if (message)
-			this.onSpeak({ message, emotion });
-	}
+		// check for initial content
+		if ('content' in slide)
+			this.onSetMessage({ message: slide.content });
 
-	// returns the message to the original state
-	onRevert = () => {
-		if (this.nextAllowRevertTime > +new Date) return;
-		this.views.slide.revert();
-		this.notifyAssistantUpdate();
-		$speech.stop();
-	}
+		// apply emotions, if any - if not, this'll
+		// reset the emotion
+		this.onSetEmotion(slide.emotion || slide.emote);
 
-	// handles updating hint messages
-	onHint = options => {
-		this.broadcast('show-hint', options);
 	}
 
 	// listens for extra speech events
-	onSpeak = (options = { }) => {
-		const message = _.trim(options.message);
-		if (!_.some(message)) return;
+	onSetMessage = (options = { }) => {
+		
+		// require a message
+		const hash = _.snakeCase(options.message);
+		if (!_.some(hash) || (this._hash === hash && !options.force))
+			return;
 
-		// let others know the assistant has updated
-		this.notifyAssistantUpdate();
+		// save this so not to do it twice
+		this._hash = hash;
 
-		// force the slide mode if something is requesting
-		// a speech message
-		this.views.question.hide();
-		this.views.slide.show();
+		// update the message
+		const { content, speak } = generateMessage(options.message);
+		console.log('will', speak);
+		this.view.setContent(content);
+		$speech.speak(speak);
 
-		// don't do this twice on accident
-		const matchesExisting = this.views.slide.overrideMessage === message;
-		if (this.views.slide.isUsingOverrideMessage) {
-			if (matchesExisting) return;
-		}
-
-		// TODO: this is kinda ugly -- to get the formatted
-		// text we're grabbing the text value from the node
-		// update the slide content
-		// replace the content
-		const isSwitchingToOverride = !this.views.slide.isUsingOverrideMessage;
-		const hasUsedOverrideMessage = !!this.views.slide.hasUsedOverrideMessage;
-		this.views.slide.setContent(message, true);
-		this.views.slide.isUsingOverrideMessage = true;
-		this.views.slide.hasUsedOverrideMessage = true;
-		this.views.slide.overrideMessage = message;
-
-		// speak and update the emotion, if any
-		if ('emotion' in options)
-			this.setEmotion(options.emotion);
-
-		// check if speaking
-		if (isSwitchingToOverride || !matchesExisting) {
-
-			// this is the first time this has happened
-			// so speak the first attempt
-			if (!hasUsedOverrideMessage || !matchesExisting) {
-				const speak = this.views.slide.getMessage();
-				this.speak([ speak ]);
-			}
-
-			// play a sound effect, if needed
-			$sound.notify({ balance: 0.75 });
-		}
-
+		// set the emotion, if any
+		if (options.emote || options.emotion)
+			this.onSetEmotion(options.emote || options.emotion);
 	}
 
 	/** replaces the emotion for the assistant
 	 * @param {string} emotion the emotion to show
 	 */
-	setEmotion = emotion => {
+	onSetEmotion = emotion => {
 		this.ui.avatar.toggleClassMap({
 			happy: emotion === 'happy',
 			sad: emotion === 'sad',
@@ -396,12 +400,14 @@ export default class Assistant extends Component {
 		});
 	}
 
-	/** speaks a message using the assistant
-	 * @param {string} message the message to speak
-	 */
-	speak = message => {
-		if (_.some(message))
-			$speech.speak(message);
+	// allow moving to the next step
+	onAllowNext = () => {
+		this.toggleClass('is-waiting', false);
+	}
+	
+	// prevent moving to the next step
+	onBlockNext = () => {
+		this.toggleClass('is-waiting', true);
 	}
 
 }

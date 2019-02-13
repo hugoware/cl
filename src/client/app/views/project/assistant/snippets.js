@@ -1,5 +1,5 @@
 
-import _ from 'lodash';
+import { _ } from '../../../lib';
 import $editor from '../../../editor';
 
 // attach each snippet

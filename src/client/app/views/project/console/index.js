@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from '../../../lib';
 import Component from '../../../component';
 import ConsoleMessage from './message';
 import { clear } from '../../../error-manager';

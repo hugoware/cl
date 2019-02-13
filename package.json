@@ -19,7 +19,8 @@
     "marker": "electron ./lessons/marker/index.html",
     "create-lesson": "./scripts/new-lesson.sh",
     "test": "./node_modules/.bin/jasmine --config=./jasmine.json",
-    "dev-tests": "nodemon -d 1 -L -w ./src -w ./tests --exec \"./node_modules/.bin/jasmine --config=./jasmine.json\""
+    "dev-tests": "nodemon -d 1 -L -w ./src -w ./tests --exec \"./node_modules/.bin/jasmine --config=./jasmine.json\"",
+    "update-validator": "npm install --save github:hugoware/code-validator"
   },
   "author": "",
   "license": "ISC",
@@ -68,7 +69,6 @@
     "dexie": "^2.0.4",
     "escodegen": "^1.11.0",
     "esprima": "^4.0.1",
-    "ev": "github:hugoware/code-validator",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "fast-xml-parser": "^3.12.5",

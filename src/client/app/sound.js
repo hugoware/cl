@@ -1,7 +1,6 @@
 /// <reference path="./types/index.js" />
 
-import _ from 'lodash';
-import { Howl } from 'howler';
+import { _, Howl } from './lib';
 
 const $sounds = new Howl({
 	// src: ['/__codelab__/sounds.webm', '/__codelab__/sounds.mp3'],

@@ -4,6 +4,7 @@ import $path from 'path';
 import $fsx from 'fs-extra';
 import $yml from 'js-yaml';
 import $uglify from 'uglify-js';
+import { exec as $exec } from 'child_process';
 import * as $babel from 'babel-core';
 import $dictionary from './dictionary';
 
@@ -32,6 +33,7 @@ function readFile(name) {
 // get basic info
 const source = process.argv[2];
 const id = _.snakeCase(source);
+const tempDir = $path.resolve('./.compile');
 const root = $path.resolve(`./lessons/content/${source}`);
 const scriptDirectory = `${root}/scripts`;
 const dist = $path.resolve(`./lessons/output/${id}`);
@@ -64,20 +66,24 @@ const definitions = _.filter(content, item => 'definition' in item);
 const slides = _.filter(content, item => 'slide' in item || 'question' in item);
 
 // prepare a few items
-manifest.definitions = { };
+// manifest.definitions = { };
 
 // process each category in order
-processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
+// processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
 processSlides(state, manifest, slides);
-processDefinitions(state, manifest, definitions);
-manifest.zones = zones;
+// processDefinitions(state, manifest, definitions);
+// manifest.zones = zones;
+
+// make the temp directory
+$fsx.ensureDirSync(tempDir);
+$fsx.emptyDirSync(tempDir);
 
 // include all scripts
 const scripts = [];
 for (const file of $fsx.readdirSync(scriptDirectory)) {
 	if (!/\.js$/.test(file)) continue;
-	const script = $fsx.readFileSync($path.resolve(scriptDirectory, file)).toString();
-	scripts.push(script);
+	$fsx.copySync(`${scriptDirectory}/${file}`, `${tempDir}/${file}`);
+	scripts.push(file);
 }
 
 // make sure the destination is there
@@ -95,13 +101,23 @@ if ($fsx.existsSync(`${root}/files`))
 
 // process the zone data which includes copying
 // collapsed content and modifying files
-processZones(manifest, manifest.zones, `${dist}/files`);
+// processZones(manifest, manifest.zones, `${dist}/files`);
 
 // populate the template
 template = template.replace(/\$LESSON_ID\$/g, id);
 template = template.replace(/\$LESSON_TYPE\$/g, type);
-template = template.replace(/\$SCRIPTS\$/g, scripts.join('\n\n'));
 template = template.replace(/\$DATA\$/g, JSON.stringify(manifest, null, IS_PREVIEW ? 2 : null));
+
+// import each script
+template = template.replace(/\$IMPORTS\$/g, _.map(scripts, script => {
+	script = script.replace(/\.js$/, '');
+	return `import * as ${script} from './${script}';`;
+}).join('\n'));
+
+// setup references for each import
+template = template.replace(/\$REFS\$/g, _.map(scripts, script => {
+	return script.replace(/\.js$/, '');
+}).join(', '));
 
 // create the final result
 const transformed = $babel.transform(template, {
@@ -125,8 +141,7 @@ else {
 }
 
 // copy resources
-$fsx.ensureDirSync(dist);
-$fsx.writeFileSync(`${dist}/index.js`, result);
+$fsx.writeFileSync(`${tempDir}/index.js`, result);
 
 // write the manifest summary
 $fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
@@ -134,6 +149,15 @@ $fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
   description: manifest.description,
   type: manifest.type,
 }));
+
+// compile this
+$exec(
+	`./node_modules/.bin/browserify .compile/index.js -o ${dist}/index.js`,
+	// './node_modules/.bin/browserify ./.compile/index.js -o./.compile/index.d.js',
+	err => {
+		if (err) console.log(err);
+		else console.log(`generated: ${dist}`);
+	});
   
 // notify this is done
 // console.log('generated', JSON.stringify(manifest, null, 2));

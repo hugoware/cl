@@ -1,6 +1,5 @@
 
-import _ from 'lodash';
-import $keyboard from 'mousetrap';
+import { _, Mousetrap } from '../../../../../lib';
 
 import Component from '../../../../../component';
 import contentManager from '../../../../../content-manager'
@@ -8,6 +7,7 @@ import $editor from '../../../../../editor';
 import $state from '../../../../../state';
 import ManagedEditor from '../../../../../editor/managed';
 import { requirePermission } from '../../../prevent';
+import { cancelEvent } from '../../../../../utils/index';
 
 // the amount of time to wait before compiling
 const COMPILER_DELAY = 300;
@@ -70,8 +70,8 @@ export default class CodeEditor extends Component {
 		this.ui.editor.find('textarea').addClass('mousetrap');
 
 		// handle keyboard shortcuts
-		$keyboard.bind('mod+shift+s', this.onKeyboardShortcutSaveAll);
-		$keyboard.bind('mod+s', this.onKeyboardShortcutSave);
+		Mousetrap.bind('mod+shift+s', this.onKeyboardShortcutSaveAll);
+		Mousetrap.bind('mod+s', this.onKeyboardShortcutSave);
 
 		// handle tracking changes
 		this.onProcessTimers.interval = setInterval(this.onProcessTimers, 25);
@@ -101,7 +101,7 @@ export default class CodeEditor extends Component {
 	// matches the editor size for a period of time
 	onMaintainEditorSize = () => {
 		if ((+new Date) > this.maintainSizeLimit) return;
-		this.editor.editor.resize();
+		// this.editor.editor.resize();
 	}
 
 	// need to discard the workspaces
@@ -117,7 +117,7 @@ export default class CodeEditor extends Component {
 	// make sure to refresh when slides change
 	onSlideChanged = () => {
 		this.editor.clearUndoHistory();
-		this.editor.editor.resize(true);
+		// this.editor.editor.resize(true);
 		this.updateResetAction();
 	}
 
@@ -193,7 +193,21 @@ export default class CodeEditor extends Component {
 	}
 
 	// queues up changes to the content manager
-	onContentChange = () => {
+	onContentChange = event => {
+
+		event.changes.splice(0, event.changes.length);
+		return cancelEvent(event);
+		console.log(event);
+
+		// setTimeout(() => this.editor.editor.restoreViewState());
+		// this.editor.editor.saveViewState();
+
+		if ($state.lesson) {
+			const { activeFile } = this;
+			$state.lesson.invoke('contentChange', activeFile);
+		}
+
+		// compile the file
 		this.compile();
 	}
 

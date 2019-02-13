@@ -1,0 +1,12 @@
+log_variables: 
+  all: { }
+
+declare_variables:
+  all:
+    start:
+      row: 1
+      col: 1
+    end:
+      row: 2
+      col: 17
+    line: true

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from './lib';
 import { getExtension } from './utils';
 
 const $cache = { };

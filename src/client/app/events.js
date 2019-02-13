@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from './lib';
 
 // map of all actions
 const actions = [ ];

@@ -38,6 +38,8 @@
 						.item.projects-only(data-filter='game') Games
 						.item.projects-only(data-filter='mobile') Mobile Apps
 
+				.no-lessons You've finished all of the lessons in this category! Check back later since more will be added from time to time.
+
 				.empty
 					h2 No #[span.for-lesson Lessons] #[span.for-project Projects] Found
 					p It doesn't appear that you have any #[span.for-lesson lessons] #[span.for-project projects] of this type available.
@@ -46,6 +48,8 @@
 						.create-project Create a new Project
 
 				.list(bind='list')
+				
+
 
 
 +template('project-item')

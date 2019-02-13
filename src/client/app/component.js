@@ -1,8 +1,6 @@
 /// <reference path="./types/index.js" />
 
-import _ from 'lodash';
-import $ from 'jquery';
-import Promise from 'bluebird';
+import { _, $, Promise } from './lib';
 import $events from './events';
 import $api from './api';
 import $icons from './icons';

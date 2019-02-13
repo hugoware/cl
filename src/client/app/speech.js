@@ -1,6 +1,5 @@
 
-import _ from 'lodash';
-import $ from 'jquery';
+import { _, $ } from './lib';
 import { listen, broadcast } from './events';
 import $state from './state';
 const available = 'speechSynthesis' in window;

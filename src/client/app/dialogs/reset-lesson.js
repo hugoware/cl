@@ -1,5 +1,5 @@
 
-import _ from 'lodash';
+import { _ } from '../lib';
 import $api from '../api';
 import Dialog from './';
 import ErrorMessage from '../ui/error-message';

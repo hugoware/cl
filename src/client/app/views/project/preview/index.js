@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import $ from 'jquery';
+import { _, $ } from '../../../lib';
 import Component from '../../../component';
 
 // different preview modes

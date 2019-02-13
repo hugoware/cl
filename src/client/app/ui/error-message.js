@@ -1,9 +1,8 @@
-import _ from 'lodash';
+import { _, Showdown } from '../lib';
 import Component from '../component';
-import $showdown from 'showdown';
 
 // shared markdown converter
-const $convert = new $showdown.Converter();
+const $convert = new Showdown.Converter();
 
 const DEFAULT_ERROR_MESSAGE = 'There was an unexpected error';
 

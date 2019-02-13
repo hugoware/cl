@@ -9,6 +9,8 @@ const $run = require('gulp-run-command').default;
 
   // ui/styles
 const $sass = require('gulp-sass');
+const $babelify = require('babelify');
+const $watchify = require('watchify');
 
   // scripts
 const $pump = require('pump');
@@ -109,41 +111,104 @@ function displayError(err) {
 _.each($config.scripts.client, source => {
   const input = `src/client/${source}/index.js`;
   const action = `compile-client-${source}-scripts`;
-  const watch = `watch-client-${source}-scripts`;
+	const watch = `watch-client-${source}-scripts`;
 
-  // common transformer
-  const transformer = $browserify(input, {
-    fast: true,
-    cache: { },
-    packageCache: { },
-  })
-  .transform('babelify', {
-    presets: [ 'es2015' ],
-    plugins: [
-      // 'convert-to-json',
-      ['inline-import', { 'extensions': [ '.txt', '.ts', '.html' ] }],
-      'transform-svg-import-to-string',
-      'transform-class-properties',
-      'async-to-promises'
-    ]
-  });
+	// add custom browserify options here
+	const options = _.assign({}, $watchify.args, {
+		entries: [input],
+		debug: true,
+		transform: [
+			$babelify.configure({
+				presets: ['es2015'],
+				plugins: [
+					// 'convert-to-json',
+					['inline-import', { 'extensions': ['.txt', '.ts', '.html'] }],
+					'transform-svg-import-to-string',
+					'transform-class-properties',
+					'async-to-promises'
+				]
+			})
+		]
+	});
+
+	// reusable bundler
+	const bundler = $watchify($browserify(options));
+	
+	// handles creating the bundle
+	function bundle() {
+		console.log(`[bundling] ${source}`);
+		const output = $gulp.dest(`dist/resources/public`);
+		return bundler.bundle()
+			// log errors if they happen
+			.on('error', err => console.error(err))
+			.pipe($source(`${source}.js`))
+			// optional, remove if you don't need to buffer file contents
+			.pipe($buffer())
+			// optional, remove if you dont want sourcemaps
+			// .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
+			// Add transformation tasks to the pipeline here.
+			// .pipe(sourcemaps.write('./')) // writes .map file
+			.pipe(output);
+	}
+
+	// create the standard build task
+	$gulp.task(action, bundle);
+
+	// create the watcher task
+	$gulp.task(watch, () => {
+
+		// create the initial bundle
+		if (!bundle.hasRun) {
+			bundle.hasRun = true;
+			bundle();
+		}
+
+		bundler.on('update', bundle); // on any dep update, runs the bundler
+		bundler.on('log', (...args) => {
+			console.log(`[updated] ${source}:`, ...args);
+		}); // output build logs to terminal
+	});
+
+
+  // // common transformer
+  // const transformer = $browserify({
+  //   entries: [ input ],
+  //   extensions: ['.js'],
+  //   ignore: /(node_modules)/,
+  //   debug: true,
+  //   fast: true,
+  //   cache: { },
+  //   packageCache: { },
+  //   transform: [
+  //     $babelify.configure({
+  //       presets: [ 'es2015' ],
+  //       plugins: [
+  //         // 'convert-to-json',
+  //         ['inline-import', { 'extensions': [ '.txt', '.ts', '.html' ] }],
+  //         'transform-svg-import-to-string',
+  //         'transform-class-properties',
+  //         'async-to-promises'
+  //       ]
+  //     })
+  //   ]
+  // });
   
-  // compiles the client script
-  $gulp.task(action, () => {
-    const output = $gulp.dest(`dist/resources/public`);
+  // // compiles the client script
+  // $gulp.task(action, () => {
+  //   const output = $gulp.dest(`dist/resources/public`);
 
-    return transformer
-      .bundle()
-      .on('error', displayError)
-      .pipe($source(`${source}.js`))
-      .pipe($buffer())
-      .pipe(output);
-  });
+  //   return transformer
+  //     .bundle()
+  //     .on('error', displayError)
+  //     .pipe($source(`${source}.js`))
+  //     .pipe($buffer())
+  //     .pipe(output);
+  // });
 
-  // setup a watch
-  $gulp.task(watch, () => {
-    $gulp.watch([`src/client/${source}/**/*`], [ action ]);
-  });
+  // // setup a watch
+  // $gulp.task(watch, () => {
+  //   $gulp.watch([`src/client/${source}/**/*`], [ action ]);
+  // });
 });
 
 // setup worker build scripts

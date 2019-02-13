@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import $path from 'path';
 import $fs from 'fs';
-import ZoneMap from '../../src/client/app/zone-map';
+// import ZoneMap from '../../src/client/app/zone-map';
 
 export default function processZones(manifest, zones, source) {
 

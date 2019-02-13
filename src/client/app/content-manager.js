@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from './lib';
 import { broadcast } from './events';
 import $errorManager from './error-manager';
 import getWorker from './worker';

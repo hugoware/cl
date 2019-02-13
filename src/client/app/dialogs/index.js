@@ -1,5 +1,5 @@
 
-import _ from 'lodash';
+import { _ } from '../lib';
 import Component from '../component';
 import { cancelEvent } from '../utils/index';
 

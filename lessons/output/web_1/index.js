@@ -1,484 +1,313 @@
-"use strict";
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+'use strict';
 
-(function () {
+var _createClass = function () {
+	function defineProperties(target, props) {
+		for (var i = 0; i < props.length; i++) {
+			var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+		}
+	}return function (Constructor, protoProps, staticProps) {
+		if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	};
+}();
+// import controllers
 
-  // returns the instance of this lesson
-  function web1Lesson(state, project, utils) {
-    var $self = this;
-    $self.data = {
-      "name": "Basics 1",
-      "type": "web",
-      "description": "Introduction to building Web Pages",
-      "lesson": [{
-        "mode": "popup",
-        "content": "<p>Let's learn about unordered lists</p><p>Start by opening the <code>index.html</code> file by double clicking on it</p>",
-        "waitFor": ["fileOpen(/index.html)"],
-        "highlights": ["fileBrowser(/index.html)"],
-        "validation": {
-          "openFile": "canOpenIndexHtml"
-        },
-        "type": "slide",
-        "speak": ["Let's learn about unordered lists", "Start by opening the index.html file by double clicking on it"]
-      }, {
-        "mode": "popup",
-        "content": "<p>You're allowed to upload a file now</p>",
-        "autoNext": false,
-        "validation": {
-          "uploadFile": "verifyFileUploadIsImage"
-        },
-        "waitFor": ["::event(file-uploaded, verifyUploadImageSuccess)"],
-        "flags": {
-          "add": ["upload-file-dialog"]
-        },
-        "type": "slide",
-        "speak": ["You're allowed to upload a file now"]
-      }, {
-        "mode": "popup",
-        "actions": ["hide-all-dialogs"],
-        "content": "<p>Great! Now that the file <code>%imageName%</code> file is open, let's look at a few things</p>",
-        "type": "slide",
-        "speak": ["Great! Now that the file %imageName% file is open, let's look at a few things"]
-      }, {
-        "mode": "popup",
-        "content": "<p>These are tags that wrap the unordered list</p>",
-        "autoNext": false,
-        "waitFor": ["::event(modify-file, verifyHasEnoughListItems)"],
-        "zones": {
-          "/index.html": {
-            "ul_start_tag": "show",
-            "ul_end_tag": "show",
-            "ul_content": "edit"
-          }
-        },
-        "type": "slide",
-        "speak": ["These are tags that wrap the unordered list"]
-      }, {
-        "mode": "overlay",
-        "show": 4,
-        "title": "What is the name of the <code>highlighted</code> block of code?",
-        "content": "<div class=\"snippet\" type=\"mary_example\" />",
-        "hint": "This is a longer example of what a hint might look like. This is going to span for a period longer than the other items on the page.\n",
-        "explain": "This is just a <code>summary message</code> to explain the final answer",
-        "choices": ["this is <code>correct</code>", "This <em>is</em> incorrect", "This <em>is</em> also wrong", "This ~shouldn't~ work", "This <em>is another</em> mix", "This <em>is</em> failed"],
-        "type": "question",
-        "speak": ["What is the name of the highlighted block of code?"],
-        "explained": "This is just a summary message to explain the final answer"
-      }, {
-        "mode": "overlay",
-        "show": 4,
-        "title": "This is another question about what you've learned?",
-        "hint": "It's really pretty obvious",
-        "explain": "This is just a <code>summary message</code> to explain the final answer",
-        "choices": ["this is <code>correct</code>", "This <em>is</em> incorrect", "This <em>is</em> also wrong", "This ~shouldn't~ work", "This <em>is another</em> mix", "This <em>is</em> failed"],
-        "type": "question",
-        "speak": ["This is another question about what you've learned?"],
-        "content": "",
-        "explained": "This is just a summary message to explain the final answer"
-      }, {
-        "checkpoint": true,
-        "mode": "popup",
-        "content": "<p>That's it! The lesson is finished!</p>",
-        "type": "slide",
-        "speak": ["That's it! The lesson is finished!"]
-      }],
-      "definitions": {
-        "html": {
-          "id": "html",
-          "name": "HTML",
-          "aka": "Hyper Text Markup Language",
-          "define": "This is the full def"
-        }
-      },
-      "snippets": {
-        "complex_tag": {
-          "content": "<div>\n  <h1>The Title</h1>\n  <p></p>\n</div>",
-          "type": "html"
-        },
-        "html_tag_example": {
-          "content": "<h1>This is an example of HTML</h1>",
-          "type": "html"
-        },
-        "mary_example": {
-          "content": "function () {\n  console.log('reads the file');\n}",
-          "type": "javascript"
-        }
-      },
-      "zones": {
-        "/index$html": {
-          "ul_start_tag": {
-            "start": {
-              "row": 9,
-              "col": 4
-            },
-            "end": {
-              "row": 9,
-              "col": 8
-            }
-          },
-          "ul_end_tag": {
-            "start": {
-              "row": 13,
-              "col": 4
-            },
-            "end": {
-              "row": 13,
-              "col": 9
-            }
-          },
-          "ul_content": {
-            "start": {
-              "row": 10,
-              "col": 0
-            },
-            "end": {
-              "row": 12,
-              "col": 36
-            },
-            "line": true
-          }
-        },
-        "complex_tag": {
-          "main_content": {
-            "start": {
-              "row": 1,
-              "col": 6
-            },
-            "end": {
-              "row": 1,
-              "col": 15
-            }
-          },
-          "paragraph_content": {
-            "start": {
-              "row": 2,
-              "col": 5
-            },
-            "end": {
-              "row": 2,
-              "col": 5
-            },
-            "collapsed": true,
-            "content": "The main content!"
-          }
-        },
-        "html_tag_example": {
-          "main_content": {
-            "start": {
-              "row": 0,
-              "col": 4
-            },
-            "end": {
-              "row": 0,
-              "col": 30
-            }
-          }
-        },
-        "mary_example": {
-          "read_file": {
-            "start": {
-              "row": 0,
-              "col": 9
-            },
-            "end": {
-              "row": 1,
-              "col": 6
-            }
-          },
-          "argument": {
-            "start": {
-              "row": 1,
-              "col": 14
-            },
-            "end": {
-              "row": 1,
-              "col": 30
-            }
-          },
-          "function_scope": {
-            "start": {
-              "row": 0,
-              "col": 0
-            },
-            "end": {
-              "row": 2,
-              "col": 1
-            },
-            "line": true
-          },
-          "function": {
-            "start": {
-              "row": 0,
-              "col": 9
-            },
-            "end": {
-              "row": 0,
-              "col": 9
-            },
-            "collapsed": true,
-            "content": "readTheFile"
-          },
-          "code_block": {
-            "start": {
-              "row": 1,
-              "col": 0
-            },
-            "end": {
-              "row": 1,
-              "col": 0
-            },
-            "collapsed": true,
-            "line": true,
-            "content": ""
-          }
-        }
-      }
-    };
 
-    // share imported utils
-    var _ = utils._;
+var _validateList = require('./validateList');
 
-    // shared variables
-    var $lesson = $self;
-    var $project = project;
-    var $state = state;
+var validateList = _interopRequireWildcard(_validateList);
 
-    // parses a string of html
-    function $html(str, options) {
-      return _.isString(str) ? utils.$html((str || '').toString(), options) : utils.$html(str);
-    }
+var _verifyHasEnoughListItems = require('./verifyHasEnoughListItems');
 
-    // a general selector function
-    function $() {
-      return utils.$.apply(utils.$, arguments);
-    }
+var verifyHasEnoughListItems = _interopRequireWildcard(_verifyHasEnoughListItems);
 
-    // shared functions
-    function $denyAccess(message, explain) {
-      if (_.isFunction($lesson.onDeny)) $lesson.onDeny({ message: message, explain: explain });
-    }
+function _interopRequireWildcard(obj) {
+	if (obj && obj.__esModule) {
+		return obj;
+	} else {
+		var newObj = {};if (obj != null) {
+			for (var key in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+			}
+		}newObj.default = obj;return newObj;
+	}
+}
 
-    // speaks a message using the assistant
-    function $speakMessage(message, emotion) {
-      if (_.isFunction($lesson.onSpeak)) $lesson.onSpeak({ message: message, emotion: emotion, isOverride: true });
-    }
+function _classCallCheck(instance, Constructor) {
+	if (!(instance instanceof Constructor)) {
+		throw new TypeError("Cannot call a class as a function");
+	}
+}
 
-    // returns the message to the prior content
-    function $revertMessage() {
-      if (_.isFunction($lesson.onRevert)) $lesson.onRevert();
-    }
+// performs the oxford comma
+function $oxford(items, conjunction) {
+	var total = items.length;
 
-    // handles displaying a hint
-    function $showHint(str, options) {
-      if (!_.isFunction($lesson.onHint)) return;
-      options = options || {};
-      options.message = str;
-      $lesson.onHint(options);
-    }
+	// determine the best
+	if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
 
-    // handles hiding hints
-    function $hideHint() {
-      if (_.isFunction($lesson.onHint)) $lesson.onHint(null);
-    }
+	// return the result
+	else {
+			var last = items.pop();
+			return items.join(', ') + ', ' + conjunction + ' ' + last;
+		}
+}
 
-    // runs a series of actions until one
-    // of them returns false
-    function $validate() {
-      var actions = [].slice.call(arguments);
+// pluralizes a word
+function $plural(count, single, plural, none) {
+	var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
 
-      // check for extra options
-      var options = {};
-      if (!_.isFunction(actions[0])) options = actions.shift();
+	var value = Math.abs(count);
+	var message = value === 1 ? single : value > 1 ? plural ? plural : single + 's' : none || plural;
+	return message.replace(delimeter, count);
+}
 
-      // run each action
-      for (var i = 0, total = actions.length; i < total; i++) {
-        var action = actions[i];
+// lesson controller
 
-        // perform each action
-        try {
-          if (action() === false) throw 'validation failed';
-        }
+var web1Lesson = function () {
 
-        // for errors, just fail
-        catch (err) {
-          if (options.revertOnError !== false) $revertMessage();
-          return false;
-        }
-      }
+	// setup the lesson
+	function web1Lesson(project, lesson, api, utils) {
+		var _this = this;
 
-      // was successful
-      return true;
-    }
+		_classCallCheck(this, web1Lesson);
 
-    // gets a zone
-    function $getZone(file, id, asDom, strict) {
-      var html = utils.getZoneContent(file, id);
-      return asDom ? $html(html, { strict: strict !== false }) : html;
-    }
+		this.state = {};
+		this.lesson = lesson;
+		this.project = project;
+		this.api = api;
 
-    // append each action
-    function $define(name, options, action) {
+		// core lesson data
+		this.data = {
+			"name": "Basics 1",
+			"type": "web",
+			"description": "Introduction to building Web Pages",
+			"lesson": [{
+				"mode": "popup",
+				"controller": "verifyHasEnoughListItems",
+				"content": "Let's learn about unordered lists!\n\nStart by opening the `index.html` file by double clicking on it\n"
+			}, {
+				"mode": "popup",
+				"controller": "validateList",
+				"content": "These are tags that wrap the unordered list\n"
+			}, {
+				"mode": "overlay",
+				"show": 4,
+				"title": "What is the name of the `highlighted` block of code?",
+				"content": "[snippet mary_example]\n",
+				"hint": "This is a longer example of what a hint might look like. This is going to span for a period longer than the other items on the page.\n",
+				"explain": "This is just a `summary message` to explain the final answer",
+				"choices": ["this is `correct`", "This *is* incorrect", "This _is_ also wrong", "This ~shouldn't~ work", "This *is another* mix", "This _is_ failed"]
+			}, {
+				"mode": "overlay",
+				"show": 4,
+				"title": "This is another question about what you've learned?",
+				"hint": "It's really pretty obvious",
+				"explain": "This is just a `summary message` to explain the final answer",
+				"choices": ["this is `correct`", "This *is* incorrect", "This _is_ also wrong", "This ~shouldn't~ work", "This *is another* mix", "This _is_ failed"]
+			}, {
+				"checkpoint": true,
+				"mode": "popup",
+				"content": "That's it! The lesson is finished!"
+			}]
+		};
 
-      // no options were provided
-      if (_.isFunction(options)) {
-        action = options;
-        options = null;
-      }
+		// other utilities
+		utils.plural = $plural;
+		utils.oxford = $oxford;
 
-      // save the actions
-      _.assign(action, options);
-      $self[name] = action;
-    }
+		// share utility function
+		var _ = window._ = utils._;
+		utils._.assign(_, utils);
 
-    // attach required scripts
+		// expose API tools
+		this.assistant = api.assistant;
+		this.screen = api.screen;
+		this.progress = api.progress;
+		this.content = api.content;
+		this.editor = api.editor;
 
-    $define('canOpenIndexHtml', function (file) {
-      return $validate({ revertOnError: false }, function () {
+		// setup controllers
+		this.controllers = {};
 
-        if (file.path !== '/index.html') {
-          $denyAccess("Can't Open This File", 'Open the index.html file to continue the lesson');
-          $speakMessage("You can't open that file just yet!\n\nMake sure to open `index.html` to continue the lesson.", 'surprised');
-          return false;
-        }
-      });
-    });
+		// setup each included entry
+		var refs = {
+			validateList: validateList, verifyHasEnoughListItems: verifyHasEnoughListItems
+		};
 
-    // checks that they've added enough list items to a zone
-    $define('verifyFileUploadIsImage', function (data) {
-      return $validate({ revertOnError: false }, function () {
-        var files = data.files;
+		// setup each reference
+		_.each(refs, function (ref, key) {
+			if (ref.controller) _this.controllers[key] = ref;else _.assign(_this, ref);
+		});
 
-        // didn't work for some reason
+		// debugging
+		if (/localhost/gi.test(window.location.origin)) window.LESSON = this;
+	}
 
-        if (!_.isArray(files)) return false;
+	// returns the active controller
 
-        // make sure it's valid
-        if (files.length !== 1) {
-          $speakMessage("For now, just upload a single image file to continue");
-          return false;
-        }
 
-        // get the data
-        var file = files[0] || {};
+	_createClass(web1Lesson, [{
+		key: 'invoke',
 
-        // make sure it's an image
-        if (!/(png|jpe?g|gif)$/.test(file.name)) {
-          $speakMessage("Only upload image files at this time. Try `png`, `jpg` or `gif` files");
-          return false;
-        }
+		// executes an action if available
+		value: function invoke(action) {
+			if (!this.respondsTo(action)) return null;
+			action = toActionName(action);
+			var controller = this.controller;
 
-        // wait for the file to upload
-        $self.waitingForFile = file.name;
-      });
-    });
+			for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+				args[_key - 1] = arguments[_key];
+			}
 
-    // checks that they've added enough list items to a zone
-    $define('verifyHasEnoughListItems', { init: true }, function () {
+			return controller[action].apply(this, args);
+		}
 
-      var requiredItems = 5;
-      var minimumLength = 3;
+		// checks if there's an action for this event
 
-      // tracking item count
-      var totalItems = 0;
-      var totalListItems = 0;
+	}, {
+		key: 'respondsTo',
+		value: function respondsTo(action) {
+			action = toActionName(action);
+			var controller = this.controller;
 
-      // make sure there's a valid zone
-      return $validate(function () {
+			return !!controller && controller[action];
+		}
+	}, {
+		key: 'timeout',
+		value: function timeout(action, time) {}
+	}, {
+		key: 'interval',
+		value: function interval(action, time) {}
+	}, {
+		key: 'controller',
+		get: function get() {
+			var slide = this.lesson.slide;
 
-        var zone = $getZone('/index.html', 'ul_content', true);
-        if (!zone) {
-          $showHint('Fix the HTML errors to continue');
-          return false;
-        }
+			return slide && this.controllers[slide.controller];
+		}
+	}]);
 
-        // check how many items are listed
-        var hasEmptyItem = void 0;
-        var hasShortItem = void 0;
+	return web1Lesson;
+}();
 
-        // check each list item
-        zone.children().each(function (index, node) {
-          totalItems++;
+// converts to an invoke action name
 
-          // not a list item
-          if (!/^li$/i.test(node.tagName)) return;
-          totalListItems++;
 
-          // check the contents
-          var item = $html(node);
-          var text = _.trim(item.text());
-          if (text.length === 0) hasEmptyItem = true;
-          if (text.length < minimumLength) hasShortItem = true;
-        });
+function toActionName(name) {
+	if (!/on[A-Z]/.test(name)) name = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
+	return name;
+}
 
-        // update the message, if needed
-        if (totalListItems < requiredItems) {
-          var remaining = requiredItems - totalListItems;
-          var plural = remaining > 1 ? 's' : '';
-          $showHint("Enter " + remaining + " more list item" + plural);
-          return false;
-        }
+// register the lesson for use
+window.registerLesson('web_1', web1Lesson);
 
-        // check for other conditions
-        if (hasEmptyItem) {
-          $showHint("Add content to each list item");
-          return false;
-        }
+},{"./validateList":2,"./verifyHasEnoughListItems":3}],2:[function(require,module,exports){
+'use strict';
 
-        if (hasShortItem) {
-          $showHint("Add at least " + minimumLength + " characters per list item");
-          return false;
-        }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.onEnter = onEnter;
+exports.onContentChange = onContentChange;
+var controller = exports.controller = true;
 
-        // must only be list items
-        if (totalItems !== requiredItems) {
-          $showHint("Only use list items in this example");
-          return false;
-        }
+function onEnter() {
+  var _this = this;
 
-        // remove list items
-        zone.children('li').remove();
+  this.progress.block();
+  this.editor.readOnly('/index.html', false);
 
-        // check the remaining text
-        var text = _.trim(zone.html());
-        if (_.some(text)) {
-          $showHint('Only use `li` tags. Do not include any extra text');
-          return false;
-        }
+  // const markup = this.content.getFile('/index.html');
+  // console.log('markup');
 
-        // passed validation
-        $hideHint();
-        $speakMessage('Looks great! You can move onto the next step now');
-      });
-    });
+  // let cursor = 0;
+  // setInterval(() => this.editor.cursor(++cursor), 2000);
 
-    // checks that they've added enough list items to a zone
-    $define('verifyUploadImageSuccess', function (result) {
-      return $validate({ revertOnError: false }, function () {
+  var hint = 8;
+  setInterval(function () {
+    return _this.editor.hint('just a hint', { index: ++hint });
+  }, 1000);
+  this.editor.hint('just a hint', { index: hint });
 
-        // make sure it's for the correct file
-        if ($self.waitingForFile !== result.file.name) return false;
+  var start = 8;
+  var end = start + 5;
+  setInterval(function () {
+    start++;
+    end++;
+    end++;
+    _this.editor.area({ start: start, end: end });
+  }, 1000);
 
-        // failed to upload for some reason
-        if (!result.success) {
-          $speakMessage("Seems like something went wrong uploading your file. Go ahead and try again", 'sad');
-          return false;
-        }
+  // this.editor.area(82, 179, { path: '/index.html' });
+  // this.editor.marker('start', { start: 5, end: 15 });
+}
 
-        // difficult to type name
-        if (/ /g.test($self.waitingForFile)) $speakMessage("It's sometimes difficult to work with a file name that has spaces in it. Consider uploading a new file without spaces in the name.", 'sad');
+function onContentChange() {
 
-        // very long name
-        else if (_.size($self.waitingForFile) > 20) $speakMessage("That's a fairly long file name. You might consider uploading an image with a shorter name to make it easier to type in.", 'sad');
+  // this.editor.hint('You need to change this', 5)
 
-          // looks good
-          else $speakMessage("Perfect! Let's add this image to our web page!", 'happy');
+}
 
-        // it worked, so let's move on
-        $state.imageName = $self.waitingForFile;
-        delete $self.waitingForFile;
-      });
-    });
-  }
+},{}],3:[function(require,module,exports){
+'use strict';
 
-  // registration function
-  window.registerLesson('web_1', web1Lesson);
-})();
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+exports.onReset = onReset;
+exports.onOpenFile = onOpenFile;
+exports.onBeforeContentChange = onBeforeContentChange;
+var controller = exports.controller = true;
+
+var MESSAGE_OPEN_FILE = '\nBefore we can continue, we need to open the `index.html` file.\n\n[snippet html_example]\n\nStart by double clicking the file in the file browser';
+
+var MESSAGE_INCORRECT_FILE = '\nOops! That\'s not the correct file! Double click on the highlighted file in the file browser';
+
+var MESSAGE_CORRECT_FILE = '\nGreat! Let\'s continue to the next slide!';
+
+function onEnter() {
+	this.editor.readOnly('/index.html', true);
+	this.assistant.emote.sad();
+	this.progress.block();
+	this.screen.highlight.fileBrowserItem('/index.html');
+}
+
+function onExit() {
+	this.screen.highlight.clear();
+}
+
+function onReset() {
+	console.log('onReset');
+}
+
+function onOpenFile(file) {
+	if (this.state.hasOpenedIndexHtml) return false;
+
+	// check the file
+	var correct = file.path === '/index.html';
+	if (!correct) {
+		this.assistant.say(MESSAGE_INCORRECT_FILE, { emote: 'sad', force: true });
+		this.progress.block();
+		return false;
+	}
+
+	// save this worked
+	this.state.hasOpenedIndexHtml = true;
+	this.assistant.say(MESSAGE_CORRECT_FILE, { emotion: 'happy' });
+	this.progress.allow();
+	this.screen.highlight.clear();
+	return true;
+}
+
+function onBeforeContentChange(_ref, event) {
+	var file = _ref.file,
+	    session = _ref.session;
+
+	this.assistant.say('Don\'t try and edit `' + file.name + '` just yet!', { emotion: 'sad' });
+	return false;
+}
+
+},{}]},{},[1]);

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from '../lib';
 import Component from '../component';
 import $icons from '../icons';
 import { expandPaths } from '../utils';

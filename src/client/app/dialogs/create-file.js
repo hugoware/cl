@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from '../lib';
 import Dialog from './';
 import Component from '../component';
 import TextInput from '../ui/text-input';

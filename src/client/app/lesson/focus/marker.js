@@ -1,5 +1,5 @@
 
-import $ from 'jquery';
+import { $ } from '../../lib';
 
 export default class Marker {
 

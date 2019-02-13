@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from '../../lib';
 import { listen } from '../../events';
 import { evaluateAllSelectors } from '../../utils/selector';
 

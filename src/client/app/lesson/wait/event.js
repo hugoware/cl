@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import $ from 'jquery';
+import { _, $ } from '../../lib';
 import $state from '../../state';
 import { listen, remove } from '../../events';
 const $context = $(document.body);

@@ -1,4 +1,20 @@
 
+$define('verifyHasMultipleListItems', () => {
+  
+  // check the zone
+  const zone = $getZone('/index.html', 'ul_content', true);
+  console.log(zone);
+
+  if (!zone) {
+    $showHint('Fix the HTML errors to continue');
+    return false;
+  }
+
+
+
+});
+
+
 // export const init = true;
 
 // export default function verifyHasMultipleListItems() {

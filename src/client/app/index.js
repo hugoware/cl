@@ -1,5 +1,4 @@
-import $ from 'jquery';
-import _ from 'lodash';
+import { $, _, Bluebird } from './lib';
 
 // extensions
 import * as __extensions__ from './extensions';
@@ -9,7 +8,6 @@ import $state from './state';
 import $nav from './nav';
 import $editor from './editor';
 import Component from "./component";
-import Bluebird from 'bluebird';
 
 // page components
 import Header from './header';

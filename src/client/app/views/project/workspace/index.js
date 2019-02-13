@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from '../../../lib';
 import Component from '../../../component';
 import TabBar from '../tab-bar';
 import $state from '../../../state';

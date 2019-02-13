@@ -1,5 +1,5 @@
 
-import _ from 'lodash';
+import { _ } from '../../../lib';
 import Component from '../../../component';
 import ComponentList from '../../../component-list';
 import Tab from './tab';

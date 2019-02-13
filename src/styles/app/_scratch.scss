@@ -2,9 +2,20 @@
 .focus_point {
 	position: absolute;
 	white-space: pre;
+	// background: rgba(#0f0, 0.2) !important;
 
 	&.highlighted {
 		border-bottom: 2px dotted #f00;
 		background: rgba(#f00, 0.3);
 	}
+
+	&.as-new-line {
+		width: 6px !important;
+	}
+}
+
+.working_area {
+	position: absolute;
+	// white-space: pre;
+	// background: rgba(#fff, 0.1);
 }

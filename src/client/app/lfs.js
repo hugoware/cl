@@ -1,4 +1,5 @@
-import Dexie from 'dexie';
+import { Dexie } from './lib';
+
 const $db = new Dexie('CodeLab');
 $db.version(1).stores({ 
 	files: '&path, content' 

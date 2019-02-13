@@ -14,14 +14,14 @@ export default function processSlides(state, manifest, slides) {
 		
 		// create the slide item
 		if (slide) {
-      processSlide(state, manifest, slide);
+      // processSlide(state, manifest, slide);
       manifest.lesson.push(slide);
     }
 
     // create the question item
     if (question) {
-			processSlide(state, manifest, question);
-			processQuestion(state, manifest, question);
+			// processSlide(state, manifest, question);
+			// processQuestion(state, manifest, question);
 			manifest.lesson.push(question);
 		}
 	});

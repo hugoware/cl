@@ -1,5 +1,5 @@
 /// <reference path="../../../types/index.js" />
-import _ from 'lodash';
+import { _ } from '../../../lib';
 import $state from '../../../state';
 import { applySnippets } from './snippets';
 import Component from '../../../component';

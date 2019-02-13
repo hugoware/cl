@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import $measureText from 'measure-text';
+import { _, measureText } from '../lib';
 import Component from '../component';
 import { cancelEvent } from '../utils/index';
 
@@ -94,7 +93,7 @@ export default class TextInput extends Component {
 
 // matches the input size to the text
 function matchInput(instance, text, { fontSize = '19px', fontFamily = 'sans-serif' } = { }) {
-	const size = $measureText({
+	const size = measureText({
 		text,
 		fontSize,
 		fontFamily,

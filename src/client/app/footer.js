@@ -1,9 +1,8 @@
-import _ from 'lodash';
+import { _, Showdown } from './lib';
 import Component from './component';
 
 // allow fancy tooltips
-import $showdown from 'showdown';
-const $convert = new $showdown.Converter();
+const $convert = new Showdown.Converter();
 
 export default class Footer extends Component {
 

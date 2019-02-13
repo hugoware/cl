@@ -1,6 +1,6 @@
 /// <reference path="../../types/index.js" />
 
-import _ from 'lodash';
+import { _ } from '../../lib';
 import Component from '../../component';
 import { evaluateSelector } from '../../utils/selector';
 import $state from '../../state';

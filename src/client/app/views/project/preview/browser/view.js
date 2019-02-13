@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import $cheerio from 'cheerio';
+import { _, Cheerio } from '../../../../lib';
 import $contentManager from '../../../../content-manager';
 import $state from '../../../../state'
 import { resolvePathFromUrl } from '../../../../utils';
@@ -68,7 +67,7 @@ async function generateTemplate(view, path) {
 
 	// try to get the compiled content
 	const markup = await $contentManager.get(path);
-	view.template = $cheerio.load(markup);
+	view.template = Cheerio.load(markup);
 
 	// storage for external resources
 	view.scripts = { };
@@ -196,7 +195,7 @@ async function replaceDependencies(view, file) {
 				item.attribs.type = 'text/css';
 				delete item.attribs.href;
 				delete item.attribs.rel;
-				$cheerio(item).html(content);
+				Cheerio(item).html(content);
 			});
 		}
 
@@ -211,7 +210,7 @@ async function replaceDependencies(view, file) {
 			_.each(view.scripts[key], item => {
 				item.attribs.type = 'text/javascript';
 				delete item.attribs.src;
-				$cheerio(item).html(content);
+				Cheerio(item).html(content);
 			});
 		}
 

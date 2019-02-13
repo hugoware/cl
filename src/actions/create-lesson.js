@@ -21,35 +21,33 @@ export default async function createLesson(lessonId, userId) {
 		// no lessons means we need to create it
 		let id;
 		if (lessons.length === 0) {
+			throw 'invalid_lesson_state';
 			
-			// get the project data
-			let lesson = resolveLesson(lessonId, 'data.json');
-			lesson = await $fsx.readFile(lesson);
-			lesson = JSON.parse(lesson.toString());
+			// // get the project data
+			// let lesson = resolveLesson(lessonId, 'data.json');
+			// lesson = await $fsx.readFile(lesson);
+			// lesson = JSON.parse(lesson.toString());
 
-			// try and create the record
-			id = await $database.generateId($database.projects, 6);
+			// // try and create the record
+			// id = await $database.generateId($database.projects, 6);
 			
-			// get the default information
-			const { name, type, description } = lesson;
-			await $database.projects.insertOne({
-				id, name, type, description,
-				lesson: lessonId,
-				ownerId: userId,
-				started: false,
-				finished: false,
-				modifiedAt: $date.now(),
-				progress: { }
-			});
+			// // get the default information
+			// const { name, type, description } = lesson;
+			// await $database.projects.insertOne({
+			// 	id, name, type, description,
+			// 	lesson: lessonId,
+			// 	ownerId: userId,
+			// 	done: false,
+			// 	active: true,
+			// 	modifiedAt: $date.now()
+			// });
 		}
 		// otherwise, we can just replace the state
 		else if (lessons.length === 1) {
 			id = lessons[0].id;
 			await $database.projects.update(query, {
 				$set: { 
-					started: false,
-					finished: false,
-					progress: { },
+					done: false,
 					modifiedAt: $date.now()
 				}
 			});

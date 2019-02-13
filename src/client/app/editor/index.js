@@ -1,32 +1,18 @@
-import _ from 'lodash';
-import { getCompletions } from './autocomplete';
-import $brace from 'brace';
-import 'brace/ext/language_tools'
+import { _, Brace } from '../lib';
+// import { getCompletions } from './autocomplete';
 
 import ManagedEditor from './managed';
-const Range = $brace.acequire('ace/range').Range;
-const LanguageTools = $brace.acequire('ace/ext/language_tools');
 
-// handle loading custom ones like this
-window.LANG = LanguageTools;
-_.each(window.COMPLETERS, completer => {
-	LanguageTools.addCompleter(completer);
-})
-
-
-// validations
-require('brace/mode/html');
-require('brace/mode/javascript');
-require('brace/mode/json');
-require('brace/mode/xml');
-require('brace/mode/css');
-// require('brace/mode/lua');
+// // handle loading custom ones like this
+// window.LANG = LanguageTools;
+// _.each(window.COMPLETERS, completer => {
+// 	LanguageTools.addCompleter(completer);
+// });
 
 // configure Brace
-require('brace/theme/monokai');
-$brace.config.set('basePath', '/__codelab__/ace');
-$brace.config.set('modePath', '/__codelab__/ace');
-$brace.config.set('themePath', '/__codelab__/ace');
+Brace.config.set('basePath', '/__codelab__/ace');
+Brace.config.set('modePath', '/__codelab__/ace');
+Brace.config.set('themePath', '/__codelab__/ace');
 
 // default options for the code editor
 const DEFAULT_THEME = 'ace/theme/monokai';
@@ -85,7 +71,7 @@ class EditorManager {
 		
 		// apply the snippet
 		const { snippet, highlight, zones } = options;
-		const session = $brace.createEditSession(snippet.content, `ace/mode/${snippet.type}`);
+		const session = Brace.createEditSession(snippet.content, `ace/mode/${snippet.type}`);
 		session.setOptions({ tabSize: 2, useWorker: false });
 		editor.setSession(session);
 
@@ -99,7 +85,7 @@ class EditorManager {
 
 				// update the markers
 				const { start, end, line } = zone;
-				const range = new Range(start.row, start.col, end.row, end.col);
+				const range = new Brace.Range(start.row, start.col, end.row, end.col);
 				editor.session.addMarker(range, 'snippet-highlight', line ? 'fullLine' : '');
 			});
 
@@ -115,7 +101,7 @@ function createEditor(container, options) {
 	options = _.assign({ }, DEFAULT_OPTIONS, options);
 
 	// create the editor
-	const editor = $brace.edit(container);
+	const editor = Brace.edit(container);
 	editor.setTheme(DEFAULT_THEME);
 	editor.setOptions(options);
 	editor.container.style.lineHeight = DEFAULT_OPTIONS.lineHeight;

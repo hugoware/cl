@@ -8,62 +8,66 @@
 
 - slide:
     mode: popup
-    content: |
+    controller: verifyHasEnoughListItems
 
-      Oh baby let's check out this virus together - what do you say?
-      Let's learn about unordered lists
+    # persistContent: true
+    # waitFor:
+    #   - ::fileOpen(/index.html)
+
+    # highlights:
+    #   - ::fileBrowser(/index.html)
+
+    # validation:
+    #   openFile: ::allowIfFile(/index.html, open-file)
+
+    content: |
+      Let's learn about unordered lists!
 
       Start by opening the `index.html` file by double clicking on it
 
-    waitFor:
-      - fileOpen(/index.html)
+# - slide:
+#     mode: popup
 
-    highlights:
-      - fileBrowser(/index.html)
+#     content: |
+#       You're allowed to upload a file now
 
-    validation:
-      openFile: canOpenIndexHtml
+#     autoNext: false
 
-- slide:
-    mode: popup
+#     validation:
+#       uploadFile: verifyFileUploadIsImage
 
-    content: |
-      You're allowed to upload a file now
+#     waitFor:
+#       - ::event(file-uploaded, verifyUploadImageSuccess)
 
-    autoNext: false
+#     flags: +upload-file-dialog
 
-    validation:
-      uploadFile: verifyFileUploadIsImage
+# - slide:
+#     mode: popup
 
-    waitFor:
-      - ::event(file-uploaded, verifyUploadImageSuccess)
+#     actions:
+#       - hide-all-dialogs
 
-    flags: +upload-file-dialog
-
-- slide:
-    mode: popup
-
-    actions:
-      - hide-all-dialogs
-
-    content: |
-      Great! Now that the file `%imageName%` file is open, let's look at a few things
+#     content: |
+#       Great! Now that the file `%imageName%` file is open, let's look at a few things
 
 - slide:
     mode: popup
+    controller: validateList
+    # autoNext: false
+
+    # waitFor:
+    #   - ::event(modify-file, onContentChange)
+
     content: |
       These are tags that wrap the unordered list
 
-    autoNext: false
 
-    waitFor:
-      - ::event(modify-file, verifyHasEnoughListItems)
 
-    zones:
-      /index.html:
-        ul_start_tag: show
-        ul_end_tag: show
-        ul_content: edit
+    # zones:
+    #   /index.html:
+    #     ul_start_tag: show
+    #     ul_end_tag: show
+    #     ul_content: edit
 
 # - slide:
 #     mode: popup

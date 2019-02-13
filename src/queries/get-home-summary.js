@@ -1,7 +1,6 @@
 
 import _ from 'lodash';
 import $database from '../storage/database';
-import $lessons from '../storage/lessons';
 import $date from '../utils/date';
 
 /** Handles getting summary information for a user

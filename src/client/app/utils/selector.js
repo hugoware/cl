@@ -1,7 +1,6 @@
 /// <reference path="../types/index.js" />
 
-import $ from 'jquery';
-import _ from 'lodash';
+import { $, _ } from '../lib';
 import $uiSelectors from '../ui-selectors';
 
 /** evaluates an array of selectors or a single strinc

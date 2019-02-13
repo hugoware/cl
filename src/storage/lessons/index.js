@@ -47,6 +47,7 @@ async function syncLessonAccess(userId) {
 
 }
 
+// checks a category if it should unlock or activate any lessons
 async function evaluateLessonCategory(userId, category, existing) {
 	const all = _.filter(existing, { type: category });
 	const ids = _.map(all, 'lesson');
@@ -85,7 +86,8 @@ async function evaluateLessonCategory(userId, category, existing) {
 	}
 }
 
-/** creates a brand new record id */
+
+// creates a new record placeholder for a lesson
 async function createLesson(userId, lesson, active) {
 	
 	// no lesson was provided
@@ -118,8 +120,9 @@ async function activateLesson(lessons) {
 	for (let i = 0; i < lessons.length; i++) {
 		const lesson = lessons[i];
 		const { id } = lesson;
-		console.log('activated', id);
-		// await $database.projects.update({ id }, { active: true });
+		await $database.projects.update({ id }, {
+			$set: { active: true }
+		});
 	}
 }
 

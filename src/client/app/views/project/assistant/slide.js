@@ -1,12 +1,9 @@
 /// <reference path="../../../types/index.js" />
 
-import _ from 'lodash';
+import { _ } from '../../../lib';
 import $state from '../../../state';
 import { applySnippets } from './snippets';
-import $showdown from 'showdown';
 import Component from '../../../component';
-
-const $convert = new $showdown.Converter();
 
 export default class Slide extends Component {
 
@@ -83,8 +80,8 @@ export default class Slide extends Component {
 	/** replaces the content for the view
 	 * @param {string} message a markdown themed content message
 	 */
-	setContent = (message, isFollowUp) => {
-		this.isUsingRevertMessage = false;
+	setContent = (html, isFollowUp) => {
+		// this.isUsingRevertMessage = false;
 		
 		// get rid of the titles
 		this.toggleClassMap({
@@ -93,16 +90,16 @@ export default class Slide extends Component {
 		});
 
 		// replace custom words
-		if ($state.lesson)
-			message = $state.lesson.replaceCustomWords(message);
+		// if ($state.lesson)
+		// 	html = $state.lesson.replaceCustomWords(message);
 
 		// set follow up message values
-		this.toggleClass('has-follow-up', isFollowUp);
+		// this.toggleClass('has-follow-up', isFollowUp);
 
 		// replace the content
-		const html = $convert.makeHtml(message);
-		const target = isFollowUp ? this.ui.followUp : this.ui.message;
-		target.html(html);
+		// const html = $convert.makeHtml(message);
+		// const target = isFollowUp ? this.ui.followUp : this.ui.message;
+		this.ui.message.html(html);
 	}
 
 }

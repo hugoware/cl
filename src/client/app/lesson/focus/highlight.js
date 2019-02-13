@@ -1,5 +1,5 @@
 /// <reference path="../../types/index.js" />
-import $ from 'jquery';
+import { $ } from '../../lib';
 
 export default class Highlight {
 

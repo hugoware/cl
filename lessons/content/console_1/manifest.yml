@@ -1,6 +1,6 @@
-name: CodeLab Console Demo
-type: console
-description: An Introduction to the CodeLab Learning System
+name: Console 1
+type: code
+description: An Introduction to the CodeLab Learning System 1
 
 lesson:
   - intro

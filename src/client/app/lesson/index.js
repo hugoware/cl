@@ -1,21 +1,20 @@
 /// <reference path="../types/index.js" />
 
-import _ from 'lodash';
-import $cheerio from 'cheerio';
-import $xml from 'xmlchecker';
-import $jquery from 'jquery';
+import { _, $jquery, Cheerio, XmlChecker } from '../lib';
 import $state from '../state';
 import $api from '../api';
 import $focus from './focus';
 import $wait from './wait';
+import LessonAPI from './api';
+
 import $lfs from '../lfs';
-import { CodeValidator } from 'code-validator';
+
 import { load } from './loader';
 import { broadcast, listen, remove } from '../events';
-import ZoneMap from '../zone-map';
+// import ZoneMap from '../zone-map';
 
 // can't seem to use this anywhere in a playground
-window.cheerio = $cheerio;
+window.cheerio = Cheerio;
 
 /** creates a default lesson */
 export default class Lesson {
@@ -26,17 +25,23 @@ export default class Lesson {
 	 */
 	static async load(project) {
 		const type = await load(project.lesson);
+		return new Lesson(project, type);
+		
+		// get the lesson type
 
 		// get the data
-		const state = { };
-		const modified = [ ];
+		const api = new LessonApi(project.lesson);
+		// const state = { };
+		// const modified = [ ];
 		const utils = {
 
 			// libraries
 			_, $: $jquery,
 
-			// code validator helper
-			$validate: CodeValidator.eval,
+			// validaton helpers
+			$validateCode: CodeValidator.validate,
+			$validateCss: CssValidator.validate,
+			$validateHtml: HtmlValidator.validate,
 
 			// parsing html snippets
 			$html: toCheerioObject,
@@ -57,37 +62,43 @@ export default class Lesson {
 		
 		// create the lesson
 		const lesson = new Lesson(instance);
+		instance.lesson = lesson;
 
-		// setup each ZoneMap
-		lesson.maps = { };
-		for (const id in instance.data.zones) {
+		instance.api = new LessonAPI(lesson);
 
-			// make sure it's a file
-			if (id[0] !== '/') continue;
+		// // setup each ZoneMap
+		// lesson.maps = { };
+		// for (const id in instance.data.zones) {
 
-			// get the zone information
-			const path = id.replace(/\$/g, '.');
-			const zones = lesson.getZones(path)
+		// 	// make sure it's a file
+		// 	if (id[0] !== '/') continue;
 
-			// get the zone map
-			const content = await $lfs.read(path);
-			lesson.maps[path] = ZoneMap.create(content, zones);
-		}
+		// 	// get the zone information
+		// 	const path = id.replace(/\$/g, '.');
+		// 	const zones = lesson.getZones(path)
+
+		// 	// get the zone map
+		// 	const content = await $lfs.read(path);
+		// 	lesson.maps[path] = ZoneMap.create(content, zones);
+		// }
 
 		// give back the result
-		window.LESSON = lesson;
+		// window.LESSON = lesson;
 		return lesson;
 	}
 
 	// creates a new lesson
-	constructor(lesson) {
-		this.instance = lesson;
+	constructor(project, type) {
 
-		// lock and unlock states for files
-		this.files = { };
+		// setup the lesson
+		this.api = new LessonAPI(this);
+		this.instance = new type(project, this, this.api, { _ });
 
-		// tracking slide events
-		this.events = [ ];
+		// // lock and unlock states for files
+		// this.files = { };
+
+		// // tracking slide events
+		// this.events = [ ];
 
 		// by default, start so that a navigation
 		// should happen
@@ -145,23 +156,38 @@ export default class Lesson {
 		return this.files[path] !== true;
 	}
 
-	/** finds a validator by name for the lesson
-	 * @param {string} key the name of the validator
-	 * @returns {function} the validation function
+	/** does this slide respond to an action
+	 * @param {string} action the action to check for
 	 */
-	getValidator = key => {
-		return this.instance[key];
+	respondsTo(action) {
+		return this.instance.respondsTo(action);
 	}
 
-	// not sure if this is going to be a thing or not
-	// but not everything is a validator
-	/** finds an action by name for the lesson
-	 * @param {string} key the name of the action
-	 * @returns {function} the function
+	/** executes a controller action, if any
+	 * @param {string} action the action to check for
+	 * @param {...any} args the arguments to pass
 	 */
-	getAction = key => {
-		return this.instance[key];
+	invoke(action, ...args) {
+		return this.instance.invoke(action, ...args);
 	}
+
+	// /** finds a validator by name for the lesson
+	//  * @param {string} key the name of the validator
+	//  * @returns {function} the validation function
+	//  */
+	// getValidator = key => {
+	// 	return this.instance[key];
+	// }
+
+	// // not sure if this is going to be a thing or not
+	// // but not everything is a validator
+	// /** finds an action by name for the lesson
+	//  * @param {string} key the name of the action
+	//  * @returns {function} the function
+	//  */
+	// getAction = key => {
+	// 	return this.instance[key];
+	// }
 
 	/** returns a snippet by ID */
 	getSnippet = type => {
@@ -184,18 +210,18 @@ export default class Lesson {
 		return this.maps[path];
 	}
 	
-	/** returns all of the zones for a file */
-	getZones = path => {
-		const { state, data } = this.instance;
+	// /** returns all of the zones for a file */
+	// getZones = path => {
+	// 	const { state, data } = this.instance;
 		
-		// copy the zones first
-		state.zones = state.zones || { };
+	// 	// copy the zones first
+	// 	state.zones = state.zones || { };
 		
-		// return the zones
-		path = path.replace(/\./g, '$');
-		state.zones[path] = state.zones[path] || _.assign({ }, data.zones[path]);
-		return state.zones[path];
-	}
+	// 	// return the zones
+	// 	path = path.replace(/\./g, '$');
+	// 	state.zones[path] = state.zones[path] || _.assign({ }, data.zones[path]);
+	// 	return state.zones[path];
+	// }
 
 	/** finds special words and replaces them with the lesson words
 	 * @param {string} message the message to update
@@ -230,6 +256,7 @@ export default class Lesson {
 			return;
 
 		// leaving the active slide
+		this.instance.invoke('exit');
 		broadcast('leave-slide');
 		
 		// determine the new position and the 
@@ -280,48 +307,48 @@ export default class Lesson {
 		// await this.saveProgress();
 	}
 	
-	/** navigates to the previous slide */
-	previous = async () => {
-		const { slide } = this;
-		if (slide && slide.isCheckpoint) return;
-		return await this.go(this.index - 1);
-	}
+	// /** navigates to the previous slide */
+	// previous = async () => {
+	// 	const { slide } = this;
+	// 	if (slide && slide.isCheckpoint) return;
+	// 	return await this.go(this.index - 1);
+	// }
 
-	/** returns temporary modified file content
-	 * @param {string} path the path of the temp file
-	 */
-	getModified = path => {
-		const modified = _.find(this.instance.modified, { path });
-		return modified ? modified.content : null;
-	}
+	// /** returns temporary modified file content
+	//  * @param {string} path the path of the temp file
+	//  */
+	// getModified = path => {
+	// 	const modified = _.find(this.instance.modified, { path });
+	// 	return modified ? modified.content : null;
+	// }
 
-	/** returns the current progress for this lesson */
-	getProgress = () => {
-		const { index, instance } = this;
-		const { state } = instance;
+	// /** returns the current progress for this lesson */
+	// getProgress = () => {
+	// 	const { index, instance } = this;
+	// 	const { state } = instance;
 
-		// get the active files
-		const activeFile = ($state.activeFile || {}).path;
-		const files = _($state.openFiles)
-			.map(file => file.path)
-			.value();
+	// 	// get the active files
+	// 	const activeFile = ($state.activeFile || {}).path;
+	// 	const files = _($state.openFiles)
+	// 		.map(file => file.path)
+	// 		.value();
 
-		// grab modified, but unsaved files
-		const modified = [ ];
-		_.each($state.modifiedFiles, file => {
-			modified.push({ path: file.path, content: file.current });
-		});
+	// 	// grab modified, but unsaved files
+	// 	const modified = [ ];
+	// 	_.each($state.modifiedFiles, file => {
+	// 		modified.push({ path: file.path, content: file.current });
+	// 	});
 
-		// give back the progress info
-		return { index, state, files, activeFile, modified };
-	}
+	// 	// give back the progress info
+	// 	return { index, state, files, activeFile, modified };
+	// }
 
-	/** saves the progress for the current lesson */
-	saveProgress = async () => {
-		const { projectId } = $state;
-		const progress = this.getProgress();
-		return await $api.request('set-progress', { projectId, progress });
-	}
+	// /** saves the progress for the current lesson */
+	// saveProgress = async () => {
+	// 	const { projectId } = $state;
+	// 	const progress = this.getProgress();
+	// 	return await $api.request('set-progress', { projectId, progress });
+	// }
 
 	/** handles clean up */
 	dispose = () => {
@@ -329,7 +356,7 @@ export default class Lesson {
 		$focus.clear();
 
 		// cleanup watcher events
-		disposeSlideEvents(this);
+		// disposeSlideEvents(this);
 	}
 
 }
@@ -338,17 +365,11 @@ export default class Lesson {
 function initialize(lesson) {	
 	const total = _.size(lesson.slides);
 	_.each(lesson.slides, (slide, index) => {
-		
-		// prepare each slide
 		slide.id = _.uniqueId('slide:');
 		slide.isLast = index === (total - 1);
 		slide.isFirst = index === 0;
 		slide.isQuestion = slide.type === 'question';
 		slide.isSlide = slide.type === 'slide';
-
-		// replace any snippets
-		if (slide.content)
-			slide.template = $cheerio.load(slide.content);
 	});
 	
 }
@@ -361,9 +382,9 @@ function setActiveSlide(lesson, slide) {
 	$wait.clear();
 	$focus.clear();
 
-	// check for setting the cursor
-	if (slide.cursor)
-		broadcast('set-editor-cursor', slide.cursor);
+	// // check for setting the cursor
+	// if (slide.cursor)
+	// 	broadcast('set-editor-cursor', slide.cursor);
 
 	// check for markers
 	const markers = slide.markers || slide.marker;
@@ -374,29 +395,31 @@ function setActiveSlide(lesson, slide) {
 	if (highlights) $focus.setHighlight(highlights);
 
 	// setup the wait events
-	let wait = slide.waitFor || slide.wait;
+	// let wait = slide.waitFor || slide.wait;
 		
 	// register wait events
-	if (wait) $wait.waitFor(wait);
+	// if (wait) $wait.waitFor(wait);
 
 	// set a few other values
-	slide.isWaiting = _.some(wait) || !!slide.runValidation;
-	slide.isFirst = index === 0;
+	// slide.isWaiting = _.some(wait) || !!slide.runValidation;
+	// slide.isFirst = index === 0;
 	slide.isLast = index === lastIndex;
-	slide.isCheckpoint = slide.allowBack !== true;
+	// slide.isCheckpoint = slide.allowBack !== true;
 
-	// broadcast all actions, if any
-	_.each(slide.actions, action => {
-		const parts = _.map(action.split(/,/g), _.trim);
-		broadcast.apply(null, parts);
-	});
+	// // broadcast all actions, if any
+	// _.each(slide.actions, action => {
+	// 	const parts = _.map(action.split(/,/g), _.trim);
+	// 	broadcast.apply(null, parts);
+	// });
 
 	// set the events for this slide
-	disposeSlideEvents(lesson);
-	registerSlideEvents(lesson, slide);
+	// disposeSlideEvents(lesson);
+	// registerSlideEvents(lesson, slide);
 
 	// let other systems know the slide changed
-	broadcast('slide-changed', lesson, slide);
+	console.log('bro', slide);
+	broadcast('slide-changed', slide);
+	lesson.instance.invoke('enter');
 }
 
 // clears all slide events
@@ -433,65 +456,66 @@ function applySlide(lesson, slide, invert) {
 	if (!slide) return;
 
 	// check for flags
-	const { flags = { }, zones = { } } = slide;
+	// const { flags = { }, zones = { } } = slide;
+	const { flags = { } } = slide;
 
-	// revert changes
-	if (invert) {
+	// // revert changes
+	// if (invert) {
 
-		// state flags
-		_.each(flags.add, key => delete $state.flags[key]);
-		_.each(flags.remove, key => $state.flags[key] = true);
+	// 	// state flags
+	// 	_.each(flags.add, key => delete $state.flags[key]);
+	// 	_.each(flags.remove, key => $state.flags[key] = true);
 
-		// change file states
-		_.each(slide.files, (flag, path) => {
-			if (flag === 'lock') lesson.files[path] = false;
-			else if (flag === 'unlock') lesson.files[path] = true;
-		});
+	// 	// change file states
+	// 	_.each(slide.files, (flag, path) => {
+	// 		if (flag === 'lock') lesson.files[path] = false;
+	// 		else if (flag === 'unlock') lesson.files[path] = true;
+	// 	});
 		
-	}
-	else {
+	// }
+	// else {
 		// state flags
 		_.each(flags.add, key => $state.flags[key] = true);
 		_.each(flags.remove, key => delete $state.flags[key]);
 		
 		// change file states
-		_.each(slide.files, (flag, path) => {
-			if (flag === 'lock') lesson.files[path] = true;
-			else if (flag === 'unlock') lesson.files[path] = false;
-		});
-	}
+	// 	_.each(slide.files, (flag, path) => {
+	// 		if (flag === 'lock') lesson.files[path] = true;
+	// 		else if (flag === 'unlock') lesson.files[path] = false;
+	// 	});
+	// }
 	
-	// update each zone
-	_.each(slide.zones, (zones, file) => {
-		const map = lesson.maps[file];
-		_.each(zones, (state, id) => {
-			updateZone(map, id, state, invert);
-		});
-	});
+	// // update each zone
+	// _.each(slide.zones, (zones, file) => {
+	// 	const map = lesson.maps[file];
+	// 	_.each(zones, (state, id) => {
+	// 		updateZone(map, id, state, invert);
+	// 	});
+	// });
 
 }
 
-// checks the state to determine what to do with a zone
-function updateZone(map, zone, state, invert) {
+// // checks the state to determine what to do with a zone
+// function updateZone(map, zone, state, invert) {
 
-	// check the collapse state
-	if (/edit/.test(state))
-		map[invert ? 'lock' : 'edit'](zone);
-	else if (/lock/.test(state))
-		map[invert ? 'edit' : 'lock'](zone);
+// 	// check the collapse state
+// 	if (/edit/.test(state))
+// 		map[invert ? 'lock' : 'edit'](zone);
+// 	else if (/lock/.test(state))
+// 		map[invert ? 'edit' : 'lock'](zone);
 
-	// check the collapse state
-	if (/collapse/.test(state))
-		map[invert ? 'expand' : 'collapse'](zone);
-	else if (/expand/.test(state))
-		map[invert ? 'collapse' : 'expand'](zone);
+// 	// check the collapse state
+// 	if (/collapse/.test(state))
+// 		map[invert ? 'expand' : 'collapse'](zone);
+// 	else if (/expand/.test(state))
+// 		map[invert ? 'collapse' : 'expand'](zone);
 
-	// check the visibility state
-	if (/show/.test(state))
-		map[invert ? 'hide' : 'show'](zone);
-	else if (/hide/.test(state))
-		map[invert ? 'show' : 'hide'](zone);
-}
+// 	// check the visibility state
+// 	if (/show/.test(state))
+// 		map[invert ? 'hide' : 'show'](zone);
+// 	else if (/hide/.test(state))
+// 		map[invert ? 'show' : 'hide'](zone);
+// }
 
 // marks a lesson as completed
 async function endLesson(lesson) {
@@ -524,19 +548,19 @@ function toCheerioObject(str, options = {}) {
 
 	// just converting a cheerio object
 	if (_.isObject(str))
-		return $cheerio(str);
+		return Cheerio(str);
 
 	// failed validation
 	str = `<root>${str}</root>`;
 	try {
-		$xml.check(`<?xml version="1.0" ?>${str}`);
+		XmlChecker.check(`<?xml version="1.0" ?>${str}`);
 	}
 	catch (err) {
 		return null;
 	}
 
 	// parse the html
-	return $cheerio(str, {
+	return Cheerio(str, {
 		withDomLvl1: false,
 		xmlMode: true
 	});

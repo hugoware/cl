@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import { JQuery } from 'jquery';
+import { _, JQuery } from './lib';
 import Component from './component';
 
 export default class ComponentList extends Component {

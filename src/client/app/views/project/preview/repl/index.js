@@ -1,11 +1,10 @@
 /// <reference path="../../../../types/index.js" />
 
-import _ from 'lodash';
+import { _, Mousetrap } from '../../../../lib';
 import $state from '../../../../state';
 import Component from '../../../../component';
 import $contentManager from '../../../../content-manager';
 import CodeRunner from '../../../../../viewer/code-runner';
-import $keyboard from 'mousetrap';
 
 const EMPTY_BOUNDS = { top: 0, bottom: 0 };
 
@@ -62,7 +61,7 @@ export default class ReplMode extends Component {
 		this.on('run-scripts', this.onGlobalRunScripts);
 
 		// handle executing code
-		$keyboard.bind('mod+enter', this.onRunScripts);
+		Mousetrap.bind('mod+enter', this.onRunScripts);
 
 		// write the main document
 		this.ui.output.on('load', () => this.writeContent($view));

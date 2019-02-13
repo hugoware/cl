@@ -8,7 +8,7 @@ export const authenticate = true;
 
 export async function handle(socket, session, data = { }) {
 	const { user } = session;
-	const { projectId, progress } = data;
+	const { projectId } = data;
 
 	try {
 		// make sure they can access this project
@@ -16,7 +16,7 @@ export async function handle(socket, session, data = { }) {
 		if (!access.write)
 			throw 'access_denied';
 
-		await finishLesson(projectId);
+		await finishLesson(user, projectId);
 		socket.ok(event, { success: true });
 	}
 	catch (err) {

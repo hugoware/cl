@@ -1,5 +1,5 @@
 
-import _ from 'lodash';
+import { _ } from './lib';
 import $nav from './nav';
 import Component from './component';
 import $state from './state'

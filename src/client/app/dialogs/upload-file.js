@@ -1,6 +1,6 @@
 /// <reference path="../types/index.js" />
 
-import _ from 'lodash';
+import { _ } from '../lib';
 import Dialog from './';
 import Component from '../component';
 import $state from '../state';

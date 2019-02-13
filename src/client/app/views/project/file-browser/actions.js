@@ -1,6 +1,6 @@
 /// <reference path="../../../types/index.js" />
 
-import _ from 'lodash';
+import { _ } from '../../../lib';
 import $state from '../../../state';
 import Component from '../../../component';
 import { cancelEvent } from '../../../utils/index';

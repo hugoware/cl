@@ -30,6 +30,43 @@ $project-item-accent-gap: 3px;
 		display: block;
 	}
 
+	.no-lessons {
+		display: none;
+		clear: both;
+		text-align: center;
+		background: lighten(#2F3238, 10%);
+		margin-right: 5%;
+		margin-bottom: 40px;
+		padding: 10px 0;
+		font-size: 14px;
+		color: lighten(#2F3238, 40%);
+		text-shadow: 0 1px 2px rgba(#000, 0.6);
+		border-radius: 3px;
+	}
+
+	&.no-lessons .no-lessons {
+		display: block;
+	}
+
+	// &.has-pending-lessons .section.lessons .count {
+	// 	background: #F0C330;
+	// 	text-shadow: 0 1px 2px #000;
+	// 	display: inline-block;
+
+	// 	&:before {
+	// 		position: absolute;
+	// 		@include animation(indicator-ring 3s infinite);
+	// 		// margin: -2px 0 0 -2px;
+	// 		content: ' ';
+	// 		top: 0;
+	// 		left: 2px;
+	// 		right: 2px;
+	// 		bottom: 0;
+	// 		border-radius: 100px;
+	// 		border: 5px solid $tab-bar-modified-indicator-highlight-color;
+	// 	}
+	// }
+
 	.empty .for-project,
 	.empty .for-lesson {
 		display: none;
@@ -257,6 +294,7 @@ $project-item-accent-gap: 3px;
 			}
 
 			.count {
+				position: relative;
 				font-size: 12.5px;
 				font-weight: bold;
 				float: right;

@@ -1,5 +1,5 @@
 
-import _ from 'lodash';
+import { _ } from '../lib';
 import $state from '../state';
 import Dialog from './';
 import DropDown from '../ui/dropdown';

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from './lib';
 import * as $helpers from './lesson/helpers';
 
 /** checks for permission flags for the project and lesson */
@@ -15,42 +15,62 @@ export default function checkPermissions(state, permissions, args = [ ]) {
 		return true;
 
 	// start checking each requested permission
-	const validation = state.lesson.slide.validation || { };
 	for (const permission of permissions) {
+		let success;
 
 		// check for a local validation function
 		const func = _.camelCase(permission);
-		const validator = validation[func];
-		if (_.isString(validator)) {
-			try {
 
-				// execute the command - check for utility functions
-				// that perform common actions
-				let success;
-				if (/^\:{2}/.test(validator)) {
-
-					// extract the arguments
-					const extracted = extractValidator(validator);
-					const params = [ extracted.args, args ];
-					success = $helpers[extracted.command].apply(state.lesson.instance, params)
-				}
-				else {
-					success = state.lesson.instance[validator](...args);
-				}
-
-				// check if this worked or not
-				if (success === true)
-					return true;
-			}
-			// nothing to do
-			catch (err) { }
-		}
-		// without custom validation, just check flag states
+		// check if this has a controller action that
+		// will respond to it
+		if (state.lesson.respondsTo(func))
+			success = state.lesson.invoke(func, ...args);
+		
+		// check for a flag condition
 		else {
 			const id = _.kebabCase(permission).toLowerCase();
-			if (state.flags[id] === true)
-				return true;
+			success = state.flags[id];
 		}
+
+		// this did work
+		if (success === true)
+			return true;
+
+
+		// const validator = validation[func];
+		// if (_.isString(validator)) {
+		// 	try {
+
+		// 		// execute the command - check for utility functions
+		// 		// that perform common actions
+		// 		let success;
+
+		// 		// it's it's not all in uppercase, it's not a flag
+		// 		if (/[^a-z]/.test(validator)) {
+
+		// 			// check if the current controller responds
+		// 			// to the action
+
+		// 			// extract the arguments
+		// 			const extracted = extractValidator(validator);
+		// 			const params = [ extracted.args, args ];
+		// 			success = $helpers[extracted.command].apply(state.lesson.instance, params)
+		// 		}
+		// 		else {
+		// 			success = state.lesson.instance[validator](...args);
+		// 		}
+
+		// 		// check if this worked or not
+		// 		if (success === true)
+		// 			return true;
+		// 	}
+		// 	// nothing to do
+		// 	catch (err) { }
+		// }
+		// // without custom validation, just check flag states
+		// else {
+			
+		// }
 	}
 
 	// did not find the required flag

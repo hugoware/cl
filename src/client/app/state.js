@@ -1,6 +1,6 @@
 /// <reference path="./types/index.js" />
 
-import _ from 'lodash';
+import { _ } from './lib';
 import $lfs from './lfs';
 import $api from './api';
 import $speech from './speech';

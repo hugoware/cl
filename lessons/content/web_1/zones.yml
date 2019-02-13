@@ -1,25 +1,25 @@
 /index.html:
   ul_start_tag:
     start:
-      row: 9
-      col: 4
+      row: 8
+      col: 5
     end:
-      row: 9
-      col: 8
+      row: 8
+      col: 9
   ul_end_tag:
     start:
-      row: 13
-      col: 4
-    end:
-      row: 13
-      col: 9
-  ul_content:
-    start:
-      row: 10
-      col: 0
+      row: 12
+      col: 5
     end:
       row: 12
-      col: 36
+      col: 10
+  ul_content:
+    start:
+      row: 8
+      col: 5
+    end:
+      row: 12
+      col: 10
     line: true
 complex_tag:
   main_content:

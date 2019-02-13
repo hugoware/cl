@@ -1,5 +1,5 @@
 /// <reference path="./types/index.js" />
-import _ from 'lodash';
+import { _ } from './lib';
 import { broadcast } from './events';
 
 /** all current errors

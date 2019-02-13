@@ -6,9 +6,9 @@
   function console1Lesson(state, project, utils) {
     var $self = this;
     $self.data = {
-      "name": "CodeLab Console Demo",
-      "type": "console",
-      "description": "An Introduction to the CodeLab Learning System",
+      "name": "Console 1",
+      "type": "code",
+      "description": "An Introduction to the CodeLab Learning System 1",
       "lesson": [{
         "mode": "popup",
         "content": "<p>Let's start working on code examples - open the file <code>main.ts</code></p>",
@@ -19,22 +19,6 @@
         },
         "type": "slide",
         "speak": ["Let's start working on code examples - open the file main.ts"]
-      }, {
-        "mode": "popup",
-        "content": "<p>Declare the following three variables</p><div class=\"snippet\" type=\"declare_variables\" />",
-        "persistContent": true,
-        "autoNext": false,
-        "runValidation": "verifyObject",
-        "events": ["modify-file, verifyObjectSyntax"],
-        "type": "slide",
-        "speak": ["Declare the following three variables"]
-      }, {
-        "mode": "popup",
-        "content": "<p>Let's print them out and see what they say</p><div class=\"snippet\" type=\"log_variables\" />",
-        "runValidation": "verifyLog",
-        "events": ["modify-file, verifyLogSyntax"],
-        "type": "slide",
-        "speak": ["Let's print them out and see what they say"]
       }, {
         "mode": "overlay",
         "content": "<p>This is the end of the lesson</p>",

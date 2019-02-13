@@ -1,5 +1,5 @@
 
-import _ from 'lodash';
+import { _ } from '../lib';
 
 /** tries to extract an error from the argument
  * @param {any} err the object to resolve
