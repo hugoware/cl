@@ -53,18 +53,19 @@ export default class Assistant extends Component {
 		this.listen('reset', this.onReset);
 		this.listen('activate-project', this.onActivateProject);
 		this.listen('deactivate-project', this.onDeactivateProject);
-		// this.listen('slide-wait-for-result', this.onSlideWaitForResult);
 		this.listen('lesson-finished', this.onFinishLesson);
-		// this.listen('save-file', this.onSaveFile);
-		// this.listen('modify-file', this.onModifyFile);
-		// this.listen('code-execution-approval', this.onCodeExecutionApproval);
 		this.listen('slide-changed', this.onSlideChanged);
 		this.listen('set-message', this.onSetMessage);
 		this.listen('set-emotion', this.onSetEmotion);
 		this.listen('block-next', this.onBlockNext);
 		this.listen('allow-next', this.onAllowNext);
-
+		
 		this.on('click', '.next', this.onNext);
+		
+		// this.listen('slide-wait-for-result', this.onSlideWaitForResult);
+		// this.listen('save-file', this.onSaveFile);
+		// this.listen('modify-file', this.onModifyFile);
+		// this.listen('code-execution-approval', this.onCodeExecutionApproval);
 		// this.on('click', '.previous', this.onPrevious);
 
 		// set the speech enablement
@@ -111,19 +112,19 @@ export default class Assistant extends Component {
 	// hides the assistant
 	onReset = () => {
 		this.removeClass('leave');
-		// this.notifyAssistantUpdate();
+		this.notifyAssistantUpdate();
 	}
 
 	// display the popup message again
 	onRestorePopUp = () => {
 		this.removeClass('hide-popup');
-		// this.notifyAssistantUpdate();
+		this.notifyAssistantUpdate();
 	}
 	
 	// hides the popup message
 	onHidePopUp = () => {
 		this.addClass('hide-popup');
-		// this.notifyAssistantUpdate();
+		this.notifyAssistantUpdate();
 	}
 
 	// // sync the lesson state
@@ -171,7 +172,7 @@ export default class Assistant extends Component {
 		$speech.stop();
 		setTimeout(() => {
 			this.hide();
-			// this.notifyAssistantUpdate();
+			this.notifyAssistantUpdate();
 		}, 1000);
 	}
 
@@ -231,7 +232,7 @@ export default class Assistant extends Component {
 	onDeactivateProject = () => {
 		if ($speech.active) $speech.stop();
 		this.slideIndex = null;
-		// this.notifyAssistantUpdate();
+		this.notifyAssistantUpdate();
 		this.hide();
 	}
 
@@ -253,10 +254,10 @@ export default class Assistant extends Component {
 	// 	this.refresh();
 	// }
 
-	// // let the app know the assistant changed
-	// notifyAssistantUpdate = () => {
-	// 	setTimeout(() => this.broadcast('assistant-updated'), 0);
-	// }
+	// let the app know the assistant changed
+	notifyAssistantUpdate = () => {
+		setTimeout(() => this.broadcast('assistant-updated'));
+	}
 
 	// refresh the display for this slide
 	refresh = async () => {
@@ -266,7 +267,7 @@ export default class Assistant extends Component {
 
 		// // make sure the popup is visible
 		// this.removeClass('hide-popup');
-		// // this.notifyAssistantUpdate();
+		// this.notifyAssistantUpdate();
 
 		// // make sure the slide changed
 		// const index = $state.lesson.index;
@@ -275,7 +276,9 @@ export default class Assistant extends Component {
 
 		// update slide content
 		const { slide } = $state.lesson;
-		// const { view } = this;
+		const { view } = this;
+
+		console.log(slide);
 
 		// // determine the mode to use
 		// const mode = slide.mode || 'popup';
@@ -297,7 +300,7 @@ export default class Assistant extends Component {
 		
 
 		// // update the content
-		// view.refresh(slide);
+		view.refresh(slide);
 
 		// // this.views.slide.hasUsedOverrideMessage = false;
 
@@ -356,14 +359,18 @@ export default class Assistant extends Component {
 
 		// update labels as needed
 		this.find('.next').text(slide.isLast ? 'Finish' : 'Next');
-		
+
 		// check for initial content
-		if ('content' in slide)
+		if (slide.isQuestion)
+			this.view.setContent(slide);
+
+		else {	
 			this.onSetMessage({ message: slide.content });
 
-		// apply emotions, if any - if not, this'll
-		// reset the emotion
-		this.onSetEmotion(slide.emotion || slide.emote);
+			// apply emotions, if any - if not, this'll
+			// reset the emotion
+			this.onSetEmotion(slide.emotion || slide.emote);
+		}
 
 	}
 
@@ -380,9 +387,11 @@ export default class Assistant extends Component {
 
 		// update the message
 		const { content, speak } = generateMessage(options.message);
-		console.log('will', speak);
-		this.view.setContent(content);
-		$speech.speak(speak);
+		this.view.setContent(content, true);
+
+		// speakinga  message
+		if (!options.silent)
+			$speech.speak(speak);
 
 		// set the emotion, if any
 		if (options.emote || options.emotion)

@@ -111,7 +111,7 @@ export default class CodeEditor extends Component {
 
 	// done with the lesson
 	onLessonFinished = () => {
-		this.editor.clearAllZones();
+		// this.editor.clearAllZones();
 	}
 
 	// make sure to refresh when slides change
@@ -194,17 +194,9 @@ export default class CodeEditor extends Component {
 
 	// queues up changes to the content manager
 	onContentChange = event => {
-
-		event.changes.splice(0, event.changes.length);
-		return cancelEvent(event);
-		console.log(event);
-
-		// setTimeout(() => this.editor.editor.restoreViewState());
-		// this.editor.editor.saveViewState();
-
 		if ($state.lesson) {
 			const { activeFile } = this;
-			$state.lesson.invoke('contentChange', activeFile);
+			setTimeout(() => $state.lesson.invoke('contentChange', activeFile));
 		}
 
 		// compile the file

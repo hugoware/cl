@@ -4,6 +4,7 @@
 	left: 0;
 	z-index: $layer-definition;
 	pointer-events: none;
+	max-width: 400px;
 
 	$definition-background-color: rgba(#000, 0.85);
 	$definition-border-color: rgba(#fff, 0.5);;
@@ -60,6 +61,7 @@
 	}
 	
 	.aka {
+		color: #fff;
 		font-size: 16px;
 		padding-bottom: 18px;
 		display: none;
@@ -81,6 +83,7 @@
 
 	&.show .content {
 		opacity: 1;
+		line-height: 1.3em;
 	}
 
 	.define {

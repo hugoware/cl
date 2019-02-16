@@ -57,6 +57,22 @@
 		box-shadow: inset 0 0 0 2px rgba(#fff, 0.2);
 		border-radius: 4px;
 	}
+
+	.message {
+		padding-right: 35px;
+	}
+
+	.title {
+		font-size: 28px;
+	}
+
+	.has-subtitle .title {
+		padding-bottom: 5px;
+	}
+
+	.subtitle {
+		font-size: 19px;
+	}
 	
 	.actions {
 		padding: $assistant-overlay-actions-gap 0 $assistant-overlay-actions-padding 0;

@@ -2,6 +2,7 @@
 import { _ } from '../../lib';
 import $state from '../../state';
 import Component from '../../component';
+import generateMessage from '../../message-generator/index';
 
 export default class DefinitionPopUp extends Component {
 
@@ -54,7 +55,10 @@ export default class DefinitionPopUp extends Component {
 		// update the content
 		this.ui.name.text(definition.name);
 		this.ui.aka.text(definition.aka);
-		this.ui.define.html(definition.define);
+
+		// convert the markup
+		const define = generateMessage(definition.define);
+		this.ui.define.html(define.content);
 
 		// set some class info, as required
 		this.toggleClassMap({

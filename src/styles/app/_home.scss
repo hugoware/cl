@@ -496,12 +496,13 @@ $project-item-accent-gap: 3px;
 		background: rgba(#2F3238, 0.95);
 
 		color: #fff;
-		text-shadow: 0 1px 2px #000;
+		text-shadow: 0 1px 15px #000;
 		z-index: 10;
 
 		h2 {
-			font-size: 21px; 
+			font-size: 23px; 
 			padding: 0 0 10px 0;
+			font-weight: bold;
 		}
 
 		p {
@@ -511,7 +512,10 @@ $project-item-accent-gap: 3px;
 		}
 
 		.info {
-			padding: 50px;
+			position: relative;
+			transform: translate(0, -55%);
+			padding: 0 50px;
+			top: 50%;
 		}
 	}
 

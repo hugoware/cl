@@ -64,7 +64,7 @@ export function evaluateSelector(selector) {
 		hasCommands,
 
 		// gives back the element
-		get() {
+		getInstance() {
 			return $(selector)
 		},
 

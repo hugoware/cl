@@ -1,7 +1,6 @@
 
 
-- 
-  id: json
+- id: json
   name: JSON
   aka: JavaScript Object Notation
   define: This is the defined result
@@ -10,11 +9,11 @@
   name: Output
   define: The results from a computer program based on input
 
--
-  id: preview_area
+- id: preview_area
   name: Preview Area
   define: The right side of the screen that shows the current output of the project being worked on
 
 - id: double_clicking
   name: Double Click
   define: Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly.
+

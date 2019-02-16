@@ -43,6 +43,9 @@ export default class ManagedEditor {
 		this.instances = [ ];
 		this.editor = editor;
 
+		// access to the managed editor
+		$state.editor = this;
+
 		// keep in sync with lessons
 		listen('slide-changed', this.onSlideChanged);
 		listen('set-working-area', this.onSetWorkingArea);
@@ -98,8 +101,18 @@ export default class ManagedEditor {
 		if (!this.activeInstance) return;
 
 		const instance = this.activeInstance;
-		const { session, focusPoint } = instance;
+		const { session, focusPoint, workingArea, content } = instance;
 		const { doc } = session;
+
+		// check for a working area offset
+		if (instance.hasWorkingArea && options.adjustForWorkingArea !== false) {
+			const offset = doc.positionToIndex(workingArea.range.start);
+			options.start += offset;
+			options.end += offset;
+		}
+
+		// shift for newlines
+		// const char = content.substr(options.start, 1);
 
 		// determine the position
 		const range = getPosition(this, options, { requireRange: true });
@@ -110,17 +123,34 @@ export default class ManagedEditor {
 		const start = range.start;
 		const end = range.end;
 		const style = start.row === end.row ? 'text' : 'line';
-		const isInfo = !!(options.info || options.asInfo);
 
 		// set the focus point
-		focusPoint.clazz = `focus_point ${style} ${isInfo ? '' : 'highlighted'} ${isNewLine ? 'as-new-line' : ''}`;
+		focusPoint.clazz = `focus_point ${style} ${isNewLine ? 'as-new-line' : ''}`;
 		focusPoint.range.start.row = start.row;
 		focusPoint.range.start.column = start.column;
+
+		// just in case
+		const samePosition = end.row === start.row && end.column === start.column;
+		const invalidPosition = end.row <= start.row || (end.row === start.row && end.column < start.column);
+		
+		// replace the posiiton, if needed
+		if (samePosition || invalidPosition) {
+			end.row = start.row;
+			end.column = start.column + 1;
+		}
+
+		// update the end
 		focusPoint.range.end.row = end.row;
 		focusPoint.range.end.column = end.column;
 
 		// update the cursor
 		this.editor.resize(true);
+	}
+
+	// stops tracking the working area
+	onClearWorkingArea = () => {
+		if (!this.activeInstance) return;
+		this.activeInstance.hasWorkingArea = false;
 	}
 
 	// sets the focus point position
@@ -131,14 +161,17 @@ export default class ManagedEditor {
 		const { workingArea } = instance;
 
 		// determine the position
-		const range = getPosition(this, options, { requireRange: true });
+		const isLine = !!(options.line || options.asLine || options.isLine);
+		const range = getPosition(this, options, { isLine, requireRange: true });
+		instance.hasWorkingArea = true;
 		
 		// get a useful range
 		const start = range.start;
 		const end = range.end;
 
 		// set the focus point
-		workingArea.clazz = `working_area`;
+		workingArea.clazz = `working_area ${isLine ? 'line' : 'text'}`;
+		workingArea.isLine = isLine;
 		workingArea.range.start.row = start.row;
 		workingArea.range.start.column = start.column;
 		workingArea.range.end.row = end.row;
@@ -160,6 +193,8 @@ export default class ManagedEditor {
 			return cancelEvent(event);
 
 		// make sure there's an instance to work with
+		const { session, hasWorkingArea, workingArea } = instance;
+		const { doc } = session;
 		const { command = {} } = event;
 
 		// create the options to check with
@@ -167,7 +202,7 @@ export default class ManagedEditor {
 		event.isBackspace = !event.isInsert && /backspace/i.test(command.name);
 		event.isDelete = !event.isBackspace && /del/i.test(command.name);
 		event.isComment = !event.isDelete && /comment/i.test(command.name);
-
+		
 		// keyboard nav is allowed always
 		if (/^goto(left|right)$/i.test(command.name)
 			|| /^goline(down|up)$/i.test(command.name)
@@ -183,11 +218,55 @@ export default class ManagedEditor {
 			|| /^esc$/i.test(command.name)
 		) return;
 
+		// get the ranges
+		if (hasWorkingArea) {
+			const { doc } = session;
+			const selection = this.editor.getSelectionRange();
+			const area = workingArea.range;
+			const startAtStart = selection.start.row === area.start.row && selection.start.column === area.start.column;
+			const startAtEnd = selection.start.row === area.end.row && selection.start.column === area.end.column;
+			const endAtStart = selection.end.row === area.start.row && selection.end.column === area.start.column;
+			const endAtEnd = selection.end.row === area.end.row && selection.end.column === area.end.column;
+			const selectionStartIndex = doc.positionToIndex(selection.start);
+			const selectionEndIndex = doc.positionToIndex(selection.end);
+			const areaStartIndex = doc.positionToIndex(area.start);
+			const areaEndIndex = doc.positionToIndex(area.end);
+			const startInRange = areaStartIndex <= selectionStartIndex && selectionStartIndex < areaEndIndex;
+			const endInRange = areaStartIndex <= selectionEndIndex && selectionEndIndex < areaEndIndex;
+			const backspaceAtFront = event.isBackspace && startAtStart && endAtStart;
+			const deleteAtEnd = event.isDelete && startAtEnd && endAtEnd;
+
+			// since there's a working area, we need to check that
+			// the change can be made
+			const disallow = backspaceAtFront || deleteAtEnd || !startInRange || !endInRange;
+
+			// not allowed to change
+			if (disallow) {
+				$state.lesson.invoke('rejectContentChange', instance, event);
+				return cancelEvent(event);
+			}
+
+		}
+
 		// if there's a lesson, allow this to prevent editing
 		// the file under certain conditions
-		const allow = $state.lesson.invoke('beforeContentChange', this.activeInstance, event);
+		const allow = $state.lesson.invoke('beforeContentChange', instance, event);
 		if (allow === false)
 			return cancelEvent(event);
+
+		// if this was allowed, and it's within the working area, and it
+		// is adding newlines, then we need to move the working area down some
+		if (hasWorkingArea && workingArea.isLine) {
+			const lineCount = session.getLength();
+
+			// wait for the update to finish, then compare the new
+			// number of lines
+			setTimeout(() => {
+				const delta = session.getLength() - lineCount;
+				workingArea.range.end.row += delta;
+				this.editor.resize(true);
+			});
+		}
 
 		// otherwise, it's okay
 		return true;
@@ -365,6 +444,7 @@ export default class ManagedEditor {
 				// determine the content source
 				let content;
 
+				// THIS SETS THE MODIFIED STATE WHEN LOADING
 				// // if this is a lesson, we need to make sure that the file
 				// // doesn't have a semi-modified state - This is when the file
 				// // is changed because of a collapse/expand, but not saved
@@ -455,6 +535,31 @@ export default class ManagedEditor {
 		this.editor.resize();
 	}
 
+	// grabs the current content for the working zone
+	getWorkingAreaContent() {
+		if (!this.activeInstance) return '';
+
+		// check the content
+		const { session, workingArea } = this.activeInstance;
+		const { isLine, range } = workingArea;
+		const newline = session.doc.getNewLineCharacter();
+
+		// capturing each line
+		// if (isLine) {
+		// 	const content = [ ];
+		// 	const count = range.end.row - range.start.row;
+		// 	_.times(count + 1, i => {
+		// 		const line = session.getLine(range.start.row + i)
+		// 		content.push(line);
+		// 	});
+
+		// 	return content.join(newline)
+		// }
+		let content = session.doc.getTextRange(workingArea.range);
+		content = content.replace(/\n$/, '');
+		return content;
+	}
+
 	// // sync zones to the current state
 	// syncZones = instance => {
 	// 	if (!(instance && instance.map)) return;
@@ -496,8 +601,8 @@ export default class ManagedEditor {
 }
 
 // determine a position from an argument
-function getPosition(managed, position, { requireRange, direction = 1 } = { }) {
-	const { content, session } = managed.activeInstance
+function getPosition(managed, position, { isLine, requireRange, direction = 1 } = { }) {
+	const { content, session } = managed.activeInstance;
 	const { doc } = session;
 	const { length } = content;
 
@@ -541,11 +646,13 @@ function getPosition(managed, position, { requireRange, direction = 1 } = { }) {
 	}
 
 	if (_.isNumber(position.start)) {
-		range.start = toPosition(doc, position.start);
+		if (isLine) range.start = { row: position.start - 1, column: 0 };
+		else range.start = toPosition(doc, position.start);
 	}
-
+	
 	if (_.isNumber(position.end)) {
-		range.end = toPosition(doc, position.end);
+		if (isLine) range.end = { row: position.end, column: 0 };
+		else range.end = toPosition(doc, position.end);
 	}
 
 	return range;

@@ -1,0 +1,6 @@
+
+- id: css
+  name: CSS
+  aka: Cascading Style Sheets
+  define: |
+    Special rules for styling

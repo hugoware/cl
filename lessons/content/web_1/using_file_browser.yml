@@ -1,65 +1,171 @@
 
+
+- slide:
+    mode: overlay
+    title: Introduction to Creating Web Pages
+    content: |
+      Welcome to your first lesson on creating web pages!
+
+      [image html-logo.png 140 inline]
+      [image css-logo.png 140 inline fade]
+      [image javascript-logo.png 140 inline fade]
+
+      As you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.
+
+- slide:
+    mode: overlay
+    content: |
+      It's exciting to start learning a new programming language, but before we learn how to use [define html] and [define css] to create web pages, it's a good idea to learn a bit about the technology that's running behind the scenes.
+
+- slide:
+    mode: overlay
+    content: |
+      [define html] is a language that's used to display web pages on the [define internet]. For the most part, it's the content such as words and images on a web page.
+
+      Simply put, [define html] is what a web page _says_.
+
+- slide:
+    mode: overlay
+    content: |
+      [define css] is another language used when creating web pages. [define css] is used to create rules that decide how the page appears, such as choosing colors and or changing font sizes.
+      
+      Generally speaking, [define css] is how the web page _looks_.
+
+- slide:
+    mode: overlay
+    content: |
+      Finally, [define javascript] is a programming language that allows you to add logic and behaviors to a web page.
+
+      For the most part, [define javascript] is what a web page _does_.
+
+- slide:
+    mode: overlay
+    content: |
+      For the most part, these three technologies are used to create most of what you see on the [define internet] today.
+
+      To start, we'll be learning mostly about how to use [define html] to create web pages, and then later how to apply [define css] to change the visual appearance of what we created.
+
+- slide:
+    mode: overlay
+    content: |
+      [define html] is a set of instructions that a [define web_browser] uses to determine what is shown to use user.
+
+      Each time you browse to a [define web_page], the [define web_browser] receives [define html] from the website, reads the instructions, and then creates the final page that you see on your screen.
+
 - 
-  definition:
-    id: html
-    name: HTML
-    aka: Hyper Text Markup Language
-    define: This is the full def
+  question:
+    mode: overlay
+    show: 4
+
+    title: What is the [define html] name of the `highlighted` block of code?
+    content: |
+      You're going to need to select the correct [define html] to get this right
+
+      [snippet mary_example]
+
+    hint: |
+      This is a longer example of [define css] what a hint might look like. This is going to span for a period longer than the other items on the page.
+
+    explain: This is just a `summary message` to explain the final answer
+
+    choices:
+      - this is `correct`
+      - This *is* incorrect
+      - This _is_ also wrong
+      - This ~shouldn't~ work
+      - This *is another* mix
+      - This _is_ failed
+
+
+- slide:
+    mode: overlay
+    content: |
+      Simple 1
+
+      [snippet html_tag_example highlight:0,4|30,5]
+
+- slide:
+    mode: overlay
+    content: Simple 2 [define javascript]
 
 - slide:
     mode: popup
-    controller: verifyHasEnoughListItems
-
-    # persistContent: true
-    # waitFor:
-    #   - ::fileOpen(/index.html)
-
-    # highlights:
-    #   - ::fileBrowser(/index.html)
-
-    # validation:
-    #   openFile: ::allowIfFile(/index.html, open-file)
-
-    content: |
-      Let's learn about unordered lists!
-
-      Start by opening the `index.html` file by double clicking on it
-
-# - slide:
-#     mode: popup
-
-#     content: |
-#       You're allowed to upload a file now
-
-#     autoNext: false
-
-#     validation:
-#       uploadFile: verifyFileUploadIsImage
-
-#     waitFor:
-#       - ::event(file-uploaded, verifyUploadImageSuccess)
-
-#     flags: +upload-file-dialog
-
-# - slide:
-#     mode: popup
-
-#     actions:
-#       - hide-all-dialogs
-
-#     content: |
-#       Great! Now that the file `%imageName%` file is open, let's look at a few things
+    content: Simple 3 [define html]
 
 - slide:
     mode: popup
-    controller: validateList
-    # autoNext: false
+    content: Simple 4 
 
-    # waitFor:
-    #   - ::event(modify-file, onContentChange)
+- slide:
+    mode: overlay
+    content: Simple 5 [define css]
 
-    content: |
-      These are tags that wrap the unordered list
+- slide:
+    mode: overlay
+    content: Simple 6
+
+- slide:
+    mode: popup
+    content: Simple 7
+
+- slide:
+    mode: popup
+    content: Simple 8
+
+# - slide:
+#     mode: popup
+#     controller: verifyHasEnoughListItems
+
+#     # persistContent: true
+#     # waitFor:
+#     #   - ::fileOpen(/index.html)
+
+#     # highlights:
+#     #   - ::fileBrowser(/index.html)
+
+#     # validation:
+#     #   openFile: ::allowIfFile(/index.html, open-file)
+
+#     content: |
+#       Let's learn about unordered lists!
+
+#       Start by opening the `index.html` file by double clicking on it
+
+# # - slide:
+# #     mode: popup
+
+# #     content: |
+# #       You're allowed to upload a file now
+
+# #     autoNext: false
+
+# #     validation:
+# #       uploadFile: verifyFileUploadIsImage
+
+# #     waitFor:
+# #       - ::event(file-uploaded, verifyUploadImageSuccess)
+
+# #     flags: +upload-file-dialog
+
+# # - slide:
+# #     mode: popup
+
+# #     actions:
+# #       - hide-all-dialogs
+
+# #     content: |
+# #       Great! Now that the file `%imageName%` file is open, let's look at a few things
+
+# - slide:
+#     mode: popup
+#     controller: validateList
+#     # autoNext: false
+
+#     # waitFor:
+#     #   - ::event(modify-file, onContentChange)
+
+#     content: |
+#       These are tags that wrap the unordered list
 
 
 

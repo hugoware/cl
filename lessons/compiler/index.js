@@ -69,9 +69,9 @@ const slides = _.filter(content, item => 'slide' in item || 'question' in item);
 // manifest.definitions = { };
 
 // process each category in order
-// processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
+processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
 processSlides(state, manifest, slides);
-// processDefinitions(state, manifest, definitions);
+processDefinitions(state, manifest, definitions);
 // manifest.zones = zones;
 
 // make the temp directory

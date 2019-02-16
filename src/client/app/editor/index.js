@@ -33,65 +33,59 @@ const DEFAULT_OPTIONS = {
 	printMarginColumn: -1
 };
 
-// common editor class
-class EditorManager {
+/** waits for the monoaco editor to load */
+export async function init() {
+	return Promise.resolve();
+}
 
-	/** waits for the monoaco editor to load */
-	async init() {
-		return Promise.resolve();
-	}
+/** creates a new code editor instance
+ * @param {HTMLElement} container the element to hold for the code editor
+ */
+export function createInstance(container) {
+	const editor = createEditor(container, {
+		enableBasicAutocompletion: true, // [{ getCompletions }],
+		enableSnippets: false,
+		enableLiveAutocompletion: true,
+		copyWithEmptySelection: false
+	});
 
-	/** creates a new code editor instance
-	 * @param {HTMLElement} container the element to hold for the code editor
-	 */
-	createInstance(container) {
-		const editor = createEditor(container, {
-			enableBasicAutocompletion: true, // [{ getCompletions }],
-			enableSnippets: false,
-			enableLiveAutocompletion: true,
-			copyWithEmptySelection: false
-		});
+	// create the editor instance
+	return new ManagedEditor(editor);
+}
 
-		// create the editor instance
-		return new ManagedEditor(editor);
-	}
+/** colorizes a snippet of code 
+ * @param {HTMLElement} element the element to colorize
+*/
+export function colorize(element, options) {
+	
+	// view only editor area
+	const editor = createEditor(element, {
+		fontSize: options.fontSize || DEFAULT_SNIPPET_FONT_SIZE,
+		useWorker: false,
+		readOnly: true,
+		maxLines: 500
+	});
+	
+	// apply the snippet
+	const { snippet, highlight } = options;
+	const session = Brace.createEditSession(snippet.content, `ace/mode/${snippet.type}`);
+	session.setOptions({ tabSize: 2, useWorker: false });
+	editor.setSession(session);
 
-	/** colorizes a snippet of code 
-	 * @param {HTMLElement} element the element to colorize
-	*/
-	colorize(element, options) {
-		
-		// view only editor area
-		const editor = createEditor(element, {
-			fontSize: options.fontSize || DEFAULT_SNIPPET_FONT_SIZE,
-			useWorker: false,
-			readOnly: true,
-			maxLines: 500
-		});
-		
-		// apply the snippet
-		const { snippet, highlight, zones } = options;
-		const session = Brace.createEditSession(snippet.content, `ace/mode/${snippet.type}`);
-		session.setOptions({ tabSize: 2, useWorker: false });
-		editor.setSession(session);
+	// check for highlighting
+	_.each(highlight, ({ start, end, isLine }) => {
+		start = editor.session.doc.indexToPosition(start);
+		end = editor.session.doc.indexToPosition(end);
+		const range = new Brace.Range(start.row, start.column, end.row, end.column);
 
-		// check for highlighting
-		if (highlight)
-			_.each(highlight, key => {
+		// save the highlight
+		const index = session.addMarker(range);
+		const marker = session.getMarkers()[index];
+		marker.clazz = `snippet-highlight ${isLine ? 'fullLine' : ''}`;
+		marker.inFront = true;
+	});
 
-				// check for the zone to highlight
-				const zone = zones[key];
-				if (!zone) return;
-
-				// update the markers
-				const { start, end, line } = zone;
-				const range = new Brace.Range(start.row, start.col, end.row, end.col);
-				editor.session.addMarker(range, 'snippet-highlight', line ? 'fullLine' : '');
-			});
-
-		return { element, snippet, editor, session };
-	}
-
+	return { element, snippet, editor, session };
 }
 
 // setup a code editor area
@@ -109,4 +103,9 @@ function createEditor(container, options) {
 	return editor;
 }
 
-export default new EditorManager();
+// shared default actions
+export default {
+	init,
+	colorize,
+	createInstance
+}

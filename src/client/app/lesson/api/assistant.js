@@ -20,6 +20,10 @@ export default class AssistantAPI {
 		broadcast('set-message', options)
 	}
 
+	// shortcut for displaying messages without speaking
+	show = message => 
+		this.say(message, { silent: true });
+
 	/** changes the emotion */
 	emote = emotion => {
 		broadcast('set-emotion', emotion);

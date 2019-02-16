@@ -25,3 +25,18 @@
     Something different for html stuff
 
     `<img src="something" />`
+
+- id: web_browser
+  name: Web Browser
+  define: |
+    An program that is used to view websites. Some common examples are **Chrome**, **Firefox**, **Safari**, and **Edge**
+
+- id: web_page
+  name: Web Page
+  define: |
+    An individual view of a web site.
+
+- id: internet
+  name: Internet
+  define: |
+    A world wide network of computers

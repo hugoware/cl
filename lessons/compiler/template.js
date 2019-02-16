@@ -53,8 +53,10 @@ class $LESSON_TYPE$Lesson {
 		this.assistant = api.assistant;
 		this.screen = api.screen;
     this.progress = api.progress;
+    this.validate = api.validate;
     this.content = api.content;
 		this.editor = api.editor;
+		this.sound = api.sound;
 
 		// setup controllers
 		this.controllers = { };
@@ -79,6 +81,11 @@ class $LESSON_TYPE$Lesson {
 	get controller() {
 		const { slide } = this.lesson;
 		return slide && this.controllers[slide.controller];
+	}
+
+	// returns the current slide
+	get slide() {
+		return this.lesson.slide;
 	}
 
 	// executes an action if available

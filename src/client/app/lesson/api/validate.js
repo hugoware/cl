@@ -1,7 +1,7 @@
 
 import { CodeValidator, CssValidator, HtmlValidator } from '../../lib';
 
-export default class ValidateAPI {
+export default class ValidationAPI {
 
 	constructor(lesson) {
 		this.lesson = lesson;

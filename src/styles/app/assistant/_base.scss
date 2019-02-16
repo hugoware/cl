@@ -85,8 +85,48 @@
 	}
 
 	.define {
-		border-bottom: 1px dotted #fff;
+		border-bottom: 1px dashed rgba(#fff, 0.5);
+		background: rgba(#000, 0.1);
+		display: inline-block;
+		padding: 0 3px 0 3px;
+		border-radius: 2px;
 		cursor: help;
+		@include animate('transform');
+		transform: scale(1, 1);
+
+		&:hover {
+			transform: scale(1.1, 1.1);
+			background: rgba(#000, 0.2);
+		}
+	}
+
+	.image {
+		padding: 0 0 15px 0;
+		background-size: 100% auto;
+
+		text-align: center;
+
+		&.inline {
+			display: inline-block;
+			padding-right: 20px;
+		}
+
+		&.fade {
+			opacity: 0.5;
+		}
+
+		&.left {
+			text-align: left;
+		}
+
+		&.right {
+			text-align: right;
+		}
+
+		&.fit img {
+			width: 100%;
+		}
+
 	}
 
 	$assistant-speech-button-height: 40px;
@@ -162,9 +202,12 @@
 	}
 
 	.title {
-		font-size: 30px;
 		padding-bottom: 25px;
 		line-height: 1.2em;
+
+		p {
+			font-size: 23px !important;
+		}
 	}
 
 	.has-subtitle .title {

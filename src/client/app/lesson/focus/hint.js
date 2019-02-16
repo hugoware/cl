@@ -22,11 +22,10 @@ export default class HintDisplay extends Component {
 		this.listen('finish-project', this.onFinishProject);
 		this.listen('refresh-hint', this.onRefreshHint);
 		this.listen('show-hint', this.onShowHint);
-		this.listen('hide-hint', this.onHideHint);
+		this.listen('clear-hint', this.onClearHint);
 
-		// always looking for the cursor
-		// this.cursor = evaluateSelector('.ace_editor .ace_cursor');
-		// this.hint = ;
+		// always looking for the focus area
+		this.hint = evaluateSelector('.ace_editor .focus_point');
 		
 		// handle refreshable events
 		window.addEventListener('resize', this.onAutoRefresh);
@@ -36,7 +35,7 @@ export default class HintDisplay extends Component {
 		window.addEventListener('input', this.onAutoRefresh);
 
 		// hidden by default
-		this.onHideHint();
+		this.onClearHint();
 	}
 
 	// is the hint visible
@@ -44,23 +43,14 @@ export default class HintDisplay extends Component {
 		return !this.hasClass('show');
 	}
 
-	get hint() {
-
-		if (!this._hint)
-			this._hint = evaluateSelector('.ace_editor .focus_point');
-
-		// if (!this.hint || this.hint.isMissing)
-		return this._hint;
-	}
-
 	// when resetting the document
 	onReset = () => {
-		this.onHideHint();
+		this.onClearHint();
 	}
 
 	// leaving the project view
 	onDeactivateProject = () => {
-		this.onHideHint();
+		this.onClearHint();
 	}
 
 	// updates the marker position
@@ -70,11 +60,7 @@ export default class HintDisplay extends Component {
 	
 	// updates the marker position
 	onRefreshHint = () => {
-		if (this.isVisible)
-			this.refreshPosition();
-		// // don't do anything if already hiding
-		// if (this.isHidingHint) return;
-		// setTimeout(this.refreshPosition);
+		this.refreshPosition();
 	}
 
 	// handles showing the hint
@@ -87,8 +73,11 @@ export default class HintDisplay extends Component {
 			return;
 
 		// make visible
-		if (!this.is('.show'))
+		if (this.isHidden)
 			this.addClass('show');
+
+		// add the highlight, if needed
+		this.isHighlighted = !(options.isInfo || options.info);
 
 		// update the position
 		this.refreshPosition();
@@ -102,97 +91,33 @@ export default class HintDisplay extends Component {
 		this._hash = hash;
 		const message = generateMessage(options.message);
 		this.ui.message.html(message.content);
-		
-		// // // hint is not required
-		// // if (options === null) 
-		// // 	return;
-		// // 	// return this.onHideHint();
-	
-		// // // there's a range to use
-		// // const hasFocus = 'index' in options || 'start' in options || 'end' in options || 'zone' in options;
-		// // if (hasFocus) {
-		// // 	this.broadcast('set-editor-focus-point', options);
-		// // 	this.selector = this.position;
-		// // 	this.isFocusPoint = true;
-		// // 	this.refreshPosition();
-		// // }
-		// // // choose the location
-		// // else {
-
-		// // 	// clears the current focus, if any
-		// // 	if (this.isFocusPoint) {
-		// // 		this.broadcast('hide-editor-focus-point');
-		// // 	}
-
-		// // 	this.selector = this.cursor;
-		// // 	this.isFocusPoint = false;
-		// // }
-
-		// // // try and refresh
-		// // if (this.selector.isMissing) {
-
-		// // 	// try to find the selector again
-		// // 	this.selector.refresh();
-
-		// // 	// if it's still missing, don't show anything
-		// // 	if (this.selector.isMissing) {
-		// // 		this.onHideHint();
-		// // 		return;
-		// // 	}
-		// // 	// shift to the correct location
-		// // 	else this.refreshPosition();
-		// // }
-
-		// // // if it's hidden, then display
-		// // if (this.isHidingHint)
-		// // 	setTimeout(() => {
-		// // 		this.refreshPosition();
-		// // 		this.addClass('show');
-		// // 	}, 50);
-		
-		// // // make sure to activate the hint even if
-		// // // the message itself didn't change
-		// // this.isHidingHint = false;
-
-		// // // already the same message
-		// // if (options.message === this._activeMessage) return;
-		// // this._activeMessage = options.message;
-
-		// // // update the message
-		// // const html = $convert.makeHtml(options.message);
-		// // this.ui.message.html(html);
 	}
 
 	// handles hiding the hint from view
-	onHideHint = () => {
-		console.log('wants to hide');
-		return;
-		
-		if (this.isHidingHint) return;
-		this.isHidingHint = true;
+	onClearHint = () => {
 		this.removeClass('show');
 
-		// HACK: just select and remove the class
-		if (this.isFocusPoint) {
-			setTimeout(() => {
-				const element = this.position.get();
-				element.removeClass('highlighted');
-			}, 50);
-		}
+		// nothing to do
+		if (this.hint.isMissing)
+			return;
+
+		// remove the highlight
+		const instance = this.hint.getInstance();
+		instance.removeClass('highlighted');
 	}
 
 	// match the cursor position for now
 	refreshPosition = () => {
-		this.hint.refresh();
-
+		if (this.isHidden)
+			return;
+		
+		// can't refresh yet
+		if (this.hint.isMissing)
+			return;
+	
 		// ensure the bounds to use
-		let bounds = this.hint.getBounds();
-		// if (!bounds && this.isFocusPoint)
-		// 	bounds = this.focusPoint;
-		// if (!bounds)
-		// 	bounds = MISSING_BOUNDS;
-
-		// calculate the position
+		this.hint.refresh();
+		const bounds = this.hint.getBounds();
 		const { left } = bounds;
 		const right = isNaN(bounds.right) ? left : bounds.right;
 		const mid = (left + right) / 2;
@@ -202,8 +127,12 @@ export default class HintDisplay extends Component {
 		// for the focus point, save the position
 		// this is used when the focus point is removed
 		// but still needs an origin point
-		// if (this.isFocusPoint)
-		this.focusPoint = location;
+		this.prior = location;
+
+		// make sure the focus stays highlighted
+		if (this.isHighlighted)
+			this.hint.getInstance()
+				.addClass('highlighted');
 
 		this.offset({
 			top: loc.top + 10,

@@ -31,6 +31,7 @@ import ShareProjectDialog from './dialogs/share-project';
 import ProjectSettingsDialog from './dialogs/project-settings';
 import RemoveProjectDialog from './dialogs/remove-project';
 import ResetLessonDialog from './dialogs/reset-lesson';
+import $speech from './speech'
 
 // configurations
 window.Promise = window.Promise || Bluebird;
@@ -44,8 +45,10 @@ class App extends Component {
 
 	// handles loading the app for the first time
 	static async init() {
+		
 		// wait for resources
 		await $editor.init();
+		await $speech.init();
 
 		// create the app
 		const app = new App();

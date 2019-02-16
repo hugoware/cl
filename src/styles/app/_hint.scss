@@ -7,9 +7,9 @@
 		// opacity: 0;
 	@include animate('opacity, margin, top, left', 0.2s);
 	opacity: 0;
-	margin: 15px 0 0 0;
+	// margin: 15px 0 0 0;
 	&.show {
-		margin: 0 0 0 0;
+		// margin: 0 0 0 0;
 		opacity: 1;
 	}
 

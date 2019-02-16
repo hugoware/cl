@@ -17,7 +17,68 @@ export default function generateMessage(message) {
 		let hidden, delay, silent, snippet;
 		const props = [];
 
-		// line = replaceDictionaryWords(line);
+		// replace inline dictionary works
+		line = line.replace(/\[image ?[^\]]+\]/g, match => {
+			let value = _.trim(match.substr(6));
+			value = value.replace(/\]$/g, '');
+			const parts = value.split(/ /);
+			
+			// adjust the key
+			let src = _.trim(parts.shift());
+			if (!/^https?\:/i.test(src)) {
+				src = `/__codelab__/lessons/${$state.project.lesson}/resources/${src}`;
+			}
+
+			// check for a defined width
+			let width;
+			_.each(parts, item => {
+				console.log('check', item);
+				const value = parseInt(item);
+				if (!isNaN(value))
+					width = value;
+			})
+
+			// alt classes
+			const inline = _.includes(parts, 'inline') ? 'inline' : '';
+			const center = _.includes(parts, 'center') ? 'center' : '';
+			const right = _.includes(parts, 'right') ? 'right' : '';
+			const fade = _.includes(parts, 'fade') ? 'fade' : '';
+
+			// get an id
+			const id = _.uniqueId('message-image-');
+			const image = new Image();
+			image.onload = () => {
+				const container = document.getElementById(id);
+				container.appendChild(image);
+				image.width = _.isNumber(width) ? width : (image.width * 0.5);
+			};
+
+			// set the image url
+			setTimeout(() => image.src = src);
+
+			// other attributes
+			return `<div id="${id}" class="image ${center} ${right} ${inline} ${fade}" ></div>`;
+		});
+
+		// replace inline dictionary works
+		line = line.replace(/\[define ?[^\]]+\]/g, match => {
+			let value = _.trim(match.substr(7));
+			value = value.replace(/\]$/g, '');
+			const parts = value.split(/ /);
+			const key = parts.shift();
+
+			// find the value to display
+			let display = _.trim(parts.join(' ') || '');
+
+			// make sure this is real
+			const definition = $state.lesson.getDefinition(key);
+
+			// without a display name, use the provided one
+			if (!display)
+				display = definition.name;
+
+			return `<span class="define" type="${key}" >${display}</span>`;
+		});
 
 		// extract instructions, if any
 		line = line.replace(/^\[[^\]]+\]/, commands => {
@@ -71,7 +132,7 @@ export default function generateMessage(message) {
 		});
 
 		// write the snippet content
-		if (snippet) 
+		if (snippet)
 			content.push(`<div class="snippet" type="${snippet}" ${props.join(' ')}/>`);
 
 		// check for a delay
@@ -96,8 +157,8 @@ export default function generateMessage(message) {
 	// finalize content
 	speak = _(speak).compact().value(); // .map(val => fixSpeech(state, val)).value();
 	content = content.join('');
-
-	// return the result
+	
+	// return the results
 	return {
 		speak,
 		content

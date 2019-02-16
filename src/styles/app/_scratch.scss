@@ -2,6 +2,8 @@
 .focus_point {
 	position: absolute;
 	white-space: pre;
+	min-width: 5px;
+	margin-left: -1px;
 	// background: rgba(#0f0, 0.2) !important;
 
 	&.highlighted {

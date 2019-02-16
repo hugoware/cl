@@ -26,65 +26,6 @@ export default class Lesson {
 	static async load(project) {
 		const type = await load(project.lesson);
 		return new Lesson(project, type);
-		
-		// get the lesson type
-
-		// get the data
-		const api = new LessonApi(project.lesson);
-		// const state = { };
-		// const modified = [ ];
-		const utils = {
-
-			// libraries
-			_, $: $jquery,
-
-			// validaton helpers
-			$validateCode: CodeValidator.validate,
-			$validateCss: CssValidator.validate,
-			$validateHtml: HtmlValidator.validate,
-
-			// parsing html snippets
-			$html: toCheerioObject,
-
-			// reads a file
-			getFileContent: $state.getFileContent,
-
-			// other utilities
-			getZoneContent: $state.getZoneContent
-		};
-
-		// create the lesson and save additional information
-		// that's shared in other placed by the lesson
-		const instance = new type(state, project, utils);
-		instance.project = project;
-		instance.state = state;
-		instance.modified = modified;
-		
-		// create the lesson
-		const lesson = new Lesson(instance);
-		instance.lesson = lesson;
-
-		instance.api = new LessonAPI(lesson);
-
-		// // setup each ZoneMap
-		// lesson.maps = { };
-		// for (const id in instance.data.zones) {
-
-		// 	// make sure it's a file
-		// 	if (id[0] !== '/') continue;
-
-		// 	// get the zone information
-		// 	const path = id.replace(/\$/g, '.');
-		// 	const zones = lesson.getZones(path)
-
-		// 	// get the zone map
-		// 	const content = await $lfs.read(path);
-		// 	lesson.maps[path] = ZoneMap.create(content, zones);
-		// }
-
-		// give back the result
-		// window.LESSON = lesson;
-		return lesson;
 	}
 
 	// creates a new lesson
@@ -171,29 +112,14 @@ export default class Lesson {
 		return this.instance.invoke(action, ...args);
 	}
 
-	// /** finds a validator by name for the lesson
-	//  * @param {string} key the name of the validator
-	//  * @returns {function} the validation function
-	//  */
-	// getValidator = key => {
-	// 	return this.instance[key];
-	// }
-
-	// // not sure if this is going to be a thing or not
-	// // but not everything is a validator
-	// /** finds an action by name for the lesson
-	//  * @param {string} key the name of the action
-	//  * @returns {function} the function
-	//  */
-	// getAction = key => {
-	// 	return this.instance[key];
-	// }
-
 	/** returns a snippet by ID */
 	getSnippet = type => {
-		const snippet = this.snippets[type];
-		snippet.zones = this.zones[type];
-		return snippet;
+		return this.snippets[type];
+	}
+
+	/** returns a definition by ID */
+	getDefinition = type => {
+		return this.definitions[type];
 	}
 
 	/** gets zone information for a path (and specific zone) */
@@ -210,19 +136,6 @@ export default class Lesson {
 		return this.maps[path];
 	}
 	
-	// /** returns all of the zones for a file */
-	// getZones = path => {
-	// 	const { state, data } = this.instance;
-		
-	// 	// copy the zones first
-	// 	state.zones = state.zones || { };
-		
-	// 	// return the zones
-	// 	path = path.replace(/\./g, '$');
-	// 	state.zones[path] = state.zones[path] || _.assign({ }, data.zones[path]);
-	// 	return state.zones[path];
-	// }
-
 	/** finds special words and replaces them with the lesson words
 	 * @param {string} message the message to update
 	 * @return {string} the updated message
@@ -297,14 +210,21 @@ export default class Lesson {
 	/** navigates to the next slide */
 	next = async () => {
 
-		// if the lesson is over, mark it as completed
-		const { slide } = this;
-		if (slide && slide.isLast)
+		// if we're at the end and finishing, just
+		// hide the edit mode
+		if (this.slide && this.slide.isLast) {
+			$state.flags['open-mode'] = true;
+			broadcast('lesson-finished');
+		}
+
+		// move to the next slide
+		await this.go(this.index + 1);
+
+		// if this is moving to the next slide, then
+		// we want to go ahead and save it's done
+		if (this.slide && this.slide.isLast)
 			return endLesson(this);
 
-		// continue to the next lesson
-		await this.go(this.index + 1);
-		// await this.saveProgress();
 	}
 	
 	// /** navigates to the previous slide */
@@ -320,34 +240,6 @@ export default class Lesson {
 	// getModified = path => {
 	// 	const modified = _.find(this.instance.modified, { path });
 	// 	return modified ? modified.content : null;
-	// }
-
-	// /** returns the current progress for this lesson */
-	// getProgress = () => {
-	// 	const { index, instance } = this;
-	// 	const { state } = instance;
-
-	// 	// get the active files
-	// 	const activeFile = ($state.activeFile || {}).path;
-	// 	const files = _($state.openFiles)
-	// 		.map(file => file.path)
-	// 		.value();
-
-	// 	// grab modified, but unsaved files
-	// 	const modified = [ ];
-	// 	_.each($state.modifiedFiles, file => {
-	// 		modified.push({ path: file.path, content: file.current });
-	// 	});
-
-	// 	// give back the progress info
-	// 	return { index, state, files, activeFile, modified };
-	// }
-
-	// /** saves the progress for the current lesson */
-	// saveProgress = async () => {
-	// 	const { projectId } = $state;
-	// 	const progress = this.getProgress();
-	// 	return await $api.request('set-progress', { projectId, progress });
 	// }
 
 	/** handles clean up */
@@ -368,8 +260,8 @@ function initialize(lesson) {
 		slide.id = _.uniqueId('slide:');
 		slide.isLast = index === (total - 1);
 		slide.isFirst = index === 0;
-		slide.isQuestion = slide.type === 'question';
-		slide.isSlide = slide.type === 'slide';
+		slide.isQuestion = _.some(slide.choices);
+		slide.isSlide = !slide.isQuestion;
 	});
 	
 }
@@ -417,39 +309,38 @@ function setActiveSlide(lesson, slide) {
 	// registerSlideEvents(lesson, slide);
 
 	// let other systems know the slide changed
-	console.log('bro', slide);
 	broadcast('slide-changed', slide);
 	lesson.instance.invoke('enter');
 }
 
-// clears all slide events
-function disposeSlideEvents(lesson) {
-	for (let i = lesson.events.length; i-- > 0;)
-		remove(lesson.events.shift());
-}
+// // clears all slide events
+// function disposeSlideEvents(lesson) {
+// 	for (let i = lesson.events.length; i-- > 0;)
+// 		remove(lesson.events.shift());
+// }
 
-// setup all events
-function registerSlideEvents(lesson, slide) {
-	_.each(slide.events, params => {
-		params = _.map(params.split(','), _.trim);
-		const key = params.shift();
-		const action = lesson.getAction(params.shift());
-		const args = _.map(params, arg => {
-			console.log('convert to args', arg);
-			return arg;
-		});
+// // setup all events
+// function registerSlideEvents(lesson, slide) {
+// 	_.each(slide.events, params => {
+// 		params = _.map(params.split(','), _.trim);
+// 		const key = params.shift();
+// 		const action = lesson.getAction(params.shift());
+// 		const args = _.map(params, arg => {
+// 			console.log('convert to args', arg);
+// 			return arg;
+// 		});
 
-		// listen for events
-		const id = listen(key, (...event) => {
-			const pass = [].concat(args).concat(event);
-			action(...pass);
-		});
+// 		// listen for events
+// 		const id = listen(key, (...event) => {
+// 			const pass = [].concat(args).concat(event);
+// 			action(...pass);
+// 		});
 
-		// save the event
-		lesson.events.push(id);
+// 		// save the event
+// 		lesson.events.push(id);
 
-	});
-}
+// 	});
+// }
 
 // applies the flags for a slide
 function applySlide(lesson, slide, invert) {
@@ -495,28 +386,6 @@ function applySlide(lesson, slide, invert) {
 
 }
 
-// // checks the state to determine what to do with a zone
-// function updateZone(map, zone, state, invert) {
-
-// 	// check the collapse state
-// 	if (/edit/.test(state))
-// 		map[invert ? 'lock' : 'edit'](zone);
-// 	else if (/lock/.test(state))
-// 		map[invert ? 'edit' : 'lock'](zone);
-
-// 	// check the collapse state
-// 	if (/collapse/.test(state))
-// 		map[invert ? 'expand' : 'collapse'](zone);
-// 	else if (/expand/.test(state))
-// 		map[invert ? 'collapse' : 'expand'](zone);
-
-// 	// check the visibility state
-// 	if (/show/.test(state))
-// 		map[invert ? 'hide' : 'show'](zone);
-// 	else if (/hide/.test(state))
-// 		map[invert ? 'show' : 'hide'](zone);
-// }
-
 // marks a lesson as completed
 async function endLesson(lesson) {
 	
@@ -525,10 +394,6 @@ async function endLesson(lesson) {
 	try {
 		const result = await $api.request('finish-lesson', { projectId });
 		if (!result.success) throw 'finish_lesson_failed';
-
-		// since it worked, change to free-mode
-		$state.flags['open-mode'] = true;
-		broadcast('lesson-finished');
 	}
 	// if there was any error, the assistant should probably
 	// let them know something went wrong
@@ -543,25 +408,25 @@ async function endLesson(lesson) {
 
 
 
-// creates a cheerio object for validation
-function toCheerioObject(str, options = {}) {
+// // creates a cheerio object for validation
+// function toCheerioObject(str, options = {}) {
 
-	// just converting a cheerio object
-	if (_.isObject(str))
-		return Cheerio(str);
+// 	// just converting a cheerio object
+// 	if (_.isObject(str))
+// 		return Cheerio(str);
 
-	// failed validation
-	str = `<root>${str}</root>`;
-	try {
-		XmlChecker.check(`<?xml version="1.0" ?>${str}`);
-	}
-	catch (err) {
-		return null;
-	}
+// 	// failed validation
+// 	str = `<root>${str}</root>`;
+// 	try {
+// 		XmlChecker.check(`<?xml version="1.0" ?>${str}`);
+// 	}
+// 	catch (err) {
+// 		return null;
+// 	}
 
-	// parse the html
-	return Cheerio(str, {
-		withDomLvl1: false,
-		xmlMode: true
-	});
-}
+// 	// parse the html
+// 	return Cheerio(str, {
+// 		withDomLvl1: false,
+// 		xmlMode: true
+// 	});
+// }
