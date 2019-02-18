@@ -23,11 +23,10 @@ function compile(path) {
   const id = section.substr(0, section.indexOf('/'));
   const args = `run compile-lesson -- ${id}`;
 
-  console.log('compile:', id);
-
   // wait a moment before compiling
   clearTimeout($pending);
   $pending = setTimeout(() => {
+  	console.log('compile:', id);
     spawn('npm', args.split(' '), {
       stdio: [ process.stdin, process.stdout, process.stderr ]
     });

@@ -162,13 +162,13 @@ export default class ReplMode extends Component {
 		this.filePath = file.path;		
 	}
 
-	// handles successful code executions
-	onCodeExecutionApproval = (options = {}) => {
-		if ($state.lesson)
-			$state.createRestorePoint();
+	// // handles successful code executions
+	// onCodeExecutionApproval = (options = {}) => {
+	// 	if ($state.lesson)
+	// 		$state.createRestorePoint();
 
-		this.broadcast('code-execution-approval', options)
-	}
+	// 	this.broadcast('code-execution-approval', options)
+	// }
 
 	// handles replacing the content of the view if 
 	// dependencies require it

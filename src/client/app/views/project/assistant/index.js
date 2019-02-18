@@ -59,6 +59,7 @@ export default class Assistant extends Component {
 		this.listen('set-emotion', this.onSetEmotion);
 		this.listen('block-next', this.onBlockNext);
 		this.listen('allow-next', this.onAllowNext);
+		this.listen('progress-next', () => this.onNext(true));
 		
 		this.on('click', '.next', this.onNext);
 		
@@ -237,11 +238,14 @@ export default class Assistant extends Component {
 	}
 
 	// handle button navigation
-	onNext = async () => {
+	onNext = async force => {
 
 		// don't allow clicking forward too fast
 		const now = +new Date;
-		if (this.nextNavigate > now) return;
+		if (!force && this.nextNavigate > now)
+			return;
+
+		// save the timing
 		this.nextNavigate = now + MINIMUM_MS_PER_SLIDE;
 
 		// go to the next slide

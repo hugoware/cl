@@ -1,0 +1,116 @@
+-
+  slide:
+    mode: overlay
+    title: Introduction to Creating Web Pages
+    content: |
+      Welcome to your first lesson on creating web pages!
+
+      As you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.
+
+-
+  slide:
+    mode: overlay
+    title: Introduction to Creating Web Pages
+    content: |
+      In this tutorial we're going to start learning the basics of creating web pages.
+
+      However, before we start learning how to write code, it's best to take a little bit of time and learn how web pages work _behind the scenes_.
+
+-
+  slide:
+    mode: overlay
+    title: Introduction to Creating Web Pages
+    controller: browserType
+
+-
+  slide:
+    mode: overlay
+    title: Introduction to Creating Web Pages
+    content: |
+      Generally speaking, web pages viewed in the browser are created using just three different core technologies.
+
+      [image tech.png]
+
+      In fact, it's entirely possible that every single website you've ever visited has used all three of these technologies at the same time!
+
+-
+  slide:
+    mode: overlay
+    title: Introduction to Creating Web Pages
+    content: |
+      [define html] is the foundation for all [define web_page web pages]. [define html] is a language that determines the words and content that are displayed in the web browser.
+
+      [image html-focus.png]
+
+      In a sense, [define html] is what your web page _says_.
+
+-
+  slide:
+    mode: overlay
+    title: Introduction to Creating Web Pages
+    content: |
+      [define css] is a language that's used to determine the visual appearance of a web page. Colors, font sizes, layout, and more are defined by the rules written in [define css]
+
+      [image css-focus.png]
+
+      Simply put, [define css] decides what your web page _looks like_.
+
+-
+  slide:
+    mode: overlay
+    title: Introduction to Creating Web Pages
+    content: |
+      Finally, [define javascript] is a programming language that can be used to create logic and behaviors on a web page. Many modern websites use [define javascript] to create complicated applications that run entirely in the [define web_browser browser]
+
+      [image javascript-focus.png]
+
+      Generally speaking, [define javascript] decides what your web page _will do_.
+
+
+# - three main technologies
+# - focusing on html
+# - What is HTML
+# - open tag
+# - close tag
+# - content
+# - the whole thing in an element
+# - let's give it a try
+# - open index.html
+# - change the content between tags
+# - the preview area updates each time
+# - try and write a new tag entirely underneath
+# - shows up as a completely separate block of code
+# - the name of the tag changes the behavior
+# - heading tag
+# - the structure is the same - name is different
+# - ask them to add a heading
+# - great work
+# - Content has just been text and words
+# - Content can also be other tags
+# - Show an ordered list
+# - have them add a list item
+# - explain that the number 1 is not something they added
+# - ask them to add 4 more items
+# - emphasize each item added moves the list down
+# - let's look at one more tag that
+# - This can get rather complicated at times
+# - some elements have even more nested elements
+# - show a table
+# - point out the row
+# - point out the cell
+# - Let's try and edit one
+# - add a table with items in it
+# - this one has a lot of stuff in it
+# - let them add and item to the list
+# - let them modify a cell
+# - Great, let's add another row all together
+# - Let's review what we've learned
+# - Great! Let's keep going
+# - What is the opening tag
+# - What is the closing tag
+# - what is the content
+# - what is the entire thing called
+
+
+
+

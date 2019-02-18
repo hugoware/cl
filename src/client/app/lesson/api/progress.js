@@ -54,6 +54,11 @@ export default class ProgressAPI {
 	allow = () => {
 		broadcast('allow-next');
 	}
+
+	// immediately goes to the next slide
+	next = () => {
+		broadcast('progress-next');
+	}
 	
 	// prevent moving to the next slide
 	block = () => {

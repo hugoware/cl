@@ -7,23 +7,23 @@ export default class EditorAPI {
 		this.lesson = lesson;
 
 		// removes zones
-		this.area.clear = path =>
-			broadcast('clear-working-area', path);
+		this.area.clear = file =>
+			broadcast('clear-working-area', file);
 
 		// returns the current editor content
-		this.area.content = () =>
-			$state.editor.getWorkingAreaContent();
+		this.area.content = file =>
+			$state.editor.getWorkingAreaContent(file);
 
 		// returns the current editor content
-		this.area.lines = (start, end) =>
-			this.area({ start, end, isLine: true });
+		this.area.lines = (file, start, end) =>
+			this.area(file, { start, end, isLine: true });
 
 		// removes the hint
-		this.hint.clear = () =>
+		this.hint.clear = file =>
 			broadcast('clear-hint');
 			
 		// standard inline hint validation
-		this.hint.validate = result => {
+		this.hint.validate = (file, result) => {
 			if (result && result.error)
 				this.hint(result.error.message, result.error);
 			else
@@ -38,27 +38,27 @@ export default class EditorAPI {
 	}
 
 	// sets the working area for the editor
-	area = (options, end) => {
+	area = (file, options, end) => {		
 		if (_.isNumber(end)) {
 			options = { start: options, end };
 		}
 
-		broadcast('set-working-area', options);
+		broadcast('set-working-area', file, options);
 	}
 
 	// sets the cursor posiiton
-	cursor = (row, column) => {
+	cursor = (file, row, column) => {
 		const options = _.isNumber(column) ? { row, column } : { index: row };
-		broadcast('set-editor-cursor', options);
+		broadcast('set-editor-cursor', file, options);
 	}
 
 	// sets the selected content
-	selection = (start, end) => {
-		broadcast('set-editor-selection', { start, end });
+	selection = (file, start, end) => {
+		broadcast('set-editor-selection', file, { start, end });
 	}
 
 	// sets the hint cursor information
-	hint = (message, options = { }) => {
+	hint = (file, message, options = { }) => {
 		
 		// check if only an index was provided
 		if (_.isNumber(options))

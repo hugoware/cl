@@ -112,7 +112,7 @@ export default class Slide extends Component {
 		}
 
 		// set the content
-		this.ui.message.html(content);
+		this.ui.message.html(`<div class="assistant-spacing" ></div>${content}`);
 		this.ui.title.text(title);
 		this.ui.subtitle.text(subtitle);
 

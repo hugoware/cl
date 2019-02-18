@@ -17,3 +17,21 @@
   name: Double Click
   define: Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly.
 
+- id: website
+  name: Website
+  define: A point on the Internet that serves web pages
+
+- id: web_browser
+  name: Web Browser
+  define: |
+    An program that is used to view websites. Some common examples are **Chrome**, **Firefox**, **Safari**, and **Edge**
+
+- id: web_page
+  name: Web Page
+  define: |
+    An individual view of a web site.
+
+- id: internet
+  name: Internet
+  define: |
+    A world wide network of computers

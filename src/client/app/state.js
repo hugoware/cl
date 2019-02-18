@@ -99,8 +99,8 @@ const $state = {
 
 		// save each restore point
 		_.each($state.files, file => {
-			if (file.hasContent)
-				file.restore = file.current || file.content;
+			if (!file.hasContent) return;
+			file.restore = file.current || file.content;
 		});
 
 	},
@@ -754,5 +754,9 @@ listen('close-file', file => {
 // handle lesson cleanup
 listen('deactivate-project', disposeLesson)
 listen('lesson-finished', disposeLesson);
+
+// debugging
+if (!isProd)
+	window.$state = $state;
 
 export default $state;

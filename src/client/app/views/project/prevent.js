@@ -23,7 +23,7 @@ window.addEventListener('mousemove', event => {
  * @param {PermissionCheck} options
  */
 export function requirePermission(check) {
-	const { required, requires, permissions, args = [ ] } = check;
+	const { requires, permissions, args = [ ] } = check;
 
 	// reset the prevent message for this attempt
 	delete PreventActionPopUp.instance.__activated;

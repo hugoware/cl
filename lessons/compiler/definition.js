@@ -6,9 +6,10 @@ const converter = new showdown.Converter();
 
 // extracts and creates all dictionary definitions
 export default function processDefinitions(state, manifest, definitions) {
+	const defs = _.assign({ }, manifest.defs);
+	delete manifest.defs;
 
 	// start by finding all definitions used
-	const defs = { };
 	_.each(manifest.lesson, slide => {
 		const all = `${slide.content} ${slide.hint} ${slide.title}`;
 		const matches = all.match(/\[define\s+[^( |\])]+/g);
@@ -20,10 +21,8 @@ export default function processDefinitions(state, manifest, definitions) {
 
 	// copy their values to the slide, favoring local defs
 	// over global defs
-	
 	_.each(defs, (v, key) => {
 		const def = state.dictionary[key];
-
 		const override = _.find(definitions, item => item.definition.id === key);
 
 		defs[key] = override ? override.definition : def;

@@ -83,12 +83,19 @@ export default class Lesson {
 		return this.instance.data.lesson;
 	}
 
-	/** a highlight zone in the document
-	 * @returns {Object<string,LessonZone>} the object map of zones
+	/** a image resource
+	 * @returns {Object<string,Resource>} size information for an image
 	 */
-	get zones() {
-		return this.instance.data.zones;
+	get resources() {
+		return this.instance.data.resources;
 	}
+
+	// /** a highlight zone in the document
+	//  * @returns {Object<string,LessonZone>} the object map of zones
+	//  */
+	// get zones() {
+	// 	return this.instance.data.zones;
+	// }
 
 	/** checks if a file path is allowed to be edited
 	 * @param {string} path the path to the file
@@ -115,6 +122,11 @@ export default class Lesson {
 	/** returns a snippet by ID */
 	getSnippet = type => {
 		return this.snippets[type];
+	}
+
+	/** returns a resource by path */
+	getResource = path => {
+		return _.find(this.resources, { path });
 	}
 
 	/** returns a definition by ID */
@@ -217,6 +229,9 @@ export default class Lesson {
 			broadcast('lesson-finished');
 		}
 
+		// always create a restore point
+		$state.createRestorePoint();
+
 		// move to the next slide
 		await this.go(this.index + 1);
 
@@ -263,7 +278,9 @@ function initialize(lesson) {
 		slide.isQuestion = _.some(slide.choices);
 		slide.isSlide = !slide.isQuestion;
 	});
-	
+
+	// always create a starting restore point
+	$state.createRestorePoint();
 }
 
 // sets the active slide
@@ -307,6 +324,8 @@ function setActiveSlide(lesson, slide) {
 	// set the events for this slide
 	// disposeSlideEvents(lesson);
 	// registerSlideEvents(lesson, slide);
+
+	console.log('go??');
 
 	// let other systems know the slide changed
 	broadcast('slide-changed', slide);

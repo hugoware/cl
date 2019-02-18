@@ -77,6 +77,7 @@ export default class TabBar extends Component {
 		if (tab.is('.active')) return;
 
 		requirePermission({
+			args: [ tab.file, tab ],
 			requires: [ 'CHANGE_TAB' ],
 			message: "Can't Switch Files",
 			allowed: () => {

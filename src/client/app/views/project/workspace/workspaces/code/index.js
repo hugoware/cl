@@ -64,7 +64,8 @@ export default class CodeEditor extends Component {
 		/** @type {ManagedEditor} */
 		const disableBraceMatching = !!$state.lesson;
 		this.editor = $editor.createInstance(this.ui.editor[0], { disableBraceMatching });
-		this.editor.onChanged = this.onContentChange;
+		this.editor.onChanged = this.onChanged;
+		this.editor.onSelectionChanged = this.onSelectionChanged;
 
 		// allow keyboard shortcuts
 		this.ui.editor.find('textarea').addClass('mousetrap');
@@ -192,8 +193,18 @@ export default class CodeEditor extends Component {
 		this.stopMaintainingSize();
 	}
 
+	// handles selections
+	onSelectionChanged = () => {
+		// there's no selection event
+		if (!(this.activeInstance && $state.lesson && $state.lesson.respondsTo('selection')))
+			return;
+
+		const selection = this.editor.getSelection();
+		$state.lesson.invoke('selection', selection);
+	}
+
 	// queues up changes to the content manager
-	onContentChange = event => {
+	onChanged = event => {
 		if ($state.lesson) {
 			const { activeFile } = this;
 			setTimeout(() => $state.lesson.invoke('contentChange', activeFile));
@@ -244,7 +255,7 @@ export default class CodeEditor extends Component {
 	}
 
 	// reset the contents for a file
-	onResetFile = () => {
+	onResetFile = async () => {
 		if (!this.canResetFiles) return;
 
 		// replace the content for the file
@@ -258,10 +269,10 @@ export default class CodeEditor extends Component {
 
 		// refreshes the hint, if any
 		this.broadcast('modify-file', file);
-		setTimeout(() => this.broadcast('refresh-hint', file), 25);
 
 		// update the saved version of the file
-		contentManager.update(file.path, file.current);
+		await contentManager.update(file.path, file.current);
+		$state.lesson.invoke('reset', file);
 	}
 
 	// shows a restore button if a file has a restore state

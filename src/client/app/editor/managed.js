@@ -1,4 +1,4 @@
-import { _, Brace } from '../lib';
+import { $, _, Brace } from '../lib';
 import $lfs from '../lfs';
 import $state from '../state';
 import { cancelEvent } from '../utils';
@@ -52,40 +52,65 @@ export default class ManagedEditor {
 		listen('clear-working-area', this.onClearWorkingArea);
 		listen('set-editor-cursor', this.onSetCursor);
 		listen('set-editor-focus-point', this.onSetFocusPoint);
+		listen('set-editor-readonly', this.onSetReadOnly);
 
 		// prevent auto complete events when
 		// an entry is not allowed - check if there's
 		// a better way to handle this
 		this.editor.setOptions({ enableBasicAutocompletion: false, enableLiveAutocompletion: false });
 
-		// setup event handlers
+		// handle events
 		this.editor.commands.on('exec', this.onExecuteCommand);
-		this.editor.on('mousedown', () => this.isMouseDown = true);
-		this.editor.on('mouseup', () => this.isMouseDown = false);
+		this.editor.on('mousedown', () => { this.isMouseDown = true; });
+
+		// handle releasing
+		const handleSelectionEvent = _.debounce(() => {
+			if (this.isMouseDown) return;
+			this.onSelectionChanged(event);
+		}, 300);
+
+		// handle releasing the mouse
+		const handleRelease = () => {
+			this.isMouseDown = false;
+			handleSelectionEvent();
+		};
+
+		$(window).on('mouseup', handleRelease);
+		this.editor.on('mouseup', handleRelease);
+
+		// handle selection events
+		this.editor.on('changeSelection', event => {
+			setTimeout(handleSelectionEvent, 250);
+		});
 	}
 
 	onSetZone = options => { }
 	onClearZone = options => { }
 	onClearAllZones = () => { }
 
+	// sets the readonly state
+	onSetReadOnly = (file, readOnly) => {
+		$state.paths[file].readOnly = !!readOnly;
+	}
+
 	// handles changing between lessons
 	onSlideChanged = () => {
-		if (!this.activeInstance) return;
-		const instance = this.activeInstance;
+		// if (!this.activeInstance) return;
+		// const instance = this.activeInstance;
 
-		// check if the content changed
-		const map = instance.map;
-		if (!map) return;
+		// // check if the content changed
+		// const map = instance.map;
+		// if (!map) return;
 
-		// check for changes
-		if (instance.lastContentUpdate || 0 < map.lastUpdate) {
-			let content = map.content;
-			content = content.split(/\n/g).join(instance.session.doc.getNewLineCharacter());
-			instance.session.setValue(map.content);
-		}
+		// // check for changes
+		// if (instance.lastContentUpdate || 0 < map.lastUpdate) {
+		// 	let content = map.content;
+		// 	content = content.split(/\n/g).join(instance.session.doc.getNewLineCharacter());
+		// 	instance.session.setValue(map.content);
+		// }
 
-			// always sync cursor states
-		this.syncZones(this.activeInstance);
+		// 	// always sync cursor states
+		// this.syncZones(this.activeInstance);
 		setTimeout(() => this.editor.resize());
 	}
 
@@ -154,10 +179,18 @@ export default class ManagedEditor {
 	}
 
 	// sets the focus point position
-	onSetWorkingArea = options => {
-		if (!this.activeInstance) return;
+	onSetWorkingArea = (file, options) => {
 
-		const instance = this.activeInstance;
+		// find the working instance, if any
+		const instance = this.getInstance(file);
+		if (instance) {
+
+			// since it's not open yet, update the file
+			throw 'NotImplemented: set area and update when opening';
+			
+		}
+
+		// update the active instance
 		const { workingArea } = instance;
 
 		// determine the position
@@ -185,6 +218,12 @@ export default class ManagedEditor {
 	onExecuteCommand = event => {
 		const instance = this.activeInstance;
 		if (!(instance && $state.lesson)) return true;
+
+		// make sure it's not readonly
+		if (instance.file.readOnly) {
+			$state.lesson.invoke('tryEditReadOnly', instance.file);
+			return cancelEvent(event);
+		}
 
 		// weird issue happenw when holding down the mouse
 		// it acts like a continued selection and will 
@@ -444,21 +483,9 @@ export default class ManagedEditor {
 				// determine the content source
 				let content;
 
-				// THIS SETS THE MODIFIED STATE WHEN LOADING
-				// // if this is a lesson, we need to make sure that the file
-				// // doesn't have a semi-modified state - This is when the file
-				// // is changed because of a collapse/expand, but not saved
-				// const { lesson } = $state;
-				// if (lesson) {
-				// 	const modified = lesson.getModified(file.path);
-				// 	if (modified) {
-				// 		content = modified;
-
-				// 		// also need to mark it as modified
-				// 		file.modified = true;
-				// 		broadcast('modify-file', file);
-				// 	}
-				// }
+				// check for premodified content
+				if (file.current)
+					content = file.current;
 
 				// without content, just read it normally
 				if (!content)
@@ -471,7 +498,7 @@ export default class ManagedEditor {
 
 				// create the handler for content changes
 				session.on('change', this.onChanged);
-
+				
 				// create the instance
 				instance = {
 					file, session,
@@ -588,14 +615,50 @@ export default class ManagedEditor {
 			: this.activeInstance;
 	}
 
+	// updates the content for a file
+	setContent = (path, content, replaceRestore) => {
+		const file = $state.paths[path];
+		
+		// replace the current value
+		file.current = content;
+		if (replaceRestore)
+			file.restore = content;
+
+		// update the instance, if any
+		const instance = this.getInstance(path);
+		if (instance) {
+			instance.session.setValue(content);
+		}
+	}
+
 	/** returns the content for a file, making sure to replace
 	 * any collapsed areas before showing the changes 
 	 * @param {ProjectItem} file the file that should be found
 	 * */
-	getContent = file => {
-		const instance = _.find(this.instances, instance => instance.file.path === file.path);
-		const content = instance.session.getValue();
-		return content;
+	getContent = path => {
+		console.log($state);
+		const file = $state.paths[path];
+		return file.current || file.content;
+
+		// const instance = file 
+		// 	? _.find(this.instances, inst => inst.file.path === file.path)
+		// 	: this.activeInstance;
+		// const content = instance.session.getValue();
+		// return content;
+	}
+
+	/** grabs the current selection, if any */
+	getSelection = file => {
+
+		
+
+
+		const instance = this.activeInstance;
+		const { session } = instance;
+		const { doc } = session;
+		const range = this.editor.getSelectionRange();
+		const content = doc.getTextRange(range);
+		return _.assign({ content }, range);
 	}
 
 }

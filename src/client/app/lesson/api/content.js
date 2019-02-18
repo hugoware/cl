@@ -7,9 +7,14 @@ export default class ContentAPI {
 		this.lesson = lesson;
 	}
 
-	// allow moving to the next slide
-	getFile = path => {
-		return $state.paths[path];
+	set(path, content, replaceRestore) {
+		$state.editor.setContent(path, content, replaceRestore);
+		return this.get(path);
+	}
+
+	get(path) {
+		const file = $state.paths[path];
+		return file.current || file.content;
 	}
 
 }

@@ -13,9 +13,10 @@ const IS_PREVIEW = true;
 
 // content importers
 import processSlides from './lesson';
+import processResources from './resources';
 import processDefinitions from './definition';
 import processSnippets from './snippet'; 
-import processZones from './zones'; 
+// import processZones from './zones'; 
 
 // reads content from a yml file
 function readYml(target) {
@@ -39,7 +40,7 @@ const scriptDirectory = `${root}/scripts`;
 const dist = $path.resolve(`./lessons/output/${id}`);
 const snippets = $path.resolve(`${root}/snippets`);
 const manifest = readYml('manifest.yml');
-const zones = readYml('zones.yml');
+// const zones = readYml('zones.yml');
 const state = { dictionary: $dictionary };
 const type = _.camelCase(source);
 
@@ -47,11 +48,11 @@ const type = _.camelCase(source);
 let template = readFile('compiler/template.js');
 
 // fix the zone keys
-for (const id in zones) {
-  const value = zones[id];
-  delete zones[id];
-  zones[id.replace(/\./, '$')] = value;
-}
+// for (const id in zones) {
+//   const value = zones[id];
+//   delete zones[id];
+//   zones[id.replace(/\./, '$')] = value;
+// }
 
 // start processing each lesson file
 let content = [];
@@ -65,26 +66,34 @@ content = _.compact(content);
 const definitions = _.filter(content, item => 'definition' in item);
 const slides = _.filter(content, item => 'slide' in item || 'question' in item);
 
-// prepare a few items
-// manifest.definitions = { };
-
-// process each category in order
-processSnippets(state, manifest, snippets, zones, $fsx.readdirSync(snippets));
-processSlides(state, manifest, slides);
-processDefinitions(state, manifest, definitions);
-// manifest.zones = zones;
-
 // make the temp directory
 $fsx.ensureDirSync(tempDir);
 $fsx.emptyDirSync(tempDir);
 
 // include all scripts
+manifest.defs = { };
 const scripts = [];
 for (const file of $fsx.readdirSync(scriptDirectory)) {
 	if (!/\.js$/.test(file)) continue;
-	$fsx.copySync(`${scriptDirectory}/${file}`, `${tempDir}/${file}`);
+	const scriptSource = `${scriptDirectory}/${file}`;
+
+	const content = $fsx.readFileSync(scriptSource).toString();
+	const defs = content.match(/\[define ?[^( |\])]+/g);
+	_.each(defs, match => {
+		const key = _.trim(match.substr(7));
+		manifest.defs[key] = true;
+	});
+
+	$fsx.copySync(scriptSource, `${tempDir}/${file}`);
 	scripts.push(file);
 }
+
+
+// process each category in order
+processSnippets(state, manifest, snippets, [ ], $fsx.readdirSync(snippets));
+processResources(state, manifest, root);
+processSlides(state, manifest, slides);
+processDefinitions(state, manifest, definitions);
 
 // make sure the destination is there
 $fsx.ensureDirSync(dist);

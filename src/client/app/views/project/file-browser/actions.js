@@ -102,7 +102,8 @@ export default class FileBrowserActions extends Component {
 		const selection = $state.getSelection();
 		const item = _.first(selection);
 		requirePermission({
-			required: $state.checkPermissions('RENAME_ITEMS_DIALOG'),
+			args: [ item ],
+			requires: [ 'renameItemsDialog', $state.checkPermissions('RENAME_ITEMS_DIALOG') ],
 			message: `Can't Rename Items`,
 			allowed: () => {
 				this.broadcast('open-dialog', 'rename-item', item);
@@ -113,7 +114,8 @@ export default class FileBrowserActions extends Component {
 	onDeleteItems = () => {
 		const selection = $state.getSelection();
 		requirePermission({
-			required: $state.checkPermissions('DELETE_ITEMS_DIALOG'),
+			args: [ selection ],
+			requires: [ 'deleteItemsDialog', $state.checkPermissions('DELETE_ITEMS_DIALOG') ],
 			message: `Can't Delete Items`,
 			allowed: () => {
 				this.broadcast('open-dialog', 'remove-items', selection);
@@ -125,7 +127,8 @@ export default class FileBrowserActions extends Component {
 	onMoveItems = () => {
 		const selection = $state.getSelection(true);
 		requirePermission({
-			required: $state.checkPermissions('MOVE_ITEMS_DIALOG'),
+			args: [ selection ],
+			requires: [ 'moveItemsDialog', $state.checkPermissions('MOVE_ITEMS_DIALOG') ],
 			message: `Can't Move Items`,
 			allowed: () => {
 				this.broadcast('open-dialog', 'move-items', selection);
@@ -136,7 +139,7 @@ export default class FileBrowserActions extends Component {
 	// tries to launch the create folder dialog
 	onCreateFolder = () => {
 		requirePermission({
-			required: $state.checkPermissions('CREATE_FOLDER_DIALOG'),
+			requires: [ 'createFolderDialog', $state.checkPermissions('CREATE_FOLDER_DIALOG') ],
 			message: `Can't Create Folders`,
 			allowed: () => {
 				if (!this.allowCreateFolder) return;
@@ -148,7 +151,7 @@ export default class FileBrowserActions extends Component {
 	
 	onCreateFile = () => {
 		requirePermission({
-			required: $state.checkPermissions('CREATE_FILE_DIALOG'),
+			requires: [ 'createFileDialog', $state.checkPermissions('CREATE_FILE_DIALOG') ],
 			message: `Can't Create Files`,
 			allowed: () => {
 				const folder = _.first(this.selection);
@@ -159,7 +162,7 @@ export default class FileBrowserActions extends Component {
 	
 	onUploadFile = () => {
 		requirePermission({
-			required: $state.checkPermissions('UPLOAD_FILE_DIALOG'),
+			requires: [ 'uploadFileDialog', $state.checkPermissions('UPLOAD_FILE_DIALOG') ],
 			message: `Can't Upload Files`,
 			allowed: () => {
 				const folder = _.first(this.selection);

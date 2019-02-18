@@ -25,18 +25,11 @@ export default function generateMessage(message) {
 			
 			// adjust the key
 			let src = _.trim(parts.shift());
+			console.log('getting', src);
+			const resource = $state.lesson.getResource(src);
 			if (!/^https?\:/i.test(src)) {
 				src = `/__codelab__/lessons/${$state.project.lesson}/resources/${src}`;
 			}
-
-			// check for a defined width
-			let width;
-			_.each(parts, item => {
-				console.log('check', item);
-				const value = parseInt(item);
-				if (!isNaN(value))
-					width = value;
-			})
 
 			// alt classes
 			const inline = _.includes(parts, 'inline') ? 'inline' : '';
@@ -44,20 +37,35 @@ export default function generateMessage(message) {
 			const right = _.includes(parts, 'right') ? 'right' : '';
 			const fade = _.includes(parts, 'fade') ? 'fade' : '';
 
-			// get an id
-			const id = _.uniqueId('message-image-');
-			const image = new Image();
-			image.onload = () => {
-				const container = document.getElementById(id);
-				container.appendChild(image);
-				image.width = _.isNumber(width) ? width : (image.width * 0.5);
-			};
-
 			// set the image url
-			setTimeout(() => image.src = src);
+			let width = '';
+			let height = '';
+			let containerHeight = '';
+			if (resource) {
+				containerHeight = `style="height: ${0 | (resource.height / 2)}"`
+				width = `width="${0|(resource.width / 2)}px"`;
+				height = `height="${0|(resource.height / 2)}px"`;
+			}
+
+
+			// check for a defined width
+			_.each(parts, item => {
+				const value = parseInt(item);
+				if (!isNaN(value)) {
+					width = `width="${value}px"`;
+					height = "";
+					containerHeight = "";
+				}
+			});
+
+			// trigger showing the image
+			const id = _.uniqueId('slide_image_');
+			setTimeout(() => document.getElementById(id).className += ' show-image');
 
 			// other attributes
-			return `<div id="${id}" class="image ${center} ${right} ${inline} ${fade}" ></div>`;
+			return `<div id="${id}" class="image ${center} ${right} ${inline} ${fade}" ${containerHeight} >
+				<img src="${src}" ${width} ${height} />
+			</div>`;
 		});
 
 		// replace inline dictionary works
@@ -155,7 +163,7 @@ export default function generateMessage(message) {
 	}
 
 	// finalize content
-	speak = _(speak).compact().value(); // .map(val => fixSpeech(state, val)).value();
+	speak = _(speak).compact().map(fixSpeech).value();
 	content = content.join('');
 	
 	// return the results
@@ -164,6 +172,13 @@ export default function generateMessage(message) {
 		content
 	};
 
+}
+
+
+// format speech
+function fixSpeech(str) {
+	return str;
+	// return str;
 }
 
 
@@ -192,24 +207,24 @@ function replaceDictionaryWords(line) {
 }
 
 
-// fixes phrases to make them read easier
-function fixSpeech(phrase, optionalSource) {
-	if (_.isNumber(phrase))
-		return phrase;
+// // fixes phrases to make them read easier
+// function fixSpeech(phrase, optionalSource) {
+// 	if (_.isNumber(phrase))
+// 		return phrase;
 
-	// convert characters as needed
-	const words = phrase.split(/ +/g);
-	for (let i = 0; i < words.length; i++) {
-		const word = (words[i]).toLowerCase();
+// 	// convert characters as needed
+// 	const words = phrase.split(/ +/g);
+// 	for (let i = 0; i < words.length; i++) {
+// 		const word = (words[i]).toLowerCase();
 
-		// check for replacements
-		let replace = undefined; // state.replacements[word];
-		if (!replace) replace = STANDARD_REPLACEMENTS[word];
+// 		// check for replacements
+// 		let replace = undefined; // state.replacements[word];
+// 		if (!replace) replace = STANDARD_REPLACEMENTS[word];
 
-		// save the change
-		if (_.isString(replace))
-			words[i] = replace;
-	}
+// 		// save the change
+// 		if (_.isString(replace))
+// 			words[i] = replace;
+// 	}
 
-	return words.join(' ');
-}
+// 	return words.join(' ');
+// }

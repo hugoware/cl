@@ -4,13 +4,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 // import controllers
 
 
-var _validateList = require('./validateList');
+var _browserType = require('./browserType');
 
-var validateList = _interopRequireWildcard(_validateList);
-
-var _verifyHasEnoughListItems = require('./verifyHasEnoughListItems');
-
-var verifyHasEnoughListItems = _interopRequireWildcard(_verifyHasEnoughListItems);
+var browserType = _interopRequireWildcard(_browserType);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -56,82 +52,37 @@ var web1Lesson = function () {
 
     // core lesson data
     this.data = {
-      "name": "Basics 1",
+      "name": "Introduction to Web Development",
       "type": "web",
-      "description": "Introduction to building Web Pages",
+      "description": "Getting started on learning the basics of Web Development",
       "lesson": [{
         "mode": "overlay",
         "title": "Introduction to Creating Web Pages",
-        "content": "Welcome to your first lesson on creating web pages!\n\n[image html-logo.png 140 inline]\n[image css-logo.png 140 inline fade]\n[image javascript-logo.png 140 inline fade]\n\nAs you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.\n"
+        "content": "Welcome to your first lesson on creating web pages!\n\nAs you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.\n"
       }, {
         "mode": "overlay",
-        "content": "It's exciting to start learning a new programming language, but before we learn how to use [define html] and [define css] to create web pages, it's a good idea to learn a bit about the technology that's running behind the scenes.\n"
+        "title": "Introduction to Creating Web Pages",
+        "content": "In this tutorial we're going to start learning the basics of creating web pages.\n\nHowever, before we start learning how to write code, it's best to take a little bit of time and learn how web pages work _behind the scenes_.\n"
       }, {
         "mode": "overlay",
-        "content": "[define html] is a language that's used to display web pages on the [define internet]. For the most part, it's the content such as words and images on a web page.\n\nSimply put, [define html] is what a web page _says_.\n"
+        "title": "Introduction to Creating Web Pages",
+        "controller": "browserType"
       }, {
         "mode": "overlay",
-        "content": "[define css] is another language used when creating web pages. [define css] is used to create rules that decide how the page appears, such as choosing colors and or changing font sizes.\n\nGenerally speaking, [define css] is how the web page _looks_.\n"
+        "title": "Introduction to Creating Web Pages",
+        "content": "Generally speaking, web pages viewed in the browser are created using just three different core technologies.\n\n[image tech.png]\n\nIn fact, it's entirely possible that every single website you've ever visited has used all three of these technologies at the same time!\n"
       }, {
         "mode": "overlay",
-        "content": "Finally, [define javascript] is a programming language that allows you to add logic and behaviors to a web page.\n\nFor the most part, [define javascript] is what a web page _does_.\n"
+        "title": "Introduction to Creating Web Pages",
+        "content": "[define html] is the foundation for all [define web_page web pages]. [define html] is a language that determines the words and content that are displayed in the web browser.\n\n[image html-focus.png]\n\nIn a sense, [define html] is what your web page _says_.\n"
       }, {
         "mode": "overlay",
-        "content": "For the most part, these three technologies are used to create most of what you see on the [define internet] today.\n\nTo start, we'll be learning mostly about how to use [define html] to create web pages, and then later how to apply [define css] to change the visual appearance of what we created.\n"
+        "title": "Introduction to Creating Web Pages",
+        "content": "[define css] is a language that's used to determine the visual appearance of a web page. Colors, font sizes, layout, and more are defined by the rules written in [define css]\n\n[image css-focus.png]\n\nSimply put, [define css] decides what your web page _looks like_.\n"
       }, {
         "mode": "overlay",
-        "content": "[define html] is a set of instructions that a [define web_browser] uses to determine what is shown to use user.\n\nEach time you browse to a [define web_page], the [define web_browser] receives [define html] from the website, reads the instructions, and then creates the final page that you see on your screen.\n"
-      }, {
-        "mode": "overlay",
-        "show": 4,
-        "title": "What is the [define html] name of the `highlighted` block of code?",
-        "content": "You're going to need to select the correct [define html] to get this right\n\n[snippet mary_example]\n",
-        "hint": "This is a longer example of [define css] what a hint might look like. This is going to span for a period longer than the other items on the page.\n",
-        "explain": "This is just a `summary message` to explain the final answer",
-        "choices": ["this is `correct`", "This *is* incorrect", "This _is_ also wrong", "This ~shouldn't~ work", "This *is another* mix", "This _is_ failed"]
-      }, {
-        "mode": "overlay",
-        "content": "Simple 1\n\n[snippet html_tag_example highlight:0,4|30,5]\n"
-      }, {
-        "mode": "overlay",
-        "content": "Simple 2 [define javascript]"
-      }, {
-        "mode": "popup",
-        "content": "Simple 3 [define html]"
-      }, {
-        "mode": "popup",
-        "content": "Simple 4"
-      }, {
-        "mode": "overlay",
-        "content": "Simple 5 [define css]"
-      }, {
-        "mode": "overlay",
-        "content": "Simple 6"
-      }, {
-        "mode": "popup",
-        "content": "Simple 7"
-      }, {
-        "mode": "popup",
-        "content": "Simple 8"
-      }, {
-        "mode": "overlay",
-        "show": 4,
-        "title": "What is the name of the `highlighted` block of code?",
-        "content": "[snippet mary_example]\n",
-        "hint": "This is a longer example of what a hint might look like. This is going to span for a period longer than the other items on the page.\n",
-        "explain": "This is just a `summary message` to explain the final answer",
-        "choices": ["this is `correct`", "This *is* incorrect", "This _is_ also wrong", "This ~shouldn't~ work", "This *is another* mix", "This _is_ failed"]
-      }, {
-        "mode": "overlay",
-        "show": 4,
-        "title": "This is another question about what you've learned?",
-        "hint": "It's really pretty obvious",
-        "explain": "This is just a `summary message` to explain the final answer",
-        "choices": ["this is `correct`", "This *is* incorrect", "This _is_ also wrong", "This ~shouldn't~ work", "This *is another* mix", "This _is_ failed"]
-      }, {
-        "checkpoint": true,
-        "mode": "popup",
-        "content": "That's it! The lesson is finished!"
+        "title": "Introduction to Creating Web Pages",
+        "content": "Finally, [define javascript] is a programming language that can be used to create logic and behaviors on a web page. Many modern websites use [define javascript] to create complicated applications that run entirely in the [define web_browser browser]\n\n[image javascript-focus.png]\n\nGenerally speaking, [define javascript] decides what your web page _will do_.\n"
       }],
       "snippets": {
         "complex_tag": {
@@ -141,18 +92,55 @@ var web1Lesson = function () {
         "html_tag_example": {
           "content": "<h1>This is an example of HTML</h1>",
           "type": "html"
-        },
-        "mary_example": {
-          "content": "function readTheFile() {\n  console.log('reads the file');\n}",
-          "type": "javascript"
         }
       },
+      "resources": [{
+        "width": 1260,
+        "height": 310,
+        "type": "png",
+        "path": "css-focus.png"
+      }, {
+        "width": 1260,
+        "height": 310,
+        "type": "png",
+        "path": "html-focus.png"
+      }, {
+        "width": 1260,
+        "height": 310,
+        "type": "png",
+        "path": "javascript-focus.png"
+      }, {
+        "width": 1260,
+        "height": 310,
+        "type": "png",
+        "path": "tech.png"
+      }],
       "definitions": {
+        "internet": {
+          "id": "internet",
+          "name": "Internet",
+          "define": "A world wide network of computers\n"
+        },
+        "website": {
+          "id": "website",
+          "name": "Website",
+          "define": "A point on the Internet that serves web pages"
+        },
+        "web_browser": {
+          "id": "web_browser",
+          "name": "Web Browser",
+          "define": "An program that is used to view websites. Some common examples are **Chrome**, **Firefox**, **Safari**, and **Edge**\n"
+        },
         "html": {
           "id": "html",
           "name": "HTML",
           "aka": "Hyper Text Markup Language",
           "define": "This is the full definition value"
+        },
+        "web_page": {
+          "id": "web_page",
+          "name": "Web Page",
+          "define": "An individual view of a web site.\n"
         },
         "css": {
           "id": "css",
@@ -160,25 +148,10 @@ var web1Lesson = function () {
           "aka": "Cascading Style Sheets",
           "define": "Special rules for styling\n"
         },
-        "internet": {
-          "id": "internet",
-          "name": "Internet",
-          "define": "A world wide network of computers\n"
-        },
         "javascript": {
           "id": "javascript",
           "name": "JavaScript",
           "define": "Programming language\n"
-        },
-        "web_browser": {
-          "id": "web_browser",
-          "name": "Web Browser",
-          "define": "An program that is used to view websites. Some common examples are **Chrome**, **Firefox**, **Safari**, and **Edge**\n"
-        },
-        "web_page": {
-          "id": "web_page",
-          "name": "Web Page",
-          "define": "An individual view of a web site.\n"
         }
       }
     };
@@ -205,7 +178,7 @@ var web1Lesson = function () {
 
     // setup each included entry
     var refs = {
-      validateList: validateList, verifyHasEnoughListItems: verifyHasEnoughListItems
+      browserType: browserType
     };
 
     // setup each reference

@@ -1,8 +1,6 @@
-name: Basics 1
+name: Introduction to Web Development
 type: web
-description: Introduction to building Web Pages
+description: Getting started on learning the basics of Web Development
 
 lesson:
-  - intro
-  - using_file_browser
-  - editing_files
+  - main

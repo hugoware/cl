@@ -18,6 +18,12 @@ export default function checkPermissions(state, permissions, args = [ ]) {
 	for (const permission of permissions) {
 		let success;
 
+		// check if this is a boolean
+		if (permission === true || permission === false) {
+			console.log('prevla', permission);
+			return permission;
+		}
+
 		// check for a local validation function
 		const func = _.camelCase(permission);
 

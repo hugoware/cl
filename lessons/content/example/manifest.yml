@@ -1,0 +1,8 @@
+name: Basics 1
+type: web
+description: Introduction to building Web Pages
+
+lesson:
+  - intro
+  - using_file_browser
+  - editing_files

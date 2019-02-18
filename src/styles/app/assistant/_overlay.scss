@@ -8,8 +8,8 @@
 	$assistant-overlay-padding: 35px;
 	$assistant-overlay-actions-gap: 35px;
 	$assistant-overlay-actions-padding: 25px;
-	$assistant-overlay-avatar-size: 190px;
-	$assistant-overlay-avatar-gap: 55px;
+	$assistant-overlay-avatar-size: 180px;
+	$assistant-overlay-avatar-gap: 45px;
 	$assistant-overlay-avatar-padding: 10px;
 
 	.hide {
@@ -43,9 +43,9 @@
 		width: 740px;
 		top: 40%;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		transform: translate(-400px, -50%);
 		box-shadow: 0 6px 22px rgba(#000, 0.4);
-		margin: 0 0 0 -30px;
+		margin: 0 0 0 0;
 	}
 
 	.panel {
@@ -59,7 +59,7 @@
 	}
 
 	.message {
-		padding-right: 35px;
+		// padding-right: 35px;
 	}
 
 	.title {
