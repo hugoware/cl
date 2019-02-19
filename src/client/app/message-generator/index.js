@@ -25,7 +25,6 @@ export default function generateMessage(message) {
 			
 			// adjust the key
 			let src = _.trim(parts.shift());
-			console.log('getting', src);
 			const resource = $state.lesson.getResource(src);
 			if (!/^https?\:/i.test(src)) {
 				src = `/__codelab__/lessons/${$state.project.lesson}/resources/${src}`;
@@ -36,6 +35,7 @@ export default function generateMessage(message) {
 			const center = _.includes(parts, 'center') ? 'center' : '';
 			const right = _.includes(parts, 'right') ? 'right' : '';
 			const fade = _.includes(parts, 'fade') ? 'fade' : '';
+			const frame = _.includes(parts, 'frame') ? 'frame' : '';
 
 			// set the image url
 			let width = '';
@@ -63,7 +63,7 @@ export default function generateMessage(message) {
 			setTimeout(() => document.getElementById(id).className += ' show-image');
 
 			// other attributes
-			return `<div id="${id}" class="image ${center} ${right} ${inline} ${fade}" ${containerHeight} >
+			return `<div id="${id}" class="image ${center} ${right} ${inline} ${fade} ${frame}" ${containerHeight} >
 				<img src="${src}" ${width} ${height} />
 			</div>`;
 		});
@@ -149,21 +149,24 @@ export default function generateMessage(message) {
 
 		// check to add text or not
 		if (!silent) {
-			let markup = converter.makeHtml(line);
+			let markup = fixSpeech(line);
+			markup = converter.makeHtml(markup);
 			markup = Cheerio.load(markup).text();
+			markup = replacePronunciation(markup, { spoken: true });
 			speak.push(markup);
 		}
 
 		// if visible, add it to the content
 		if (!hidden) {
-			const markup = converter.makeHtml(line);
-			content.push(_.trim(markup));
+			let markup = _.trim(converter.makeHtml(line));
+			markup = replacePronunciation(markup, { content: true });
+			content.push(markup);
 		}
 
 	}
 
 	// finalize content
-	speak = _(speak).compact().map(fixSpeech).value();
+	speak = _.compact(speak);
 	content = content.join('');
 	
 	// return the results
@@ -175,10 +178,22 @@ export default function generateMessage(message) {
 }
 
 
-// format speech
+// handles special replacement words for unusual pronunciation
+function replacePronunciation(str, type) {
+	return str.replace(/\|{2}[^\|]+\|[^\|{2}]+\|{2}/g, match => {
+		const parts = match.substr(2, match.length - 4).split('|');
+		return type.content ? parts[0] : parts[1];
+	});
+}
+
+// format speech to replace common replacements for
+// speech equivilents
 function fixSpeech(str) {
+	_.each(STANDARD_REPLACEMENTS, (replace, key) => {
+		str = str.replace(key, replace);
+	});
+
 	return str;
-	// return str;
 }
 
 

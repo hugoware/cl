@@ -9,8 +9,6 @@
 
 -
   slide:
-    mode: overlay
-    title: Introduction to Creating Web Pages
     content: |
       In this tutorial we're going to start learning the basics of creating web pages.
 
@@ -18,14 +16,10 @@
 
 -
   slide:
-    mode: overlay
-    title: Introduction to Creating Web Pages
     controller: browserType
 
 -
   slide:
-    mode: overlay
-    title: Introduction to Creating Web Pages
     content: |
       Generally speaking, web pages viewed in the browser are created using just three different core technologies.
 
@@ -35,8 +29,6 @@
 
 -
   slide:
-    mode: overlay
-    title: Introduction to Creating Web Pages
     content: |
       [define html] is the foundation for all [define web_page web pages]. [define html] is a language that determines the words and content that are displayed in the web browser.
 
@@ -46,8 +38,6 @@
 
 -
   slide:
-    mode: overlay
-    title: Introduction to Creating Web Pages
     content: |
       [define css] is a language that's used to determine the visual appearance of a web page. Colors, font sizes, layout, and more are defined by the rules written in [define css]
 
@@ -57,14 +47,108 @@
 
 -
   slide:
-    mode: overlay
-    title: Introduction to Creating Web Pages
     content: |
       Finally, [define javascript] is a programming language that can be used to create logic and behaviors on a web page. Many modern websites use [define javascript] to create complicated applications that run entirely in the [define web_browser browser]
 
       [image javascript-focus.png]
 
       Generally speaking, [define javascript] decides what your web page _will do_.
+
+-
+  slide:
+    content: |
+      Each time you vist a [define website website], code files like [define html], [define css], and [define javascript] are sent to your computer. The [define web_browser] uses the instructions in each of these files to create the [define web_page web page] you see on the screen.
+
+      [image build.jpg frame]
+
+-
+  slide:
+    content: |
+      There's a lot to learn when it comes to creating web pages, but with practice and time you'll be building entire websites before you know it.
+      
+      [image html-focus.png]
+
+      At the start of this tutorial series, we're going to focus on learning [define html] and then introduce [define css] and [define javascript] at a later time.
+
+- slide:
+    emotion: happy
+    content: Great! So let's get started learning some [define html]!
+
+- slide:
+    title: What is HTML?
+    content: |
+      [define html] is a language that's used to describe the information found in a web page. It's written using instructions called [define html_element Elements]. An [define html_element] is made up of several parts called [define html_tag tags].
+
+      Below is an example of a simple [define html_element].
+
+      [snippet html_tag_example]
+
+      Let's go over what each part of this code example ||does|duz||. 
+
+- slide:
+    content: |
+      An [define html_element] starts with an opening [define html_tag tag]. It's written by surrounding the name of the tag with a `<` and `>` sign.
+      
+      [snippet html_tag_example highlight:0,1|3,1]
+
+- slide:
+    content: |
+      The word between the opening and closing tags is the type. Each [define html_element] has a different role in the web browser. For example, this `h1` Element is a heading.
+      
+      [snippet html_tag_example highlight:1,2]
+
+
+- slide:
+    content: |
+      At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.
+
+      The closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.
+
+      [snippet html_tag_example highlight:30,5]
+
+- slide:
+    content: |
+      At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.
+
+      The closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.
+
+      [snippet html_tag_example highlight:30,5]
+
+- slide:
+    content: |
+      Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase "This is an example of HTML" in a large and bold font
+
+      [snippet html_tag_example highlight:4,26]
+
+- slide:
+    start: true
+    mode: popup
+    content: |
+      We've talked a lot about what [define html] is and how it works, so let's actually try writing code and see what happens.
+
+- slide:
+    controller: highlightFileBrowser
+    content: |
+      On the left side of the screen is the [define file_browser]. This is a list of all files in your project.
+
+- slide:
+    controller: waitForIndexHtml
+    content: |
+      Open the file named `index.html` by [define double_click double clicking] on it in the [define file_browser].
+
+
+
+
+
+
+- slide:
+    title: FINISHED WARNING
+    content: about to finish
+
+- slide:
+    title: FINISHED
+    content: did finish
+
 
 
 # - three main technologies

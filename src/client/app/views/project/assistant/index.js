@@ -282,8 +282,6 @@ export default class Assistant extends Component {
 		const { slide } = $state.lesson;
 		const { view } = this;
 
-		console.log(slide);
-
 		// // determine the mode to use
 		// const mode = slide.mode || 'popup';
 		// this.toggleClassMap({

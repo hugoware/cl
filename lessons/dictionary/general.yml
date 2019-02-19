@@ -13,13 +13,17 @@
   name: Preview Area
   define: The right side of the screen that shows the current output of the project being worked on
 
-- id: double_clicking
+- id: double_click
   name: Double Click
   define: Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly.
 
 - id: website
   name: Website
   define: A point on the Internet that serves web pages
+
+- id: file_browser
+  name: File Browser
+  define: The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor
 
 - id: web_browser
   name: Web Browser

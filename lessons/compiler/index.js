@@ -44,6 +44,9 @@ const manifest = readYml('manifest.yml');
 const state = { dictionary: $dictionary };
 const type = _.camelCase(source);
 
+// delete the target directory
+$fsx.removeSync(dist);
+
 // get the template to use
 let template = readFile('compiler/template.js');
 

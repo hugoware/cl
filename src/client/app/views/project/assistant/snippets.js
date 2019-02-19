@@ -4,7 +4,6 @@ import $editor from '../../../editor';
 
 // attach each snippet
 export function applySnippets(slide, lesson) {
-	console.log(slide, lesson);
 
 	// replace all snippets
 	const snippets = slide.find('.snippet');

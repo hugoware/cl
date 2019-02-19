@@ -41,6 +41,24 @@ function onEnter() {
 }
 
 },{}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onOpenFile = onOpenFile;
+exports.onEnter = onEnter;
+var controller = exports.controller = true;
+
+function onOpenFile(file) {
+	this.screen.highlight.clear();
+}
+
+function onEnter() {
+	this.screen.highlight.fileBrowser();
+}
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -58,6 +76,14 @@ var _createClass = function () {
 var _browserType = require('./browserType');
 
 var browserType = _interopRequireWildcard(_browserType);
+
+var _highlightFileBrowser = require('./highlightFileBrowser');
+
+var highlightFileBrowser = _interopRequireWildcard(_highlightFileBrowser);
+
+var _waitForIndexHtml = require('./waitForIndexHtml');
+
+var waitForIndexHtml = _interopRequireWildcard(_waitForIndexHtml);
 
 function _interopRequireWildcard(obj) {
   if (obj && obj.__esModule) {
@@ -125,29 +151,53 @@ var web1Lesson = function () {
         "title": "Introduction to Creating Web Pages",
         "content": "Welcome to your first lesson on creating web pages!\n\nAs you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.\n"
       }, {
-        "mode": "overlay",
-        "title": "Introduction to Creating Web Pages",
         "content": "In this tutorial we're going to start learning the basics of creating web pages.\n\nHowever, before we start learning how to write code, it's best to take a little bit of time and learn how web pages work _behind the scenes_.\n"
       }, {
-        "mode": "overlay",
-        "title": "Introduction to Creating Web Pages",
         "controller": "browserType"
       }, {
-        "mode": "overlay",
-        "title": "Introduction to Creating Web Pages",
         "content": "Generally speaking, web pages viewed in the browser are created using just three different core technologies.\n\n[image tech.png]\n\nIn fact, it's entirely possible that every single website you've ever visited has used all three of these technologies at the same time!\n"
       }, {
-        "mode": "overlay",
-        "title": "Introduction to Creating Web Pages",
         "content": "[define html] is the foundation for all [define web_page web pages]. [define html] is a language that determines the words and content that are displayed in the web browser.\n\n[image html-focus.png]\n\nIn a sense, [define html] is what your web page _says_.\n"
       }, {
-        "mode": "overlay",
-        "title": "Introduction to Creating Web Pages",
         "content": "[define css] is a language that's used to determine the visual appearance of a web page. Colors, font sizes, layout, and more are defined by the rules written in [define css]\n\n[image css-focus.png]\n\nSimply put, [define css] decides what your web page _looks like_.\n"
       }, {
-        "mode": "overlay",
-        "title": "Introduction to Creating Web Pages",
         "content": "Finally, [define javascript] is a programming language that can be used to create logic and behaviors on a web page. Many modern websites use [define javascript] to create complicated applications that run entirely in the [define web_browser browser]\n\n[image javascript-focus.png]\n\nGenerally speaking, [define javascript] decides what your web page _will do_.\n"
+      }, {
+        "content": "Each time you vist a [define website website], code files like [define html], [define css], and [define javascript] are sent to your computer. The [define web_browser] uses the instructions in each of these files to create the [define web_page web page] you see on the screen.\n\n[image build.jpg frame]\n"
+      }, {
+        "content": "There's a lot to learn when it comes to creating web pages, but with practice and time you'll be building entire websites before you know it.\n\n[image html-focus.png]\n\nAt the start of this tutorial series, we're going to focus on learning [define html] and then introduce [define css] and [define javascript] at a later time.\n"
+      }, {
+        "emotion": "happy",
+        "content": "Great! So let's get started learning some [define html]!"
+      }, {
+        "title": "What is HTML?",
+        "content": "[define html] is a language that's used to describe the information found in a web page. It's written using instructions called [define html_element Elements]. An [define html_element] is made up of several parts called [define html_tag tags].\n\nBelow is an example of a simple [define html_element].\n\n[snippet html_tag_example]\n\nLet's go over what each part of this code example ||does|duz||. \n"
+      }, {
+        "content": "An [define html_element] starts with an opening [define html_tag tag]. It's written by surrounding the name of the tag with a `<` and `>` sign.\n\n[snippet html_tag_example highlight:0,1|3,1]\n"
+      }, {
+        "content": "The word between the opening and closing tags is the type. Each [define html_element] has a different role in the web browser. For example, this `h1` Element is a heading.\n\n[snippet html_tag_example highlight:1,2]\n"
+      }, {
+        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:30,5]\n"
+      }, {
+        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:30,5]\n"
+      }, {
+        "content": "Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase \"This is an example of HTML\" in a large and bold font\n\n[snippet html_tag_example highlight:4,26]\n"
+      }, {
+        "start": true,
+        "mode": "popup",
+        "content": "We've talked a lot about what [define html] is and how it works, so let's actually try writing code and see what happens.\n"
+      }, {
+        "controller": "highlightFileBrowser",
+        "content": "On the left side of the screen is the [define file_browser]. This is a list of all files in your project.\n"
+      }, {
+        "controller": "waitForIndexHtml",
+        "content": "Open the file named `index.html` by [define double_click double clicking] on it in the [define file_browser].\n"
+      }, {
+        "title": "FINISHED WARNING",
+        "content": "about to finish"
+      }, {
+        "title": "FINISHED",
+        "content": "did finish"
       }],
       "snippets": {
         "complex_tag": {
@@ -160,6 +210,11 @@ var web1Lesson = function () {
         }
       },
       "resources": [{
+        "height": 559,
+        "width": 1340,
+        "type": "jpg",
+        "path": "build.jpg"
+      }, {
         "width": 1260,
         "height": 310,
         "type": "png",
@@ -217,6 +272,26 @@ var web1Lesson = function () {
           "id": "javascript",
           "name": "JavaScript",
           "define": "Programming language\n"
+        },
+        "html_element": {
+          "id": "html_element",
+          "name": "HTML Element",
+          "define": "This is about HTML elements\n"
+        },
+        "html_tag": {
+          "id": "html_tag",
+          "name": "HTML Tag",
+          "define": "This is about HTML elements - this is `<` or `>`\n"
+        },
+        "file_browser": {
+          "id": "file_browser",
+          "name": "File Browser",
+          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+        },
+        "double_click": {
+          "id": "double_click",
+          "name": "Double Click",
+          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
         }
       }
     };
@@ -228,6 +303,10 @@ var web1Lesson = function () {
     // share utility function
     var _ = window._ = utils._;
     utils._.assign(_, utils);
+
+    // timing
+    this._delays = {};
+    this._intervals = {};
 
     // expose API tools
     this.assistant = api.assistant;
@@ -243,7 +322,7 @@ var web1Lesson = function () {
 
     // setup each included entry
     var refs = {
-      browserType: browserType
+      browserType: browserType, highlightFileBrowser: highlightFileBrowser, waitForIndexHtml: waitForIndexHtml
     };
 
     // setup each reference
@@ -284,12 +363,51 @@ var web1Lesson = function () {
 
       return !!controller && controller[action];
     }
+
+    // resets any required information between slides
+
   }, {
-    key: 'timeout',
-    value: function timeout(action, time) {}
+    key: 'clear',
+    value: function clear() {
+      _.each(this._delays, function (cancel) {
+        return cancel();
+      });
+      _.each(this._intervals, function (cancel) {
+        return cancel();
+      });
+    }
+
+    // sets a timed delay
+
+  }, {
+    key: 'delay',
+    value: function delay(time, action) {
+      var _this2 = this;
+
+      var ref = setTimeout(action, time);
+      var cancel = this._delays[ref] = function () {
+        clearTimeout(ref);
+        delete _this2._delays[ref];
+      };
+
+      return cancel;
+    }
+
+    // sets a timed interval
+
   }, {
     key: 'interval',
-    value: function interval(action, time) {}
+    value: function interval(time, action) {
+      var _this3 = this;
+
+      var ref = setInterval(action, time);
+      var cancel = this._intervals[ref] = function () {
+        clearInterval(ref);
+        delete _this3._intervals[ref];
+      };
+
+      return cancel;
+    }
   }, {
     key: 'controller',
     get: function get() {
@@ -321,4 +439,37 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_1', web1Lesson);
 
-},{"./browserType":1}]},{},[2]);
+},{"./browserType":1,"./highlightFileBrowser":2,"./waitForIndexHtml":4}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onOpenFile = onOpenFile;
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+var controller = exports.controller = true;
+
+function onOpenFile(file) {
+
+	if (file.path === '/index.html') {
+		this.progress.next();
+		return true;
+	}
+}
+
+function onEnter() {
+	var _this = this;
+
+	this.screen.highlight.fileBrowserItem('/index.html');
+
+	this.delay(8000, function () {
+		_this.assistant.say('To open the `index.html` file, double click the item in the File Browser.\n\nTo double click, move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.');
+	});
+}
+
+function onExit() {
+	this.screen.highlight.clear();
+}
+
+},{}]},{},[3]);

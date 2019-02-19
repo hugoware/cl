@@ -96,8 +96,8 @@ export default class Slide extends Component {
 		this.toggleClassMap({
 			'is-first': slide.isFirst,
 			'is-last': slide.isLast,
-			'has-title': 'title' in slide,
-			'has-subtitle': 'subtitle' in slide,
+			'has-title': slide.hasTitle,
+			'has-subtitle': slide.hasSubtitle,
 		});
 
 		// update alt values

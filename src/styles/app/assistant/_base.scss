@@ -139,6 +139,10 @@
 			width: 100%;
 		}
 
+		&.frame img {
+			border-radius: 5px;
+		}
+
 	}
 
 	$assistant-speech-button-height: 40px;

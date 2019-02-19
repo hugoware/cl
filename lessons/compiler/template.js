@@ -49,6 +49,10 @@ class $LESSON_TYPE$Lesson {
 		const _ = window._ = utils._;
 		utils._.assign(_, utils);
 
+		// timing
+		this._delays = { };
+		this._intervals = { };
+
 		// expose API tools
 		this.assistant = api.assistant;
 		this.screen = api.screen;
@@ -103,12 +107,33 @@ class $LESSON_TYPE$Lesson {
 		return !!controller && controller[action];
 	}
 
-	timeout(action, time) {
 
+	// resets any required information between slides
+	clear() {
+		_.each(this._delays, cancel => cancel());
+		_.each(this._intervals, cancel => cancel());
 	}
 
-	interval(action, time) {
-		
+	// sets a timed delay
+	delay(time, action) {
+		const ref = setTimeout(action, time);
+		const cancel = this._delays[ref] = () => {
+			clearTimeout(ref);
+			delete this._delays[ref];
+		};
+
+		return cancel;
+	}
+
+	// sets a timed interval
+	interval(time, action) {
+		const ref = setInterval(action, time);
+		const cancel = this._intervals[ref] = () => {
+			clearInterval(ref);
+			delete this._intervals[ref];
+		};
+
+		return cancel;
 	}
 
 }

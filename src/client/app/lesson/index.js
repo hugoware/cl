@@ -183,6 +183,7 @@ export default class Lesson {
 		// leaving the active slide
 		this.instance.invoke('exit');
 		broadcast('leave-slide');
+		this.instance.clear();
 		
 		// determine the new position and the 
 		// delta required to navigate there
@@ -190,6 +191,12 @@ export default class Lesson {
 		let current = this.index;
 		const backwards = current > index;
 		const direction = backwards ? -1 : 1;
+
+		// set the starting slide
+		if (_.isNumber(this.startAt)) {
+			index = this.startAt - 1;
+			delete this.startAt;
+		}
 
 		// invert the current slide, if needed
 		let safety = 9999;
@@ -271,12 +278,39 @@ export default class Lesson {
 // prepares slides in advance
 function initialize(lesson) {	
 	const total = _.size(lesson.slides);
+	const prior = { };
+
 	_.each(lesson.slides, (slide, index) => {
 		slide.id = _.uniqueId('slide:');
 		slide.isLast = index === (total - 1);
 		slide.isFirst = index === 0;
 		slide.isQuestion = _.some(slide.choices);
 		slide.isSlide = !slide.isQuestion;
+
+		// debug helper
+		if ($state.isLocal && slide.start)
+			lesson.startAt = index;
+
+		if (!slide.mode)
+			slide.mode = prior.mode;
+		
+		// if modes change, then title must be
+		// manually reset
+		if (slide.mode !== prior.mode)
+			prior.title = null;
+
+		if ('mode' in slide)
+			prior.mode = slide.mode;
+
+		if (!slide.title)
+			slide.title = prior.title;
+
+		if ('title' in slide)
+			prior.title = slide.title;
+
+		slide.hasTitle = _.some(slide.title);
+		slide.hasSubtitle = _.some(slide.subtitle);
+		
 	});
 
 	// always create a starting restore point
@@ -324,8 +358,6 @@ function setActiveSlide(lesson, slide) {
 	// set the events for this slide
 	// disposeSlideEvents(lesson);
 	// registerSlideEvents(lesson, slide);
-
-	console.log('go??');
 
 	// let other systems know the slide changed
 	broadcast('slide-changed', slide);
