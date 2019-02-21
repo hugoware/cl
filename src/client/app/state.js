@@ -9,6 +9,8 @@ import { broadcast, listen } from './events';
 import { simplifyPathCollection } from '../../utils/project';
 import Lesson from './lesson';
 import checkPermissions from './permissions';
+import Preview from './views/project/preview/index';
+import ManagedEditor from './editor/managed';
 
 const ROOT = { path: '/' };
 const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py', 'rb'];
@@ -24,9 +26,15 @@ const $state = {
 
 	/** @type {UserDetail} */
 	user: null,
-
+	
 	/** @type {Object<string, boolean>} map of lesson permissions */
 	permissions: null,
+	
+	/** @type {Preview} */
+	preview: null,
+
+	/** @type {ManagedEditor} */
+	editor: null,
 
 	/** tracks the config flags in a project */
 	flags: { },
@@ -305,6 +313,7 @@ const $state = {
 			await $lfs.write(file.path, file.content);
 
 		// mark the file as open
+		broadcast('activate-file', file);
 		file.isOpen = true;
 	},
 

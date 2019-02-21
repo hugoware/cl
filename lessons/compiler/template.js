@@ -1,38 +1,13 @@
+import { _ } from './lib';
 
 // import controllers
 $IMPORTS$
-
-// performs the oxford comma
-function $oxford(items, conjunction) {
-	const total = items.length;
-
-	// determine the best
-	if (total === 1)
-		return items.join('')
-	else if (total == 2)
-		return items.join(` ${conjunction} `);
-
-	// return the result
-	else {
-		const last = items.pop();
-		return `${items.join(', ')}, ${conjunction} ${last}`;
-	}
-}
-
-// pluralizes a word
-function $plural(count, single, plural, none, delimeter = '@') {
-	const value = Math.abs(count);
-	const message = value === 1 ? single
-		: value > 1 ? (plural ? plural : `${single}s`)
-			: none || plural;
-	return message.replace(delimeter, count);
-}
 
 // lesson controller
 class $LESSON_TYPE$Lesson {
 
 	// setup the lesson
-	constructor(project, lesson, api, utils) {
+	constructor(project, lesson, api) {
 		this.state = { };
 		this.lesson = lesson;
 		this.project = project;
@@ -41,24 +16,16 @@ class $LESSON_TYPE$Lesson {
 		// core lesson data
 		this.data = $DATA$;
 
-		// other utilities
-		utils.plural = $plural;
-		utils.oxford = $oxford;
-
-		// share utility function
-		const _ = window._ = utils._;
-		utils._.assign(_, utils);
-
 		// timing
 		this._delays = { };
 		this._intervals = { };
 
 		// expose API tools
 		this.assistant = api.assistant;
+		this.preview = api.preview;
 		this.screen = api.screen;
     this.progress = api.progress;
-    this.validate = api.validate;
-    this.content = api.content;
+    this.file = api.file;
 		this.editor = api.editor;
 		this.sound = api.sound;
 

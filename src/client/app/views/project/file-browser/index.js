@@ -150,7 +150,6 @@ export default class FileBrowser extends Component {
 			// before activating a file, update the middleware file system
 			// to use the active file content
 			await $state.openFile(data.path);
-			this.broadcast('activate-file', data);
 		}
 
 	}

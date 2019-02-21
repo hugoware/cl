@@ -39,3 +39,13 @@
   name: Internet
   define: |
     A world wide network of computers
+
+- id: codelab_editor
+  name: Code Editor
+  define: |
+    The CodeLab editing area
+
+- id: codelab_html_preview
+  name: Preview Area
+  define: |
+    You can see your HTML as you type

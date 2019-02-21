@@ -1,4 +1,5 @@
 import { _, $ } from '../../../lib';
+import $state from '../../../state';
 import Component from '../../../component';
 
 // different preview modes
@@ -33,6 +34,12 @@ export default class Preview extends Component {
 		// cache of handlers
 		this.handlers = { };
 
+		// shared the preview area
+		$state.preview = this;
+
+		// pending events
+		this.events = [ ];
+
 		// events
 		this.listen('reset', this.onReset);
 		this.listen('activate-project', this.onActivateProject);
@@ -41,6 +48,17 @@ export default class Preview extends Component {
 		this.listen('compile-file', this.onCompileFile);
 		this.listen('close-file', this.onCloseFile);
 		this.listen('preview-message', this.onPreviewMessage);
+	}
+
+	// includes an event to watch for
+	addEvent(event) {
+		this.events.push(event);
+	}
+
+	// remove all events
+	clearEvents() {
+		$(this.handler.output).off();
+		this.events = [ ];
 	}
 
 	// resetting the view
@@ -95,13 +113,23 @@ export default class Preview extends Component {
 	// handles when files are loaded
 	onActivateFile = async file => {
 		if (!this.handler) return;
-		this.handler.onActivateFile(file);
+		await this.handler.onActivateFile(file);
+		setTimeout(this.syncEvents, 100);
 	}
 
 	// check for dependencies and update
 	onCompileFile = async file => {
 		if (!this.handler) return;
-		this.handler.onCompileFile(file);
+		await this.handler.onCompileFile(file);
+		setTimeout(this.syncEvents, 100);
+	}
+
+	// attaches any events to the preview area
+	syncEvents = () => {
+		const root = $(this.handler.output);
+		_.each(this.events, event => {
+			root.on(event.event, event.selector, event.action);
+		});
 	}
 
 }

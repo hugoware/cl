@@ -4,7 +4,11 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.controller = undefined;
 exports.onEnter = onEnter;
+
+var _lib = require('./lib');
+
 var controller = exports.controller = true;
 
 function onEnter() {
@@ -37,10 +41,234 @@ function onEnter() {
 
 	var tell = name ? 'For example, the name of the web browser you\'re using is *' + name + '*!' : 'However, in this case I\'m not sure what browser you\'re using';
 
-	this.assistant.say('\nWhen you browse the [define internet], you visit [define website websites] that show you information. That information is displayed on your screen using a [define web_browser web browser].\n\nThere\'s many web browsers that are used such as Chrome, Firefox, Safari, and more.\n\n' + tell);
+	this.assistant.say({
+		emote: 'happy',
+		message: '\n\t\t\tWhen you browse the [define internet], you visit [define website websites] that show you information. That information is displayed on your screen using a [define web_browser web browser].\n\n\t\t\tThere\'s many web browsers that are used such as Chrome, Firefox, Safari, and more.\n\n\t\t\t' + tell
+	});
 }
 
-},{}],2:[function(require,module,exports){
+},{"./lib":8}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+exports.onContentChange = onContentChange;
+exports.onBeforeContentChange = onBeforeContentChange;
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+var controller = exports.controller = true;
+
+var $valid = void 0;
+
+function onEnter() {
+	this.progress.block();
+	this.file.readOnly({ path: '/index.html', readOnly: false });
+	this.editor.area({ path: '/index.html', start: 6, end: 19 });
+}
+
+function onExit() {
+	this.file.readOnly({ file: '/index.html' });
+	this.editor.area.clear({ path: '/index.html' });
+}
+
+function onContentChange(file, change) {
+	var content = this.editor.area.get({ path: '/index.html' });
+
+	var simplified = (0, _utils.simplify)(content);
+	var diff = (0, _utils.similarity)('helloworld', simplified);
+	var isChanged = simplified.length > 5 && diff < 0.4;
+
+	// it's literally what was said
+	if (simplified === 'somethingdifferent') {
+		$valid = true;
+		this.assistant.say({
+			message: 'Oh! Very funny! I guess I did say "something different", didn\'t I?',
+			emote: 'happy'
+		});
+	}
+
+	// check if the message is new
+	else if (!$valid && isChanged) {
+			$valid = true;
+			this.progress.allow();
+			this.assistant.say({
+				message: 'Looks great! You can see what you typed into the Preview Area'
+			});
+		}
+		// invalidated
+		else if ($valid && !isChanged) {
+				$valid = false;
+				this.assistant.revert();
+			}
+}
+
+function onBeforeContentChange(file, change) {
+	return !change.hasNewline;
+}
+
+},{"./lib":8,"./utils":10}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onTryEditReadOnly = onTryEditReadOnly;
+exports.onExit = onExit;
+var controller = exports.controller = true;
+
+function onEnter() {
+	this.screen.highlight.codeEditor();
+}
+
+function onTryEditReadOnly() {
+	this.assistant.say({
+		emote: 'happy',
+		message: 'Oops! I\'m glad you\'re so excited to start making changes, but you can\'t edit the file just yet!'
+	});
+}
+
+function onExit() {
+	this.screen.highlight.clear();
+}
+
+},{}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+exports.onContentChange = onContentChange;
+
+var _lib = require('./lib');
+
+var controller = exports.controller = true;
+
+function validate(instance, file) {
+	var content = instance.file.content({ file: file });
+
+	var result = _lib.HtmlValidator.validate(content, function (test) {
+		return test._w.tag('h1').content().close('h1')._n.__w.tag('h3').text('A small heading').close('h3')._n.__w.tag('button').text('Click me').close('button').__w.eof();
+	});
+
+	// update validation
+	instance.editor.hint.validate({ path: '/index.html', result: result });
+
+	// update progress
+	instance.progress.update({
+		result: result,
+		allow: function allow() {
+			return instance.assistant.say({
+				message: 'Great! Let\'s move to the next step!'
+			});
+		},
+		deny: instance.assistant.revert,
+		always: instance.sound.notify
+	});
+}
+
+function onEnter() {
+	var _this = this;
+
+	this.progress.block();
+	this.file.readOnly({ path: '/index.html', readOnly: false });
+
+	// for curious students
+	this.preview.addEvent('click', 'button', function () {
+		_this.assistant.say({
+			emote: 'happy',
+			message: '\n\t\t\t\tThat button doesn\'t do anything just yet, but we\'ll learn how to make it do stuff in later lessons.\n\t\t\t\tI\'m glad you we\'re curious and tried clicking on it!'
+		});
+	});
+
+	var file = this.file.get({ path: '/index.html' });
+	validate(this, file);
+}
+
+function onExit() {
+	this.file.readOnly({ path: '/index.html' });
+	this.editor.area.clear();
+	this.preview.clearEvents();
+}
+
+function onContentChange(file) {
+	validate(this, file);
+}
+
+},{"./lib":8}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+exports.onContentChange = onContentChange;
+
+var _lib = require('./lib');
+
+var controller = exports.controller = true;
+
+function validate(instance, file) {
+	var content = instance.file.content({ file: file });
+
+	var result = _lib.HtmlValidator.validate(content, function (test) {
+		return test._w.tag('h1').content().close('h1')._n.__w.tag('h3').text('A small heading').close('h3').__w.eof();
+	});
+
+	// update validation
+	instance.editor.hint.validate({ path: '/index.html', result: result });
+
+	// update progress
+	instance.progress.update({
+		result: result,
+		allow: function allow() {
+			return instance.assistant.say({
+				emote: 'happy',
+				message: 'Great! Let\'s move to the next step!'
+			});
+		},
+		deny: instance.assistant.revert,
+		always: instance.sound.notify
+	});
+}
+
+function onEnter() {
+	var _this = this;
+
+	this.progress.block();
+	this.file.readOnly({ path: '/index.html', readOnly: false });
+	this.editor.cursor({ end: true });
+
+	// perform initial validation
+	this.delay(100, function () {
+		var file = _this.file.get({ path: '/index.html' });
+		validate(_this, file);
+	});
+}
+
+function onExit() {
+	this.preview.clearEvents();
+	this.file.readOnly({ path: '/index.html' });
+	this.editor.area.clear();
+}
+
+function onContentChange(file) {
+	validate(this, file);
+}
+
+},{"./lib":8}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -58,7 +286,7 @@ function onEnter() {
 	this.screen.highlight.fileBrowser();
 }
 
-},{}],3:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -70,16 +298,39 @@ var _createClass = function () {
     if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
   };
 }();
+
 // import controllers
 
+
+var _lib = require('./lib');
 
 var _browserType = require('./browserType');
 
 var browserType = _interopRequireWildcard(_browserType);
 
+var _changeHeadingContent = require('./changeHeadingContent');
+
+var changeHeadingContent = _interopRequireWildcard(_changeHeadingContent);
+
+var _codeEditorIntro = require('./codeEditorIntro');
+
+var codeEditorIntro = _interopRequireWildcard(_codeEditorIntro);
+
+var _freeButtonInsert = require('./freeButtonInsert');
+
+var freeButtonInsert = _interopRequireWildcard(_freeButtonInsert);
+
+var _freeHeadingInsert = require('./freeHeadingInsert');
+
+var freeHeadingInsert = _interopRequireWildcard(_freeHeadingInsert);
+
 var _highlightFileBrowser = require('./highlightFileBrowser');
 
 var highlightFileBrowser = _interopRequireWildcard(_highlightFileBrowser);
+
+var _previewAreaIntro = require('./previewAreaIntro');
+
+var previewAreaIntro = _interopRequireWildcard(_previewAreaIntro);
 
 var _waitForIndexHtml = require('./waitForIndexHtml');
 
@@ -103,35 +354,11 @@ function _classCallCheck(instance, Constructor) {
   }
 }
 
-// performs the oxford comma
-function $oxford(items, conjunction) {
-  var total = items.length;
-
-  // determine the best
-  if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
-
-  // return the result
-  else {
-      var last = items.pop();
-      return items.join(', ') + ', ' + conjunction + ' ' + last;
-    }
-}
-
-// pluralizes a word
-function $plural(count, single, plural, none) {
-  var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
-
-  var value = Math.abs(count);
-  var message = value === 1 ? single : value > 1 ? plural ? plural : single + 's' : none || plural;
-  return message.replace(delimeter, count);
-}
-
 // lesson controller
-
 var web1Lesson = function () {
 
   // setup the lesson
-  function web1Lesson(project, lesson, api, utils) {
+  function web1Lesson(project, lesson, api) {
     var _this = this;
 
     _classCallCheck(this, web1Lesson);
@@ -177,13 +404,10 @@ var web1Lesson = function () {
       }, {
         "content": "The word between the opening and closing tags is the type. Each [define html_element] has a different role in the web browser. For example, this `h1` Element is a heading.\n\n[snippet html_tag_example highlight:1,2]\n"
       }, {
-        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:30,5]\n"
+        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:17,5]\n"
       }, {
-        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:30,5]\n"
+        "content": "Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase \"Hello, World!\" in a large and bold font\n\n[snippet html_tag_example highlight:4,13]\n"
       }, {
-        "content": "Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase \"This is an example of HTML\" in a large and bold font\n\n[snippet html_tag_example highlight:4,26]\n"
-      }, {
-        "start": true,
         "mode": "popup",
         "content": "We've talked a lot about what [define html] is and how it works, so let's actually try writing code and see what happens.\n"
       }, {
@@ -192,6 +416,28 @@ var web1Lesson = function () {
       }, {
         "controller": "waitForIndexHtml",
         "content": "Open the file named `index.html` by [define double_click double clicking] on it in the [define file_browser].\n"
+      }, {
+        "controller": "codeEditorIntro",
+        "content": "Great! The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code. At the top, you'll see there's a new tab added for the file you just opened.\n"
+      }, {
+        "content": "Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.\n"
+      }, {
+        "start": true,
+        "controller": "previewAreaIntro",
+        "content": "On the right side of the screen, we can see the result of the [define html] in the [define codelab_html_preview].\n"
+      }, {
+        "controller": "changeHeadingContent",
+        "content": "Let's start by changing the content of the [define html_element Element]. Replace the words \"Hello, World!\" with something different.\n"
+      }, {
+        "content": "Now, let's try to type in an entirely new [define html_element]. This time we're going to create both the opening and closing [define html_tag tags] as well as the content inside.\n"
+      }, {
+        "controller": "freeHeadingInsert",
+        "content": "Create the following [define html_element]\n\n[snippet free_heading_insert]\n"
+      }, {
+        "content": "Practice makes perfect! Let's try that again with another [define html_element].\n"
+      }, {
+        "controller": "freeButtonInsert",
+        "content": "Create the following [define html_element]\n\n[snippet free_button_insert]\n"
       }, {
         "title": "FINISHED WARNING",
         "content": "about to finish"
@@ -204,8 +450,16 @@ var web1Lesson = function () {
           "content": "<div>\n  <h1>The Title</h1>\n  <p>The main content!</p>\n</div>",
           "type": "html"
         },
+        "free_button_insert": {
+          "content": "<button>Click me</button>",
+          "type": "html"
+        },
+        "free_heading_insert": {
+          "content": "<h3>A smaller heading</h3>",
+          "type": "html"
+        },
         "html_tag_example": {
-          "content": "<h1>This is an example of HTML</h1>",
+          "content": "<h1>Hello, World!</h1>",
           "type": "html"
         }
       },
@@ -292,17 +546,19 @@ var web1Lesson = function () {
           "id": "double_click",
           "name": "Double Click",
           "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
+        },
+        "codelab_editor": {
+          "id": "codelab_editor",
+          "name": "Code Editor",
+          "define": "The CodeLab editing area\n"
+        },
+        "codelab_html_preview": {
+          "id": "codelab_html_preview",
+          "name": "Preview Area",
+          "define": "You can see your HTML as you type\n"
         }
       }
     };
-
-    // other utilities
-    utils.plural = $plural;
-    utils.oxford = $oxford;
-
-    // share utility function
-    var _ = window._ = utils._;
-    utils._.assign(_, utils);
 
     // timing
     this._delays = {};
@@ -310,10 +566,10 @@ var web1Lesson = function () {
 
     // expose API tools
     this.assistant = api.assistant;
+    this.preview = api.preview;
     this.screen = api.screen;
     this.progress = api.progress;
-    this.validate = api.validate;
-    this.content = api.content;
+    this.file = api.file;
     this.editor = api.editor;
     this.sound = api.sound;
 
@@ -322,12 +578,12 @@ var web1Lesson = function () {
 
     // setup each included entry
     var refs = {
-      browserType: browserType, highlightFileBrowser: highlightFileBrowser, waitForIndexHtml: waitForIndexHtml
+      browserType: browserType, changeHeadingContent: changeHeadingContent, codeEditorIntro: codeEditorIntro, freeButtonInsert: freeButtonInsert, freeHeadingInsert: freeHeadingInsert, highlightFileBrowser: highlightFileBrowser, previewAreaIntro: previewAreaIntro, waitForIndexHtml: waitForIndexHtml
     };
 
     // setup each reference
-    _.each(refs, function (ref, key) {
-      if (ref.controller) _this.controllers[key] = ref;else _.assign(_this, ref);
+    _lib._.each(refs, function (ref, key) {
+      if (ref.controller) _this.controllers[key] = ref;else _lib._.assign(_this, ref);
     });
 
     // debugging
@@ -369,10 +625,10 @@ var web1Lesson = function () {
   }, {
     key: 'clear',
     value: function clear() {
-      _.each(this._delays, function (cancel) {
+      _lib._.each(this._delays, function (cancel) {
         return cancel();
       });
-      _.each(this._intervals, function (cancel) {
+      _lib._.each(this._intervals, function (cancel) {
         return cancel();
       });
     }
@@ -439,7 +695,123 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_1', web1Lesson);
 
-},{"./browserType":1,"./highlightFileBrowser":2,"./waitForIndexHtml":4}],4:[function(require,module,exports){
+},{"./browserType":1,"./changeHeadingContent":2,"./codeEditorIntro":3,"./freeButtonInsert":4,"./freeHeadingInsert":5,"./highlightFileBrowser":6,"./lib":8,"./previewAreaIntro":9,"./waitForIndexHtml":11}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var lib = window.__CODELAB_LIBS__;
+
+var _ = exports._ = lib._;
+var $ = exports.$ = lib.$;
+var CodeValidator = exports.CodeValidator = lib.CodeValidator;
+var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
+var CssValidator = exports.CssValidator = lib.CssValidator;
+
+exports.default = {
+	_: _, $: $,
+	CodeValidator: CodeValidator,
+	HtmlValidator: HtmlValidator,
+	CssValidator: CssValidator
+};
+
+},{}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+var controller = exports.controller = true;
+
+function onEnter() {
+	this.file.open({ path: '/index.html' });
+	this.screen.highlight.previewArea();
+}
+
+function onExit() {
+	this.screen.highlight.clear();
+}
+
+},{}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.simplify = simplify;
+exports.oxford = oxford;
+exports.plural = plural;
+exports.similarity = similarity;
+
+// creates a text/numeric only representation for a strin
+function simplify(str) {
+  return (str || '').toString().replace(/[^a-z0-9]/gi, '').toLowerCase();
+}
+
+// performs the oxford comma
+function oxford(items, conjunction) {
+  var total = items.length;
+
+  // determine the best
+  if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
+
+  // return the result
+  else {
+      var last = items.pop();
+      return items.join(', ') + ', ' + conjunction + ' ' + last;
+    }
+}
+
+// pluralizes a word
+function plural(count, single, plural, none) {
+  var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
+
+  var value = Math.abs(count);
+  var message = value === 1 ? single : value > 1 ? plural ? plural : single + 's' : none || plural;
+  return message.replace(delimeter, count);
+}
+
+// checks for string similarity
+function similarity(s1, s2) {
+  var longer = s1;
+  var shorter = s2;
+  if (s1.length < s2.length) {
+    longer = s2;
+    shorter = s1;
+  }
+  var longerLength = longer.length;
+  if (longerLength == 0) {
+    return 1.0;
+  }
+  return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+
+function editDistance(s1, s2) {
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+
+  var costs = new Array();
+  for (var i = 0; i <= s1.length; i++) {
+    var lastValue = i;
+    for (var j = 0; j <= s2.length; j++) {
+      if (i == 0) costs[j] = j;else {
+        if (j > 0) {
+          var newValue = costs[j - 1];
+          if (s1.charAt(i - 1) != s2.charAt(j - 1)) newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+          costs[j - 1] = lastValue;
+          lastValue = newValue;
+        }
+      }
+    }
+    if (i > 0) costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+}
+
+},{}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -461,10 +833,15 @@ function onOpenFile(file) {
 function onEnter() {
 	var _this = this;
 
-	this.screen.highlight.fileBrowserItem('/index.html');
+	this.progress.block();
+
+	this.file.readOnly({ path: '/index.html' });
+	this.screen.highlight.fileBrowserItem({ path: '/index.html' });
 
 	this.delay(8000, function () {
-		_this.assistant.say('To open the `index.html` file, double click the item in the File Browser.\n\nTo double click, move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.');
+		_this.assistant.say({
+			message: '\n\t\t\t\tTo open the `index.html` file, double click the item in the File Browser.\n\t\t\t\tTo double click, move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.'
+		});
 	});
 }
 
@@ -472,4 +849,4 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}]},{},[3]);
+},{}]},{},[7]);

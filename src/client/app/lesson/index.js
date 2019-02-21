@@ -1,20 +1,14 @@
 /// <reference path="../types/index.js" />
 
-import { _, $jquery, Cheerio, XmlChecker } from '../lib';
+import { _ } from '../lib';
 import $state from '../state';
 import $api from '../api';
 import $focus from './focus';
 import $wait from './wait';
 import LessonAPI from './api';
 
-import $lfs from '../lfs';
-
 import { load } from './loader';
 import { broadcast, listen, remove } from '../events';
-// import ZoneMap from '../zone-map';
-
-// can't seem to use this anywhere in a playground
-window.cheerio = Cheerio;
 
 /** creates a default lesson */
 export default class Lesson {
@@ -33,7 +27,7 @@ export default class Lesson {
 
 		// setup the lesson
 		this.api = new LessonAPI(this);
-		this.instance = new type(project, this, this.api, { _ });
+		this.instance = new type(project, this, this.api);
 
 		// // lock and unlock states for files
 		// this.files = { };
@@ -194,7 +188,7 @@ export default class Lesson {
 
 		// set the starting slide
 		if (_.isNumber(this.startAt)) {
-			index = this.startAt - 1;
+			index = this.startAt;
 			delete this.startAt;
 		}
 
@@ -286,6 +280,10 @@ function initialize(lesson) {
 		slide.isFirst = index === 0;
 		slide.isQuestion = _.some(slide.choices);
 		slide.isSlide = !slide.isQuestion;
+
+		// check for a controller
+		if ('controller' in slide && !lesson.instance.controllers[slide.controller])
+			throw `Missing controller: ${slide.controller}`;
 
 		// debug helper
 		if ($state.isLocal && slide.start)

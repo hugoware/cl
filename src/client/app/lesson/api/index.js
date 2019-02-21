@@ -3,10 +3,10 @@
 import AssistantAPI from './assistant';
 import ScreenAPI from './screen';
 import ProgressAPI from './progress';
-import ContentAPI from './content';
-import EditorAPI from './editor'
-import ValidationAPI from './validate'
-import SoundAPI from './sound'
+import FileAPI from './file';
+import EditorAPI from './editor';
+import PreviewAPI from './preview';
+import SoundAPI from './sound';
 
 export default class LessonAPI {
 
@@ -15,11 +15,11 @@ export default class LessonAPI {
 
 		// attach apis
 		this.assistant = new AssistantAPI(this);
+		this.preview = new PreviewAPI(this);
 		this.screen = new ScreenAPI(this);
 		this.progress = new ProgressAPI(this);
-		this.content = new ContentAPI(this);
+		this.file = new FileAPI(this);
 		this.editor = new EditorAPI(this);
-		this.validate = new ValidationAPI(this);
 		this.sound = new SoundAPI(this);
 	}
 

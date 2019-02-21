@@ -204,13 +204,7 @@ export default class CodeEditor extends Component {
 	}
 
 	// queues up changes to the content manager
-	onChanged = event => {
-		if ($state.lesson) {
-			const { activeFile } = this;
-			setTimeout(() => $state.lesson.invoke('contentChange', activeFile));
-		}
-
-		// compile the file
+	onChanged = () => {
 		this.compile();
 	}
 

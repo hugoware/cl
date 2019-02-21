@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { broadcast } from '../../events';
+import $state from '../../state';
 
 export default class AssistantAPI {
 
@@ -14,19 +15,32 @@ export default class AssistantAPI {
 	}
 
 	/** speaks a message */
-	say = (message, options) => {
-		options = options || { };
-		options.message = message;
-		broadcast('set-message', options)
+	say = ({ message, emote }) => {
+		message = trimLeading(message);
+		broadcast('set-message', { message, emote });
+	}
+	
+	// return to the original message
+	revert = ({ silent = false } = { }) => {
+		const { slide } = $state.lesson;
+		broadcast('set-message', { 
+			message: slide.content,
+			emote: slide.emote || slide.emotion,
+			silent
+		});
 	}
 
 	// shortcut for displaying messages without speaking
-	show = message => 
-		this.say(message, { silent: true });
+	show = ({ message, emote }) => 
+		this.say({ message, emote, silent: true });
 
 	/** changes the emotion */
 	emote = emotion => {
 		broadcast('set-emotion', emotion);
 	}
 
+}
+
+function trimLeading(str) {
+	return _.map(_.trim(str).split(/\n/g), _.trim).join('\n');
 }

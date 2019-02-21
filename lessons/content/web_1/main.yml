@@ -104,24 +104,15 @@
 
       The closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.
 
-      [snippet html_tag_example highlight:30,5]
+      [snippet html_tag_example highlight:17,5]
 
 - slide:
     content: |
-      At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.
+      Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase "Hello, World!" in a large and bold font
 
-      The closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.
-
-      [snippet html_tag_example highlight:30,5]
+      [snippet html_tag_example highlight:4,13]
 
 - slide:
-    content: |
-      Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase "This is an example of HTML" in a large and bold font
-
-      [snippet html_tag_example highlight:4,26]
-
-- slide:
-    start: true
     mode: popup
     content: |
       We've talked a lot about what [define html] is and how it works, so let's actually try writing code and see what happens.
@@ -136,10 +127,47 @@
     content: |
       Open the file named `index.html` by [define double_click double clicking] on it in the [define file_browser].
 
+- slide:
+    controller: codeEditorIntro
+    content: |
+      Great! The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code. At the top, you'll see there's a new tab added for the file you just opened.
 
+- slide:
+    content: |
+      Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.
 
+- slide:
+    start: true
+    controller: previewAreaIntro
+    content: |
+      On the right side of the screen, we can see the result of the [define html] in the [define codelab_html_preview].
 
+- slide:
+    controller: changeHeadingContent
+    content: |
+      Let's start by changing the content of the [define html_element Element]. Replace the words "Hello, World!" with something different.
 
+- slide:
+    content: |
+      Now, let's try to type in an entirely new [define html_element]. This time we're going to create both the opening and closing [define html_tag tags] as well as the content inside.
+
+- slide:
+    controller: freeHeadingInsert
+    content: |
+      Create the following [define html_element]
+
+      [snippet free_heading_insert]
+
+- slide:
+    content: |
+      Practice makes perfect! Let's try that again with another [define html_element].
+
+- slide:
+    controller: freeButtonInsert
+    content: |
+      Create the following [define html_element]
+
+      [snippet free_button_insert]
 
 - slide:
     title: FINISHED WARNING

@@ -8,6 +8,9 @@ export default class ScreenAPI {
 		// highlights
 		this.highlight.fileBrowserItem = path => this.highlight(`.item[file="${path}"]`);
 		this.highlight.fileBrowser = () => this.highlight(`#file-browser`);
+		this.highlight.workspace = () => this.highlight(`#workspace`);
+		this.highlight.codeEditor = () => this.highlight(`.editor.ace_editor`);
+		this.highlight.previewArea = () => this.highlight(`#preview`);
 		this.highlight.clear = () => this.clear();
 		
 		// markers

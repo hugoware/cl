@@ -1,3 +1,5 @@
+import { _ } from './lib';
+
 export const controller = true;
 
 export function onEnter() {
@@ -37,11 +39,14 @@ export function onEnter() {
 		: `However, in this case I'm not sure what browser you're using`;
 
 
-	this.assistant.say(`
-When you browse the [define internet], you visit [define website websites] that show you information. That information is displayed on your screen using a [define web_browser web browser].
+	this.assistant.say({
+		emote: 'happy',
+		message: `
+			When you browse the [define internet], you visit [define website websites] that show you information. That information is displayed on your screen using a [define web_browser web browser].
 
-There's many web browsers that are used such as Chrome, Firefox, Safari, and more.
+			There's many web browsers that are used such as Chrome, Firefox, Safari, and more.
 
-${tell}`);
+			${tell}`
+		});
 
 }

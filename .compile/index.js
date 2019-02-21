@@ -1,16 +1,39 @@
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 // import controllers
 
+
+var _lib = require('./lib');
 
 var _browserType = require('./browserType');
 
 var browserType = _interopRequireWildcard(_browserType);
 
+var _changeHeadingContent = require('./changeHeadingContent');
+
+var changeHeadingContent = _interopRequireWildcard(_changeHeadingContent);
+
+var _codeEditorIntro = require('./codeEditorIntro');
+
+var codeEditorIntro = _interopRequireWildcard(_codeEditorIntro);
+
+var _freeButtonInsert = require('./freeButtonInsert');
+
+var freeButtonInsert = _interopRequireWildcard(_freeButtonInsert);
+
+var _freeHeadingInsert = require('./freeHeadingInsert');
+
+var freeHeadingInsert = _interopRequireWildcard(_freeHeadingInsert);
+
 var _highlightFileBrowser = require('./highlightFileBrowser');
 
 var highlightFileBrowser = _interopRequireWildcard(_highlightFileBrowser);
+
+var _previewAreaIntro = require('./previewAreaIntro');
+
+var previewAreaIntro = _interopRequireWildcard(_previewAreaIntro);
 
 var _waitForIndexHtml = require('./waitForIndexHtml');
 
@@ -20,35 +43,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// performs the oxford comma
-function $oxford(items, conjunction) {
-  var total = items.length;
-
-  // determine the best
-  if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
-
-  // return the result
-  else {
-      var last = items.pop();
-      return items.join(', ') + ', ' + conjunction + ' ' + last;
-    }
-}
-
-// pluralizes a word
-function $plural(count, single, plural, none) {
-  var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
-
-  var value = Math.abs(count);
-  var message = value === 1 ? single : value > 1 ? plural ? plural : single + 's' : none || plural;
-  return message.replace(delimeter, count);
-}
-
 // lesson controller
-
 var web1Lesson = function () {
 
   // setup the lesson
-  function web1Lesson(project, lesson, api, utils) {
+  function web1Lesson(project, lesson, api) {
     var _this = this;
 
     _classCallCheck(this, web1Lesson);
@@ -94,13 +93,10 @@ var web1Lesson = function () {
       }, {
         "content": "The word between the opening and closing tags is the type. Each [define html_element] has a different role in the web browser. For example, this `h1` Element is a heading.\n\n[snippet html_tag_example highlight:1,2]\n"
       }, {
-        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:30,5]\n"
+        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:17,5]\n"
       }, {
-        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:30,5]\n"
+        "content": "Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase \"Hello, World!\" in a large and bold font\n\n[snippet html_tag_example highlight:4,13]\n"
       }, {
-        "content": "Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase \"This is an example of HTML\" in a large and bold font\n\n[snippet html_tag_example highlight:4,26]\n"
-      }, {
-        "start": true,
         "mode": "popup",
         "content": "We've talked a lot about what [define html] is and how it works, so let's actually try writing code and see what happens.\n"
       }, {
@@ -109,6 +105,28 @@ var web1Lesson = function () {
       }, {
         "controller": "waitForIndexHtml",
         "content": "Open the file named `index.html` by [define double_click double clicking] on it in the [define file_browser].\n"
+      }, {
+        "controller": "codeEditorIntro",
+        "content": "Great! The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code. At the top, you'll see there's a new tab added for the file you just opened.\n"
+      }, {
+        "content": "Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.\n"
+      }, {
+        "start": true,
+        "controller": "previewAreaIntro",
+        "content": "On the right side of the screen, we can see the result of the [define html] in the [define codelab_html_preview].\n"
+      }, {
+        "controller": "changeHeadingContent",
+        "content": "Let's start by changing the content of the [define html_element Element]. Replace the words \"Hello, World!\" with something different.\n"
+      }, {
+        "content": "Now, let's try to type in an entirely new [define html_element]. This time we're going to create both the opening and closing [define html_tag tags] as well as the content inside.\n"
+      }, {
+        "controller": "freeHeadingInsert",
+        "content": "Create the following [define html_element]\n\n[snippet free_heading_insert]\n"
+      }, {
+        "content": "Practice makes perfect! Let's try that again with another [define html_element].\n"
+      }, {
+        "controller": "freeButtonInsert",
+        "content": "Create the following [define html_element]\n\n[snippet free_button_insert]\n"
       }, {
         "title": "FINISHED WARNING",
         "content": "about to finish"
@@ -121,8 +139,16 @@ var web1Lesson = function () {
           "content": "<div>\n  <h1>The Title</h1>\n  <p>The main content!</p>\n</div>",
           "type": "html"
         },
+        "free_button_insert": {
+          "content": "<button>Click me</button>",
+          "type": "html"
+        },
+        "free_heading_insert": {
+          "content": "<h3>A smaller heading</h3>",
+          "type": "html"
+        },
         "html_tag_example": {
-          "content": "<h1>This is an example of HTML</h1>",
+          "content": "<h1>Hello, World!</h1>",
           "type": "html"
         }
       },
@@ -209,17 +235,19 @@ var web1Lesson = function () {
           "id": "double_click",
           "name": "Double Click",
           "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
+        },
+        "codelab_editor": {
+          "id": "codelab_editor",
+          "name": "Code Editor",
+          "define": "The CodeLab editing area\n"
+        },
+        "codelab_html_preview": {
+          "id": "codelab_html_preview",
+          "name": "Preview Area",
+          "define": "You can see your HTML as you type\n"
         }
       }
     };
-
-    // other utilities
-    utils.plural = $plural;
-    utils.oxford = $oxford;
-
-    // share utility function
-    var _ = window._ = utils._;
-    utils._.assign(_, utils);
 
     // timing
     this._delays = {};
@@ -227,10 +255,10 @@ var web1Lesson = function () {
 
     // expose API tools
     this.assistant = api.assistant;
+    this.preview = api.preview;
     this.screen = api.screen;
     this.progress = api.progress;
-    this.validate = api.validate;
-    this.content = api.content;
+    this.file = api.file;
     this.editor = api.editor;
     this.sound = api.sound;
 
@@ -239,12 +267,12 @@ var web1Lesson = function () {
 
     // setup each included entry
     var refs = {
-      browserType: browserType, highlightFileBrowser: highlightFileBrowser, waitForIndexHtml: waitForIndexHtml
+      browserType: browserType, changeHeadingContent: changeHeadingContent, codeEditorIntro: codeEditorIntro, freeButtonInsert: freeButtonInsert, freeHeadingInsert: freeHeadingInsert, highlightFileBrowser: highlightFileBrowser, previewAreaIntro: previewAreaIntro, waitForIndexHtml: waitForIndexHtml
     };
 
     // setup each reference
-    _.each(refs, function (ref, key) {
-      if (ref.controller) _this.controllers[key] = ref;else _.assign(_this, ref);
+    _lib._.each(refs, function (ref, key) {
+      if (ref.controller) _this.controllers[key] = ref;else _lib._.assign(_this, ref);
     });
 
     // debugging
@@ -287,10 +315,10 @@ var web1Lesson = function () {
   }, {
     key: 'clear',
     value: function clear() {
-      _.each(this._delays, function (cancel) {
+      _lib._.each(this._delays, function (cancel) {
         return cancel();
       });
-      _.each(this._intervals, function (cancel) {
+      _lib._.each(this._intervals, function (cancel) {
         return cancel();
       });
     }

@@ -179,14 +179,15 @@ export default class ManagedEditor {
 	}
 
 	// sets the focus point position
-	onSetWorkingArea = (file, options) => {
+	onSetWorkingArea = (options) => {
+		const { path } = options;
 
 		// find the working instance, if any
-		const instance = this.getInstance(file);
-		if (instance) {
+		const instance = this.getInstance(path);
+		if (!instance) {
 
 			// since it's not open yet, update the file
-			throw 'NotImplemented: set area and update when opening';
+			// throw 'NotImplemented: set area and update when opening';
 			
 		}
 
@@ -195,7 +196,11 @@ export default class ManagedEditor {
 
 		// determine the position
 		const isLine = !!(options.line || options.asLine || options.isLine);
-		const range = getPosition(this, options, { isLine, requireRange: true });
+		const range = getPosition(this, options, {
+			offsetStart: -1,
+			isLine,
+			requireRange: true 
+		});
 		instance.hasWorkingArea = true;
 		
 		// get a useful range
@@ -237,10 +242,15 @@ export default class ManagedEditor {
 		const { command = {} } = event;
 
 		// create the options to check with
-		event.isInsert = /insert/i.test(command.name);
-		event.isBackspace = !event.isInsert && /backspace/i.test(command.name);
-		event.isDelete = !event.isBackspace && /del/i.test(command.name);
-		event.isComment = !event.isDelete && /comment/i.test(command.name);
+		const newline = doc.getNewLineCharacter();
+		const change = { };
+		change.isInsert = /insert/i.test(command.name);
+		change.isBackspace = !!(!change.isInsert && /backspace/i.test(command.name));
+		change.isDelete = !!(!change.isBackspace && /del/i.test(command.name));
+		change.isComment = !!(!change.isDelete && /comment/i.test(command.name));
+		change.data = _.toString(event.args);
+		change.isNewline = change.isNewLine = event.args === newline;
+		change.hasNewline = change.hasNewLine = change.hasNewlines = change.hasNewLines = (change.isNewline || (change.data.split(newline).length > 1));
 		
 		// keyboard nav is allowed always
 		if (/^goto(left|right)$/i.test(command.name)
@@ -262,34 +272,46 @@ export default class ManagedEditor {
 			const { doc } = session;
 			const selection = this.editor.getSelectionRange();
 			const area = workingArea.range;
-			const startAtStart = selection.start.row === area.start.row && selection.start.column === area.start.column;
-			const startAtEnd = selection.start.row === area.end.row && selection.start.column === area.end.column;
-			const endAtStart = selection.end.row === area.start.row && selection.end.column === area.start.column;
-			const endAtEnd = selection.end.row === area.end.row && selection.end.column === area.end.column;
 			const selectionStartIndex = doc.positionToIndex(selection.start);
 			const selectionEndIndex = doc.positionToIndex(selection.end);
-			const areaStartIndex = doc.positionToIndex(area.start);
+			
+			// start offset is always nudged forward by one because when it's created
+			// it's shifted back a little bit - this is because if the marker is ever
+			// adjusted, it'll move forward - this makes sure that you can't ever get
+			// fully to the front of the selection and will prevent it from destroying
+			// the working area range
+			const areaStartIndex = doc.positionToIndex(area.start) + 1;
 			const areaEndIndex = doc.positionToIndex(area.end);
-			const startInRange = areaStartIndex <= selectionStartIndex && selectionStartIndex < areaEndIndex;
-			const endInRange = areaStartIndex <= selectionEndIndex && selectionEndIndex < areaEndIndex;
-			const backspaceAtFront = event.isBackspace && startAtStart && endAtStart;
-			const deleteAtEnd = event.isDelete && startAtEnd && endAtEnd;
+			const startAtStart = selectionStartIndex === areaStartIndex;
+			const startAtEnd = selectionStartIndex === areaEndIndex;
+			const endAtStart = selectionEndIndex === areaStartIndex;
+			const endAtEnd = selectionEndIndex === areaEndIndex;
+			const startInRange = selectionStartIndex >= areaStartIndex && selectionStartIndex <= areaEndIndex;
+			const endInRange = selectionEndIndex >= areaStartIndex && selectionEndIndex <= areaEndIndex;
+			const backspaceAtFront = change.isBackspace && startAtStart && endAtStart;
+			const deleteAtEnd = change.isDelete && startAtEnd && endAtEnd;
 
 			// since there's a working area, we need to check that
 			// the change can be made
+			// console.log(selectionEndIndex, areaStartIndex, areaEndIndex, selectionEndIndex);
+			// console.log(backspaceAtFront, deleteAtEnd, startInRange, endInRange);
 			const disallow = backspaceAtFront || deleteAtEnd || !startInRange || !endInRange;
 
 			// not allowed to change
 			if (disallow) {
-				$state.lesson.invoke('rejectContentChange', instance, event);
+				$state.lesson.invoke('rejectContentChange', instance.file, change, instance);
 				return cancelEvent(event);
 			}
+
+			// update the working area
+			// area.start = doc.indexToPosition(selectionStartIndex);
+			// area.end = doc.indexToPosition(selectionEndIndex);
 
 		}
 
 		// if there's a lesson, allow this to prevent editing
 		// the file under certain conditions
-		const allow = $state.lesson.invoke('beforeContentChange', instance, event);
+		const allow = $state.lesson.invoke('beforeContentChange', instance.file, change, instance);
 		if (allow === false)
 			return cancelEvent(event);
 
@@ -306,6 +328,10 @@ export default class ManagedEditor {
 				this.editor.resize(true);
 			});
 		}
+
+		// since this worked, notify
+		setTimeout(() =>
+			$state.lesson.invoke('contentChange', instance.file, change, instance));
 
 		// otherwise, it's okay
 		return true;
@@ -511,7 +537,9 @@ export default class ManagedEditor {
 
 				// create a marker to use for focusing hints and errors
 				_.each([ 'focusPoint', 'workingArea' ], prop => {
-					const range = new Brace.Range(0, 0, 0, 1);
+					const range = new Brace.Range();
+					range.start = session.doc.createAnchor(0, 0);
+					range.end = session.doc.createAnchor(0, 1);
 					const index = session.addMarker(range);
 					const point = session.getMarkers()[index];
 					point.inFront = true;
@@ -541,10 +569,25 @@ export default class ManagedEditor {
 	 * @param {number} col the column to focus at
 	*/
 	setCursor = options => {
-		const { row, column } = getPosition(this, options);
 		this.editor.focus();
-		this.editor.gotoLine(row, column, true);
-		this.editor.renderer.scrollToRow(row);
+		let scrollRow;
+
+		if (options.start === true) {
+			this.editor.selection.moveCursorFileStart();
+			scrollRow = 0;
+		}
+		else if (options.end === true) {
+			this.editor.selection.moveCursorFileEnd();
+			scrollRow = this.editor.getLastVisibleRow();
+		}
+		else {
+			const { row, column } = getPosition(this, options);
+			this.editor.gotoLine(row, column, true);
+			scrollRow = row;
+		}
+		
+		// update the view
+		this.editor.renderer.scrollToRow(scrollRow);
 		this.editor.resize();
 	}
 
@@ -568,8 +611,8 @@ export default class ManagedEditor {
 
 		// check the content
 		const { session, workingArea } = this.activeInstance;
-		const { isLine, range } = workingArea;
-		const newline = session.doc.getNewLineCharacter();
+		const { range } = workingArea;
+		// const newline = session.doc.getNewLineCharacter();
 
 		// capturing each line
 		// if (isLine) {
@@ -582,8 +625,15 @@ export default class ManagedEditor {
 
 		// 	return content.join(newline)
 		// }
-		let content = session.doc.getTextRange(workingArea.range);
-		content = content.replace(/\n$/, '');
+		let content = session.doc.getTextRange(range);
+
+		// like with working areas, we need to skip the
+		// first character since it's a safety character
+		// to prevent the range from ever being zero
+		content = content.substr(1);
+
+		// trim newlines??
+		// content = content.replace(/\n$/, '');
 		return content;
 	}
 
@@ -636,7 +686,6 @@ export default class ManagedEditor {
 	 * @param {ProjectItem} file the file that should be found
 	 * */
 	getContent = path => {
-		console.log($state);
 		const file = $state.paths[path];
 		return file.current || file.content;
 
@@ -649,10 +698,6 @@ export default class ManagedEditor {
 
 	/** grabs the current selection, if any */
 	getSelection = file => {
-
-		
-
-
 		const instance = this.activeInstance;
 		const { session } = instance;
 		const { doc } = session;
@@ -664,7 +709,8 @@ export default class ManagedEditor {
 }
 
 // determine a position from an argument
-function getPosition(managed, position, { isLine, requireRange, direction = 1 } = { }) {
+function getPosition(managed, position, {
+	isLine, requireRange, offsetEnd, offsetStart, direction = 1 } = { }) {
 	const { content, session } = managed.activeInstance;
 	const { doc } = session;
 	const { length } = content;
@@ -704,26 +750,28 @@ function getPosition(managed, position, { isLine, requireRange, direction = 1 } 
 
 	// create a range
 	if (_.isObject(position.range)) {
-		range.start = toPosition(doc, position.range.start);
-		range.end = toPosition(doc, position.range.end);
+		range.start = toPosition(doc, position.range.start, offsetStart);
+		range.end = toPosition(doc, position.range.end, offsetEnd);
 	}
 
 	if (_.isNumber(position.start)) {
 		if (isLine) range.start = { row: position.start - 1, column: 0 };
-		else range.start = toPosition(doc, position.start);
+		else range.start = toPosition(doc, position.start, offsetStart);
 	}
 	
 	if (_.isNumber(position.end)) {
 		if (isLine) range.end = { row: position.end, column: 0 };
-		else range.end = toPosition(doc, position.end);
+		else range.end = toPosition(doc, position.end, offsetEnd);
 	}
 
 	return range;
 }
 
 // looks up an index
-function toPosition(doc, value) {
-	return _.isNumber(value) ? doc.indexToPosition(value) : value;
+function toPosition(doc, value, offset = 0) {
+	return _.isNumber(value)
+		? doc.indexToPosition(value + offset) 
+		: value;
 }
 
 // // evaluates a cursor position request

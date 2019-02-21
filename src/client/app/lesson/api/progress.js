@@ -9,38 +9,38 @@ export default class ProgressAPI {
 
 	// handles a variety of scenarios to check if
 	// validation of the slide is allowed
-	update = (obj, actions) => {
+	update = ({ compare, result, valid, allow = _.noop, deny = _.noop, always = _.noop }) => {
 		const isAllowed = !!this.allowed;
 		let shouldAllow;
 
+		// alt aliases to check for
+		compare = valid || result || compare;
+
 		// check for true
-		if (obj === true)
+		if (compare === true)
 			shouldAllow = true;
 
 		// check for falsy value
-		if (!obj)
+		if (!compare)
 			shouldAllow = false;
 
 		// check for an error object
-		if ('error' in obj)
-			shouldAllow = !obj.error
+		if ('error' in compare)
+			shouldAllow = !compare.error
 
 		// apply the result
 		if (shouldAllow) this.allow();
 		else this.block();
 
-		// check for any functions
-		if (!actions) return;
-
 		// switching to allowed
-		if (!isAllowed && shouldAllow && actions.allow) {
-			actions.allow();
-			actions.always();
+		if (!isAllowed && shouldAllow && allow) {
+			allow();
+			always();
 		}
 		// switching to denied
-		else if (isAllowed && !shouldAllow && actions.deny) {
-			actions.deny();
-			actions.always();
+		else if (isAllowed && !shouldAllow && deny) {
+			deny();
+			always();
 		}
 
 	}
@@ -58,6 +58,7 @@ export default class ProgressAPI {
 	// immediately goes to the next slide
 	next = () => {
 		broadcast('progress-next');
+		this.allow();
 	}
 	
 	// prevent moving to the next slide

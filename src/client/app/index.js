@@ -1,4 +1,4 @@
-import { $, _, Bluebird } from './lib';
+import { $, _, Bluebird, Cheerio, CodeValidator, CssValidator, HtmlValidator } from './lib';
 
 // extensions
 import * as __extensions__ from './extensions';
@@ -39,6 +39,15 @@ Bluebird.config({ warnings: false });
 
 // shared channel for iframe access
 window.__CODELAB__ = { };
+
+// share library access
+window.__CODELAB_LIBS__ = {
+	_,
+	$: Cheerio,
+	CodeValidator,
+	CssValidator,
+	HtmlValidator,
+};
 
 // the main app class
 class App extends Component {

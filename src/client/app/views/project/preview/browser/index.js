@@ -240,9 +240,12 @@ export default class BrowserMode extends Component {
 	reset() {
 		this.ui.viewer.hide();
 		this.ui.output.show();
-		this.output.innerHTML = '';
-		this.output.outerHTML = this.output.outerHTML;
-		this.output.innerHTML = NO_PREVIEW_LOADED;
+
+		if (!!this.output) {
+			this.output.innerHTML = '';
+			this.output.outerHTML = this.output.outerHTML;
+			this.output.innerHTML = NO_PREVIEW_LOADED;
+		}
 	}
 
 	// navigates to a new url

@@ -73,6 +73,13 @@ const slides = _.filter(content, item => 'slide' in item || 'question' in item);
 $fsx.ensureDirSync(tempDir);
 $fsx.emptyDirSync(tempDir);
 
+// copy helpers
+_.each(['utils', 'lib'], key => {
+	const source = $path.resolve(`./lessons/compiler/imports/${key}.js`);
+	const target = `${tempDir}/${key}.js`;
+	$fsx.copySync(source, target);
+});
+
 // include all scripts
 manifest.defs = { };
 const scripts = [];

@@ -11,13 +11,17 @@ export function onOpenFile(file) {
 }
 
 export function onEnter() {
-
-	this.screen.highlight.fileBrowserItem('/index.html');
+	this.progress.block();
+	
+	this.file.readOnly({ path: '/index.html' });
+	this.screen.highlight.fileBrowserItem({ path: '/index.html' });
 
 	this.delay(8000, () => {
-		this.assistant.say(`To open the \`index.html\` file, double click the item in the File Browser.
-
-To double click, move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.`);
+		this.assistant.say({
+			message: `
+				To open the \`index.html\` file, double click the item in the File Browser.
+				To double click, move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.`
+			});
 	});
 }
 
