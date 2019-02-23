@@ -83,7 +83,7 @@ export default class HintDisplay extends Component {
 		this.refreshPosition();
 
 		// check the message
-		const hash = _.snakeCase(options.message);
+		const hash = _.trim(options.message);
 		if (hash === this._hash)
 			return;
 

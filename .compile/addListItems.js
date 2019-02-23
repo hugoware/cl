@@ -1,13 +1,12 @@
 
 import { HtmlValidator } from './lib';
-import { validate_insert_button } from './validation';
+import { validate_list } from './validation';
 
-export const controller = true;;
+export const controller = true;
 
-
-function validate(instance) {
+export function validate(instance) {
 	const content = instance.file.content({ path: '/index.html' });
-	const result = HtmlValidator.validate(content, validate_insert_button);
+	const result = HtmlValidator.validate(content, validate_list);
 	
 	// update validation
 	instance.editor.hint.validate({ path: '/index.html', result });
@@ -16,7 +15,7 @@ function validate(instance) {
 	instance.progress.update({
 		result,
 		allow: () => instance.assistant.say({
-			message: `Great! Let's move to the next step!`
+			message: `Wonderful! You'll notice that the [define web_browser] automatically placed a number next to each of the list items you created!`
 		}),
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
@@ -24,29 +23,17 @@ function validate(instance) {
 }
 
 export function onEnter() {
-	this.editor.focus();
 	this.progress.block();
 	this.file.allowEdit({ path: '/index.html' });
-
-	// for curious students
-	this.preview.addEvent('click', 'button', () => {
-		this.assistant.say({
-			emote: 'happy',
-			message: `
-				That button doesn't do anything just yet, but we'll learn how to make it do stuff in later lessons.
-				I'm glad you we're curious and tried clicking on it!`
-			});
-	});
 }
 
 export function onReady() {
+	this.editor.cursor({ end: true });
 	validate(this);
 }
 
 export function onExit() {
 	this.file.readOnly({ path: '/index.html' });
-	this.editor.area.clear();
-	this.preview.clearEvents();
 }
 
 export function onContentChange(file) {

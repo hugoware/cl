@@ -25,3 +25,8 @@
     Something different for html stuff
 
     `<img src="something" />`
+
+- id: html_child_elements
+  name: Child Elements
+  define: |
+    HTML Elements that are contained inside of other HTML Elements. Also commonly referred to as **nested Elements**.

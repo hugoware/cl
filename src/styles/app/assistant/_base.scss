@@ -82,6 +82,7 @@
 		background: #272822;
 		border-radius: 5px;
 		text-shadow: none;
+		position: relative;
 
 		.snippet-highlight {
 			background: rgba(#fff, 0.15);
@@ -89,6 +90,41 @@
 			position: absolute;
 			z-index: 999;
 		}
+
+		.snippet-preview {
+			$preview-gap: 3px;
+			$preview-radius: 4px;
+			position: absolute;
+			top: $preview-gap;
+			right: $preview-gap;
+			bottom: $preview-gap;
+			z-index: 5;
+			background: lighten(#636C72, 50%);
+			border-radius: 0 $preview-radius $preview-radius 0;
+
+			.snippet-title {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				background: rgba(0,0,0,0.2);
+				font-size: 14px;
+				padding: 0 17px;
+				border-radius: $preview-radius 0 $preview-radius 0;
+				text-transform: lowercase;
+			}
+
+			.snippet-output {
+				padding: 15px 20px;
+				color: #000;
+			}
+
+			// undo some reset stuff
+			ol { list-style: decimal; }
+			ul { list-style: disc; }
+			ol, ul { padding: 0 20px; }
+
+		}
+
 	}
 
 	.define {

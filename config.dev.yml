@@ -4,8 +4,11 @@ http_port: 4500
 database: codelab
 
 lesson_directory: ~/lessons/output/
+audio_directory: ~/.audio/
 cache_directory: ~/.cache/
 data_directory: ~/.data/
+
+azure_subscription_key: 5ec90588a27c47fba5bcec56b470c2a9
 
 google_client_id: 961278028726-i4baurj84uri5q440vedq44bo8dpmi14.apps.googleusercontent.com
 google_web_secret: vysKp687PqFSAU2YQtR0ia_T

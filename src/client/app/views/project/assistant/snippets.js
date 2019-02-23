@@ -1,5 +1,5 @@
 
-import { _ } from '../../../lib';
+import { _, $ } from '../../../lib';
 import $editor from '../../../editor';
 
 // attach each snippet
@@ -16,6 +16,18 @@ export function applySnippets(slide, lesson) {
 		// update the element
 		const type = element.getAttribute('type');
 		const snippet = lesson.getSnippet(type);
+
+		// check for a preview
+		const previewWidth = element.getAttribute('preview');
+		if (_.some(previewWidth)) {
+			const preview = $(`<div class="snippet-preview" style="width: ${previewWidth}" >
+				<div class="snippet-title">Preview</div>
+				<div class="snippet-output" >${snippet.content}</div>
+			</div>`);
+
+			// show the preview area
+			element.appendChild(preview[0]);
+		}
 		
 		// capture all highlighted areas
 		let highlight = _.trim(element.getAttribute('highlight')).split(/\|+/g);

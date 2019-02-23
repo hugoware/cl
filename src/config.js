@@ -21,6 +21,9 @@ class Config {
 		return true;
 	}
 	
+	/** @returns {string} key for recording speech */
+	get azureSubscriptionKey() { return this.data.azure_subscription_key; }
+
 	/** @returns {string} the web client ID for google auth */
 	get googleWebclientId() { return this.data.google_webclient_id; }
 	

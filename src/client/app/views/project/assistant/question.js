@@ -73,7 +73,8 @@ export default class Question extends Component {
 	}
 
 	refresh() {
-		console.log('not a thing');
+		// TODO: still happens
+		// console.log('not a thing');
 	}
 
 	/** handles updating the view with slide content 

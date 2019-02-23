@@ -74,4 +74,9 @@ export default class EditorAPI {
 		broadcast('show-hint', { message });
 	}
 
+	// sets the focus to the editor
+	focus = () => {
+		setTimeout($state.editor.setFocus);
+	}
+
 }

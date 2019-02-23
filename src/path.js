@@ -50,6 +50,15 @@ export function resolveLesson(id = '', file) {
   return resolveRoot(path);
 }
 
+/** Resolves a path to a lesson directory
+ * @param {string} key the key to locate in the audio directory
+ * @returns {string} the resolved path
+ */
+export function resolveAudio(key) {
+	let path = `${$config.audioDirectory}/${key}.mp3`;
+  return resolveRoot(path);
+}
+
 /** Resolves a path from the public web server directory
  * @param {string} path the path to resolve
  * @returns {string} the resolved path

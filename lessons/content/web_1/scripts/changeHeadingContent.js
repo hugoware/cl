@@ -27,8 +27,10 @@ export function onContentChange(file, change) {
 	if (simplified === 'somethingdifferent') {
 		$valid = true;
 		this.assistant.say({
-			message: `Oh! Very funny! I guess I did say "something different", didn't I?`,
 			emote: 'happy',
+			message: `
+				Oh! I did say to type _"something different"_, didn't I?
+				You're very clever!`
 		});
 	}
 

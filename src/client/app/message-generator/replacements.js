@@ -11,4 +11,6 @@ export default {
 	'`-`': 'hyphen',
 	'`==`': 'equal to sign',
 	'`=`': 'equal sign',
+	'`ol`': 'Oh-El',
+	'`li`': 'El-Eye',
 };

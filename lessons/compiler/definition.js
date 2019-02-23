@@ -11,7 +11,7 @@ export default function processDefinitions(state, manifest, definitions) {
 
 	// start by finding all definitions used
 	_.each(manifest.lesson, slide => {
-		const all = `${slide.content} ${slide.hint} ${slide.title}`;
+		const all = `${slide.content} ${slide.hint} ${slide.title} ${slide.explain}`;
 		const matches = all.match(/\[define\s+[^( |\])]+/g);
 		_.each(matches, match => {
 			const key = _.trim(match.substr(7));

@@ -47,5 +47,11 @@ export default class FileAPI {
 		// broadcast('set-editor-readonly', file, !!readOnly);
 	}
 
+	// allow editing
+	allowEdit = ({ path, file }) => {
+		this.readOnly({ path, file, readOnly: false });
+	}
+	
+
 }
 

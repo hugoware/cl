@@ -224,12 +224,6 @@ export default class ManagedEditor {
 		const instance = this.activeInstance;
 		if (!(instance && $state.lesson)) return true;
 
-		// make sure it's not readonly
-		if (instance.file.readOnly) {
-			$state.lesson.invoke('tryEditReadOnly', instance.file);
-			return cancelEvent(event);
-		}
-
 		// weird issue happenw when holding down the mouse
 		// it acts like a continued selection and will 
 		// insert and replace wherever the cursor is at
@@ -241,17 +235,6 @@ export default class ManagedEditor {
 		const { doc } = session;
 		const { command = {} } = event;
 
-		// create the options to check with
-		const newline = doc.getNewLineCharacter();
-		const change = { };
-		change.isInsert = /insert/i.test(command.name);
-		change.isBackspace = !!(!change.isInsert && /backspace/i.test(command.name));
-		change.isDelete = !!(!change.isBackspace && /del/i.test(command.name));
-		change.isComment = !!(!change.isDelete && /comment/i.test(command.name));
-		change.data = _.toString(event.args);
-		change.isNewline = change.isNewLine = event.args === newline;
-		change.hasNewline = change.hasNewLine = change.hasNewlines = change.hasNewLines = (change.isNewline || (change.data.split(newline).length > 1));
-		
 		// keyboard nav is allowed always
 		if (/^goto(left|right)$/i.test(command.name)
 			|| /^goline(down|up)$/i.test(command.name)
@@ -267,6 +250,23 @@ export default class ManagedEditor {
 			|| /^esc$/i.test(command.name)
 		) return;
 
+		// make sure it's not readonly
+		if (instance.file.readOnly) {
+			$state.lesson.invoke('tryEditReadOnly', instance.file);
+			return cancelEvent(event);
+		}
+
+		// create the options to check with
+		const newline = doc.getNewLineCharacter();
+		const change = { };
+		change.isInsert = /insert/i.test(command.name);
+		change.isBackspace = !!(!change.isInsert && /backspace/i.test(command.name));
+		change.isDelete = !!(!change.isBackspace && /del/i.test(command.name));
+		change.isComment = !!(!change.isDelete && /comment/i.test(command.name));
+		change.data = _.toString(event.args);
+		change.isNewline = change.isNewLine = event.args === newline;
+		change.hasNewline = change.hasNewLine = change.hasNewlines = change.hasNewLines = (change.isNewline || (change.data.split(newline).length > 1));
+		
 		// get the ranges
 		if (hasWorkingArea) {
 			const { doc } = session;

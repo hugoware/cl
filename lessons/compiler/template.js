@@ -39,8 +39,8 @@ class $LESSON_TYPE$Lesson {
 
 		// setup each reference
 		_.each(refs, (ref, key) => {
-			if (ref.controller) this.controllers[key] = ref;
-			else _.assign(this, ref);
+			if (ref.controller)
+				this.controllers[key] = ref;
 		});
 
 		// debugging

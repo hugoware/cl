@@ -21,7 +21,7 @@
 -
   slide:
     content: |
-      Generally speaking, web pages viewed in the browser are created using just three different core technologies.
+      Generally speaking, web pages viewed in the browser are created using just three different core technologies. These are [define html], [define css], and [define javascript].
 
       [image tech.png]
 
@@ -39,7 +39,7 @@
 -
   slide:
     content: |
-      [define css] is a language that's used to determine the visual appearance of a web page. Colors, font sizes, layout, and more are defined by the rules written in [define css]
+      [define css] is a language that's used to determine the visual appearance of a web page. The colors, font sizes, layout, and other design properties of your web page are defined by the rules in [define css]
 
       [image css-focus.png]
 
@@ -137,7 +137,6 @@
       Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.
 
 - slide:
-    start: true
     controller: previewAreaIntro
     content: |
       On the right side of the screen, we can see the result of the [define html] in the [define codelab_html_preview].
@@ -170,59 +169,159 @@
       [snippet free_button_insert]
 
 - slide:
-    title: FINISHED WARNING
-    content: about to finish
+    mode: overlay
+    content: |
+      So far you've written a few simple [define html_element HTML Elements] that had some words inside.
+
+      Each [define html_element] you created had a different effect on the contents.
 
 - slide:
-    title: FINISHED
-    content: did finish
+    content: |
+      For example, the `h1` [define html_element Element] made the font large and bold.
+
+      The `button` [define html_element Element] created a clickable button.
+
+      Basically, the type of [define html_element] used will have a different effect on the contents.
+
+- slide:
+    content:
+      This is where [define html] starts getting exciting!
+
+      Text isn't the only thing that you can put inside of an [define html_element]!
+
+- slide:
+    content: |
+      Many [define html_element HTML Elements] allow for you to put even more Elements inside of them.
+
+      [snippet list_example]
+
+      In fact, most websites you visit on the [define internet] are made up of hundreds, or even thousands, of individual [define html_element HTML Elements]!
+
+- slide:
+    content: |
+      Let's review the [define html] code sample below.
+
+      [snippet list_example highlight:0,4|48,5]
+
+      Like with the previous examples, there are still opening and closing [define html_tag tags].
+
+- slide:
+    content: |
+      Between the opening and closing [define html_tag tags] are more [define html_element HTML Elements].
+
+      [snippet list_example highlight:6,12|20,12|34,13]
+
+      Often times you'll hear these called [define html_child_elements] or "nested" Elements.
 
 
+- slide:
+    content: |
+      These two [define html_element Element] types work together to create a list of numbers in the [define web_browser].
 
-# - three main technologies
-# - focusing on html
-# - What is HTML
-# - open tag
-# - close tag
-# - content
-# - the whole thing in an element
-# - let's give it a try
-# - open index.html
-# - change the content between tags
-# - the preview area updates each time
-# - try and write a new tag entirely underneath
-# - shows up as a completely separate block of code
-# - the name of the tag changes the behavior
-# - heading tag
-# - the structure is the same - name is different
-# - ask them to add a heading
-# - great work
-# - Content has just been text and words
-# - Content can also be other tags
-# - Show an ordered list
-# - have them add a list item
-# - explain that the number 1 is not something they added
-# - ask them to add 4 more items
-# - emphasize each item added moves the list down
-# - let's look at one more tag that
-# - This can get rather complicated at times
-# - some elements have even more nested elements
-# - show a table
-# - point out the row
-# - point out the cell
-# - Let's try and edit one
-# - add a table with items in it
-# - this one has a lot of stuff in it
-# - let them add and item to the list
-# - let them modify a cell
-# - Great, let's add another row all together
-# - Let's review what we've learned
-# - Great! Let's keep going
-# - What is the opening tag
-# - What is the closing tag
-# - what is the content
-# - what is the entire thing called
+      [snippet list_example preview:45%]
+
+      The `ol` Element tells the [define web_browser] that each of the child `li` Elements should be displayed as a new **list item**.
 
 
+- slide:
+    mode: popup
+    content: |
+      This might seem a little confusing at first, but it'll make much more sense once you try it out for yourself.
 
+- slide:
+    controller: addListItems
+    content: |
+      Create the list in the example below.
 
+      [snippet list_example]
+
+- slide:
+    mode: overlay
+    content: |
+      Great work! There's still a lot to learn, but let's end this lesson by reviewing what we've covered so far.
+
+- question:
+    show: 4
+    title: What is the name of the `highlighted` code?
+    content: |
+      [snippet html_tag_example highlight:0,4]
+
+    hint: |
+      The individual parts of an [define html_element] are called tags.
+
+    explain: |
+      Each time you create a new [define html_element] you must start with an opening tag.
+
+    choices:
+      - The opening tag
+      - The leading byte
+      - The execute command
+      - The block maker
+
+- question:
+    show: 4
+    title: What is the name of the `highlighted` code?
+    content: |
+      [snippet html_tag_example highlight:17,5]
+
+    hint: |
+      The individual parts of an [define html_element] are called tags.
+
+    explain: |
+      Each time you create a new [define html_element] you must use a closing tag to end it. You'll learn about more types in later lessons!
+
+    choices:
+      - The closing tag
+      - The ending byte
+      - The terminator command
+      - The block breaker
+
+- question:
+    show: 4
+    title: What is the name of the `highlighted` code?
+    content: |
+      [snippet html_tag_example highlight:4,13]
+
+    explain: |
+      The content is whatever has been added between the opening and closing [define html_tag tags] of an [define html_element]. It could be text, or even other [define html_element Elements].
+
+    choices:
+      - The content
+      - The encoded matrix
+      - The bytecode input
+      - The binary block
+
+- question:
+    show: 4
+    title: What is the name of a complete [define html] instruction? 
+    content: |
+      This includes the opening and closing tags as well as the content inside.
+
+      [snippet html_tag_example highlight:0,22]
+
+    explain: |
+      Basic commands in [define html] are called [define html_element HTML Elements]. Websites use hundreds, or even thousands of them, to create the content in the [define web_browser]
+
+    choices:
+      - An HTML Element
+      - An encoded terminator
+      - A binary block
+      - A bytecode command
+
+- slide:
+    mode: popup
+    content: |
+      Way to go! You've finished this lesson!
+
+- slide:
+    content: |
+      At this point all files are now unlocked and you're free to make changes to anything in this project. You can play with the [define html] you've learned, or just try out new things.
+
+- slide:
+    content: |
+      If you create something that you'd like others to see, you can use the **Share** button and send them a link so they can try it out for themselves.
+
+- slide:
+    emote: happy
+    content: |
+      Great work, and I'll see you again for **Lesson 2**

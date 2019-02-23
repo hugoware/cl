@@ -360,6 +360,7 @@ function setActiveSlide(lesson, slide) {
 	// let other systems know the slide changed
 	broadcast('slide-changed', slide);
 	lesson.instance.invoke('enter');
+	setTimeout(() => lesson.instance.invoke('ready'), 100);
 }
 
 // // clears all slide events

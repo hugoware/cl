@@ -1,23 +1,12 @@
 
 import { HtmlValidator } from './lib';
+import { validate_insert_h3 } from './validation';
 
 export const controller = true;
 
-function validate(instance, file) {
-	const content = instance.file.content({ file });
-
-	const result = HtmlValidator.validate(content, test => test
-		._w
-		.tag('h1')
-		.content()
-		.close('h1')
-		._n
-		.__w
-		.tag('h3')
-		.text('A small heading')
-		.close('h3')
-		.__w
-		.eof());
+function validate(instance) {
+	const content = instance.file.content({ path: '/index.html' });
+	const result = HtmlValidator.validate(content, validate_insert_h3);
 	
 	// update validation
 	instance.editor.hint.validate({ path: '/index.html', result });
@@ -36,14 +25,12 @@ function validate(instance, file) {
 
 export function onEnter() {
 	this.progress.block();
-	this.file.readOnly({ path: '/index.html', readOnly: false });
-	this.editor.cursor({ end: true });
+	this.file.allowEdit({ path: '/index.html' });
+}
 
-	// perform initial validation
-	this.delay(100, () => {
-		const file = this.file.get({ path: '/index.html' });
-		validate(this, file);
-	});
+export function onReady() {
+	this.editor.cursor({ end: true });
+	validate(this);
 }
 
 export function onExit() {
