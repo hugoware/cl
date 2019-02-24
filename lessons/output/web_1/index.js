@@ -1,4 +1,23 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onSaveFile = onSaveFile;
+exports.onReady = onReady;
+var controller = exports.controller = true;
+
+function onSaveFile() {
+	this.progress.next();
+	return true;
+}
+
+function onReady() {
+	this.screen.marker.saveButton({ offsetX: -2, offsetY: 2, tr: true });
+}
+
+},{}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -55,7 +74,7 @@ function onContentChange(file) {
 	validate(this);
 }
 
-},{"./lib":9,"./validation":12}],2:[function(require,module,exports){
+},{"./lib":10,"./validation":13}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -104,7 +123,7 @@ function onEnter() {
 	});
 }
 
-},{"./lib":9}],3:[function(require,module,exports){
+},{"./lib":10}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -170,7 +189,7 @@ function onBeforeContentChange(file, change) {
 	return !change.hasNewline;
 }
 
-},{"./lib":9,"./utils":11}],4:[function(require,module,exports){
+},{"./lib":10,"./utils":12}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -196,7 +215,7 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -264,7 +283,7 @@ function onContentChange(file) {
 	validate(this);
 }
 
-},{"./lib":9,"./validation":12}],6:[function(require,module,exports){
+},{"./lib":10,"./validation":13}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -323,7 +342,7 @@ function onContentChange(file) {
 	validate(this, file);
 }
 
-},{"./lib":9,"./validation":12}],7:[function(require,module,exports){
+},{"./lib":10,"./validation":13}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -341,7 +360,7 @@ function onEnter() {
 	this.screen.highlight.fileBrowser();
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -358,6 +377,10 @@ var _createClass = function () {
 
 
 var _lib = require('./lib');
+
+var _aboutSaving = require('./aboutSaving');
+
+var aboutSaving = _interopRequireWildcard(_aboutSaving);
 
 var _addListItems = require('./addListItems');
 
@@ -453,26 +476,28 @@ var web1Lesson = function () {
       }, {
         "content": "Finally, [define javascript] is a programming language that can be used to create logic and behaviors on a web page. Many modern websites use [define javascript] to create complicated applications that run entirely in the [define web_browser browser]\n\n[image javascript-focus.png]\n\nGenerally speaking, [define javascript] decides what your web page _will do_.\n"
       }, {
-        "content": "Each time you vist a [define website website], code files like [define html], [define css], and [define javascript] are sent to your computer. The [define web_browser] uses the instructions in each of these files to create the [define web_page web page] you see on the screen.\n\n[image build.jpg frame]\n"
+        "content": "Each time you visit a [define website website], code files like [define html], [define css], and [define javascript] are sent to your computer. The [define web_browser] uses the instructions in each of these files to create the [define web_page web page] you see on the screen.\n\n[image build.jpg frame]\n"
       }, {
-        "content": "There's a lot to learn when it comes to creating web pages, but with practice and time you'll be building entire websites before you know it.\n\n[image html-focus.png]\n\nAt the start of this tutorial series, we're going to focus on learning [define html] and then introduce [define css] and [define javascript] at a later time.\n"
+        "content": "There's a lot to learn when it comes to creating web pages, but with practice and time, you'll be building entire websites before you know it.\n\n[image html-focus.png]\n\nAt the start of this tutorial series, we're going to focus on learning [define html] and then introduce [define css] and [define javascript] at a later time.\n"
       }, {
         "emotion": "happy",
-        "content": "Great! So let's get started learning some [define html]!"
+        "content": "Great, let's get started learning some [define html]!"
       }, {
         "title": "What is HTML?",
-        "content": "[define html] is a language that's used to describe the information found in a web page. It's written using instructions called [define html_element Elements]. An [define html_element] is made up of several parts called [define html_tag tags].\n\nBelow is an example of a simple [define html_element].\n\n[snippet html_tag_example]\n\nLet's go over what each part of this code example ||does|duz||. \n"
+        "content": "[define html] is a language that's used to describe the information found on a web page. It's written using instructions called [define html_element Elements]. An [define html_element] is made up of several parts called [define html_tag tags].\n\nBelow is an example of a simple [define html_element].\n\n[snippet html_tag_example]\n\nLet's go over what each part of this code example ||does|duz||. \n"
       }, {
-        "content": "An [define html_element] starts with an opening [define html_tag tag]. It's written by surrounding the name of the tag with a `<` and `>` sign.\n\n[snippet html_tag_example highlight:0,1|3,1]\n"
+        "content": "The first part of an [define html_element] is the **Opening** [define html_tag tag]. It's written using a `<` sign, followed by the name of the tag, and then a `>` sign.\n\n[snippet html_tag_example highlight:0,4]\n\nThis tells the [define web_browser] what rules to follow for everything that comes after the opening tag.\n"
       }, {
-        "content": "The word between the opening and closing tags is the type. Each [define html_element] has a different role in the web browser. For example, this `h1` Element is a heading.\n\n[snippet html_tag_example highlight:1,2]\n"
+        "content": "The `<` and `>` signs are special characters that are used in [define html] to mark where [define html_tag tags] begin and end.\n\n[snippet html_tag_example highlight:0,1|3,1]\n\nYou'll sometimes hear these characters referred to as _\"angle brackets\"_ by other developers.\n"
       }, {
-        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.\n\nThe closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.\n\n[snippet html_tag_example highlight:17,5]\n"
+        "content": "The word between the opening and closing tags is the name of the [define html_element Element]. Each [define html_element] has a different role in the web browser.\n\n[snippet html_tag_example highlight:1,2]\n\nFor example, this `h1` Element is how you display a large heading.\n"
       }, {
-        "content": "Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase \"Hello, World!\" in a large and bold font\n\n[snippet html_tag_example highlight:4,13]\n"
+        "content": "At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<` sign.\n\n[snippet html_tag_example highlight:17,5]\n\nThe closing [define html_tag] is very important because it marks where an [define html_element] stops.\n"
+      }, {
+        "content": "Everything between the opening and closing [define html_tag tags] is the content. This [define html_element Element] is a _heading_. If you were to look at this in a browser it would show up as the phrase \"Hello, World!\" in a large and bold font.\n\n[snippet html_tag_example highlight:4,13 preview:45%]\n"
       }, {
         "mode": "popup",
-        "content": "We've talked a lot about what [define html] is and how it works, so let's actually try writing code and see what happens.\n"
+        "content": "We've talked a lot about how [define html] works, so let's jump into writing some code and see what happens.\n"
       }, {
         "controller": "highlightFileBrowser",
         "content": "On the left side of the screen is the [define file_browser]. This is a list of all files in your project.\n"
@@ -481,12 +506,12 @@ var web1Lesson = function () {
         "content": "Open the file named `index.html` by [define double_click double clicking] on it in the [define file_browser].\n"
       }, {
         "controller": "codeEditorIntro",
-        "content": "Great! The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code. At the top, you'll see there's a new tab added for the file you just opened.\n"
-      }, {
-        "content": "Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.\n"
+        "content": "The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code.\n\nAt the top, you'll see there's a new tab added for the file you just opened.\n"
       }, {
         "controller": "previewAreaIntro",
-        "content": "On the right side of the screen, we can see the result of the [define html] in the [define codelab_html_preview].\n"
+        "content": "On the right side of the screen you can see the [define codelab_html_preview]. This shows what the [define html] for this file looks like when viewed in a [define web_browser browser].\n\nThis area will update automatically as you make changes.\n"
+      }, {
+        "content": "Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.\n"
       }, {
         "controller": "changeHeadingContent",
         "content": "Let's start by changing the content of the [define html_element Element]. Replace the words \"Hello, World!\" with something different.\n"
@@ -551,12 +576,22 @@ var web1Lesson = function () {
         "explain": "Basic commands in [define html] are called [define html_element HTML Elements]. Websites use hundreds, or even thousands of them, to create the content in the [define web_browser]\n",
         "choices": ["An HTML Element", "An encoded terminator", "A binary block", "A bytecode command"]
       }, {
+        "show": 4,
+        "title": "What is another name for the `<` and `>` signs in [define html]?",
+        "explain": "The `<` and `>` signs are special characters used by [define html] to identify where [define html_tag tags] begin and end.\n",
+        "choices": ["Angle brackets", "Pointy blocks", "Arrow bytecodes", "Sharp codes"]
+      }, {
         "mode": "popup",
         "content": "Way to go! You've finished this lesson!\n"
       }, {
         "content": "At this point all files are now unlocked and you're free to make changes to anything in this project. You can play with the [define html] you've learned, or just try out new things.\n"
       }, {
-        "content": "If you create something that you'd like others to see, you can use the **Share** button and send them a link so they can try it out for themselves.\n"
+        "content": "If you'd like to try this lesson again, you can start over by using the \"Reset Lesson\" button from the home page of this site.\n\n[image reset-lesson.jpg]\n"
+      }, {
+        "content": "If you'd like to share what you've created with others, you can use the **Share** button and send them a link so they can try it out for themselves.\n"
+      }, {
+        "controller": "aboutSaving",
+        "content": "The changes you've made so far haven't been saved yet. Make sure to press the \"Save Changes\" button before you end this lesson.\n\nIf you forget to save your files and try and close a project, the website will display a message and give you a chance to save your work.\n"
       }, {
         "emote": "happy",
         "content": "Great work, and I'll see you again for **Lesson 2**\n"
@@ -604,6 +639,16 @@ var web1Lesson = function () {
         "type": "png",
         "path": "javascript-focus.png"
       }, {
+        "height": 478,
+        "width": 930,
+        "type": "jpg",
+        "path": "reset-lesson.jpg"
+      }, {
+        "width": 930,
+        "height": 478,
+        "type": "png",
+        "path": "reset-lesson.png"
+      }, {
         "width": 1260,
         "height": 310,
         "type": "png",
@@ -624,6 +669,16 @@ var web1Lesson = function () {
           "id": "website",
           "name": "Website",
           "define": "A point on the Internet that serves web pages"
+        },
+        "double_click": {
+          "id": "double_click",
+          "name": "Double Click",
+          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
+        },
+        "file_browser": {
+          "id": "file_browser",
+          "name": "File Browser",
+          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
         },
         "html": {
           "id": "html",
@@ -656,16 +711,6 @@ var web1Lesson = function () {
           "id": "html_tag",
           "name": "HTML Tag",
           "define": "This is about HTML elements - this is `<` or `>`\n"
-        },
-        "file_browser": {
-          "id": "file_browser",
-          "name": "File Browser",
-          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
-        },
-        "double_click": {
-          "id": "double_click",
-          "name": "Double Click",
-          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
         },
         "codelab_editor": {
           "id": "codelab_editor",
@@ -703,7 +748,7 @@ var web1Lesson = function () {
 
     // setup each included entry
     var refs = {
-      addListItems: addListItems, browserType: browserType, changeHeadingContent: changeHeadingContent, codeEditorIntro: codeEditorIntro, freeButtonInsert: freeButtonInsert, freeHeadingInsert: freeHeadingInsert, highlightFileBrowser: highlightFileBrowser, previewAreaIntro: previewAreaIntro, validation: validation, waitForIndexHtml: waitForIndexHtml
+      aboutSaving: aboutSaving, addListItems: addListItems, browserType: browserType, changeHeadingContent: changeHeadingContent, codeEditorIntro: codeEditorIntro, freeButtonInsert: freeButtonInsert, freeHeadingInsert: freeHeadingInsert, highlightFileBrowser: highlightFileBrowser, previewAreaIntro: previewAreaIntro, validation: validation, waitForIndexHtml: waitForIndexHtml
     };
 
     // setup each reference
@@ -820,7 +865,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_1', web1Lesson);
 
-},{"./addListItems":1,"./browserType":2,"./changeHeadingContent":3,"./codeEditorIntro":4,"./freeButtonInsert":5,"./freeHeadingInsert":6,"./highlightFileBrowser":7,"./lib":9,"./previewAreaIntro":10,"./validation":12,"./waitForIndexHtml":13}],9:[function(require,module,exports){
+},{"./aboutSaving":1,"./addListItems":2,"./browserType":3,"./changeHeadingContent":4,"./codeEditorIntro":5,"./freeButtonInsert":6,"./freeHeadingInsert":7,"./highlightFileBrowser":8,"./lib":10,"./previewAreaIntro":11,"./validation":13,"./waitForIndexHtml":14}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -841,8 +886,8 @@ exports.default = {
 	CssValidator: CssValidator
 };
 
-},{}],10:[function(require,module,exports){
-'use strict';
+},{}],11:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -852,7 +897,6 @@ exports.onExit = onExit;
 var controller = exports.controller = true;
 
 function onEnter() {
-	this.file.open({ path: '/index.html' });
 	this.screen.highlight.previewArea();
 }
 
@@ -860,7 +904,7 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -936,7 +980,7 @@ function editDistance(s1, s2) {
   return costs[s2.length];
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -976,7 +1020,7 @@ var validate_list = exports.validate_list = function validate_list(test) {
 
 // export const validate_button = test => test
 
-},{"./lib":9}],13:[function(require,module,exports){
+},{"./lib":10}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1001,11 +1045,11 @@ function onEnter() {
 	this.progress.block();
 
 	this.file.readOnly({ path: '/index.html' });
-	this.screen.highlight.fileBrowserItem({ path: '/index.html' });
+	this.screen.highlight.fileBrowserItem('/index.html');
 
-	this.delay(8000, function () {
+	this.delay(10000, function () {
 		_this.assistant.say({
-			message: '\n\t\t\t\tTo open the `index.html` file, double click the item in the File Browser.\n\t\t\t\tTo double click, move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.'
+			message: '\n\t\t\t\tTo open the `index.html` file, [define double_click double click] the item in the [define file_browser File Browser].\n\t\t\t\tTo [define double_click double click], move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.'
 		});
 	});
 }
@@ -1014,4 +1058,4 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}]},{},[8]);
+},{}]},{},[9]);

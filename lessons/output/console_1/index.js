@@ -1,444 +1,501 @@
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onTryEditReadOnly = onTryEditReadOnly;
+exports.onExit = onExit;
+var controller = exports.controller = true;
+
+function onEnter() {
+	this.screen.highlight.codeEditor();
+}
+
+function onTryEditReadOnly() {
+	this.assistant.say({
+		emote: 'happy',
+		message: 'Oops! I\'m glad you\'re so excited to start making changes, but you can\'t edit the file just yet!'
+	});
+}
+
+function onExit() {
+	this.screen.highlight.clear();
+}
+
+},{}],2:[function(require,module,exports){
 "use strict";
 
-(function () {
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+var controller = exports.controller = true;
 
-  // returns the instance of this lesson
-  function console1Lesson(state, project, utils) {
-    var $self = this;
-    $self.data = {
-      "name": "Console 1",
+function onEnter() {
+	this.screen.highlight.previewArea();
+}
+
+function onExit() {
+	this.screen.highlight.clear();
+}
+
+},{}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
+exports.onInit = onInit;
+exports.onReset = onReset;
+exports.onEnter = onEnter;
+exports.onBeforeContentChange = onBeforeContentChange;
+exports.onRunCode = onRunCode;
+exports.onRunCodeEnd = onRunCodeEnd;
+
+var _lib = require('./lib');
+
+var controller = exports.controller = true;
+
+function onInit() {
+	this.progress.block();
+	this.editor.area({ path: '/main.js', start: 15, end: 28 });
+}
+
+function onReset() {
+	this.assistant.revert();
+}
+
+function onEnter() {
+	this.file.allowEdit({ path: '/main.js' });
+}
+
+function onBeforeContentChange(file, change) {
+	if (change.isNewline || change.data === "'") return false;
+}
+
+function onRunCode() {
+	return true;
+}
+
+function onRunCodeEnd(context) {
+	var _this = this;
+
+	var message = context.output[1];
+
+	if (_lib._.size(message) < 5) {
+		this.delay(500, function () {
+			return _this.screen.highlight('.line-number-1');
+		});
+		this.progress.allow();
+		this.assistant.say({
+			emote: 'happy',
+			message: 'Great! Looks like you typed in `' + message + '`.'
+		});
+	} else {
+		this.assistant.say({
+			message: 'Oops! Make sure to type a message!'
+		});
+	}
+}
+
+},{"./lib":6}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onOpenFile = onOpenFile;
+exports.onEnter = onEnter;
+var controller = exports.controller = true;
+
+function onOpenFile(file) {
+	this.screen.highlight.clear();
+}
+
+function onEnter() {
+	this.screen.highlight.fileBrowser();
+}
+
+},{}],5:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+}();
+
+// import controllers
+
+
+var _lib = require('./lib');
+
+var _codeEditorIntro = require('./codeEditorIntro');
+
+var codeEditorIntro = _interopRequireWildcard(_codeEditorIntro);
+
+var _codeOutputIntro = require('./codeOutputIntro');
+
+var codeOutputIntro = _interopRequireWildcard(_codeOutputIntro);
+
+var _customLogMessage = require('./customLogMessage');
+
+var customLogMessage = _interopRequireWildcard(_customLogMessage);
+
+var _highlightFileBrowser = require('./highlightFileBrowser');
+
+var highlightFileBrowser = _interopRequireWildcard(_highlightFileBrowser);
+
+var _runCodeButton = require('./runCodeButton');
+
+var runCodeButton = _interopRequireWildcard(_runCodeButton);
+
+var _waitForMainJs = require('./waitForMainJs');
+
+var waitForMainJs = _interopRequireWildcard(_waitForMainJs);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+// lesson controller
+var console1Lesson = function () {
+
+  // setup the lesson
+  function console1Lesson(project, lesson, api) {
+    var _this = this;
+
+    _classCallCheck(this, console1Lesson);
+
+    this.state = {};
+    this.lesson = lesson;
+    this.project = project;
+    this.api = api;
+
+    // core lesson data
+    this.data = {
+      "name": "Intro to Programming",
       "type": "code",
-      "description": "An Introduction to the CodeLab Learning System 1",
+      "description": "An basic introduction to programming with JavaScript",
       "lesson": [{
-        "mode": "popup",
-        "content": "<p>Let's start working on code examples - open the file <code>main.ts</code></p>",
-        "waitFor": ["::fileOpen(/main.ts)"],
-        "highlight": ["::fileBrowser(/main.ts)"],
-        "validation": {
-          "openFile": "::allowIfFile(/main.ts, open-file)"
-        },
-        "type": "slide",
-        "speak": ["Let's start working on code examples - open the file main.ts"]
-      }, {
         "mode": "overlay",
-        "content": "<p>This is the end of the lesson</p>",
-        "type": "slide",
-        "speak": ["This is the end of the lesson"]
+        "title": "Introduction to Programming",
+        "content": "Welcome to your first lesson on basic computer programming!\n\nAs you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.\n"
+      }, {
+        "content": "Computer programming is a way of giving computers instructions about what they should do next. These instructions are known as code, and computer programmers write code to solve problems or perform a task.\n"
+      }, {
+        "content": "Here is why it's a thing"
+      }, {
+        "content": "What it's used for"
+      }, {
+        "content": "There\n"
+      }, {
+        "content": "JavaScript"
+      }, {
+        "mode": "popup",
+        "content": "We've talked a lot about how computer programming works, so let's jump into writing some code and see what happens.\n"
+      }, {
+        "controller": "highlightFileBrowser",
+        "content": "On the left side of the screen is the [define file_browser]. This is a list of all files in your project.\n"
+      }, {
+        "flags": "+OPEN_FILE",
+        "controller": "waitForMainJs",
+        "content": "Open the file named `main.js` by [define double_click double clicking] on it in the [define file_browser].\n"
+      }, {
+        "controller": "codeEditorIntro",
+        "content": "The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code.\n\nAt the top, you'll see there's a new tab added for the file you just opened.\n"
+      }, {
+        "controller": "codeOutputIntro",
+        "content": "On the right side of the screen you can see the [define codelab_code_output]. This will show the output for your file when you press the **Run Code** button.\n"
+      }, {
+        "start": true,
+        "controller": "runCodeButton",
+        "content": "Let's try and run this code example and see what happens.\n\nPress the **Run Code** button and watch the [define codelab_code_output] area.\n"
+      }, {
+        "content": "This is an example of using a programming feature called a _\"function\"_.\n\nWe'll learn more about how to use _functions_ in later lessons, but for now let's use it so we can display messages in the [define codelab_code_output output] area.\n"
+      }, {
+        "controller": "customLogMessage",
+        "content": "Why don't you try changing the message that's displayed on the screen.\n\nReplace the phrase `\"hello, world!\"` with something different and then press the **Run Code** button to see the results.\n"
+      }, {
+        "content": "About to finish"
+      }, {
+        "content": "Done"
       }],
-      "definitions": {},
-      "snippets": {
-        "declare_variables": {
-          "content": "const a = 300;\nconst b = false;\nconst c = 'hello';",
-          "type": "javascript"
+      "snippets": {},
+      "resources": [],
+      "definitions": {
+        "codelab_code_output": {
+          "id": "codelab_code_output",
+          "name": "Code Output",
+          "define": "The result of called code\n"
         },
-        "log_variables": {
-          "content": "console.log(a);\nconsole.log(b);\nconsole.log(c);",
-          "type": "javascript"
-        }
-      },
-      "zones": {
-        "log_variables": {
-          "all": {}
+        "double_click": {
+          "id": "double_click",
+          "name": "Double Click",
+          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
         },
-        "declare_variables": {
-          "all": {
-            "start": {
-              "row": 1,
-              "col": 1
-            },
-            "end": {
-              "row": 2,
-              "col": 17
-            },
-            "line": true
-          }
+        "file_browser": {
+          "id": "file_browser",
+          "name": "File Browser",
+          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+        },
+        "codelab_editor": {
+          "id": "codelab_editor",
+          "name": "Code Editor",
+          "define": "The CodeLab editing area\n"
         }
       }
     };
 
-    // share imported utils
-    var _ = utils._;
+    // timing
+    this._delays = {};
+    this._intervals = {};
 
-    // shared variables
-    var $lesson = $self;
-    var $project = project;
-    var $state = state;
+    // expose API tools
+    this.assistant = api.assistant;
+    this.preview = api.preview;
+    this.screen = api.screen;
+    this.progress = api.progress;
+    this.file = api.file;
+    this.editor = api.editor;
+    this.sound = api.sound;
+    this.flags = api.flags;
 
-    // access to code syntax and content validator
-    var $validateCode = utils.$validate;
+    // setup controllers
+    this.controllers = {};
 
-    // parses a string of html
-    function $html(str, options) {
-      return _.isString(str) ? utils.$html((str || '').toString(), options) : utils.$html(str);
-    }
-
-    // a general selector function
-    function $() {
-      return utils.$.apply(utils.$, arguments);
-    }
-
-    // performs the oxford comma
-    function $oxford(items, conjunction) {
-      var total = items.length;
-
-      // determine the best
-      if (total === 1) return items.join('');else if (total == 2) return items.join(" " + conjunction + " ");
-
-      // return the result
-      else {
-          var last = items.pop();
-          return items.join(', ') + ", " + conjunction + " " + last;
-        }
-    }
-
-    // pluralizes a word
-    function $plural(count, single, plural, none) {
-      var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
-
-      var value = Math.abs(count);
-      var message = value === 1 ? single : value > 1 ? plural ? plural : single + "s" : none || plural;
-      return message.replace(delimeter, count);
-    }
-
-    // shared functions
-    function $denyAccess(message, explain) {
-      if (_.isFunction($lesson.onDeny)) $lesson.onDeny({ message: message, explain: explain });
-    }
-
-    // shared functions
-    function $approveSlide(message, emotion) {
-      if (_.isFunction($lesson.onApprove)) $lesson.onApprove({ message: message, emotion: emotion });
-    }
-
-    // speaks a message using the assistant
-    function $speakMessage(message, emotion) {
-      if (_.isFunction($lesson.onSpeak)) $lesson.onSpeak({ message: message, emotion: emotion, isOverride: true });
-    }
-
-    // returns the message to the prior content
-    function $revertMessage() {
-      if (_.isFunction($lesson.onRevert)) $lesson.onRevert();
-    }
-
-    // handles displaying a hint
-    function $showHint(str, options) {
-      if (!_.isFunction($lesson.onHint)) return;
-      options = options || {};
-      options.message = str;
-      $lesson.onHint(options);
-    }
-
-    // handles hiding hints
-    function $hideHint() {
-      if (_.isFunction($lesson.onHint)) $lesson.onHint(null);
-    }
-
-    // runs a series of actions until one
-    // of them returns false
-    function $validate() {
-      var actions = [].slice.call(arguments);
-
-      // check for extra options
-      var options = {};
-      if (!_.isFunction(actions[0])) options = actions.shift();
-
-      // run each action
-      for (var i = 0, total = actions.length; i < total; i++) {
-        var action = actions[i];
-
-        // perform each action
-        try {
-          if (action() === false) throw 'validation failed';
-        }
-
-        // for errors, just fail
-        catch (err) {
-          if (options.revertOnError !== false) $revertMessage();
-          return false;
-        }
-      }
-
-      // was successful
-      return true;
-    }
-
-    // gets a zone
-    function $getZone(file, id) {
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      var code = utils.getZoneContent(file, id);
-      if (options.trim !== false) code = _.trim(code);
-      return options.toDom || options.asDom ? $html(code) : code;
-    }
-
-    // gets a zone
-    function $getFile(file) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-      var code = utils.getFileContent(file, options);
-      if (options.trim !== false) code = _.trim(code);
-      return options.toDom || options.asDom ? $html(code) : code;
-    }
-
-    // 
-    var $noop = {};
-
-    // creates a validator function
-    function $validator(key, options) {
-
-      // create the primary validation function
-      var handler = function handler() {
-
-        // execute the validator
-        var result = void 0;
-        var exception = void 0;
-        try {
-          result = options.validate.apply(options, arguments);
-        }
-        // failed to validate
-        catch (err) {
-          exception = true;
-          result = err;
-        }
-
-        // validation passed
-        if (_.isNil(result)) {
-          if (options.hideHintOnSuccess) $hideHint();
-          return true;
-        }
-
-        // if there was an error
-        try {
-
-          // handle reverting
-          if (options.revertOnError) $revertMessage();
-
-          // doesn't want to do anything with validation
-          if (result === $noop) return false;
-
-          // check for messages
-          if (exception && options.error) {
-            console.warn('validation error:', key, ex);
-            options.error(result);
-          }
-
-          // handle failure
-          else if (_.isString(result) && options.fail) options.fail(result);
-        }
-        // extreme case
-        catch (ex) {
-          console.warn('validation error:', key, ex);
-          $hideHint();
-          $revertMessage();
-        } finally {
-          return false;
-        }
-      };
-
-      // save the options
-      $self[key] = _.assign(handler, options);
-    }
-
-    // append each action
-    function $define(name, options, action) {
-
-      // no options were provided
-      if (_.isFunction(options)) {
-        action = options;
-        options = null;
-      }
-
-      // save the actions
-      _.assign(action, options);
-      $self[name] = action;
-    }
-
-    // share all of the utility methods
-    $self.$html = $html;
-    $self.$ = $;
-    $self.$denyAccess = $denyAccess;
-    $self.$approveSlide = $approveSlide;
-    $self.$speakMessage = $speakMessage;
-    $self.$revertMessage = $revertMessage;
-    $self.$showHint = $showHint;
-    $self.$hideHint = $hideHint;
-    $self.$validate = $validate;
-    $self.$getZone = $getZone;
-    $self.$getFile = $getFile;
-    $self.$validateCode = $validateCode;
-
-    // create some common messages
-    _.assign($speakMessage, {
-      MATCH_EXAMPLE: function MATCH_EXAMPLE() {
-        return $speakMessage("Almost there! The code ran successfully, but you need to finish matching the example!", 'happy');
-      },
-      EXECUTION_ERROR: function EXECUTION_ERROR() {
-        return $speakMessage('Oops! It appears there was an error running that code!', 'surprised');
-      }
-    });
-
-    // attach required scripts
-
-    // checks the logged values
-    var syntax_verifyLog = function syntax_verifyLog(test) {
-      var variableOrder = [];
-
-      // adds a result value
-      test.includeResult({ variableOrder: variableOrder });
-
-      // checks if a variable has already been logged
-      function checkIfVariableUsed(id) {
-        if (_.includes(variableOrder, id)) {
-          var allowed = _.difference(['a', 'b', 'c'], variableOrder);
-          var vars = _.map(allowed, function (id) {
-            return "`" + id + "`";
-          });
-          var phrase = $oxford(vars, 'or');
-          return "Expected " + phrase;
-        }
-
-        variableOrder.push(id);
-      }
-
-      // test for the required logs
-      test.newline().id('console').symbol('.').id('log').symbol('(').id('a', 'b', 'c', checkIfVariableUsed).symbol(')').symbol(';').newline().id('console').symbol('.').id('log').symbol('(').id('a', 'b', 'c', checkIfVariableUsed).symbol(')').symbol(';').newline().id('console').symbol('.').id('log').symbol('(').id('a', 'b', 'c', checkIfVariableUsed).symbol(')').symbol(';');
+    // setup each included entry
+    var refs = {
+      codeEditorIntro: codeEditorIntro, codeOutputIntro: codeOutputIntro, customLogMessage: customLogMessage, highlightFileBrowser: highlightFileBrowser, runCodeButton: runCodeButton, waitForMainJs: waitForMainJs
     };
 
-    // make sure code is in a valid format
-    $define('verifyLogSyntax', function () {
-      var code = $getFile('/main.ts', { trim: false });
-      var result = $validateCode(code, syntax_verifyObject, syntax_verifyLog);
-
-      // check for errors
-      if (result.error) $showHint(result.error.message, result.error);else $hideHint();
-      return result;
+    // setup each reference
+    _lib._.each(refs, function (ref, key) {
+      if (ref.controller) _this.controllers[key] = ref;
     });
 
-    // checks the code execution
-    $define('verifyLog', function (_ref) {
-      var runner = _ref.runner,
-          code = _ref.code,
-          onSuccess = _ref.onSuccess;
-
-
-      // execute and test the code
-      runner.run(code, {
-
-        onError: $speakMessage.EXECUTION_ERROR,
-
-        onEnd: function onEnd() {
-          var hasA = void 0,
-              hasB = void 0,
-              hasC = void 0,
-              hasMismatch = void 0;
-
-          // check each variable
-          _.each(['a', 'b', 'c'], function (name, i) {
-
-            // stop if there's already an error
-            if (hasMismatch) return;
-
-            // compare the values
-            var logged = runner.getOutput(i + 1, 0);
-            if (name === 'a') {
-              hasA = true;
-              if (logged !== 300) {
-                hasMismatch = true;
-                $speakMessage('Expected `a` to be logged as `300`', 'sad');
-              }
-            } else if (name === 'b') {
-              hasB = true;
-              if (logged !== false) {
-                hasMismatch = true;
-                $speakMessage('Expected `b` to be logged as `false`', 'sad');
-              }
-            } else if (name === 'c') {
-              hasC = true;
-              if (logged !== 'hello') {
-                hasMismatch = true;
-                $speakMessage('Expected `c` to be logged as `hello`', 'sad');
-              }
-            }
-          });
-
-          // there was a result error
-          if (hasMismatch) return;
-
-          // make sure all variables were used
-          if (!(hasA && hasB && hasC)) return $speakMessage("Seems like you're missing a few variables", 'sad');
-
-          // check the syntax
-          var syntax = $self.verifyLogSyntax();
-          if (syntax.error) return $speakMessage.MATCH_EXAMPLE();
-
-          // success
-          $speakMessage('That looks great! You can see your values printed in the output area on the right');
-          onSuccess();
-        }
-
-      });
-    });
-
-    // require variables
-    var syntax_verifyObject = function syntax_verifyObject(test) {
-      return test.declare('const').id('a').symbol('=').num(300).symbol(';').newline().declare('const').id('b').symbol('=').bool(false).symbol(';').newline().declare('const').id('c').symbol('=').str('hello').symbol(';');
-    };
-
-    // make sure code is in a valid format
-    $define('verifyObjectSyntax', function () {
-      var code = $getFile('/main.ts', { trim: false });
-      var result = $validateCode(code, syntax_verifyObject);
-
-      // check for errors
-      if (result.error) $showHint(result.error.message, result.error);else $hideHint();
-      return result;
-    });
-
-    // checks the code execution
-    $define('verifyObject', function (_ref2) {
-      var runner = _ref2.runner,
-          code = _ref2.code,
-          onSuccess = _ref2.onSuccess;
-
-
-      // execute and test the code
-      runner.run(code, {
-        onError: $speakMessage.EXECUTION_ERROR,
-
-        onEnd: function onEnd() {
-
-          var a = runner.interpreter.get('a');
-          if (a !== 300) {
-            if (_.isNil(a)) $speakMessage('You need to declare a variable `a` with a number value of `300`');else if (!_.isNumber(a)) $speakMessage('The variable `a` should be the number `300`');else $speakMessage('The variable `a` should be `300`, but the variable you declared equals to `' + a + '`', 'surprised');
-            return;
-          }
-
-          var b = runner.interpreter.get('b');
-          if (b !== false) {
-            if (_.isNil(b)) $speakMessage('You need to declare a variable `b` with a boolean value of `false`');else if (!_.isBoolean(b)) $speakMessage('The variable `b` should be the boolean `false`');else $speakMessage('The variable `b` should be `false`, but the variable you declared equals to `' + b + '`', 'surprised');
-            return;
-          }
-
-          var c = runner.interpreter.get('c');
-          if (c !== 'hello') {
-            if (_.isNil(c)) $speakMessage('You need to declare a variable `c` with a string value of `hello`');else if (!_.isString(c)) $speakMessage('The variable `c` should be the string `hello`');else $speakMessage('The variable `c` should be `hello`, but the variable you declared equals to `' + c + '`', 'surprised');
-            return;
-          }
-
-          // since the values are all correct, we also should check
-          // that the code is entered correctly
-          var syntax = $self.verifyObjectSyntax();
-          if (syntax.error) return $speakMessage.MATCH_EXAMPLE();
-
-          // notify the success
-          $speakMessage('looks great!');
-          onSuccess();
-        }
-
-      });
-    });
+    // debugging
+    if (/localhost/gi.test(window.location.origin)) window.LESSON = this;
   }
 
-  // registration function
-  window.registerLesson('console_1', console1Lesson);
-})();
+  // returns the active controller
+
+
+  _createClass(console1Lesson, [{
+    key: 'invoke',
+
+    // executes an action if available
+    value: function invoke(action) {
+      if (!this.respondsTo(action)) return null;
+      action = toActionName(action);
+      var controller = this.controller;
+
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      return controller[action].apply(this, args);
+    }
+
+    // checks if there's an action for this event
+
+  }, {
+    key: 'respondsTo',
+    value: function respondsTo(action) {
+      action = toActionName(action);
+      var controller = this.controller;
+
+      return !!controller && controller[action];
+    }
+
+    // resets any required information between slides
+
+  }, {
+    key: 'clear',
+    value: function clear() {
+      _lib._.each(this._delays, function (cancel) {
+        return cancel();
+      });
+      _lib._.each(this._intervals, function (cancel) {
+        return cancel();
+      });
+    }
+
+    // sets a timed delay
+
+  }, {
+    key: 'delay',
+    value: function delay(time, action) {
+      var _this2 = this;
+
+      var ref = setTimeout(action, time);
+      var cancel = this._delays[ref] = function () {
+        clearTimeout(ref);
+        delete _this2._delays[ref];
+      };
+
+      return cancel;
+    }
+
+    // sets a timed interval
+
+  }, {
+    key: 'interval',
+    value: function interval(time, action) {
+      var _this3 = this;
+
+      var ref = setInterval(action, time);
+      var cancel = this._intervals[ref] = function () {
+        clearInterval(ref);
+        delete _this3._intervals[ref];
+      };
+
+      return cancel;
+    }
+  }, {
+    key: 'controller',
+    get: function get() {
+      var slide = this.lesson.slide;
+
+      return slide && this.controllers[slide.controller];
+    }
+
+    // returns the current slide
+
+  }, {
+    key: 'slide',
+    get: function get() {
+      return this.lesson.slide;
+    }
+  }]);
+
+  return console1Lesson;
+}();
+
+// converts to an invoke action name
+
+
+function toActionName(name) {
+  if (!/on[A-Z]/.test(name)) name = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
+  return name;
+}
+
+// register the lesson for use
+window.registerLesson('console_1', console1Lesson);
+
+},{"./codeEditorIntro":1,"./codeOutputIntro":2,"./customLogMessage":3,"./highlightFileBrowser":4,"./lib":6,"./runCodeButton":7,"./waitForMainJs":8}],6:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var lib = window.__CODELAB_LIBS__;
+
+var _ = exports._ = lib._;
+var $ = exports.$ = lib.$;
+var CodeValidator = exports.CodeValidator = lib.CodeValidator;
+var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
+var CssValidator = exports.CssValidator = lib.CssValidator;
+
+exports.default = {
+	_: _, $: $,
+	CodeValidator: CodeValidator,
+	HtmlValidator: HtmlValidator,
+	CssValidator: CssValidator
+};
+
+},{}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onRunCode = onRunCode;
+exports.onRunCodeEnd = onRunCodeEnd;
+var controller = exports.controller = true;
+
+function onEnter() {
+	this.progress.block();
+	this.screen.marker.runButton({ tr: true, offsetX: -2, offsetY: 2 });
+}
+
+function onRunCode() {
+	this.screen.highlight.clear();
+	return true;
+}
+
+function onRunCodeEnd(context) {
+	var _this = this;
+
+	this.progress.allow();
+	this.delay(500, function () {
+		return _this.screen.highlight('.line-number-1');
+	});
+	this.assistant.say({
+		emote: 'happy',
+		message: 'Great! You can see that running this code caused a message to be displayed in the [define codelab_code_output output] area.'
+	});
+}
+
+},{}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onOpenFile = onOpenFile;
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+var controller = exports.controller = true;
+
+function onOpenFile(file) {
+
+	if (file.path === '/main.js') {
+		this.progress.next();
+		return true;
+	}
+}
+
+function onEnter() {
+	var _this = this;
+
+	this.progress.block();
+
+	this.file.readOnly({ path: '/main.js' });
+	this.screen.highlight.fileBrowserItem('/main.js');
+
+	this.delay(10000, function () {
+		_this.assistant.say({
+			message: '\n\t\t\t\tTo open the `main.js` file, [define double_click double click] the item in the [define file_browser File Browser].\n\t\t\t\tTo [define double_click double click], move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.'
+		});
+	});
+}
+
+function onExit() {
+	this.screen.highlight.clear();
+}
+
+},{}]},{},[5]);

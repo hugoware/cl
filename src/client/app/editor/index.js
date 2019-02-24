@@ -1,4 +1,4 @@
-import { _, Brace } from '../lib';
+import { _, $, Brace } from '../lib';
 // import { getCompletions } from './autocomplete';
 
 import ManagedEditor from './managed';
@@ -49,6 +49,9 @@ export function createInstance(container) {
 		copyWithEmptySelection: false
 	});
 
+	// blocking an error message
+	editor.$blockScrolling = Infinity;
+
 	// create the editor instance
 	return new ManagedEditor(editor);
 }
@@ -65,12 +68,16 @@ export function colorize(element, options) {
 		readOnly: true,
 		maxLines: 500
 	});
+
+	// blocking an error message
+	editor.$blockScrolling = Infinity;
 	
 	// apply the snippet
 	const { snippet, highlight } = options;
 	const session = Brace.createEditSession(snippet.content, `ace/mode/${snippet.type}`);
 	session.setOptions({ tabSize: 2, useWorker: false });
 	editor.setSession(session);
+	editor.selection.moveCursorFileEnd();
 
 	// check for highlighting
 	_.each(highlight, ({ start, end, isLine }) => {
@@ -82,7 +89,7 @@ export function colorize(element, options) {
 		const index = session.addMarker(range);
 		const marker = session.getMarkers()[index];
 		marker.clazz = `snippet-highlight ${isLine ? 'fullLine' : ''}`;
-		marker.inFront = true;
+		marker.inFront = false;
 	});
 
 	return { element, snippet, editor, session };

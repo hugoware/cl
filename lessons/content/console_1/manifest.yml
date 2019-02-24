@@ -1,6 +1,6 @@
-name: Console 1
+name: Intro to Programming
 type: code
-description: An Introduction to the CodeLab Learning System 1
+description: An basic introduction to programming with JavaScript
 
 lesson:
-  - intro
+  - main

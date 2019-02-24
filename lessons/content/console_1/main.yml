@@ -1,0 +1,81 @@
+-
+  slide:
+    mode: overlay
+    title: Introduction to Programming
+    content: |
+      Welcome to your first lesson on basic computer programming!
+
+      As you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.
+
+-
+  slide:
+    content: |
+      Computer programming is a way of giving computers instructions about what they should do next. These instructions are known as code, and computer programmers write code to solve problems or perform a task.
+
+- slide:
+    content: Here is why it's a thing
+
+- slide:
+    content: What it's used for
+
+- slide:
+    content: |
+      There
+
+- slide:
+    content: JavaScript
+
+- slide:
+    mode: popup
+    content: |
+      We've talked a lot about how computer programming works, so let's jump into writing some code and see what happens.
+
+- slide:
+    controller: highlightFileBrowser
+    content: |
+      On the left side of the screen is the [define file_browser]. This is a list of all files in your project.
+
+- slide:
+    flags: +OPEN_FILE
+    controller: waitForMainJs
+    content: |
+      Open the file named `main.js` by [define double_click double clicking] on it in the [define file_browser].
+
+- slide:
+    controller: codeEditorIntro
+    content: |
+      The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code.
+
+      At the top, you'll see there's a new tab added for the file you just opened.
+
+- slide:
+    controller: codeOutputIntro
+    content: |
+      On the right side of the screen you can see the [define codelab_code_output]. This will show the output for your file when you press the **Run Code** button.
+
+- slide:
+    start: true
+    controller: runCodeButton
+    content: |
+      Let's try and run this code example and see what happens.
+
+      Press the **Run Code** button and watch the [define codelab_code_output] area.
+
+- slide:
+    content: |
+      This is an example of using a programming feature called a _"function"_.
+
+      We'll learn more about how to use _functions_ in later lessons, but for now let's use it so we can display messages in the [define codelab_code_output output] area.
+
+- slide:
+    controller: customLogMessage
+    content: |
+      Why don't you try changing the message that's displayed on the screen.
+
+      Replace the phrase `"hello, world!"` with something different and then press the **Run Code** button to see the results.
+
+- slide:
+    content: About to finish
+
+- slide:
+    content: Done

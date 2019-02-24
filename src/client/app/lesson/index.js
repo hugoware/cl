@@ -360,7 +360,10 @@ function setActiveSlide(lesson, slide) {
 	// let other systems know the slide changed
 	broadcast('slide-changed', slide);
 	lesson.instance.invoke('enter');
-	setTimeout(() => lesson.instance.invoke('ready'), 100);
+	setTimeout(() => {
+		lesson.instance.invoke('init');
+		lesson.instance.invoke('ready');
+	}, 100);
 }
 
 // // clears all slide events
@@ -398,7 +401,7 @@ function applySlide(lesson, slide, invert) {
 
 	// check for flags
 	// const { flags = { }, zones = { } } = slide;
-	const { flags = { } } = slide;
+	// const { flags = { } } = slide;
 
 	// // revert changes
 	// if (invert) {
@@ -415,9 +418,19 @@ function applySlide(lesson, slide, invert) {
 		
 	// }
 	// else {
+
+	// apply flags without a controller
+	const flags = _.trim(slide.flags || '').split(/ +/g);
+	_.each(flags, flag => {
+		const add = flag.charAt(0) === '+';
+		const key = flag.substr(1);
+		$state.flags[key] = add;
+	});
+
+
 		// state flags
-		_.each(flags.add, key => $state.flags[key] = true);
-		_.each(flags.remove, key => delete $state.flags[key]);
+		// _.each(flags.add, key => $state.flags[key] = true);
+		// _.each(flags.remove, key => delete $state.flags[key]);
 		
 		// change file states
 	// 	_.each(slide.files, (flag, path) => {

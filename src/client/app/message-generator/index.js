@@ -43,8 +43,8 @@ export default function generateMessage(message) {
 			let containerHeight = '';
 			if (resource) {
 				containerHeight = `style="height: ${0 | (resource.height / 2)}"`
-				width = `width="${0|(resource.width / 2)}px"`;
-				height = `height="${0|(resource.height / 2)}px"`;
+				width = `width="${0|(resource.width / 2)}"`;
+				height = ``;
 			}
 
 
@@ -190,7 +190,7 @@ function replacePronunciation(str, type) {
 // speech equivilents
 function fixSpeech(str) {
 	_.each(STANDARD_REPLACEMENTS, (replace, key) => {
-		str = str.replace(key, replace);
+		str = str.split(key).join(replace);
 	});
 
 	return str;

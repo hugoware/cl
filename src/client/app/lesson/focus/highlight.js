@@ -3,8 +3,9 @@ import { $ } from '../../lib';
 
 export default class Highlight {
 
-	constructor(selector) {
+	constructor(selector, options = { }) {
 		this.selector = selector;
+		this.options = options;
 	}
 
 	/** handles displaying a marker */

@@ -78,17 +78,25 @@
 
 	.snippet {
 		margin: 5px 0 15px 0;
-		padding: 10px;
+		padding: 15px;
 		background: #272822;
 		border-radius: 5px;
 		text-shadow: none;
 		position: relative;
 
+		.ace_active-line {
+			display: none;
+		}
+
 		.snippet-highlight {
-			background: rgba(#fff, 0.15);
-			box-shadow: inset 0 0 0 2px rgba(#fff, 0.6);
+			@include animation(highlight-flash 3s infinite);
+			$snippet-highlight-color: #6CD4F9;
+			background: rgba($snippet-highlight-color, 0.2);
+			box-shadow: inset 0 0 0 1px rgba($snippet-highlight-color, 0.9);
+			padding: 0 1px;
+			margin: 0 0 0 -3px;
 			position: absolute;
-			z-index: 999;
+			z-index: 0;
 		}
 
 		.snippet-preview {
@@ -116,9 +124,18 @@
 			.snippet-output {
 				padding: 15px 20px;
 				color: #000;
+				font-family: serif;
 			}
 
 			// undo some reset stuff
+			h1 {
+				font-weight: bold;
+				font-size: 30px;
+			}
+			h2 {
+				font-weight: bold;
+				font-size: 26px;
+			}
 			ol { list-style: decimal; }
 			ul { list-style: disc; }
 			ol, ul { padding: 0 20px; }

@@ -8,7 +8,7 @@ import FileBrowserActions from './actions';
 import { cancelEvent } from '../../../utils'
 import { requirePermission } from '../prevent';
 
-const DOUBLE_CLICK_DELAY = 250;
+const DOUBLE_CLICK_DELAY = 500;
 
 export default class FileBrowser extends Component {
 

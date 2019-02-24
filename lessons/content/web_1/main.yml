@@ -57,14 +57,14 @@
 -
   slide:
     content: |
-      Each time you vist a [define website website], code files like [define html], [define css], and [define javascript] are sent to your computer. The [define web_browser] uses the instructions in each of these files to create the [define web_page web page] you see on the screen.
+      Each time you visit a [define website website], code files like [define html], [define css], and [define javascript] are sent to your computer. The [define web_browser] uses the instructions in each of these files to create the [define web_page web page] you see on the screen.
 
       [image build.jpg frame]
 
 -
   slide:
     content: |
-      There's a lot to learn when it comes to creating web pages, but with practice and time you'll be building entire websites before you know it.
+      There's a lot to learn when it comes to creating web pages, but with practice and time, you'll be building entire websites before you know it.
       
       [image html-focus.png]
 
@@ -72,12 +72,12 @@
 
 - slide:
     emotion: happy
-    content: Great! So let's get started learning some [define html]!
+    content: Great, let's get started learning some [define html]!
 
 - slide:
     title: What is HTML?
     content: |
-      [define html] is a language that's used to describe the information found in a web page. It's written using instructions called [define html_element Elements]. An [define html_element] is made up of several parts called [define html_tag tags].
+      [define html] is a language that's used to describe the information found on a web page. It's written using instructions called [define html_element Elements]. An [define html_element] is made up of several parts called [define html_tag tags].
 
       Below is an example of a simple [define html_element].
 
@@ -87,35 +87,46 @@
 
 - slide:
     content: |
-      An [define html_element] starts with an opening [define html_tag tag]. It's written by surrounding the name of the tag with a `<` and `>` sign.
+      The first part of an [define html_element] is the **Opening** [define html_tag tag]. It's written using a `<` sign, followed by the name of the tag, and then a `>` sign.
+      
+      [snippet html_tag_example highlight:0,4]
+
+      This tells the [define web_browser] what rules to follow for everything that comes after the opening tag.
+
+- slide:
+    content: |
+      The `<` and `>` signs are special characters that are used in [define html] to mark where [define html_tag tags] begin and end.
       
       [snippet html_tag_example highlight:0,1|3,1]
 
+      You'll sometimes hear these characters referred to as _"angle brackets"_ by other developers.
+
 - slide:
     content: |
-      The word between the opening and closing tags is the type. Each [define html_element] has a different role in the web browser. For example, this `h1` Element is a heading.
+      The word between the opening and closing tags is the name of the [define html_element Element]. Each [define html_element] has a different role in the web browser.
       
       [snippet html_tag_example highlight:1,2]
 
+      For example, this `h1` Element is how you display a large heading.
 
 - slide:
     content: |
-      At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<`.
-
-      The closing [define html_tag] is very important because it marks where a [define html_element] ends. Otherwise, the Element would continue to the end of the page.
+      At the end of an [define html_element] is the closing [define html_tag tag]. It's written much like the opening tag, but there's also a `/` character after the first `<` sign.
 
       [snippet html_tag_example highlight:17,5]
 
+      The closing [define html_tag] is very important because it marks where an [define html_element] stops.
+
 - slide:
     content: |
-      Everything between the opening and closing tags for an [define html_element] is the content. This Element is a _heading_. If you were to look at this in a browser it would show up as the phrase "Hello, World!" in a large and bold font
+      Everything between the opening and closing [define html_tag tags] is the content. This [define html_element Element] is a _heading_. If you were to look at this in a browser it would show up as the phrase "Hello, World!" in a large and bold font.
 
-      [snippet html_tag_example highlight:4,13]
+      [snippet html_tag_example highlight:4,13 preview:45%]
 
 - slide:
     mode: popup
     content: |
-      We've talked a lot about what [define html] is and how it works, so let's actually try writing code and see what happens.
+      We've talked a lot about how [define html] works, so let's jump into writing some code and see what happens.
 
 - slide:
     controller: highlightFileBrowser
@@ -130,16 +141,20 @@
 - slide:
     controller: codeEditorIntro
     content: |
-      Great! The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code. At the top, you'll see there's a new tab added for the file you just opened.
+      The code file you just opened is now in the [define codelab_editor] area. This is where you can make changes to code.
 
-- slide:
-    content: |
-      Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.
+      At the top, you'll see there's a new tab added for the file you just opened.
 
 - slide:
     controller: previewAreaIntro
     content: |
-      On the right side of the screen, we can see the result of the [define html] in the [define codelab_html_preview].
+      On the right side of the screen you can see the [define codelab_html_preview]. This shows what the [define html] for this file looks like when viewed in a [define web_browser browser].
+
+      This area will update automatically as you make changes.
+
+- slide:
+    content: |
+      Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.
 
 - slide:
     controller: changeHeadingContent
@@ -308,6 +323,19 @@
       - A binary block
       - A bytecode command
 
+- question:
+    show: 4
+    title: What is another name for the `<` and `>` signs in [define html]? 
+
+    explain: |
+      The `<` and `>` signs are special characters used by [define html] to identify where [define html_tag tags] begin and end.
+
+    choices:
+      - Angle brackets
+      - Pointy blocks
+      - Arrow bytecodes
+      - Sharp codes
+
 - slide:
     mode: popup
     content: |
@@ -319,7 +347,20 @@
 
 - slide:
     content: |
-      If you create something that you'd like others to see, you can use the **Share** button and send them a link so they can try it out for themselves.
+      If you'd like to try this lesson again, you can start over by using the "Reset Lesson" button from the home page of this site.
+
+      [image reset-lesson.jpg]
+
+- slide:
+    content: |
+      If you'd like to share what you've created with others, you can use the **Share** button and send them a link so they can try it out for themselves.
+
+- slide:
+    controller: aboutSaving
+    content: |
+      The changes you've made so far haven't been saved yet. Make sure to press the "Save Changes" button before you end this lesson.
+
+      If you forget to save your files and try and close a project, the website will display a message and give you a chance to save your work.
 
 - slide:
     emote: happy

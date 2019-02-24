@@ -28,6 +28,7 @@ class $LESSON_TYPE$Lesson {
     this.file = api.file;
 		this.editor = api.editor;
 		this.sound = api.sound;
+		this.flags = api.flags;
 
 		// setup controllers
 		this.controllers = { };

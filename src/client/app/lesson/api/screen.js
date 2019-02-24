@@ -1,3 +1,4 @@
+import { _ } from '../../lib';
 import $focus from '../focus';
 
 export default class ScreenAPI {
@@ -5,34 +6,47 @@ export default class ScreenAPI {
 	constructor(lesson) {
 		this.lesson = lesson;
 
+		// simple shortcuts
+		_.each({
+			fileBrowser: '#file-browser',
+			workspace: '#workspace',
+			codeEditor: '.editor.ace_editor',
+			previewArea: '#preview',
+			saveButton: '.code-editor .action.save',
+			runButton: '.console .action.run-scripts',
+
+		}, (selector, func) => {
+			this.highlight[func] = options => this.highlight(selector, options);
+			this.marker[func] = options => this.marker(selector, options);
+		});
+
+		_.each(['highlight', 'marker'], key => {
+			const source = this[key];
+
+			source.fileBrowserItem = (path, options) =>
+				this[key](`.item[file="${path}"]`, options);
+		});
+
 		// highlights
-		this.highlight.fileBrowserItem = path => this.highlight(`.item[file="${path}"]`);
-		this.highlight.fileBrowser = () => this.highlight(`#file-browser`);
-		this.highlight.workspace = () => this.highlight(`#workspace`);
-		this.highlight.codeEditor = () => this.highlight(`.editor.ace_editor`);
-		this.highlight.previewArea = () => this.highlight(`#preview`);
-		this.highlight.clear = () => this.clear();
-		
-		// markers
-		this.marker.fileBrowserItem = path => this.marker(`.item[file="${path}"]`);
-		this.marker.fileBrowser = () => this.marker(`#file-browser`);
-		this.marker.clear = () => this.clear();
+		this.highlight.clear = () => $focus.clearHighlights();
+		this.marker.clear = () => $focus.clearMarkers();
 
 	}
 
 	// sets marked points
-	marker = selectors => {
-		$focus.setMarker(selectors);
+	marker = (selector, options) => {
+		return $focus.setMarker(selector, options);
 	}
 
 	// sets highlight points
-	highlight = selectors => {
-		$focus.setHighlight(selectors);
+	highlight = (selector, options) => {
+		return $focus.setHighlight(selector, options);
 	}
 
 	// clears all
 	clear = () => {
-		$focus.clear();
+		$focus.clearHighlights();
+		$focus.clearMarkers();
 	}
 
 }

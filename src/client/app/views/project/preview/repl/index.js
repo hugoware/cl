@@ -5,6 +5,11 @@ import $state from '../../../../state';
 import Component from '../../../../component';
 import $contentManager from '../../../../content-manager';
 import CodeRunner from '../../../../../viewer/code-runner';
+import { requirePermission } from '../../prevent';
+
+// main content view
+import $view from './view.html';
+import ExecutionContext from './context'
 
 const EMPTY_BOUNDS = { top: 0, bottom: 0 };
 
@@ -15,9 +20,6 @@ if (!document.getElementById('babel-script')) {
 	babel.src = '/__codelab__/babel.min.js';
 	document.body.appendChild(babel);
 }
-
-// main content view
-import $view from './view.html';
 
 // create the preview mode
 export default class ReplMode extends Component {
@@ -180,42 +182,64 @@ export default class ReplMode extends Component {
 	onRunScripts = () => {
 		this.runner.clear();
 		this.runner.projectUrl = $state.getProjectDomain();
+		const path = '/main.js';
+		const file = $state.paths[path];
 
-		// check for slide code execution validators
-		let validator;
-		if ($state.lesson) {
-			const { slide } = $state.lesson;
-			validator = $state.lesson.getValidator(slide.runValidation);
-		}
+		// check if allowed or not
+		if (!requirePermission({
+			args: [file],
+			requires: ['tryRunCode', 'RUN_CODE'],
+			message: `Can't Use Run Code`
+		})) return;
+
 
 		// delay before running just by a moment
-		const fileName = '/main.ts';
-		this.runner.load(`Running ${fileName} ...`);
+		this.runner.load(`Running ${path} ...`);
 		setTimeout(async () => {
 
 			// compile the code -- save any errors
 			// directly to the runner. When `.run` is called
 			// that error will be thrown right away
-			await $contentManager.compile(fileName, {
+			await $contentManager.compile(path, {
 				onError: ex => this.runner.error = ex,
 				silent: true
 			});
 
 			// get the code to execute
-			const code = await $contentManager.get(fileName);
+			const code = await $contentManager.get(path);
+			const context = new ExecutionContext(code, this.runner);
 
-			// handle the correct path
-			if (validator) {
+			// handle lesson execution
+			const options = { }
 
-				// run with the validator
-				validator({
-					onSuccess: this.onCodeExecutionApproval,
-					runner: this.runner,
-					code
+			// check lesson options
+			if ($state.lesson) {
+				_.each([ 'Start', 'Step', 'Pause', 'End', 'Error' ], command => {
+					if ($state.lesson.respondsTo(`runCode${command}`)) {
+						options[`on${command}`] = () => $state.lesson.invoke(`runCode${command}`, context);
+					}
 				});
 			}
-			// this is
-			else this.runner.run(code);
+
+			// run the code
+			if (options.onStart)
+				options.onStart(context);
+
+			// continue execution
+			this.runner.run(code, options);
+
+			// // handle the correct path
+			// if (validator) {
+
+			// 	// run with the validator
+			// 	validator({
+			// 		onSuccess: this.onCodeExecutionApproval,
+			// 		runner: this.runner,
+			// 		code
+			// 	});
+			// }
+			// // this is
+			// else this.runner.run(code);
 
 		}, 100);
 

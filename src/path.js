@@ -55,7 +55,8 @@ export function resolveLesson(id = '', file) {
  * @returns {string} the resolved path
  */
 export function resolveAudio(key) {
-	let path = `${$config.audioDirectory}/${key}.mp3`;
+	let path = $config.audioDirectory;
+	if (key) path += `/${key}.mp3`;
   return resolveRoot(path);
 }
 
@@ -177,6 +178,7 @@ export default {
 	resolveProject,
 	resolveResource,
 	resolveLesson,
+	resolveAudio,
 	resolveData,
 	sanitizePath,
 };

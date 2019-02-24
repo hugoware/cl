@@ -1,3 +1,6 @@
+
+import _ from 'lodash';
+import request from 'request';
 import { resolveError } from '../utils';
 import $config from '../config';
 import $path from '../path';
@@ -30,6 +33,7 @@ export async function handle(socket, session, data) {
 	try {
 		const token = await getToken();
 		await generateAudio(token, key, text);
+		console.log(`generated: ${key}`);
 		socket.ok(event, { key });
 	}
 	// failed to generate
@@ -79,11 +83,11 @@ async function generateAudio(token, key, text) {
 				`</voice>` +
 				`</speak>`
 		}, (error, response, body) => {
-			if (!error && response.statusCode === 200) resolve(id);
+			if (!error && response.statusCode === 200) resolve();
 			else reject(error || { statusCode: response.statusCode });
 		})
 		// save the data
-		.pipe(output);
+		.pipe($fsx.createWriteStream(output));
 	});
 }
 

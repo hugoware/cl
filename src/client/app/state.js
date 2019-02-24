@@ -16,6 +16,11 @@ const ROOT = { path: '/' };
 const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py', 'rb'];
 const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 
+// speech options;
+const SPEECH_ENABLEMENT_CONFIG = 'speech-enablement';
+const SPEECH_ENABLED = 'on';
+const SPEECH_DISABLED = 'off';
+
 const isProd = !/localhost/gi.test(window.location.host);
 
 const $state = {
@@ -100,6 +105,21 @@ const $state = {
 	 */
 	get activeFile() {
 		return _.find($state.files, 'isActive');
+	},
+
+	/** gets the current speech enablement state 
+	 * @returns {boolean}
+	*/
+	get allowSpeech() {
+		return localStorage.getItem(SPEECH_ENABLEMENT_CONFIG) !== SPEECH_DISABLED;
+	},
+	
+	/** sets the current speech enablement state 
+	 * @param {boolean} allow is this allowed or not
+	 */
+	set allowSpeech(enabled) {
+		if (!enabled) $speech.stop();
+		localStorage.setItem(SPEECH_ENABLEMENT_CONFIG, enabled ? SPEECH_ENABLED : SPEECH_DISABLED);
 	},
 
 	// creates an in-memory restore point for files

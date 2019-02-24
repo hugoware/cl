@@ -1,4 +1,5 @@
-
+import _ from 'lodash';
+import $state from '../../state';
 
 import AssistantAPI from './assistant';
 import ScreenAPI from './screen';
@@ -21,6 +22,18 @@ export default class LessonAPI {
 		this.file = new FileAPI(this);
 		this.editor = new EditorAPI(this);
 		this.sound = new SoundAPI(this);
+	}
+
+	// handles args
+	flags(...args) {
+
+		// getting args
+		if (!_.some(args))
+			return _.assign({ }, $state.flags);
+
+		// writing values
+		const [key, value] = args;
+		$state.flags[key] = !!value;
 	}
 
 }

@@ -39,6 +39,9 @@ class Config {
 	/** @returns {string} the directory where all lesson files are found */
 	get lessonDirectory() { return this.data.lesson_directory; }
 
+	/** @returns {string} the directory where the audio files are found */
+	get audioDirectory() { return this.data.audio_directory; }
+
 	/** @returns {string} the storage location for temp files */
 	get cacheDirectory() { return this.data.cache_directory; }
 

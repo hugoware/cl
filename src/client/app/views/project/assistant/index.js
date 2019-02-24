@@ -15,11 +15,6 @@ import Question from './question';
 // mostly to prevent double clicks
 const MINIMUM_MS_PER_SLIDE = $state.isLocal ? 0 : 1000;
 
-// speech options
-const SPEECH_ENABLEMENT_CONFIG = 'speech-enablement';
-const SPEECH_ENABLED = 'on';
-const SPEECH_DISABLED = 'off';
-
 export default class Assistant extends Component {
 
 	constructor() {
@@ -76,8 +71,7 @@ export default class Assistant extends Component {
 		this.ui.toggleSpeech.on('click', '.disable', this.onDisableSpeech);
 
 		// get the default enablement state
-		const enabled = window.localStorage && localStorage.getItem(SPEECH_ENABLEMENT_CONFIG) !== SPEECH_DISABLED;
-		this.setSpeech(!!enabled);
+		this.setSpeech(!!$state.allowSpeech);
 
 	}
 
@@ -145,15 +139,9 @@ export default class Assistant extends Component {
 	setSpeech = enabled => {
 		this.ui.toggleSpeech.toggleClass('enabled', !!enabled);
 		this.ui.toggleSpeech.toggleClass('disabled', !enabled);
-		
-		// change the storage option
-		if (window.localStorage)
-			localStorage.setItem(SPEECH_ENABLEMENT_CONFIG, enabled ? SPEECH_ENABLED : SPEECH_DISABLED);
 
 		// stop speaking, if needed
-		$speech.enabled = enabled;
-		if (!enabled)
-			$speech.stop();
+		$state.allowSpeech = !!enabled;
 	}
 
 	// // if the file is changed, always revert any
@@ -231,7 +219,7 @@ export default class Assistant extends Component {
 
 	// hide when leaving the project editor
 	onDeactivateProject = () => {
-		if ($speech.active) $speech.stop();
+		$speech.stop();
 		this.slideIndex = null;
 		this.notifyAssistantUpdate();
 		this.hide();

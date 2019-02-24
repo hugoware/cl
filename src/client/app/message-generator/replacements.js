@@ -13,4 +13,5 @@ export default {
 	'`=`': 'equal sign',
 	'`ol`': 'Oh-El',
 	'`li`': 'El-Eye',
+	'JavaScript': 'Java Script'
 };

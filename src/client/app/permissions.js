@@ -34,7 +34,7 @@ export default function checkPermissions(state, permissions, args = [ ]) {
 		
 		// check for a flag condition
 		else {
-			const id = _.kebabCase(permission).toLowerCase();
+			const id = _.snakeCase(permission).toUpperCase();
 			success = state.flags[id];
 		}
 

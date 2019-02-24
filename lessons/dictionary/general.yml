@@ -40,6 +40,11 @@
   define: |
     A world wide network of computers
 
+- id: codelab_code_output
+  name: Code Output
+  define: |
+    The result of called code
+
 - id: codelab_editor
   name: Code Editor
   define: |

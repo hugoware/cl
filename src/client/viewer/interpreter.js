@@ -43,10 +43,12 @@ export default class CodeInterpreter {
 	// holds execution
 	pause() {
 		this.paused = true;
+		this.triggerEvent('pause');
 	}
-
+	
 	// continues execution
 	resume() {
+		this.triggerEvent('resume');
 
 		const isPaused = !!this.paused;
 		if (!isPaused)
@@ -131,6 +133,7 @@ export default class CodeInterpreter {
 				}
 
 				// running till finished
+				this.triggerEvent('step');
 				this.finished = !this.interpreter.step();
 				if (this.finished || this.paused) break;
 			}

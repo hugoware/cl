@@ -267,6 +267,7 @@ export default class CodeEditor extends Component {
 		// update the saved version of the file
 		await contentManager.update(file.path, file.current);
 		$state.lesson.invoke('reset', file);
+		$state.lesson.invoke('init', file);
 	}
 
 	// shows a restore button if a file has a restore state
@@ -290,16 +291,14 @@ export default class CodeEditor extends Component {
 	saveTarget = async path => {
 
 		// find the file instance
-		const instance = _.find(this.editor.instances, item => item.file.path == path);
+		const instance = _.find(this.editor.instances, item => item.file.path === path);
 		if (!instance) {
 			console.log('missing instance?');
 			return false;
 		}
 
 		// gather the data
-		const { file } = instance;
-		const content = this.editor.getContent(file);
-		path = file.path;
+		const content = this.editor.getContent(path);
 
 		// try and update the project data
 		this.busy = true;
@@ -386,7 +385,8 @@ export default class CodeEditor extends Component {
 // checks if this file can be saved or not
 function canSaveFile(instance) {
 	return requirePermission({
-		required: $state.checkPermissions(['SAVE_FILE'], instance.file),
+		required: ['SAVE_FILE'],
+		args: [ instance.file ],
 		message: "Can't Save Files",
 	});
 }

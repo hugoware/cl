@@ -686,6 +686,7 @@ export default class ManagedEditor {
 	 * @param {ProjectItem} file the file that should be found
 	 * */
 	getContent = path => {
+		path = _.isString(path) ? path : path.path;
 		const file = $state.paths[path];
 		return file.current || file.content;
 

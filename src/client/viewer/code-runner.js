@@ -9,6 +9,12 @@ const DEFAULT_OPTIONS = {
 	questionSelector: '#question',
 };
 
+const HANDLED_EVENTS = [
+	'Pause',
+	'Resume',
+	'Step'
+];
+
 // trims a string
 function trim(str) {
 	return (str || '').replace(/^(\n|\t|\s)*|(\n|\t|\s)*$/g, '');
@@ -94,11 +100,23 @@ export default class CodeRunner {
 		this.writeOutput('start', msg);
 	}
 
+	// checking for step attempts
+	onStep = () => {
+		this.options.onStep(this);
+	}
+
 	// kicks off running code
 	onRun = code => {
 		this.interpreter = new CodeInterpreter(code);
 		this.interpreter.on('finished', this.onEnd);
 		this.interpreter.on('error', this.onError);
+
+		// check for handled events
+		for (const event of HANDLED_EVENTS) {
+			const func = this.options[`on${event}`];
+			if ($.isFunction(func))
+				this.interpreter.on(event.toLowerCase(), func);
+		}
 		
 		// create handlers
 		this.interpreter.on('console-log', this.onConsoleLog);
@@ -382,7 +400,8 @@ export default class CodeRunner {
 
 	// grabs the next node
 	nextNode = style => {
-
+		const lineNumber = this.totalLines;
+		
 		// check if too many appended lines
 		if (++this.totalLines > MAX_CONSOLE_LINES) {
 			const output = this.ui.output[0];
@@ -391,7 +410,7 @@ export default class CodeRunner {
 
 		// create the result
 		const line = document.createElement('div');
-		line.className = `${style || ''} line`;
+		line.className = `${style || ''} line line-number-${lineNumber}`;
 		this.ui.output.append(line);
 
 		// move to the bottom of the output
