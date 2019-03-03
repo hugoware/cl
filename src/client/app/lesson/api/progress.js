@@ -1,4 +1,4 @@
-import { $ } from '../../lib';
+import { _, $ } from '../../lib';
 import { broadcast } from '../../events';
 
 export default class ProgressAPI {
@@ -7,42 +7,65 @@ export default class ProgressAPI {
 		this.lesson = lesson;
 	}
 
-	// handles a variety of scenarios to check if
-	// validation of the slide is allowed
-	update = ({ compare, result, valid, allow = _.noop, deny = _.noop, always = _.noop }) => {
-		const isAllowed = !!this.allowed;
-		let shouldAllow;
+	// checking if a status is successful or not
+	isSuccess({ compare, result, valid }) { 
+		let success;
 
 		// alt aliases to check for
 		compare = valid || result || compare;
 
 		// check for true
 		if (compare === true)
-			shouldAllow = true;
+			success = true;
 
 		// check for falsy value
 		if (!compare)
-			shouldAllow = false;
+			success = false;
 
 		// check for an error object
 		if ('error' in compare)
-			shouldAllow = !compare.error
+			success = !compare.error
 
-		// apply the result
-		if (shouldAllow) this.allow();
-		else this.block();
+		return success;
+	}
+
+	// handles a variety of scenarios to check if
+	// validation of the slide is allowed
+	check = ({ compare, result, valid, allow = _.noop, deny = _.noop, always = _.noop }) => {
+		const isAllowed = !!this.allowed;
+		const success = this.isSuccess({ compare, result, valid });
 
 		// switching to allowed
-		if (!isAllowed && shouldAllow && allow) {
-			allow();
-			always();
+		if (!isAllowed && success && allow) {
+			try { allow(); }
+			finally { always(); }
 		}
 		// switching to denied
-		else if (isAllowed && !shouldAllow && deny) {
-			deny();
-			always();
+		else if (isAllowed && !success && deny) {
+			try { deny(); }
+			finally { always(); }
 		}
+	}
 
+	// perform updates
+	update = options => {
+		const allow = options.allow || _.noop;
+		const deny = options.deny || _.noop;
+
+		// setup actions
+		const params = _.assign({ }, options, { 
+			allow: () => {
+				allow();
+				this.allow();
+			},
+			deny: () => {
+				deny();
+				this.block();
+			}
+		});
+
+		// perform the check with the custom options
+		this.check(params);
 	}
 
 	// quick access if the next step is allowed

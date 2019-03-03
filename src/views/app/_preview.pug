@@ -22,10 +22,18 @@
 				.label Run Code
 				+shortcut('mod', 'Enter')
 		#repl.window
+			#alert
+				.header
+					.close.handle-confirm
+					.title Alert message
+				.message This is the main message
+				.actions
+					.confirm.handle-confirm OK
+
 			#error
 				h1 Code Exception
 				p Looks like there was an error while running that code!
-				.message TypeError: Unable to find the function called Console.log
+				.message Unspecified error
 
 			pre#output
 			#command

@@ -8,6 +8,10 @@ export default class FileAPI {
 		this.lesson = lesson;
 	}
 
+	clearRunner() {
+		broadcast('clear-code-runner');
+	}
+
 	addEvent(event, selector, action) {
 		$state.preview.addEvent({ event, selector, action });
 	}

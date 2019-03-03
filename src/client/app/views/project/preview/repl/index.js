@@ -45,6 +45,7 @@ export default class ReplMode extends Component {
 			inputSelector: '#repl #input',
 			errorSelector: '#repl #error',
 			questionSelector: '#repl #question',
+			alertSelector: '#repl #alert',
 		}, instance => {
 			
 			// save the runner instance
@@ -57,6 +58,7 @@ export default class ReplMode extends Component {
 
 		// global events
 		this.listen('assistant-updated', this.onAssistantUpdated);
+		this.listen('clear-code-runner', this.onClearCodeRunner);
 
 		// handle script requests
 		this.ui.runScripts.on('click', this.onRunScripts);
@@ -103,6 +105,11 @@ export default class ReplMode extends Component {
 	// handles starting a new project
 	onActivateProject = async project => {
 		this.reset();
+	}
+
+	// reset the view
+	onClearCodeRunner = () => {
+		this.runner.clear();
 	}
 
 	onDeleteItems = paths => { }
@@ -214,9 +221,12 @@ export default class ReplMode extends Component {
 
 			// check lesson options
 			if ($state.lesson) {
-				_.each([ 'Start', 'Step', 'Pause', 'End', 'Error' ], command => {
+				_.each([ 'Start', 'Step', 'Pause', 'End', 'Error', 'Alert', 'Ask' ], command => {
 					if ($state.lesson.respondsTo(`runCode${command}`)) {
-						options[`on${command}`] = () => $state.lesson.invoke(`runCode${command}`, context);
+						options[`on${command}`] = (...args) => {
+							const params = [`runCode${command}`, context].concat(args);
+							$state.lesson.invoke.apply($state.lesson, params);
+						};
 					}
 				});
 			}

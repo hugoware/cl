@@ -56,6 +56,7 @@ export default class CodeRunner {
 		// console input
 		this.stdout = [ ];
 		this.stdin = [ ];
+		this.alerts = [ ];
 		
 		// UI elements
 		this.ui = {
@@ -68,10 +69,14 @@ export default class CodeRunner {
 			error: $(options.errorSelector),
 			errorMessage: $(`${options.errorSelector} .message`),
 			question: $(options.questionSelector),
+			alert: $(options.alertSelector),
+			alertMessage: $(`${options.alertSelector} .message`),
+			alertConfirm: $(`${options.alertSelector} .handle-confirm`),
 		};
 
 		// link up inputs
 		this.ui.input.on('keyup', this.onInput);
+		this.ui.alertConfirm.on('click', this.onConfirmAlert);
 
 		// interface for external programs
 		__CODELAB__.load = this.onLoad;
@@ -129,6 +134,7 @@ export default class CodeRunner {
 		this.interpreter.on('console-ask', this.onConsoleAsk);
 		this.interpreter.on('console-image', this.onConsoleImage);
 		this.interpreter.on('console-clear', this.onConsoleClear);
+		this.interpreter.on('alert', this.onAlert);
 		this.interpreter.on('set-timeout', this.onDelay);
 
 		// copy any existing errors before running
@@ -279,7 +285,31 @@ export default class CodeRunner {
 	// handles when input is received
 	onInput = event => {
 		if (event.keyCode !== 13) return;
-		this.onCommit(event.target.innerText)
+
+		if (this.ui.alert.is('.has-alert'))
+			this.onConfirmAlert();
+		else
+			this.onCommit(event.target.innerText)
+	}
+
+
+	// handle input entry
+	onConfirmAlert = () => {
+		if (!this.interpreter.paused)
+			return;
+
+		// invoke the callback
+		try {
+			this.ui.doc.removeClass('has-alert');
+			this.ui.alert.removeClass('has-alert');
+
+			// wait a moment to allow the alert to hide
+			setTimeout(() => this.interpreter.resume());
+		}
+		// always clean up
+		finally {
+			return false;
+		}
 	}
 
 	// handle input entry
@@ -288,6 +318,10 @@ export default class CodeRunner {
 			return;
 		// if (!__CODELAB__.onPromptCallback)
 		// 	return;
+
+		// make sure to blur the input so no more
+		// keyboard events can effect it
+		this.ui.input[0].blur();
 
 		// invoke the callback
 		try {
@@ -317,7 +351,22 @@ export default class CodeRunner {
 	}
 
 	// when a user asks for input
-	onConsoleAsk = (question, callback) => {
+	onAlert = (message) => {
+		message = trim(message);
+		this.alerts.push(message);
+
+		// notify of asked values
+		if (this.options.onAlert)
+			this.options.onAlert(message);
+
+		// asking for user input
+		this.ui.doc.addClass('has-alert');
+		this.ui.alert.addClass('has-alert');
+		this.ui.alertMessage.text(message);
+	}
+
+	// when a user asks for input
+	onConsoleAsk = question => {
 		question = trim(question);
 
 		// notify of asked values
@@ -427,7 +476,16 @@ export default class CodeRunner {
 		this.stdout.push(args);
 
 		// append each value
+		const requiresContainer = args.length > 1;
 		for (let i = 0; i < args.length; i++) {
+
+			// decide how to write this item
+			let writeTo = node;
+			if (requiresContainer) {
+				writeTo = document.createElement('div');
+				writeTo.className = 'console-multi-item';
+				node.appendChild(writeTo);
+			}
 
 			// attach this to the document
 			const arg = args[i];
@@ -438,10 +496,10 @@ export default class CodeRunner {
 				const lead = i > 0 ? ' ' : '';
 				const item = document.createElement('span');
 				item.className = 'item';
-				node.innerText = `${lead}${content}`;
+				writeTo.innerText = `${lead}${content}`;
 			}
 			// anything else, assume DOM element?
-			else node.appendChild(content);
+			else writeTo.appendChild(content);
 
 		}
 
@@ -451,13 +509,15 @@ export default class CodeRunner {
 
 	// resets the entire view
 	reset = () => {
-		this.ui.doc.removeClass('has-question');
+		this.ui.doc.removeClass('has-question has-alert');
 		this.ui.error.removeClass('has-error');
+		this.ui.alert.removeClass('has-alert');
 
 		// reset the state
 		delete this.options;
 		this.stdout = [ ];
 		this.stdin = [ ];
+		this.alerts = [ ];
 
 		// reset the line count
 		this.totalLines = 0;

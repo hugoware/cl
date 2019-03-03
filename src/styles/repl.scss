@@ -2,6 +2,7 @@
 // @import '_reset';
 @import '_utils';
 @import './app/fonts';
+@import './app/_colors';
 
 
 @include keyframes(shake_a) {
@@ -38,11 +39,7 @@
 		font-family: $code-font;
 	}
 
-	#error {
-		pointer-events: none;
-		opacity: 0;
-		@include animate('opacity');
-
+	#error, #alert {
 		position: fixed;
 		top: 100px;
 		width: 80%;
@@ -50,7 +47,83 @@
 		border-radius: 5px;
 		left: 50%;
 		transform: translate(-50%, 0);
+		
+		pointer-events: none;
+		opacity: 0;
+	}
 
+	#alert {
+		background: #fff;
+		box-shadow: 0 2px 28px rgba(#000, 0.3);
+		
+		.message, .header .title {
+			font-family: $default-font;
+			text-shadow: none;
+		}
+
+		// when visible
+		&.has-alert {
+			@include animate('opacity');
+			pointer-events: all;
+			opacity: 1;
+		}
+
+		.header {
+			background: #ccc;
+			border-radius: 5px 5px 0 0;
+			padding: 8px 12px;
+			position: relative;
+			
+			.title {
+				font-size: 13px;
+				color: #777;
+			}
+
+			.close {
+				cursor: pointer;
+				$close-size: 13px;
+				border-radius: $close-size;
+				height: $close-size;
+				width: $close-size;
+				background: $dialog-action-danger-background;
+				position: absolute;
+				right: 10px;
+				top: 50%;
+				transform: translate(0, -50%);
+			}
+		}
+		
+		.message {
+			font-size: 17px;
+			color: #000;
+			padding: 15px 10px 25px 10px;
+		}
+
+		.actions {
+			text-align: center;
+			padding: 10px 0;
+			background: #eee;
+			height: auto;
+			border-radius: 0 0 5px 5px;
+		}
+
+		.confirm {
+			cursor: pointer;
+			background: $dialog-action-primary-background;
+			display: inline-block;
+			font-size: 18px;
+			padding: 9px 20px;
+			border-radius: 5px;
+			@include animate('background', 0.2s);
+
+			&:hover {
+				background: darken($dialog-action-primary-background, 15%);
+			}
+		}
+	}
+
+	#error {
+		@include animate('opacity');
 		background: rgba(mix(#DF3B32, #34363D, 50%), 0.9);
 		box-shadow: inset 0 0 0 2px #DF3B32, 0 2px 28px rgba(#000, 0.3);
 
@@ -101,6 +174,19 @@
 		padding: 0;
 		white-space: normal;
 		line-height: 1.2em;
+
+		.console-multi-item {
+			$console-item-gap: 12px;
+			display: inline-block;
+			margin-right: $console-item-gap;
+			padding-left: $console-item-gap;
+			border-left: 2px solid rgba(#000, 0.2);
+
+			&:nth-child(1) {
+				padding-left: 0;
+				border: none;
+			}
+		}
 
 		.console-image {
 			max-width: 100%;

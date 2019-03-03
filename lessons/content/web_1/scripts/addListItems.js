@@ -7,6 +7,15 @@ export const controller = true;
 export function validate(instance) {
 	const content = instance.file.content({ path: '/index.html' });
 	const result = HtmlValidator.validate(content, validate_list);
+
+	// check for the first item
+	if (!instance.state.addedItem && result.progress === 'added-item') {
+		instance.state.addedItem = true;
+		instance.assistant.say({ 
+			message: `Very good! Notice how the [define html_element Element] you added already has a number indicating which position it is on the list.`,
+			emote: 'happy'
+		});
+	}
 	
 	// update validation
 	instance.editor.hint.validate({ path: '/index.html', result });

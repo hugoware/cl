@@ -40,6 +40,15 @@ function validate(instance) {
 	var content = instance.file.content({ path: '/index.html' });
 	var result = _lib.HtmlValidator.validate(content, _validation.validate_list);
 
+	// check for the first item
+	if (!instance.state.addedItem && result.progress === 'added-item') {
+		instance.state.addedItem = true;
+		instance.assistant.say({
+			message: 'Very good! Notice how the [define html_element Element] you added already has a number indicating which position it is on the list.',
+			emote: 'happy'
+		});
+	}
+
 	// update validation
 	instance.editor.hint.validate({ path: '/index.html', result: result });
 
@@ -655,6 +664,11 @@ var web1Lesson = function () {
         "path": "tech.png"
       }],
       "definitions": {
+        "html_element": {
+          "id": "html_element",
+          "name": "HTML Element",
+          "define": "This is about HTML elements\n"
+        },
         "web_browser": {
           "id": "web_browser",
           "name": "Web Browser",
@@ -702,11 +716,6 @@ var web1Lesson = function () {
           "name": "Web Page",
           "define": "An individual view of a web site.\n"
         },
-        "html_element": {
-          "id": "html_element",
-          "name": "HTML Element",
-          "define": "This is about HTML elements\n"
-        },
         "html_tag": {
           "id": "html_tag",
           "name": "HTML Tag",
@@ -742,6 +751,7 @@ var web1Lesson = function () {
     this.file = api.file;
     this.editor = api.editor;
     this.sound = api.sound;
+    this.flags = api.flags;
 
     // setup controllers
     this.controllers = {};
@@ -991,27 +1001,27 @@ exports.validate_list = exports.validate_insert_button = exports.validate_insert
 var _lib = require('./lib');
 
 var validate_h1 = function validate_h1(test) {
-	return test.tag('h1').content().close('h1');
+	return test.tag('h1').content('hello, world!').close('h1');
 };
 
 var validate_h3 = function validate_h3(test) {
-	return test.tag('h3').text('HTML is great').close('h3');
+	return test.tag('h3').content('HTML is great').close('h3');
 };
 
 var validate_button = function validate_button(test) {
-	return test.tag('button').text('Click me').close('button');
+	return test.tag('button').content('Click me').close('button');
 };
 
 var validate_insert_h3 = exports.validate_insert_h3 = function validate_insert_h3(test) {
-	return test._w.merge(validate_h1)._n.__w.merge(validate_h3).__w.eof();
+	return test.__w$.merge(validate_h1)._n.__w$.merge(validate_h3).__w$.eof();
 };
 
 var validate_insert_button = exports.validate_insert_button = function validate_insert_button(test) {
-	return test._w.merge(validate_h1)._n.__w.merge(validate_h3)._n.__w.merge(validate_button).__w.eof();
+	return test.__w$.merge(validate_h1)._n.__w$.merge(validate_h3)._n.__w$.merge(validate_button).__w$.eof();
 };
 
 var validate_list = exports.validate_list = function validate_list(test) {
-	return test._w.merge(validate_h1)._n.__w.merge(validate_h3)._n.__w.merge(validate_button)._n.__w.tag('ol')._n._t.tag('li').text('dog').close('li')._n._t.tag('li').text('cat').close('li')._n._t.tag('li').text('fish').close('li')._n.close('ol').eof();
+	return test.__w$.merge(validate_h1)._n.__w$.merge(validate_h3)._n.__w$.merge(validate_button)._n.__w$.tag('ol')._n._t.tag('li').text('dog').close('li').progress('added-item')._n._t.tag('li').text('cat').close('li')._n._t.tag('li').text('fish').close('li')._n.close('ol').__w$.eof();
 };
 
 // export const validate_h1 = test => test

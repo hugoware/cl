@@ -19,7 +19,8 @@ export default class CodeInterpreter {
 			// standard sync event handler
 			interpreter.createEventHandler = function (key) {
 				return interpreter.createNativeFunction(function () {
-					const args = extractArgs(arguments);
+					let args = [].slice.apply(arguments);
+					args = extractArgs(args);
 					instance.triggerEvent(key, args);
 				});
 			};
@@ -195,6 +196,7 @@ function initConsole(instance, interpreter, scope) {
 	const shake = interpreter.createEventHandler('console-shake');
 	const rainbow = interpreter.createEventHandler('console-rainbow');
 	const ask = interpreter.createAsyncEventHandler('console-ask');
+	const alert = interpreter.createAsyncEventHandler('alert');
 	const image = interpreter.createAsyncEventHandler('console-image');
 
 	// sync
@@ -209,6 +211,7 @@ function initConsole(instance, interpreter, scope) {
 	interpreter.setProperty(runnerConsole, 'rainbow', rainbow, Interpreter.NONENUMERABLE_DESCRIPTOR);
 
 	// async
+	interpreter.setProperty(scope, 'alert', alert, Interpreter.NONENUMERABLE_DESCRIPTOR);
 	interpreter.setProperty(runnerConsole, 'ask', ask, Interpreter.NONENUMERABLE_DESCRIPTOR);
 	interpreter.setProperty(runnerConsole, 'image', image, Interpreter.NONENUMERABLE_DESCRIPTOR);
 }
@@ -240,14 +243,25 @@ function extractArgs(data) {
 	const args = [];
 
 	// check for a complex object
-	if (data.properties)
-		for (let i = 0; i < data.length; i++)
-			args.push(data.properties[i].data);
+	for (let index in data) {
+		const item = data[index];
 
-	// check for an array like value
-	else if (data.length)
-		for (let i = 0; i < data.length; i++)
-			args.push(data[i].data);
+		// this is complex and requires more processing
+		if (item.properties) {
+
+			// copy out each item
+			const obj = 'length' in item ? [ ] : { };
+			for (let prop in item.properties)
+				obj[prop] = item.properties[prop].data;
+
+			// save the object
+			args.push(obj);
+		}
+		
+		// copy the value as is
+		else if ('data' in item)
+			args.push(item.data);
+	}
 
 	return args;
 }

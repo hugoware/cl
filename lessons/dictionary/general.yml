@@ -54,3 +54,13 @@
   name: Preview Area
   define: |
     You can see your HTML as you type
+
+- id: execute
+  name: Execute
+  define: |
+    Another way to say when code is being run.
+
+- id: sequentially
+  name: Sequentially
+  define: |
+    Sequentially means a sequence, normally a logical order such as a beginning to end, or numerically such as 1, 2, 3, etc...

@@ -12,6 +12,10 @@ export default class ExecutionContext {
 		return this.runner.interpreter.get(expression);
 	}
 
+	get alerts() {
+		return this.runner.alerts;
+	}
+
 	get output() {
 		return this.runner.stdout;
 	}

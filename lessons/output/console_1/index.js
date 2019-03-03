@@ -52,9 +52,10 @@ exports.controller = undefined;
 exports.onInit = onInit;
 exports.onReset = onReset;
 exports.onEnter = onEnter;
+exports.onExit = onExit;
 exports.onBeforeContentChange = onBeforeContentChange;
+exports.onRunCodeAlert = onRunCodeAlert;
 exports.onRunCode = onRunCode;
-exports.onRunCodeEnd = onRunCodeEnd;
 
 var _lib = require('./lib');
 
@@ -62,7 +63,8 @@ var controller = exports.controller = true;
 
 function onInit() {
 	this.progress.block();
-	this.editor.area({ path: '/main.js', start: 15, end: 28 });
+	this.editor.area({ path: '/main.js', start: 9, end: 22 });
+	this.preview.clearRunner();
 }
 
 function onReset() {
@@ -73,36 +75,128 @@ function onEnter() {
 	this.file.allowEdit({ path: '/main.js' });
 }
 
+function onExit() {
+	this.editor.area.clear();
+}
+
 function onBeforeContentChange(file, change) {
-	if (change.isNewline || change.data === "'") return false;
+	if (change.isNewline || change.data === "'" || change.data === '\\') return false;
 }
 
-function onRunCode() {
-	return true;
-}
+function onRunCodeAlert(context, message) {
 
-function onRunCodeEnd(context) {
-	var _this = this;
-
-	var message = context.output[1];
-
-	if (_lib._.size(message) < 5) {
-		this.delay(500, function () {
-			return _this.screen.highlight('.line-number-1');
-		});
+	if (_lib._.size(message) > 5) {
 		this.progress.allow();
 		this.assistant.say({
 			emote: 'happy',
-			message: 'Great! Looks like you typed in `' + message + '`.'
+			message: 'Great! You can see your message displayed in the [define codelab_code_output].'
 		});
 	} else {
+		var any = _lib._.some(message);
 		this.assistant.say({
-			message: 'Oops! Make sure to type a message!'
+			message: 'Type a ' + (any ? 'longer' : '') + ' message before pressing the **Run Code** button!'
 		});
 	}
 }
 
-},{"./lib":6}],4:[function(require,module,exports){
+function onRunCode(context) {
+	return true;
+}
+
+},{"./lib":7}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
+exports.onEnter = onEnter;
+exports.onRunCodeAlert = onRunCodeAlert;
+exports.onReady = onReady;
+exports.onContentChange = onContentChange;
+exports.onExit = onExit;
+exports.onRunCode = onRunCode;
+
+var _lib = require('./lib');
+
+var _validation = require('./validation');
+
+var controller = exports.controller = true;
+
+var $alertCount = 0;
+var $isValid = false;
+
+function validate(instance) {
+	var content = instance.file.content({ path: '/main.js' });
+	var result = _lib.CodeValidator.validate(content, _validation.validate_free_alert);
+
+	// update validation
+	instance.editor.hint.validate({ path: '/main.js', result: result });
+
+	// update progress
+	$isValid = false;
+	instance.progress.check({
+		result: result,
+		allow: function allow() {
+			$isValid = true;
+			instance.assistant.say({
+				message: 'Great! Press the **Run Code** button to see what happens!'
+			});
+		},
+
+		deny: instance.assistant.revert,
+		always: instance.sound.notify
+	});
+}
+
+function onEnter() {
+	this.editor.focus();
+	this.progress.block();
+	this.file.allowEdit({ path: '/main.js' });
+}
+
+function onRunCodeAlert(context, message) {
+
+	if ($alertCount === 0) {
+		$alertCount++;
+
+		this.assistant.say({
+			message: 'When code is run it\'s done [define sequentially sequentially], meaning it will [define execute execute] in the order it appears in the file.\nYou can see that the first `alert` message has been displayed. Press **OK** to allow the code to continue running.'
+		});
+	} else if ($alertCount === 1) {
+		this.assistant.say({
+			message: 'Great! Now the second alert message has been displayed!',
+			emote: 'happy'
+		});
+		this.progress.allow();
+	}
+}
+
+function onReady() {
+	validate(this);
+}
+
+function onContentChange(file) {
+	this.progress.block();
+	this.assistant.revert();
+	validate(this);
+}
+
+function onExit() {
+	this.file.readOnly({ path: '/main.js' });
+}
+
+function onRunCode() {
+	if (!$isValid) {
+		this.assistant.revert();
+		return false;
+	}
+
+	$alertCount = 0;
+	return true;
+}
+
+},{"./lib":7,"./validation":10}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -120,7 +214,7 @@ function onEnter() {
 	this.screen.highlight.fileBrowser();
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -150,13 +244,25 @@ var _customLogMessage = require('./customLogMessage');
 
 var customLogMessage = _interopRequireWildcard(_customLogMessage);
 
+var _freeConsoleMessage = require('./freeConsoleMessage');
+
+var freeConsoleMessage = _interopRequireWildcard(_freeConsoleMessage);
+
 var _highlightFileBrowser = require('./highlightFileBrowser');
 
 var highlightFileBrowser = _interopRequireWildcard(_highlightFileBrowser);
 
+var _repeatConsoleMessage = require('./repeatConsoleMessage');
+
+var repeatConsoleMessage = _interopRequireWildcard(_repeatConsoleMessage);
+
 var _runCodeButton = require('./runCodeButton');
 
 var runCodeButton = _interopRequireWildcard(_runCodeButton);
+
+var _validation = require('./validation');
+
+var validation = _interopRequireWildcard(_validation);
 
 var _waitForMainJs = require('./waitForMainJs');
 
@@ -220,7 +326,6 @@ var console1Lesson = function () {
         "controller": "highlightFileBrowser",
         "content": "On the left side of the screen is the [define file_browser]. This is a list of all files in your project.\n"
       }, {
-        "flags": "+OPEN_FILE",
         "controller": "waitForMainJs",
         "content": "Open the file named `main.js` by [define double_click double clicking] on it in the [define file_browser].\n"
       }, {
@@ -230,26 +335,56 @@ var console1Lesson = function () {
         "controller": "codeOutputIntro",
         "content": "On the right side of the screen you can see the [define codelab_code_output]. This will show the output for your file when you press the **Run Code** button.\n"
       }, {
-        "start": true,
         "controller": "runCodeButton",
         "content": "Let's try and run this code example and see what happens.\n\nPress the **Run Code** button and watch the [define codelab_code_output] area.\n"
       }, {
-        "content": "This is an example of using a programming feature called a _\"function\"_.\n\nWe'll learn more about how to use _functions_ in later lessons, but for now let's use it so we can display messages in the [define codelab_code_output output] area.\n"
+        "content": "This is an example of using a programming feature called a _\"function\"_.\n\nWe'll learn more about how to use _functions_ in later lessons. For now, let's use it so we can display messages.\n"
       }, {
         "controller": "customLogMessage",
-        "content": "Why don't you try changing the message that's displayed on the screen.\n\nReplace the phrase `\"hello, world!\"` with something different and then press the **Run Code** button to see the results.\n"
+        "content": "Why don't you try changing the message that's displayed on the screen.\n\nReplace the phrase `hello, world!` with something different and then press the **Run Code** button to see the results.\n"
+      }, {
+        "content": "Now, let's try it again, but this time you'll write the entire example on your own.\n"
+      }, {
+        "controller": "freeConsoleMessage",
+        "content": "Follow along with the guide to display another message in the [define codelab_code_output output] area.\n\n[snippet console_message_example]\n"
+      }, {
+        "start": true,
+        "flags": "+OPEN_FILE",
+        "content": "Practice makes perfect! Let's write another alert message!\n"
+      }, {
+        "controller": "repeatConsoleMessage",
+        "content": "Write another alert message with any message you'd like, but this time put it at the top of the file so it runs first.\n\n[snippet repeat_message_example]\n"
       }, {
         "content": "About to finish"
       }, {
         "content": "Done"
       }],
-      "snippets": {},
+      "snippets": {
+        "console_message_example": {
+          "content": "alert('coding is fun');",
+          "type": "javascript"
+        },
+        "repeat_message_example": {
+          "content": "alert('your message');",
+          "type": "javascript"
+        }
+      },
       "resources": [],
       "definitions": {
         "codelab_code_output": {
           "id": "codelab_code_output",
           "name": "Code Output",
           "define": "The result of called code\n"
+        },
+        "sequentially": {
+          "id": "sequentially",
+          "name": "Sequentially",
+          "define": "Sequentially means a sequence, normally a logical order such as a beginning to end, or numerically such as 1, 2, 3, etc...\n"
+        },
+        "execute": {
+          "id": "execute",
+          "name": "Execute",
+          "define": "Another way to say when code is being run.\n"
         },
         "double_click": {
           "id": "double_click",
@@ -288,7 +423,7 @@ var console1Lesson = function () {
 
     // setup each included entry
     var refs = {
-      codeEditorIntro: codeEditorIntro, codeOutputIntro: codeOutputIntro, customLogMessage: customLogMessage, highlightFileBrowser: highlightFileBrowser, runCodeButton: runCodeButton, waitForMainJs: waitForMainJs
+      codeEditorIntro: codeEditorIntro, codeOutputIntro: codeOutputIntro, customLogMessage: customLogMessage, freeConsoleMessage: freeConsoleMessage, highlightFileBrowser: highlightFileBrowser, repeatConsoleMessage: repeatConsoleMessage, runCodeButton: runCodeButton, validation: validation, waitForMainJs: waitForMainJs
     };
 
     // setup each reference
@@ -405,7 +540,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('console_1', console1Lesson);
 
-},{"./codeEditorIntro":1,"./codeOutputIntro":2,"./customLogMessage":3,"./highlightFileBrowser":4,"./lib":6,"./runCodeButton":7,"./waitForMainJs":8}],6:[function(require,module,exports){
+},{"./codeEditorIntro":1,"./codeOutputIntro":2,"./customLogMessage":3,"./freeConsoleMessage":4,"./highlightFileBrowser":5,"./lib":7,"./repeatConsoleMessage":8,"./runCodeButton":9,"./validation":10,"./waitForMainJs":11}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -426,7 +561,86 @@ exports.default = {
 	CssValidator: CssValidator
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
+exports.onEnter = onEnter;
+exports.onInit = onInit;
+exports.onReady = onReady;
+exports.onContentChange = onContentChange;
+exports.onExit = onExit;
+
+var _lib = require('./lib');
+
+var _validation = require('./validation');
+
+var controller = exports.controller = true;
+
+var $endIndex = void 0;
+
+function validate(instance) {
+
+	// let result;
+
+	// check the working area first
+	var workingArea = instance.editor.area.get({ path: '/main.js' });
+	var result = _lib.CodeValidator.validate(workingArea, _validation.validate_repeat_alert);
+
+	// const success = 
+
+	// console.log(workingArea);
+
+
+	// const content = instance.file.content({ path: '/main.js' });
+	// const result = CodeValidator.validate(content, validate_repeat_alert);
+
+	// update validation
+	instance.editor.hint.validate({ path: '/main.js', result: result });
+
+	// update progress
+	instance.progress.update({
+		result: result,
+		allow: function allow() {
+			return instance.assistant.say({
+				message: 'Great! Let\'s move to the next step!'
+			});
+		},
+		deny: instance.assistant.revert,
+		always: instance.sound.notify
+	});
+}
+
+function onEnter() {
+	this.editor.focus();
+	this.progress.block();
+	this.file.allowEdit({ path: '/main.js' });
+
+	// determine the working area
+	var content = this.file.content({ path: '/main.js' });
+	$endIndex = content.length - _lib._.trimStart(content).length - 1;
+}
+
+function onInit() {
+	this.editor.area({ path: '/main.js', start: 1, end: $endIndex });
+}
+
+function onReady() {
+	validate(this);
+}
+
+function onContentChange(file) {
+	validate(this);
+}
+
+function onExit() {
+	this.file.readOnly({ path: '/main.js' });
+}
+
+},{"./lib":7,"./validation":10}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -434,7 +648,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.onEnter = onEnter;
 exports.onRunCode = onRunCode;
-exports.onRunCodeEnd = onRunCodeEnd;
+exports.onRunCodeAlert = onRunCodeAlert;
 var controller = exports.controller = true;
 
 function onEnter() {
@@ -442,25 +656,98 @@ function onEnter() {
 	this.screen.marker.runButton({ tr: true, offsetX: -2, offsetY: 2 });
 }
 
-function onRunCode() {
+function onRunCode(context) {
 	this.screen.highlight.clear();
 	return true;
 }
 
-function onRunCodeEnd(context) {
-	var _this = this;
+function onRunCodeAlert(context, message) {
 
 	this.progress.allow();
-	this.delay(500, function () {
-		return _this.screen.highlight('.line-number-1');
-	});
 	this.assistant.say({
 		emote: 'happy',
-		message: 'Great! You can see that running this code caused a message to be displayed in the [define codelab_code_output output] area.'
+		message: 'Great! You can see that running this code caused an alert message to be displayed in the [define codelab_code_output output] area.'
 	});
 }
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var validate_alert = function validate_alert(test) {
+	return test.id('alert').symbol('(').string(5, 25).symbol(')').symbol(';');
+};
+
+var validate_coding_alert = function validate_coding_alert(test) {
+	return test.id('alert').symbol('(').string('coding is fun').symbol(')').symbol(';');
+};
+
+var validate_free_alert = exports.validate_free_alert = function validate_free_alert(test) {
+	return test.__w$.merge(validate_alert)._n.__w$.merge(validate_coding_alert).__w$;
+};
+
+var validate_repeat_alert = exports.validate_repeat_alert = function validate_repeat_alert(test) {
+	return test.__w$.merge(validate_alert)._n;
+};
+
+var validate_complete_repeat_alert = exports.validate_complete_repeat_alert = function validate_complete_repeat_alert(test) {
+	return test.__w$.merge(validate_alert)._n.__w$.merge(validate_coding_alert)._n.__w$.merge(validate_alert);
+};
+
+// const validate_starting_alert = test => test
+// 	.;
+
+
+// export const validate_first_free_alert = test => test
+// 	._w
+// 	.merge(validate_h1)
+// 	._n
+// 	.__w
+// 	.merge(validate_h3)
+// 	.__w
+// 	.eof();
+
+// export const validate_insert_button = test => test
+// 	._w
+// 	.merge(validate_h1)
+// 	._n
+// 	.__w
+// 	.merge(validate_h3)
+// 	._n
+// 	.__w
+// 	.merge(validate_button)
+// 	.__w
+// 	.eof();
+
+// export const validate_list = test => test
+// 	._w
+// 	.merge(validate_h1)
+// 	._n
+// 	.__w
+// 	.merge(validate_h3)
+// 	._n
+// 	.__w
+// 	.merge(validate_button)
+// 	._n
+// 	.__w
+// 	.tag('ol')._n
+// 	._t.tag('li').text('dog').close('li')._n
+// 	._t.tag('li').text('cat').close('li')._n
+// 	._t.tag('li').text('fish').close('li')._n
+// 	.close('ol')
+// 	.eof();
+
+
+// export const validate_h1 = test => test
+
+// export const validate_h3 = test => test
+
+// export const validate_button = test => test
+
+},{}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -498,4 +785,4 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}]},{},[5]);
+},{}]},{},[6]);

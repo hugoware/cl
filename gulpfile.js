@@ -116,7 +116,7 @@ _.each($config.scripts.client, source => {
 	// add custom browserify options here
 	const options = _.assign({}, $watchify.args, {
 		entries: [input],
-		debug: true,
+		// debug: true,
 		transform: [
 			$babelify.configure({
 				presets: ['es2015'],
@@ -166,49 +166,9 @@ _.each($config.scripts.client, source => {
 		bundler.on('update', bundle); // on any dep update, runs the bundler
 		bundler.on('log', (...args) => {
 			console.log(`[updated] ${source}:`, ...args);
-		}); // output build logs to terminal
+		});
 	});
 
-
-  // // common transformer
-  // const transformer = $browserify({
-  //   entries: [ input ],
-  //   extensions: ['.js'],
-  //   ignore: /(node_modules)/,
-  //   debug: true,
-  //   fast: true,
-  //   cache: { },
-  //   packageCache: { },
-  //   transform: [
-  //     $babelify.configure({
-  //       presets: [ 'es2015' ],
-  //       plugins: [
-  //         // 'convert-to-json',
-  //         ['inline-import', { 'extensions': [ '.txt', '.ts', '.html' ] }],
-  //         'transform-svg-import-to-string',
-  //         'transform-class-properties',
-  //         'async-to-promises'
-  //       ]
-  //     })
-  //   ]
-  // });
-  
-  // // compiles the client script
-  // $gulp.task(action, () => {
-  //   const output = $gulp.dest(`dist/resources/public`);
-
-  //   return transformer
-  //     .bundle()
-  //     .on('error', displayError)
-  //     .pipe($source(`${source}.js`))
-  //     .pipe($buffer())
-  //     .pipe(output);
-  // });
-
-  // // setup a watch
-  // $gulp.task(watch, () => {
-  //   $gulp.watch([`src/client/${source}/**/*`], [ action ]);
-  // });
 });
 
 // setup worker build scripts

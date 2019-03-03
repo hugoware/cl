@@ -36,7 +36,6 @@
       On the left side of the screen is the [define file_browser]. This is a list of all files in your project.
 
 - slide:
-    flags: +OPEN_FILE
     controller: waitForMainJs
     content: |
       Open the file named `main.js` by [define double_click double clicking] on it in the [define file_browser].
@@ -54,7 +53,6 @@
       On the right side of the screen you can see the [define codelab_code_output]. This will show the output for your file when you press the **Run Code** button.
 
 - slide:
-    start: true
     controller: runCodeButton
     content: |
       Let's try and run this code example and see what happens.
@@ -65,14 +63,38 @@
     content: |
       This is an example of using a programming feature called a _"function"_.
 
-      We'll learn more about how to use _functions_ in later lessons, but for now let's use it so we can display messages in the [define codelab_code_output output] area.
+      We'll learn more about how to use _functions_ in later lessons. For now, let's use it so we can display messages.
 
 - slide:
     controller: customLogMessage
     content: |
       Why don't you try changing the message that's displayed on the screen.
 
-      Replace the phrase `"hello, world!"` with something different and then press the **Run Code** button to see the results.
+      Replace the phrase `hello, world!` with something different and then press the **Run Code** button to see the results.
+
+- slide:
+    content: |
+      Now, let's try it again, but this time you'll write the entire example on your own.
+
+- slide:
+    controller: freeConsoleMessage
+    content: |
+      Follow along with the guide to display another message in the [define codelab_code_output output] area.
+
+      [snippet console_message_example]
+
+- slide:
+    start: true
+    flags: +OPEN_FILE
+    content: |
+      Practice makes perfect! Let's write another alert message!
+
+- slide:
+    controller: repeatConsoleMessage
+    content: |
+      Write another alert message with any message you'd like, but this time put it at the top of the file so it runs first.
+
+      [snippet repeat_message_example]
 
 - slide:
     content: About to finish
