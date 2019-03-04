@@ -436,7 +436,6 @@ var console1Lesson = function () {
       }, {
         "content": "In this series we're going to be learning how to use [define javascript].\n\n[define javascript] is a popular programming language that's used in a very large variety of applications, games, websites, and more.\n"
       }, {
-        "start": true,
         "mode": "popup",
         "content": "There's a lot to learn when it comes to programming, so in this lesson we're just going to focus on using the [define codelab_editor], displaying messages, and fixing some simple code errors.\n"
       }, {
@@ -492,7 +491,7 @@ var console1Lesson = function () {
         "choices": ["JavaScript", "Visual Basic", "QBasic", "SQL"]
       }, {
         "show": 4,
-        "title": "What is an Excetion Message?",
+        "title": "What is an Exception Message?",
         "explain": "In most cases, when a program encounters an error that cannot be recovered from then it will display an [define exception_message] with details about the error. \n",
         "choices": ["A message about an error a program cannot recover from", "A message with remaining memory for a computer", "A message to warn about a disconnected keyboard", "A warning message before deleting files on your computer"]
       }, {

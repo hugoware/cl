@@ -13,7 +13,6 @@ const $workers = {
 	'js': 'babel',
 	'ts': 'babel',
 	'babel': 'babel',
-	// 'typescript': 'babel',
 	// 'rb': 'ruby',
 	// 'ruby': 'ruby',
 	// 'css': 'css',

@@ -64,7 +64,6 @@
       [define javascript] is a popular programming language that's used in a very large variety of applications, games, websites, and more.
 
 - slide:
-    start: true
     mode: popup
     content: |
       There's a lot to learn when it comes to programming, so in this lesson we're just going to focus on using the [define codelab_editor], displaying messages, and fixing some simple code errors.
@@ -179,7 +178,7 @@
 
 - question:
     show: 4
-    title: What is an Excetion Message?
+    title: What is an Exception Message?
 
     explain: |
       In most cases, when a program encounters an error that cannot be recovered from then it will display an [define exception_message] with details about the error. 

@@ -6,10 +6,10 @@ echo deploying codelab
 echo
 echo "Don't forget! If you changed worker files, they won't be used unless you run 'npm run deploy -- --include-workers'"
 
-echo
+# echo
 echo cleaning...
-rm -r ./dist
-mkdir dist
+# rm -r ./dist
+# mkdir dist
 
 # write an updated version for the file -- this will
 # trigger an update on the server
@@ -29,6 +29,9 @@ fi
 gulp deploy
 cp -r ./lessons/output ./dist/lessons
 
+# remove junk files
+echo cleaning up junk files
+find ./dist/ -name ".DS_Store" -delete
 
 echo
 echo compressing resources...
@@ -42,7 +45,7 @@ echo compressing scripts \(this part takes a while\)
 for script in $SCRIPTS
 do  
   echo compressing $script
-  node --max-old-space-size=4096 /usr/local/bin/uglifyjs ./dist/resources/public/$script.js -mc passes=3,unsafe -o ./dist/resources/public/$script.js --timings 
+  node --max-old-space-size=4096 ./node_modules/.bin/uglifyjs ./dist/resources/public/$script.js -mc passes=3,unsafe -o ./dist/resources/public/$script.js --timings 
 done
 
 # check if compiling the workers too
@@ -51,7 +54,7 @@ then
   for script in $WORKERS
   do  
     echo compressing $script
-    node --max-old-space-size=4096 /usr/local/bin/uglifyjs ./dist/resources/public/$script.js -mc passes=1,unsafe -o ./cache/workers/$script.js --timings 
+    node --max-old-space-size=4096 ./node_modules/.bin/uglifyjs ./dist/resources/public/$script.js -mc passes=1,unsafe -o ./cache/workers/$script.js --timings 
   done
 fi
 
@@ -65,6 +68,7 @@ done
 echo
 echo copying to server...
 scp package.json root@codelabschool.com:/srv/www/cl/
+scp lessons.yml root@codelabschool.com:/srv/www/cl/
 rsync -ruv --chmod=ugo=rwX -e ssh lessons/output/* root@codelabschool.com:/srv/www/cl/lessons/
 rsync -ruv --chmod=ugo=rwX -e ssh dist/* root@codelabschool.com:/srv/www/cl/dist/
 sleep 4s

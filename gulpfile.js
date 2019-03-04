@@ -53,7 +53,7 @@ const $config = {
 	scripts: {
     client: [ 'site', 'app', 'browser', 'admin', 'repl' ],
     workers: [ 'pug', 'babel', 'scss', 'html' ],
-		viewers: [ 'code', 'mobile-install' ],
+		viewers: [ 'code' ], //, 'mobile-install' ],
 		server: {
 			watch: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**', ],
 			src: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**'],
@@ -386,6 +386,7 @@ $gulp.task('watch', ['watch-views', 'watch-styles', 'watch-viewer-scripts', 'wat
 
 // full deployment task
 $gulp.task('deploy', done => $sequence(
+	'production-build',
   [ 'clean-svg-icons', 'copy-views', 'compile-styles', 'copy-resources', 'compile-viewer-scripts', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts' ],
   'compress',
   done 

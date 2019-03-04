@@ -4,8 +4,9 @@
   "description": "",
   "main": "gulpfile.js",
   "scripts": {
-    "prod": "npm run database & npm run prod-server",
+    "prod": "npm run prod-database & npm run prod-server",
     "prod-server": "nodemon ./dist/index.js --watch ./dist/version --delay 1.5 ./config.yml",
+    "prod-database": "mongod --dbpath ./data/codelab",
     "dev": "npm run database & npm run dev-server & npm run watch",
     "dev-server": "nodemon ./dist/index.js --watch dist/ --ignore 'dist/workbench.js' --ignore 'dist/resources/' --ignore 'dist/views/' --delay 1.5 -- ./config.dev.yml",
     "dev-lessons": "babel-node ./scripts/compile-lesson.js",
@@ -78,6 +79,7 @@
     "google-auth-library": "^1.6.1",
     "gulp-util": "^3.0.8",
     "howler": "^2.0.15",
+    "htmlhint": "^0.11.0",
     "jquery": "^3.3.1",
     "js-interpreter": "^1.4.6",
     "js-yaml": "^3.12.0",

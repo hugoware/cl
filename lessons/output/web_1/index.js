@@ -520,8 +520,6 @@ var web1Lesson = function () {
         "controller": "previewAreaIntro",
         "content": "On the right side of the screen you can see the [define codelab_html_preview]. This shows what the [define html] for this file looks like when viewed in a [define web_browser browser].\n\nThis area will update automatically as you make changes.\n"
       }, {
-        "start": true,
-        "flags": "+OPEN_FILE",
         "content": "Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.\n"
       }, {
         "controller": "changeHeadingContent",
