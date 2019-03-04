@@ -37,7 +37,7 @@ export default function processSnippets(state, manifest, relativeTo, ranges, sni
 
     // collect the content
     const path = $path.resolve(relativeTo, fileName);
-    snippet.content = _.trim($fsx.readFileSync(path).toString());
+    snippet.content = $fsx.readFileSync(path).toString();
     snippet.type = type;
     delete snippet.zones;
     // snippet.zones = zones;

@@ -3,38 +3,38 @@ import { _, CodeValidator } from './lib';
 export const controller = true;
 
 let $endIndex;
+let $allowRunCode;
 
 import { validate_repeat_alert, validate_complete_repeat_alert } from './validation';
 
 function validate(instance) {
 
-	// let result;
-
 	// check the working area first
 	const workingArea = instance.editor.area.get({ path: '/main.js' });
 	const result = CodeValidator.validate(workingArea, validate_repeat_alert);
 
-	// const success = 
-
-	// console.log(workingArea);
-
-
-	// const content = instance.file.content({ path: '/main.js' });
-	// const result = CodeValidator.validate(content, validate_repeat_alert);
-	
 	// update validation
 	instance.editor.hint.validate({ path: '/main.js', result });
 	
 	// update progress
-	instance.progress.update({
+	$allowRunCode = false;
+	instance.progress.check({
 		result,
-		allow: () => instance.assistant.say({
-			message: `Great! Let's move to the next step!`
-		}),
+		allow: () => {
+			$allowRunCode = true;
+			instance.assistant.say({
+				message: `Great! Press the **Run Code** button and then click **OK** for each of the alert messages`
+			});
+		},
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
 	});
 	
+}
+
+export function onReset() {
+	this.progress.block();
+	this.assistant.revert();
 }
 
 export function onEnter() {
@@ -48,7 +48,7 @@ export function onEnter() {
 }
 
 export function onInit() {
-	this.editor.area({ path: '/main.js', start: 1, end: $endIndex });
+	this.editor.area({ path: '/main.js', start: 0, end: $endIndex });
 }
 
 export function onReady() {
@@ -56,7 +56,20 @@ export function onReady() {
 }
 
 export function onContentChange(file) {
+	this.progress.block();
 	validate(this);
+}
+
+export function onRunCodeEnd() {
+	this.progress.allow();
+	this.assistant.say({
+		message: 'Wonderful! You can see that each line of code was run in the order that it was added to the file.',
+		emote: 'happy',
+	});
+}
+
+export function onRunCode() {
+	return !!$allowRunCode;
 }
 
 export function onExit() {

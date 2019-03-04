@@ -53,6 +53,7 @@ export default class ManagedEditor {
 		listen('set-editor-cursor', this.onSetCursor);
 		listen('set-editor-focus-point', this.onSetFocusPoint);
 		listen('set-editor-readonly', this.onSetReadOnly);
+		listen('set-editor-content', this.onSetEditorContent);
 
 		// prevent auto complete events when
 		// an entry is not allowed - check if there's
@@ -91,6 +92,11 @@ export default class ManagedEditor {
 	// sets the readonly state
 	onSetReadOnly = (file, readOnly) => {
 		$state.paths[file].readOnly = !!readOnly;
+	}
+
+	// replace the content for the correct file
+	onSetEditorContent = (path, content, replaceRestore) => {
+		this.setContent(path, content, replaceRestore);
 	}
 
 	// handles changing between lessons
@@ -630,7 +636,8 @@ export default class ManagedEditor {
 		// like with working areas, we need to skip the
 		// first character since it's a safety character
 		// to prevent the range from ever being zero
-		content = content.substr(1);
+		if (range.start.column > -1)
+			content = content.substr(1);
 
 		// trim newlines??
 		// content = content.replace(/\n$/, '');
@@ -670,7 +677,7 @@ export default class ManagedEditor {
 		const file = $state.paths[path];
 		
 		// replace the current value
-		file.current = content;
+		file.content = file.current = content;
 		if (replaceRestore)
 			file.restore = content;
 
@@ -732,9 +739,10 @@ function getPosition(managed, position, {
 
 	// check for an index
 	if (_.isNumber(position.index)) {
-		
+
 		// if we just need the start
 		const start = doc.indexToPosition(position.index);
+		start.row++;
 		if (!requireRange) return start;
 
 		// since it wasn't looking for a single point we
@@ -742,6 +750,7 @@ function getPosition(managed, position, {
 		let extend = position.index === 0 ? 1 : position.index + direction;
 		extend = _.clamp(extend, 1, length - 2);
 		const end = doc.indexToPosition(extend);
+		end.row++;
 
 		return { start, end };
 	}

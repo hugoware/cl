@@ -153,6 +153,8 @@
       This area will update automatically as you make changes.
 
 - slide:
+    start: true
+    flags: +OPEN_FILE
     content: |
       Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.
 
@@ -354,6 +356,11 @@
 - slide:
     content: |
       If you'd like to share what you've created with others, you can use the **Share** button and send them a link so they can try it out for themselves.
+
+      [image share-project.jpg]
+      
+      [silent] _This button will appear after the lesson as been completed._
+      
 
 - slide:
     controller: aboutSaving

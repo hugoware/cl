@@ -1,4 +1,23 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onSaveFile = onSaveFile;
+exports.onReady = onReady;
+var controller = exports.controller = true;
+
+function onSaveFile() {
+	this.progress.next();
+	return true;
+}
+
+function onReady() {
+	this.screen.marker.saveButton({ offsetX: -2, offsetY: 2, tr: true });
+}
+
+},{}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24,7 +43,7 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42,7 +61,7 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -103,7 +122,84 @@ function onRunCode(context) {
 	return true;
 }
 
-},{"./lib":7}],4:[function(require,module,exports){
+},{"./lib":10}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
+exports.onEnter = onEnter;
+exports.onContentChange = onContentChange;
+exports.onInit = onInit;
+exports.onRunCode = onRunCode;
+exports.onRunCodeAlert = onRunCodeAlert;
+
+var _lib = require('./lib');
+
+var _validation = require('./validation');
+
+var controller = exports.controller = true;
+
+var $isValid = void 0;
+var $isShowingHelp = void 0;
+
+function validate(instance) {
+	var workingArea = instance.editor.area.get({ path: '/main.js' });
+	var result = _lib.CodeValidator.validate(workingArea, _validation.validate_complete_fix_alert);
+
+	// update validation
+	if ($isShowingHelp) instance.editor.hint.validate({ path: '/main.js', result: result });
+
+	// update progress
+	$isValid = false;
+	instance.progress.check({
+		result: result,
+		allow: function allow() {
+			$isValid = true;
+			instance.assistant.say({
+				message: 'Great! Press the **Run Code** button to see if the problem is now fixed!'
+			});
+		},
+
+		deny: instance.assistant.revert,
+		always: instance.sound.notify
+	});
+}
+
+function onEnter() {
+	var _this = this;
+
+	this.file.allowEdit({ path: '/main.js' });
+	this.delay(15000, function () {
+		$isShowingHelp = true;
+		validate(_this);
+	});
+}
+
+function onContentChange() {
+	this.progress.block();
+	validate(this);
+}
+
+function onInit() {
+	this.progress.block();
+	this.editor.area({ path: '/main.js', start: 0, end: 18 });
+}
+
+function onRunCode() {
+	return $isValid;
+}
+
+function onRunCodeAlert() {
+	this.progress.allow();
+	this.assistant.say({
+		message: 'That did it! You fixed the [define syntax_error]!',
+		emote: 'happy'
+	});
+}
+
+},{"./lib":10,"./validation":13}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -196,7 +292,7 @@ function onRunCode() {
 	return true;
 }
 
-},{"./lib":7,"./validation":10}],5:[function(require,module,exports){
+},{"./lib":10,"./validation":13}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -214,7 +310,7 @@ function onEnter() {
 	this.screen.highlight.fileBrowser();
 }
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -232,6 +328,10 @@ var _createClass = function () {
 
 var _lib = require('./lib');
 
+var _aboutSaving = require('./aboutSaving');
+
+var aboutSaving = _interopRequireWildcard(_aboutSaving);
+
 var _codeEditorIntro = require('./codeEditorIntro');
 
 var codeEditorIntro = _interopRequireWildcard(_codeEditorIntro);
@@ -244,6 +344,10 @@ var _customLogMessage = require('./customLogMessage');
 
 var customLogMessage = _interopRequireWildcard(_customLogMessage);
 
+var _fixError = require('./fixError');
+
+var fixError = _interopRequireWildcard(_fixError);
+
 var _freeConsoleMessage = require('./freeConsoleMessage');
 
 var freeConsoleMessage = _interopRequireWildcard(_freeConsoleMessage);
@@ -251,6 +355,10 @@ var freeConsoleMessage = _interopRequireWildcard(_freeConsoleMessage);
 var _highlightFileBrowser = require('./highlightFileBrowser');
 
 var highlightFileBrowser = _interopRequireWildcard(_highlightFileBrowser);
+
+var _introduceError = require('./introduceError');
+
+var introduceError = _interopRequireWildcard(_introduceError);
 
 var _repeatConsoleMessage = require('./repeatConsoleMessage');
 
@@ -310,18 +418,30 @@ var console1Lesson = function () {
         "title": "Introduction to Programming",
         "content": "Welcome to your first lesson on basic computer programming!\n\nAs you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.\n"
       }, {
-        "content": "Computer programming is a way of giving computers instructions about what they should do next. These instructions are known as code, and computer programmers write code to solve problems or perform a task.\n"
+        "content": "Computer programming is a way of giving computers instructions. These instructions are typically known as code.\n\n[image code-intro.jpg frame]\n\nYou'll also sometimes people refer to the task of programming as _coding_. For the most part the two activities are the same thing.\n"
       }, {
-        "content": "Here is why it's a thing"
+        "content": "When you write code, you're writing instructions that tell a computer what it's supposed to do. A computer isn't able to think on its own, so you have to be very specific.\n\nCode in itself is a series of **[define code_condition conditions]** and **[define code_action actions]** that help solve a problem.\n"
       }, {
-        "content": "What it's used for"
+        "content": "A **[define code_condition]** checks information and decides what a computer program should do next.\n\nFor example, a program that makes sure a username and password is correct is checking for a **[define code_condition]**. The result of that condition can lead to different actions depending on _if the password is correct or not_.\n"
       }, {
-        "content": "There\n"
+        "content": "An **[define code_action]** is the work that a computer program does. As with the previous example, if the user's password was incorrect, the **[define code_action action]** would be to show an error message.\n\nIf the user's password was correct, then the **action** would be to grant them access.\n"
       }, {
-        "content": "JavaScript"
+        "content": "Let's look at a simple example written in a \"human readable\" format.\n"
+      }, {
+        "content": "[snippet conditions_simple]\n\nChances are you can figure out what the intructions in the example above are trying to accomplish.\n"
+      }, {
+        "content": "[snippet conditions_code]\n\nFor the most part, programming is very similar, but instead of using natural language, you use a programming language.\n"
+      }, {
+        "content": "[snippet conditions_code]\n\nIn this case, the **[define code_condition condition]** that is being checked is `roomIsDark`. The result of this condition decides which of the **[define code_action actions]** should be done.\n\nIf the room is _dark_ the light is turned _on_, otherwise the light is turned _off_.\n"
+      }, {
+        "content": "In this series we're going to be learning how to use [define javascript].\n\n[define javascript] is a popular programming language that's used in a very large variety of applications, games, websites, and more.\n"
+      }, {
+        "start": true,
+        "mode": "popup",
+        "content": "There's a lot to learn when it comes to programming, so in this lesson we're just going to focus on using the [define codelab_editor], displaying messages, and fixing some simple code errors.\n"
       }, {
         "mode": "popup",
-        "content": "We've talked a lot about how computer programming works, so let's jump into writing some code and see what happens.\n"
+        "content": "Alright! Let's jump into writing some code and see what happens!\n"
       }, {
         "controller": "highlightFileBrowser",
         "content": "On the left side of the screen is the [define file_browser]. This is a list of all files in your project.\n"
@@ -348,18 +468,63 @@ var console1Lesson = function () {
         "controller": "freeConsoleMessage",
         "content": "Follow along with the guide to display another message in the [define codelab_code_output output] area.\n\n[snippet console_message_example]\n"
       }, {
-        "start": true,
-        "flags": "+OPEN_FILE",
         "content": "Practice makes perfect! Let's write another alert message!\n"
       }, {
         "controller": "repeatConsoleMessage",
         "content": "Write another alert message with any message you'd like, but this time put it at the top of the file so it runs first.\n\n[snippet repeat_message_example]\n"
       }, {
-        "content": "About to finish"
+        "content": "So far all of the code we've written has run without any issues, but sometimes you may type something incorrectly which could cause an error.\n"
       }, {
-        "content": "Done"
+        "controller": "introduceError",
+        "content": "I just added some code to the top of the file that has an error in it. Press the **Run Code** button so we can see what happens when code isn't formatted correctly.\n"
+      }, {
+        "content": "In this case, we have an example of a [define syntax_error]. A Syntax Error means that the code is invalid and can't be understood by the engine running it.\n"
+      }, {
+        "controller": "fixError",
+        "content": "Try and fix this code error and then press **Run Code** when you're finished.\n\nI'm not going to show any hints right away, but if you get stuck I'll jump in and help you.\n"
+      }, {
+        "mode": "overlay",
+        "content": "Great work! There's still a lot to learn, but let's end this lesson by reviewing what we've covered so far.\n"
+      }, {
+        "show": 4,
+        "title": "What is the name of the programming language we're learning in this lesson?",
+        "explain": "[define javascript] is a very popular language that's used for programming everything from websites, mobile, apps, games and more.\n",
+        "choices": ["JavaScript", "Visual Basic", "QBasic", "SQL"]
+      }, {
+        "show": 4,
+        "title": "What is an Excetion Message?",
+        "explain": "In most cases, when a program encounters an error that cannot be recovered from then it will display an [define exception_message] with details about the error. \n",
+        "choices": ["A message about an error a program cannot recover from", "A message with remaining memory for a computer", "A message to warn about a disconnected keyboard", "A warning message before deleting files on your computer"]
+      }, {
+        "show": 4,
+        "title": "What is a Syntax Error?",
+        "explain": "A [define syntax_error] is an error when the code cannot be understood by the program. This is normally from code that has been input incorrectly or is missing required commands.\n",
+        "choices": ["An error when code can't be understood by the computer", "An error when the computer is powered off", "An error connecting to the Internet", "An error when a computer runs out of memory"]
+      }, {
+        "mode": "popup",
+        "content": "Way to go! You've finished this lesson!\n"
+      }, {
+        "content": "At this point all files are now unlocked and you're free to make changes to anything in this project. You can play with the [define javascript] you've learned, or just try out new things.\n"
+      }, {
+        "content": "If you'd like to try this lesson again, you can start over by using the \"Reset Lesson\" button from the home page of this site.\n\n[image reset-lesson.jpg]\n"
+      }, {
+        "content": "If you'd like to share what you've created with others, you can use the **Share** button and send them a link so they can try it out for themselves.\n\n[image share-project.jpg]\n\n[silent] _This button will appear after the lesson as been completed._\n"
+      }, {
+        "controller": "aboutSaving",
+        "content": "The changes you've made so far haven't been saved yet. Make sure to press the \"Save Changes\" button before you end this lesson.\n\nIf you forget to save your files and try and close a project, the website will display a message and give you a chance to save your work.\n"
+      }, {
+        "emote": "happy",
+        "content": "Great work, and I'll see you again for **Lesson 2**\n"
       }],
       "snippets": {
+        "conditions_code": {
+          "content": "if (roomIsDark) {\n\tturnLight('on');\n} \nelse {\n\tturnLight('off');\n}",
+          "type": "javascript"
+        },
+        "conditions_simple": {
+          "content": "if  roomIsDark\n\tturnLight  on\n\nelse\n\tturnLight  off\n",
+          "type": "txt"
+        },
         "console_message_example": {
           "content": "alert('coding is fun');",
           "type": "javascript"
@@ -369,12 +534,32 @@ var console1Lesson = function () {
           "type": "javascript"
         }
       },
-      "resources": [],
+      "resources": [{
+        "height": 513,
+        "width": 1340,
+        "type": "jpg",
+        "path": "code-intro.jpg"
+      }, {
+        "height": 458,
+        "width": 838,
+        "type": "jpg",
+        "path": "reset-lesson.jpg"
+      }, {
+        "height": 170,
+        "width": 555,
+        "type": "jpg",
+        "path": "share-project.jpg"
+      }],
       "definitions": {
         "codelab_code_output": {
           "id": "codelab_code_output",
           "name": "Code Output",
           "define": "The result of called code\n"
+        },
+        "syntax_error": {
+          "id": "syntax_error",
+          "name": "Syntax Error",
+          "define": "Code that doesn't follow the rules of the language and cannot be understood by the engine running it."
         },
         "sequentially": {
           "id": "sequentially",
@@ -386,6 +571,11 @@ var console1Lesson = function () {
           "name": "Execute",
           "define": "Another way to say when code is being run.\n"
         },
+        "exception_message": {
+          "id": "exception_message",
+          "name": "Exception Message",
+          "define": "An unrecoverable error\n"
+        },
         "double_click": {
           "id": "double_click",
           "name": "Double Click",
@@ -395,6 +585,21 @@ var console1Lesson = function () {
           "id": "file_browser",
           "name": "File Browser",
           "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+        },
+        "code_condition": {
+          "id": "code_condition",
+          "name": "Condition",
+          "define": "Something code is testing"
+        },
+        "code_action": {
+          "id": "code_action",
+          "name": "Action",
+          "define": "Something code is doing"
+        },
+        "javascript": {
+          "id": "javascript",
+          "name": "JavaScript",
+          "define": "Programming language\n"
         },
         "codelab_editor": {
           "id": "codelab_editor",
@@ -423,7 +628,7 @@ var console1Lesson = function () {
 
     // setup each included entry
     var refs = {
-      codeEditorIntro: codeEditorIntro, codeOutputIntro: codeOutputIntro, customLogMessage: customLogMessage, freeConsoleMessage: freeConsoleMessage, highlightFileBrowser: highlightFileBrowser, repeatConsoleMessage: repeatConsoleMessage, runCodeButton: runCodeButton, validation: validation, waitForMainJs: waitForMainJs
+      aboutSaving: aboutSaving, codeEditorIntro: codeEditorIntro, codeOutputIntro: codeOutputIntro, customLogMessage: customLogMessage, fixError: fixError, freeConsoleMessage: freeConsoleMessage, highlightFileBrowser: highlightFileBrowser, introduceError: introduceError, repeatConsoleMessage: repeatConsoleMessage, runCodeButton: runCodeButton, validation: validation, waitForMainJs: waitForMainJs
     };
 
     // setup each reference
@@ -540,7 +745,48 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('console_1', console1Lesson);
 
-},{"./codeEditorIntro":1,"./codeOutputIntro":2,"./customLogMessage":3,"./freeConsoleMessage":4,"./highlightFileBrowser":5,"./lib":7,"./repeatConsoleMessage":8,"./runCodeButton":9,"./validation":10,"./waitForMainJs":11}],7:[function(require,module,exports){
+},{"./aboutSaving":1,"./codeEditorIntro":2,"./codeOutputIntro":3,"./customLogMessage":4,"./fixError":5,"./freeConsoleMessage":6,"./highlightFileBrowser":7,"./introduceError":9,"./lib":10,"./repeatConsoleMessage":11,"./runCodeButton":12,"./validation":13,"./waitForMainJs":14}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onReady = onReady;
+exports.onRunCodeError = onRunCodeError;
+exports.onRunCode = onRunCode;
+var controller = exports.controller = true;
+
+function onEnter() {
+	this.progress.block();
+
+	var current = this.file.content({ path: '/main.js' });
+	this.file.readOnly({ path: '/main.js' });
+
+	this.file.content({
+		path: '/main.js',
+		replaceRestore: true,
+		content: '\n\nalert(\'fix me!\n\n' + current
+
+	});
+}
+
+function onReady() {
+	this.editor.cursor({ path: '/main.js', index: 16 });
+}
+
+function onRunCodeError() {
+	this.progress.allow();
+	this.assistant.say({
+		message: 'This is an [define exception_message]. This means that the code encountered a problem it couldn\'t recover from!'
+	});
+}
+
+function onRunCode() {
+	return true;
+}
+
+},{}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -561,17 +807,20 @@ exports.default = {
 	CssValidator: CssValidator
 };
 
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.controller = undefined;
+exports.onReset = onReset;
 exports.onEnter = onEnter;
 exports.onInit = onInit;
 exports.onReady = onReady;
 exports.onContentChange = onContentChange;
+exports.onRunCodeEnd = onRunCodeEnd;
+exports.onRunCode = onRunCode;
 exports.onExit = onExit;
 
 var _lib = require('./lib');
@@ -581,37 +830,35 @@ var _validation = require('./validation');
 var controller = exports.controller = true;
 
 var $endIndex = void 0;
+var $allowRunCode = void 0;
 
 function validate(instance) {
-
-	// let result;
 
 	// check the working area first
 	var workingArea = instance.editor.area.get({ path: '/main.js' });
 	var result = _lib.CodeValidator.validate(workingArea, _validation.validate_repeat_alert);
 
-	// const success = 
-
-	// console.log(workingArea);
-
-
-	// const content = instance.file.content({ path: '/main.js' });
-	// const result = CodeValidator.validate(content, validate_repeat_alert);
-
 	// update validation
 	instance.editor.hint.validate({ path: '/main.js', result: result });
 
 	// update progress
-	instance.progress.update({
+	$allowRunCode = false;
+	instance.progress.check({
 		result: result,
 		allow: function allow() {
-			return instance.assistant.say({
-				message: 'Great! Let\'s move to the next step!'
+			$allowRunCode = true;
+			instance.assistant.say({
+				message: 'Great! Press the **Run Code** button and then click **OK** for each of the alert messages'
 			});
 		},
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
 	});
+}
+
+function onReset() {
+	this.progress.block();
+	this.assistant.revert();
 }
 
 function onEnter() {
@@ -625,7 +872,7 @@ function onEnter() {
 }
 
 function onInit() {
-	this.editor.area({ path: '/main.js', start: 1, end: $endIndex });
+	this.editor.area({ path: '/main.js', start: 0, end: $endIndex });
 }
 
 function onReady() {
@@ -633,14 +880,27 @@ function onReady() {
 }
 
 function onContentChange(file) {
+	this.progress.block();
 	validate(this);
+}
+
+function onRunCodeEnd() {
+	this.progress.allow();
+	this.assistant.say({
+		message: 'Wonderful! You can see that each line of code was run in the order that it was added to the file.',
+		emote: 'happy'
+	});
+}
+
+function onRunCode() {
+	return !!$allowRunCode;
 }
 
 function onExit() {
 	this.file.readOnly({ path: '/main.js' });
 }
 
-},{"./lib":7,"./validation":10}],9:[function(require,module,exports){
+},{"./lib":10,"./validation":13}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -670,7 +930,7 @@ function onRunCodeAlert(context, message) {
 	});
 }
 
-},{}],10:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -685,16 +945,20 @@ var validate_coding_alert = function validate_coding_alert(test) {
 	return test.id('alert').symbol('(').string('coding is fun').symbol(')').symbol(';');
 };
 
-var validate_free_alert = exports.validate_free_alert = function validate_free_alert(test) {
-	return test.__w$.merge(validate_alert)._n.__w$.merge(validate_coding_alert).__w$;
-};
-
 var validate_repeat_alert = exports.validate_repeat_alert = function validate_repeat_alert(test) {
 	return test.__w$.merge(validate_alert)._n;
 };
 
+var validate_free_alert = exports.validate_free_alert = function validate_free_alert(test) {
+	return test.__w$.merge(validate_alert)._n.__w$.merge(validate_coding_alert).__w$;
+};
+
 var validate_complete_repeat_alert = exports.validate_complete_repeat_alert = function validate_complete_repeat_alert(test) {
 	return test.__w$.merge(validate_alert)._n.__w$.merge(validate_coding_alert)._n.__w$.merge(validate_alert);
+};
+
+var validate_complete_fix_alert = exports.validate_complete_fix_alert = function validate_complete_fix_alert(test) {
+	return test.__w$.merge(validate_alert)._n;
 };
 
 // const validate_starting_alert = test => test
@@ -747,7 +1011,7 @@ var validate_complete_repeat_alert = exports.validate_complete_repeat_alert = fu
 
 // export const validate_button = test => test
 
-},{}],11:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -785,4 +1049,4 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}]},{},[6]);
+},{}]},{},[8]);

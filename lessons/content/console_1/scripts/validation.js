@@ -13,6 +13,10 @@ const validate_coding_alert = test => test
 	.symbol(')')
 	.symbol(';');
 
+export const validate_repeat_alert = test => test
+	.__w$
+	.merge(validate_alert)
+	._n;
 
 export const validate_free_alert = test => test
 	.__w$
@@ -21,12 +25,6 @@ export const validate_free_alert = test => test
 	.__w$
 	.merge(validate_coding_alert)
 	.__w$;
-
-
-export const validate_repeat_alert = test => test
-	.__w$
-	.merge(validate_alert)
-	._n;
 
 export const validate_complete_repeat_alert = test => test
 	.__w$
@@ -37,6 +35,11 @@ export const validate_complete_repeat_alert = test => test
 	._n
 	.__w$
 	.merge(validate_alert);
+
+export const validate_complete_fix_alert = test => test
+	.__w$
+	.merge(validate_alert)
+	._n;
 
 // const validate_starting_alert = test => test
 // 	.;

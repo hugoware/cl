@@ -2,17 +2,17 @@ import { HtmlValidator } from './lib';
 
 const validate_h1 = test => test
 	.tag('h1')
-	.content('hello, world!')
+	.trim.content(5, 25)
 	.close('h1');
 
 const validate_h3 = test => test
 	.tag('h3')
-	.content('HTML is great')
+	.trim.content('HTML is great')
 	.close('h3')
 
 const validate_button = test => test
 	.tag('button')
-	.content('Click me')
+	.trim.content('Click me')
 	.close('button')
 
 

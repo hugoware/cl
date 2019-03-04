@@ -64,3 +64,23 @@
   name: Sequentially
   define: |
     Sequentially means a sequence, normally a logical order such as a beginning to end, or numerically such as 1, 2, 3, etc...
+
+- id: exception_message
+  name: Exception Message
+  define: |
+    An unrecoverable error
+
+- id: syntax_error
+  name: Syntax Error
+  define:
+    Code that doesn't follow the rules of the language and cannot be understood by the engine running it.
+
+- id: code_action
+  name: Action
+  define:
+    Something code is doing
+
+- id: code_condition
+  name: Condition
+  define:
+    Something code is testing

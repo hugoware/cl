@@ -42,7 +42,7 @@ export default function generateMessage(message) {
 			let height = '';
 			let containerHeight = '';
 			if (resource) {
-				containerHeight = `style="height: ${0 | (resource.height / 2)}"`
+				containerHeight = `style="height: ${0 | (resource.height / 2)}px"`
 				width = `width="${0|(resource.width / 2)}"`;
 				height = ``;
 			}

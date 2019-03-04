@@ -520,6 +520,8 @@ var web1Lesson = function () {
         "controller": "previewAreaIntro",
         "content": "On the right side of the screen you can see the [define codelab_html_preview]. This shows what the [define html] for this file looks like when viewed in a [define web_browser browser].\n\nThis area will update automatically as you make changes.\n"
       }, {
+        "start": true,
+        "flags": "+OPEN_FILE",
         "content": "Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.\n"
       }, {
         "controller": "changeHeadingContent",
@@ -597,7 +599,7 @@ var web1Lesson = function () {
       }, {
         "content": "If you'd like to try this lesson again, you can start over by using the \"Reset Lesson\" button from the home page of this site.\n\n[image reset-lesson.jpg]\n"
       }, {
-        "content": "If you'd like to share what you've created with others, you can use the **Share** button and send them a link so they can try it out for themselves.\n"
+        "content": "If you'd like to share what you've created with others, you can use the **Share** button and send them a link so they can try it out for themselves.\n\n[image share-project.jpg]\n\n[silent] _This button will appear after the lesson as been completed._\n"
       }, {
         "controller": "aboutSaving",
         "content": "The changes you've made so far haven't been saved yet. Make sure to press the \"Save Changes\" button before you end this lesson.\n\nIf you forget to save your files and try and close a project, the website will display a message and give you a chance to save your work.\n"
@@ -648,15 +650,15 @@ var web1Lesson = function () {
         "type": "png",
         "path": "javascript-focus.png"
       }, {
-        "height": 478,
-        "width": 930,
+        "height": 458,
+        "width": 838,
         "type": "jpg",
         "path": "reset-lesson.jpg"
       }, {
-        "width": 930,
-        "height": 478,
-        "type": "png",
-        "path": "reset-lesson.png"
+        "height": 170,
+        "width": 555,
+        "type": "jpg",
+        "path": "share-project.jpg"
       }, {
         "width": 1260,
         "height": 310,
@@ -1001,15 +1003,15 @@ exports.validate_list = exports.validate_insert_button = exports.validate_insert
 var _lib = require('./lib');
 
 var validate_h1 = function validate_h1(test) {
-	return test.tag('h1').content('hello, world!').close('h1');
+	return test.tag('h1').trim.content(5, 25).close('h1');
 };
 
 var validate_h3 = function validate_h3(test) {
-	return test.tag('h3').content('HTML is great').close('h3');
+	return test.tag('h3').trim.content('HTML is great').close('h3');
 };
 
 var validate_button = function validate_button(test) {
-	return test.tag('button').content('Click me').close('button');
+	return test.tag('button').trim.content('Click me').close('button');
 };
 
 var validate_insert_h3 = exports.validate_insert_h3 = function validate_insert_h3(test) {

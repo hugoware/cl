@@ -1,5 +1,4 @@
--
-  slide:
+- slide:
     mode: overlay
     title: Introduction to Programming
     content: |
@@ -7,28 +6,74 @@
 
       As you work through this lesson you will be asked to complete certain tasks before you can move onto the next step.
 
--
-  slide:
+- slide:
     content: |
-      Computer programming is a way of giving computers instructions about what they should do next. These instructions are known as code, and computer programmers write code to solve problems or perform a task.
+      Computer programming is a way of giving computers instructions. These instructions are typically known as code.
 
-- slide:
-    content: Here is why it's a thing
+      [image code-intro.jpg frame]
 
-- slide:
-    content: What it's used for
+      You'll also sometimes people refer to the task of programming as _coding_. For the most part the two activities are the same thing.
 
 - slide:
     content: |
-      There
+      When you write code, you're writing instructions that tell a computer what it's supposed to do. A computer isn't able to think on its own, so you have to be very specific.
+      
+      Code in itself is a series of **[define code_condition conditions]** and **[define code_action actions]** that help solve a problem.
 
 - slide:
-    content: JavaScript
+    content: |
+      A **[define code_condition]** checks information and decides what a computer program should do next.
+
+      For example, a program that makes sure a username and password is correct is checking for a **[define code_condition]**. The result of that condition can lead to different actions depending on _if the password is correct or not_.
+
+
+- slide:
+    content: |
+      An **[define code_action]** is the work that a computer program does. As with the previous example, if the user's password was incorrect, the **[define code_action action]** would be to show an error message.
+
+      If the user's password was correct, then the **action** would be to grant them access.
+
+- slide:
+    content: |
+      Let's look at a simple example written in a "human readable" format.
+
+- slide:
+    content: |
+      [snippet conditions_simple]
+
+      Chances are you can figure out what the intructions in the example above are trying to accomplish.
+
+- slide:
+    content: |
+      [snippet conditions_code]
+
+      For the most part, programming is very similar, but instead of using natural language, you use a programming language.
+
+- slide:
+    content: |
+      [snippet conditions_code]
+
+      In this case, the **[define code_condition condition]** that is being checked is `roomIsDark`. The result of this condition decides which of the **[define code_action actions]** should be done.
+
+      If the room is _dark_ the light is turned _on_, otherwise the light is turned _off_.
+
+- slide:
+    content: |
+      In this series we're going to be learning how to use [define javascript].
+
+      [define javascript] is a popular programming language that's used in a very large variety of applications, games, websites, and more.
+
+- slide:
+    start: true
+    mode: popup
+    content: |
+      There's a lot to learn when it comes to programming, so in this lesson we're just going to focus on using the [define codelab_editor], displaying messages, and fixing some simple code errors.
 
 - slide:
     mode: popup
     content: |
-      We've talked a lot about how computer programming works, so let's jump into writing some code and see what happens.
+      Alright! Let's jump into writing some code and see what happens!
+
 
 - slide:
     controller: highlightFileBrowser
@@ -84,8 +129,6 @@
       [snippet console_message_example]
 
 - slide:
-    start: true
-    flags: +OPEN_FILE
     content: |
       Practice makes perfect! Let's write another alert message!
 
@@ -97,7 +140,100 @@
       [snippet repeat_message_example]
 
 - slide:
-    content: About to finish
+    content: |
+      So far all of the code we've written has run without any issues, but sometimes you may type something incorrectly which could cause an error.
 
 - slide:
-    content: Done
+    controller: introduceError
+    content: |
+      I just added some code to the top of the file that has an error in it. Press the **Run Code** button so we can see what happens when code isn't formatted correctly.
+
+- slide:
+    content: |
+      In this case, we have an example of a [define syntax_error]. A Syntax Error means that the code is invalid and can't be understood by the engine running it.
+
+- slide:
+    controller: fixError
+    content: |
+      Try and fix this code error and then press **Run Code** when you're finished.
+
+      I'm not going to show any hints right away, but if you get stuck I'll jump in and help you.
+
+- slide:
+    mode: overlay
+    content: |
+      Great work! There's still a lot to learn, but let's end this lesson by reviewing what we've covered so far.
+
+- question:
+    show: 4
+    title: What is the name of the programming language we're learning in this lesson?
+
+    explain: |
+      [define javascript] is a very popular language that's used for programming everything from websites, mobile, apps, games and more.
+
+    choices:
+      - JavaScript
+      - Visual Basic
+      - QBasic
+      - SQL
+
+- question:
+    show: 4
+    title: What is an Excetion Message?
+
+    explain: |
+      In most cases, when a program encounters an error that cannot be recovered from then it will display an [define exception_message] with details about the error. 
+
+    choices:
+      - A message about an error a program cannot recover from
+      - A message with remaining memory for a computer
+      - A message to warn about a disconnected keyboard
+      - A warning message before deleting files on your computer
+
+- question:
+    show: 4
+    title: What is a Syntax Error?
+
+    explain: |
+      A [define syntax_error] is an error when the code cannot be understood by the program. This is normally from code that has been input incorrectly or is missing required commands.
+
+    choices:
+      - An error when code can't be understood by the computer
+      - An error when the computer is powered off
+      - An error connecting to the Internet
+      - An error when a computer runs out of memory
+
+- slide:
+    mode: popup
+    content: |
+      Way to go! You've finished this lesson!
+
+- slide:
+    content: |
+      At this point all files are now unlocked and you're free to make changes to anything in this project. You can play with the [define javascript] you've learned, or just try out new things.
+
+- slide:
+    content: |
+      If you'd like to try this lesson again, you can start over by using the "Reset Lesson" button from the home page of this site.
+
+      [image reset-lesson.jpg]
+
+- slide:
+    content: |
+      If you'd like to share what you've created with others, you can use the **Share** button and send them a link so they can try it out for themselves.
+
+      [image share-project.jpg]
+
+      [silent] _This button will appear after the lesson as been completed._
+
+- slide:
+    controller: aboutSaving
+    content: |
+      The changes you've made so far haven't been saved yet. Make sure to press the "Save Changes" button before you end this lesson.
+
+      If you forget to save your files and try and close a project, the website will display a message and give you a chance to save your work.
+
+- slide:
+    emote: happy
+    content: |
+      Great work, and I'll see you again for **Lesson 2**

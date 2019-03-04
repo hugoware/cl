@@ -118,6 +118,13 @@ export default class HintDisplay extends Component {
 		// ensure the bounds to use
 		this.hint.refresh();
 		const bounds = this.hint.getBounds();
+		
+		// not sure?
+		if (!bounds) {
+			debugger;
+			return;
+		}
+
 		const { left } = bounds;
 		const right = isNaN(bounds.right) ? left : bounds.right;
 		const mid = (left + right) / 2;
