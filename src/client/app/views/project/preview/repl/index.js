@@ -13,14 +13,6 @@ import ExecutionContext from './context'
 
 const EMPTY_BOUNDS = { top: 0, bottom: 0 };
 
-// TODO: this is hacky -- fix this up later
-if (!document.getElementById('babel-script')) {
-	const babel = document.createElement('script');
-	babel.setAttribute('id', 'babel-script');
-	babel.src = '/__codelab__/babel.min.js';
-	document.body.appendChild(babel);
-}
-
 // create the preview mode
 export default class ReplMode extends Component {
 
@@ -189,8 +181,22 @@ export default class ReplMode extends Component {
 	onRunScripts = () => {
 		this.runner.clear();
 		this.runner.projectUrl = $state.getProjectDomain();
-		const path = '/main.js';
-		const file = $state.paths[path];
+
+		// use the active file -- consider letting people
+		// set the "main" file
+		let path;
+		let file;
+
+		// check for main first
+		file = $state.paths['/main.js'];
+		path = file && file.path;
+
+		// for code files, the active file can be used if
+		// a main.js file hasn't been added
+		if ($state.isCodeProject && !path) {
+			file = $state.activeFile;
+			path = file && file.path;
+		}
 
 		// check if allowed or not
 		if (!requirePermission({
@@ -199,6 +205,27 @@ export default class ReplMode extends Component {
 			message: `Can't Use Run Code`
 		})) return;
 
+		// if there's not an active file
+		if (!file) {
+			this.runner.options = {};
+
+			// game/mobile behaviors
+			if ($state.isGameProject || $state.isMobileProject) {
+				const type = $state.isGameProject ? 'Game' : 'Mobile App';
+				const subtype = $state.isGameProject ? 'game' : 'app';
+				this.runner.onConsoleError('No Entry File Found: main.js');
+				this.runner.onConsoleInfo('Use the File Browser on the left side of the screen to create a new main.js file.');
+				this.runner.onConsoleLog(`\n${type} projects must have a main.js file. This is used as the start up point for your ${subtype}.\n\n`);
+			}
+			// other types
+			else {
+				this.runner.onConsoleError('No Entry File Found');
+				this.runner.onConsoleInfo('Open a file to run or use the File Browser on the left side of the screen to create a new code file.');
+				this.runner.onConsoleLog(`\nBy default, Code projects will execute main.js -- If that file has not been added to the project, then the active tab will be executed instead.\n\n`);
+			}
+
+			return;
+		}
 
 		// delay before running just by a moment
 		this.runner.load(`Running ${path} ...`);

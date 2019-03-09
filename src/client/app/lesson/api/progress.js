@@ -31,9 +31,19 @@ export default class ProgressAPI {
 
 	// handles a variety of scenarios to check if
 	// validation of the slide is allowed
-	check = ({ compare, result, valid, allow = _.noop, deny = _.noop, always = _.noop }) => {
+	check = ({ compare, result, valid, force = false, allow = _.noop, deny = _.noop, always = _.noop }) => {
 		const isAllowed = !!this.allowed;
-		const success = this.isSuccess({ compare, result, valid });
+		const success = !!this.isSuccess({ compare, result, valid });
+
+		// check if we need to do this again
+		const wasSuccess = !!$state.lesson.slide.__previous_validation_attempt__;
+		const stillSuccess = wasSuccess && success;
+		const stillFail = !wasSuccess && !success;
+		if (!force && (stillSuccess || stillFail))
+			return success;
+
+		// save the result
+		$state.lesson.slide.__previous_validation_attempt__ = success;
 
 		// switching to allowed
 		if (!isAllowed && success && allow) {
@@ -45,6 +55,9 @@ export default class ProgressAPI {
 			try { deny(); }
 			finally { always(); }
 		}
+
+		// always return the result
+		return success;
 	}
 
 	// perform updates

@@ -1,6 +1,6 @@
-if (roomIsDark) {
-	turnLight('on');
-} 
+if (birthday === today) {
+	say('Happy birthday!');
+}
 else {
-	turnLight('off');
+	say('Good morning!');
 }

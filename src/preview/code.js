@@ -7,6 +7,7 @@ import $database from '../storage/database';
 // import protectCode from '../compilers/simplescript/protect';
 // import { resolveImports, getErrorFile } from '../compilers/simplescript/modules';
 import { find } from '../storage/file-system/index';
+import * as babel from '../resources/public/babel.min';
 
 // common resources that require no processing
 const RESOURCES = [
@@ -16,8 +17,10 @@ const RESOURCES = [
 
 // return web content as required
 export default async function handleRequest(request, response, project) {
-// 	const { id } = project;
-// 	const source = $path.resolveProject(id);
+	const { id } = project;
+	const source = $path.resolveProject(id);
+
+	console.log(babel);
 
 // 	// check if this is for a resource file
 // 	const ext = $path.extalias(request.path);

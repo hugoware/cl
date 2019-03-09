@@ -1,93 +1,115 @@
+import { _ } from './lib';
+import { stringRange } from './utils';
 
-const validate_alert = test => test
-	.id('alert')
+const as_number = test => test
+	.literal(/^[0-9]+/, 'Expected a number', match => {
+
+		// make sure it doesn't start with a zero
+		if (/^0[0-9]+/.test(match))
+			return `Don't use a number that starts with a zero`;
+		
+		// check the number count
+		const count = _.size(match);
+		const error = stringRange(count, 5, 10, 'number', 'numbers');
+		if (error) return error;
+
+		return error;
+	});
+
+const validate_number_alert = test => test
+	.func('alert')
+	.symbol('(')
+	.merge(as_number)
+	.symbol(')')
+	.symbol(';');
+
+const validate_coding_alert = test => test
+	.func('alert')
+	.symbol('(')
+	.merge(as_number)
+	.symbol(')')
+	.symbol(';');
+
+const validate_insert_string = test => test
+	.func('alert')
+	.symbol('(')
+	.string('JavaScript is fun')
+	.symbol(')')
+	.symbol(';');
+
+const validate_free_string = test => test
+	.func('alert')
 	.symbol('(')
 	.string(5, 25)
 	.symbol(')')
 	.symbol(';');
 
-const validate_coding_alert = test => test
-	.id('alert')
+const validate_fix_number = test => test
+	.func('alert')
 	.symbol('(')
-	.string('coding is fun')
+	.number(12345)
+	.symbol(')')
+	.symbol(';');
+
+const validate_fix_string = test => test
+	.func('alert')
+	.symbol('(')
+	.string('fix me!')
 	.symbol(')')
 	.symbol(';');
 
 export const validate_repeat_alert = test => test
 	.__w$
-	.merge(validate_alert)
-	._n;
+	.merge(validate_number_alert)
+	._n
+	.__w$
+	.eof();
 
 export const validate_free_alert = test => test
 	.__w$
-	.merge(validate_alert)
+	.merge(validate_number_alert)
 	._n
 	.__w$
 	.merge(validate_coding_alert)
-	.__w$;
+	.__w$
+	.eof();
 
 export const validate_complete_repeat_alert = test => test
 	.__w$
-	.merge(validate_alert)
+	.merge(validate_number_alert)
 	._n
 	.__w$
 	.merge(validate_coding_alert)
 	._n
 	.__w$
-	.merge(validate_alert);
-
-export const validate_complete_fix_alert = test => test
+	.merge(validate_number_alert)
 	.__w$
-	.merge(validate_alert)
-	._n;
+	.eof();
 
-// const validate_starting_alert = test => test
-// 	.;
+export const validate_insert_string_alert = test => test
+	.__w$
+	.merge(validate_insert_string)
+	._n
+	.__w$
+	.eof();
 
+export const validate_free_string_alert = test => test
+	.__w$
+	.merge(validate_free_string)
+	._n
+	.__w$
+	.eof();
 
-// export const validate_first_free_alert = test => test
-// 	._w
-// 	.merge(validate_h1)
-// 	._n
-// 	.__w
-// 	.merge(validate_h3)
-// 	.__w
-// 	.eof();
+export const validate_complete_fix_number_alert = test => test
+	.__w$
+	.merge(validate_fix_number)
+	._n
+	.__w$
+	.eof();
 
-// export const validate_insert_button = test => test
-// 	._w
-// 	.merge(validate_h1)
-// 	._n
-// 	.__w
-// 	.merge(validate_h3)
-// 	._n
-// 	.__w
-// 	.merge(validate_button)
-// 	.__w
-// 	.eof();
-
-// export const validate_list = test => test
-// 	._w
-// 	.merge(validate_h1)
-// 	._n
-// 	.__w
-// 	.merge(validate_h3)
-// 	._n
-// 	.__w
-// 	.merge(validate_button)
-// 	._n
-// 	.__w
-// 	.tag('ol')._n
-// 	._t.tag('li').text('dog').close('li')._n
-// 	._t.tag('li').text('cat').close('li')._n
-// 	._t.tag('li').text('fish').close('li')._n
-// 	.close('ol')
-// 	.eof();
-
-
-
-// export const validate_h1 = test => test
-
-// export const validate_h3 = test => test
-
-// export const validate_button = test => test
+export const validate_complete_fix_string_alert = test => test
+	.__w$
+	.merge(validate_fix_string)
+	._n
+	.__w$
+	.eof();

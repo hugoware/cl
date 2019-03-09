@@ -308,7 +308,6 @@ function initialize(lesson) {
 
 		slide.hasTitle = _.some(slide.title);
 		slide.hasSubtitle = _.some(slide.subtitle);
-		
 	});
 
 	// always create a starting restore point
@@ -361,8 +360,29 @@ function setActiveSlide(lesson, slide) {
 	broadcast('slide-changed', slide);
 	lesson.instance.invoke('enter');
 	setTimeout(() => {
+
+		// check for finalizing initialization logic
+		if (!lesson._hasFinishedInit) {
+			lesson._hasFinishedInit = true;
+			
+			// check for startup tasks
+			const init = _.get(lesson, 'instance.data.init', {});
+
+			// set default flag states
+			_.each(init.flags, key => {
+				$state.flag[key] = true;
+			});
+
+			_.each(init.files || init.open, path => {
+				$state.flags.OPEN_FILE = true;
+				$state.openFile(path);
+			});
+		}
+
+		// prepare the controller
 		lesson.instance.invoke('init');
 		lesson.instance.invoke('ready');
+
 	}, 100);
 }
 

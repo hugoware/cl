@@ -1,7 +1,25 @@
+import { _ } from './lib';
 
 // creates a text/numeric only representation for a strin
 export function simplify(str) {
 	return (str || '').toString().replace(/[^a-z0-9]/gi, '').toLowerCase();
+}
+
+
+// checks for range messages
+export function stringRange(value, min, max, asSingular, asPlural) {
+	const num = !value ? 0
+		: _.isNumber(value.length) ? value.length
+		: value;
+
+	if (num < min) {
+		const diff = min - num;
+		return `Expected ${diff} more ${diff > 1 ? asPlural : asSingular}`;
+	}
+	else if (num > max) {
+		const diff = num - max;
+		return `Expected ${diff} fewer ${diff > 1 ? asPlural : asSingular}`;
+	}
 }
 
 // performs the oxford comma

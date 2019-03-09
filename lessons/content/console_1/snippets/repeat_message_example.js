@@ -1,1 +1,1 @@
-alert('your message');
+alert(98765);

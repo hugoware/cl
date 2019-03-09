@@ -1,1 +1,1 @@
-alert('coding is fun');
+alert(12345);

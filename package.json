@@ -33,7 +33,7 @@
     "babel-plugin-async-to-promises": "^1.0.5",
     "babel-plugin-inline-import": "^3.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "browserify": "^16.2.2",
+    "browserify": "^16.2.3",
     "chokidar": "^2.0.4",
     "electron": "^3.0.4",
     "gulp": "^3.9.1",

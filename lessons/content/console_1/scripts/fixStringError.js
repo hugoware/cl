@@ -1,5 +1,5 @@
 import { _, CodeValidator } from './lib';
-import { validate_complete_fix_alert } from './validation';
+import { validate_complete_fix_string_alert } from './validation';
 
 export const controller = true;
 
@@ -8,7 +8,7 @@ let $isShowingHelp;
 
 function validate(instance) {
 	const workingArea = instance.editor.area.get({ path: '/main.js' });
-	const result = CodeValidator.validate(workingArea, validate_complete_fix_alert);
+	const result = CodeValidator.validate(workingArea, validate_complete_fix_string_alert);
 	
 	// update validation
 	if ($isShowingHelp)
@@ -47,16 +47,27 @@ export function onContentChange() {
 export function onInit() {
 	this.progress.block();
 	this.editor.area({ path: '/main.js', start: 0, end: 18 });
+	this.editor.cursor({ path: '/main.js', index: 16 });
+	validate(this);
+}
+
+export function onRunCodeError() {
+	this.progress.allow();
+	this.assistant.say({
+		message: `Seems like there's still a problem with this code. Keep trying until you fix the [define syntax_error].`
+	});
 }
 
 export function onRunCode() {
-	return $isValid;
+	return true;
 }
 
 export function onRunCodeAlert() {
 	this.progress.allow();
 	this.assistant.say({
-		message: 'That did it! You fixed the [define syntax_error]!',
-		emote: 'happy'
+		emote: 'happy',
+		message: `There we go! You fixed the [define syntax_error]!
+
+This example also required that we include the second \`'\` as well as the \`)\`!`
 	});
 }

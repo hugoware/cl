@@ -75,6 +75,13 @@ export default function generateMessage(message) {
 			const parts = value.split(/ /);
 			const key = parts.shift();
 
+			// check for special commands
+			const last = _.last(parts);
+			const lowercase = /^(l|ls|sl|lp|pl)$/i.test(last);
+			const plural = /^(p|s|ls|sl|lp|pl)$/i.test(last);
+			if (lowercase || plural)
+				parts.pop();
+
 			// find the value to display
 			let display = _.trim(parts.join(' ') || '');
 
@@ -84,6 +91,14 @@ export default function generateMessage(message) {
 			// without a display name, use the provided one
 			if (!display)
 				display = definition.name;
+
+			// handle special things
+			if (plural)
+				display = definition.plural;
+
+			// handle special things
+			if (lowercase)
+				display = definition.lowercase || _.toLower(display);
 
 			return `<span class="define" type="${key}" >${display}</span>`;
 		});
@@ -197,29 +212,45 @@ function fixSpeech(str) {
 }
 
 
-// replace inline dictionary works
-function replaceDictionaryWords(line) {
-	return line.replace(/\[define ?[^\]]+\]/g, match => {
-		let value = _.trim(match.substr(7));
-		value = value.replace(/\]$/g, '');
-		const parts = value.split(/ /);
-		const key = parts.shift();
+// // replace inline dictionary works
+// function replaceDictionaryWords(line) {
+// 	return line.replace(/\[define ?[^\]]+\]/g, match => {
+// 		let value = _.trim(match.substr(7));
+// 		value = value.replace(/\]$/g, '');
+// 		const parts = value.split(/ /);
+// 		const key = parts.shift();
 
-		// find the value to display
-		let display = _.trim(parts.join(' ') || '');
+// 		// replace special commands
+// 		const last = _.last(parts);
+// 		console.log(parts);
+// 		const lowercase = last === 'l' || last === 'lp' || last === 'pl';
+// 		const plural = last === 'p' || last === 'lp' || last === 'pl';
+// 		if (lowercase || plural)
+// 			parts.pop();
 
-		// make sure this is real
-		const definition = state.dictionary[key];
-		if (!definition) throw `definition for ${key} is missing`;
-		manifest.definitions[key] = definition;
+// 		// find the value to display
+// 		let display = _.trim(parts.join(' ') || '');
 
-		// without a display name, use the provided one
-		if (!display)
-			display = definition.name;
+// 		// make sure this is real
+// 		const definition = state.dictionary[key];
+// 		if (!definition) throw `definition for ${key} is missing`;
+// 		manifest.definitions[key] = definition;
 
-		return `<span class="define" type="${key}" >${display}</span>`;
-	});
-}
+// 		// without a display name, use the provided one
+// 		if (!display)
+// 			display = definition.name;
+
+// 		// handle special things
+// 		if (plural)
+// 			display = definition.plural;
+
+// 		// handle special things
+// 		if (lowercase)
+// 			display = definition.lowercase || _.toLower(display);
+
+// 		return `<span class="define" type="${key}" >${display}</span>`;
+// 	});
+// }
 
 
 // // fixes phrases to make them read easier

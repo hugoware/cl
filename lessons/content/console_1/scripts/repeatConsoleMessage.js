@@ -3,6 +3,7 @@ import { _, CodeValidator } from './lib';
 export const controller = true;
 
 let $endIndex;
+let $hasShownFirstAlert;
 let $allowRunCode;
 
 import { validate_repeat_alert, validate_complete_repeat_alert } from './validation';
@@ -23,7 +24,7 @@ function validate(instance) {
 		allow: () => {
 			$allowRunCode = true;
 			instance.assistant.say({
-				message: `Great! Press the **Run Code** button and then click **OK** for each of the alert messages`
+				message: `Looks good! Press the **Run Code** button and then click **OK** for each of the alert messages!`
 			});
 		},
 		deny: instance.assistant.revert,
@@ -60,6 +61,16 @@ export function onContentChange(file) {
 	validate(this);
 }
 
+export function onRunCodeAlert() {
+	if (!$hasShownFirstAlert) {
+		$hasShownFirstAlert = true;
+		this.assistant.say({
+			message: `There's the first alert message! Continue pressing **OK** to finish running this code to the end of the file.`,
+			emote: 'happy',
+		});
+	}
+}
+
 export function onRunCodeEnd() {
 	this.progress.allow();
 	this.assistant.say({
@@ -69,6 +80,7 @@ export function onRunCodeEnd() {
 }
 
 export function onRunCode() {
+	$hasShownFirstAlert = false;
 	return !!$allowRunCode;
 }
 

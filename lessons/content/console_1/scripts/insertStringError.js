@@ -1,8 +1,8 @@
+import { _ } from './lib';
 
 export const controller = true;
 
 export function onEnter() {
-	this.progress.block();
 
 	const current = this.file.content({ path: '/main.js' });
 	this.file.readOnly({ path: '/main.js' });
@@ -14,7 +14,8 @@ export function onEnter() {
 
 alert('fix me!
 
-${current}`
+
+${_.trimStart(current)}`
 
 	});
 
@@ -23,15 +24,4 @@ ${current}`
 
 export function onReady() {
 	this.editor.cursor({ path: '/main.js', index: 16 });
-}
-
-export function onRunCodeError() {
-	this.progress.allow();
-	this.assistant.say({
-		message: `This is an [define exception_message]. This means that the code encountered a problem it couldn't recover from!`
-	});
-}
-
-export function onRunCode() {
-	return true;
 }

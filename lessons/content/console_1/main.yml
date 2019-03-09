@@ -1,3 +1,4 @@
+
 - slide:
     mode: overlay
     title: Introduction to Programming
@@ -8,17 +9,17 @@
 
 - slide:
     content: |
-      Computer programming is a way of giving computers instructions. These instructions are typically known as code.
+      Computer programming is a way of giving computers instructions. These instructions are typically known as _"code"_.
 
       [image code-intro.jpg frame]
 
-      You'll also sometimes people refer to the task of programming as _coding_. For the most part the two activities are the same thing.
+      You'll also sometimes hear people refer to the task of programming as _"coding"_. For the most part the two activities are one in the same.
 
 - slide:
     content: |
       When you write code, you're writing instructions that tell a computer what it's supposed to do. A computer isn't able to think on its own, so you have to be very specific.
       
-      Code in itself is a series of **[define code_condition conditions]** and **[define code_action actions]** that help solve a problem.
+      Code in itself is a series of **[define code_condition conditions]** and **[define code_action actions]** that solve a problem.
 
 - slide:
     content: |
@@ -31,31 +32,41 @@
     content: |
       An **[define code_action]** is the work that a computer program does. As with the previous example, if the user's password was incorrect, the **[define code_action action]** would be to show an error message.
 
-      If the user's password was correct, then the **action** would be to grant them access.
+      If the user's password was correct, then the **action** would be to allow them access to the system.
 
 - slide:
-    content: |
+    content:
       Let's look at a simple example written in a "human readable" format.
 
 - slide:
     content: |
       [snippet conditions_simple]
 
-      Chances are you can figure out what the intructions in the example above are trying to accomplish.
+      You can probably figure out what these instructions are trying to accomplish by just reading through the steps in the order they are shown.
 
 - slide:
     content: |
       [snippet conditions_code]
 
-      For the most part, programming is very similar, but instead of using natural language, you use a programming language.
+      Programming is very similar, but instead of using natural language, you use a programming language with special rules.
 
 - slide:
     content: |
-      [snippet conditions_code]
+      In this example, the **[define code_condition condition]** that is being checked is if the `birthday` is the same as `today`. The result of this condition decides which of the **[define code_action actions]** should be performed.
 
-      In this case, the **[define code_condition condition]** that is being checked is `roomIsDark`. The result of this condition decides which of the **[define code_action actions]** should be done.
+      [snippet conditions_code highlight:4,18]
 
-      If the room is _dark_ the light is turned _on_, otherwise the light is turned _off_.
+- slide:
+    content: |
+      If the **condition** is _true_, meaning `birthday` is the same as `today`, then the program would perform the first of the two **actions** and say the message "Happy birthday!".
+      
+      [snippet conditions_code highlight:27,23]
+
+- slide:
+    content: |
+      If `birthday` did not match `today`, the **[define code_condition condition]** would be _false_ and the program would use the alternate **action** and say the message "Good morning!" instead.
+
+      [snippet conditions_code highlight:61,21]
 
 - slide:
     content: |
@@ -64,15 +75,31 @@
       [define javascript] is a popular programming language that's used in a very large variety of applications, games, websites, and more.
 
 - slide:
+    content: |
+      [define javascript] has rules about the spelling, grammar, and symbols used when writing code.
+
+      This is also known as the [define syntax], or basically the arrangement of words and symbols to create code that can be understood by the computer.
+
+      [snippet conditions_code highlight:3,1|13,3|22,1|24,1|30,2|47,3|51,1|58,1|64,2|79,3|83,1]
+
+
+- slide:
+    content: |
+      Another notable rule in [define javascript] is [define case_sensitive Case Sensitivity]. Being [define case_sensitive case sensitive] means that if letters do not match in their uppercase or lowercase forms, then they are not considered the same.
+
+      For example, the uppercase letter `A` is not the same as the lowercase letter `a`. 
+
+      This is very important to remember when you write code since having the wrong case can cause big errors.
+
+- slide:
     mode: popup
     content: |
-      There's a lot to learn when it comes to programming, so in this lesson we're just going to focus on using the [define codelab_editor], displaying messages, and fixing some simple code errors.
+      There's a lot to learn when it comes to programming, so in this lesson we're going to focus on using the [define codelab_editor] to display some messages, and then fix a simple code error.
 
 - slide:
     mode: popup
     content: |
       Alright! Let's jump into writing some code and see what happens!
-
 
 - slide:
     controller: highlightFileBrowser
@@ -107,14 +134,14 @@
     content: |
       This is an example of using a programming feature called a _"function"_.
 
-      We'll learn more about how to use _functions_ in later lessons. For now, let's use it so we can display messages.
+      We'll learn more about how to use _functions_ in later in this lessons. For now, let's use it so we can display messages.
 
 - slide:
     controller: customLogMessage
     content: |
       Why don't you try changing the message that's displayed on the screen.
 
-      Replace the phrase `hello, world!` with something different and then press the **Run Code** button to see the results.
+      Replace the current numbers with new numbers and then press the **Run Code** button to see the results.
 
 - slide:
     content: |
@@ -123,7 +150,7 @@
 - slide:
     controller: freeConsoleMessage
     content: |
-      Follow along with the guide to display another message in the [define codelab_code_output output] area.
+      Write another alert message with any number you'd like. Use the example below to help remind you the correct [define syntax l] to use
 
       [snippet console_message_example]
 
@@ -134,25 +161,75 @@
 - slide:
     controller: repeatConsoleMessage
     content: |
-      Write another alert message with any message you'd like, but this time put it at the top of the file so it runs first.
+      Write another alert message with any numbers you'd like, but this time put it at the top of the file so it runs first.
 
-      [snippet repeat_message_example]
+      If you're stuck, look at the other two `alert` examples for guidance.
+
+- slide:
+    mode: overlay
+    content: |
+      So far we've shown several alert messages that display numbers. Let's try something a little different and display a message that uses words instead.
+
+- slide:
+    content: |
+      This time, instead of using a [define javascript_number], we're going to use some text. In [define javascript] this is known as a [define javascript_string].
+
+      [snippet string_example]
+
+      A [define javascript_string] is a series of characters. [define javascript_string s] are useful when you're working with data that uses letters and numbers, such as names, descriptions, or other blocks of text.
+
+- slide:
+    content: |
+      You'll notice that the [define javascript_string] example below is written a little differently than the [define javascript_number p] we were using in the examples before.
+
+      [snippet string_example highlight:0,1|18,1]
+
+      The example above has [define javascript_single_quote s] that surround all of the letters. This is very important when you're writing strings.
+
+- slide:
+    mode: popup
+    content: |
+      You'll learn a lot more about [define javascript_string s] in later lessons, but for now let's create a few messages that use [define javascript_string s].
+
+- slide:
+    controller: insertStringAlert
+    content: |
+      Follow along with the example and write a new `alert` message, but using a [define javascript_string] instead.
+
+      [snippet insert_string_example]
+
+- slide:
+    controller: freeStringAlert
+    content: |
+      Let's try that one more time, but this time enter any message you'd like!
+
+      Follow along with the instructions or use the previous example as a guide on how to add another `alert` message.
 
 - slide:
     content: |
       So far all of the code we've written has run without any issues, but sometimes you may type something incorrectly which could cause an error.
 
 - slide:
-    controller: introduceError
+    controller: insertNumberError
     content: |
       I just added some code to the top of the file that has an error in it. Press the **Run Code** button so we can see what happens when code isn't formatted correctly.
 
 - slide:
     content: |
-      In this case, we have an example of a [define syntax_error]. A Syntax Error means that the code is invalid and can't be understood by the engine running it.
+      In this case, we have an example of a [define syntax_error]. A Syntax Error means that the code can't be understood by the engine running it.
 
 - slide:
-    controller: fixError
+    controller: fixNumberError
+    content: |
+      Try and fix this code error and then press **Run Code** when you're finished.
+
+- slide:
+    controller: insertStringError
+    content: |
+      Let's try this one more time, but this time we're going to use a [define javascript_string]. I've just added a new error to the top of the file.
+
+- slide:
+    controller: fixStringError
     content: |
       Try and fix this code error and then press **Run Code** when you're finished.
 
@@ -162,6 +239,32 @@
     mode: overlay
     content: |
       Great work! There's still a lot to learn, but let's end this lesson by reviewing what we've covered so far.
+
+- question:
+    show: 4
+    title: What does Syntax mean for a programming language?
+
+    explain: |
+      [define syntax] defines the arrangement of words and symbols that helps a computer understand instructions written in a programming language.
+
+    choices:
+      - The rules for the arrangement of words and symbols 
+      - The taxed money for creating computer code
+      - The popularity of a computer language
+      - The maximum number of lines of code in a file
+
+- question:
+    show: 4
+    title: What does Case Sensitivity mean for a programming language?
+
+    explain: |
+      [define case_sensitive Case Sensitivity] means that an uppercase form of a letter is not the same as the lowercase form of a letter.
+
+    choices:
+      - The uppercase form of a letter is **NOT** the same as the lowercase form
+      - The code file has too many curly braces in it
+      - There are too many numbers in a code file
+      - The **condition** for some code has a "just in case" action
 
 - question:
     show: 4

@@ -51,7 +51,8 @@ export async function speak(message) {
 		// once ready, play it
 		instance.sound.once('load', () => {
 			if ($active.key !== result.key) return;
-			$active.sound.play();
+			stop();
+			setTimeout(() => $active.sound.play());
 		});
 
 	}
@@ -67,8 +68,12 @@ export async function speak(message) {
 
 // stops the currently playing audio clip
 export function stop() {
-	if ($active.sound)
-		$active.sound.stop();
+	_.each($cache, item => {
+		item.sound.stop();
+	});
+
+	// if ($active.sound)
+	// 	$active.sound.stop();
 }
 
 // 

@@ -113,6 +113,7 @@ export default class CodeEditor extends Component {
 	// done with the lesson
 	onLessonFinished = () => {
 		// this.editor.clearAllZones();
+		this.removeClass('has-reset');
 	}
 
 	// make sure to refresh when slides change

@@ -4,7 +4,7 @@ export const controller = true;
 
 export function onInit() {
 	this.progress.block();
-	this.editor.area({ path: '/main.js', start: 9, end: 22 });
+	this.editor.area({ path: '/main.js', start: 8, end: 11 });
 	this.preview.clearRunner();
 }
 
@@ -21,27 +21,65 @@ export function onExit() {
 }
 
 export function onBeforeContentChange(file, change) {
-	if (change.isNewline || change.data === "'" || change.data === '\\')
+	return change.isBackspace
+		|| change.isDelete
+		|| /^[0-9]+$/.test(change.data);
+}
+
+
+export function onRunCode() {
+
+	const input = this.editor.area.get({ path: '/main.js' });
+
+	// make sure it's only numbers
+	if (!/^[0-9]+$/.test(input)) {
+		this.assistant.say({
+			message: 'Make sure to only use numbers in this example!'
+		});
+
 		return false;
+	}
+
+	// if it's only zeros
+	if (/^0+[1-9]$/.test(input)) {
+		this.assistant.say({
+			message: `You've got the right idea, but try a number that doesn't start with a zero`
+		});
+
+		return false;	
+	}
+
+	// make sure it's long enough
+	const size = _.size(input);
+	if (size < 5) {
+		const any = size > 0;
+		this.assistant.say({
+			message: `Type ${any ? 'some more' : 'a few'} numbers before pressing the **Run Code** button!`
+		});
+
+		return false;
+	}
+	
+	if (size > 15) {;
+		this.assistant.say({
+			message: `Type a few less numbers before pressing the **Run Code** button!`
+		});
+
+		return false;
+	}
+
+	return true;
+
 }
 
 export function onRunCodeAlert(context, message) {
+	
+	this.editor.area.clear();
+	this.file.readOnly({ path: '/main.js' });
+	this.progress.allow();
+	this.assistant.say({
+		emote: 'happy',
+		message: `Great! You can see the numbers you typed in are displayed in the alert message!`
+	});
 
-	if (_.size(message) > 5) {
-		this.progress.allow();
-		this.assistant.say({
-			emote: 'happy',
-			message: `Great! You can see your message displayed in the [define codelab_code_output].`
-		});
-	}
-	else {
-		const any = _.some(message);
-		this.assistant.say({
-			message: `Type a ${any ? 'longer' : ''} message before pressing the **Run Code** button!`
-		})
-	}
-}
-
-export function onRunCode(context) {
-	return true;
 }

@@ -49,7 +49,7 @@ You can see that the first \`alert\` message has been displayed. Press **OK** to
 	}
 	else if ($alertCount === 1) {
 		this.assistant.say({ 
-			message: `Great! Now the second alert message has been displayed!`,
+			message: `That's it! The second alert message has been displayed showing the numbers you just added!`,
 			emote: 'happy',
 		});
 		this.progress.allow();

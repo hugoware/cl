@@ -1,5 +1,5 @@
-if  roomIsDark
-	turnLight  on
+if  birthday is  today
+	say  Happy birthday!
 
 else
-	turnLight  off
+	say  Good morning!

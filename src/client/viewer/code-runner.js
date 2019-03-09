@@ -17,7 +17,7 @@ const HANDLED_EVENTS = [
 
 // trims a string
 function trim(str) {
-	return (str || '').replace(/^(\n|\t|\s)*|(\n|\t|\s)*$/g, '');
+	return (str || '').toString().replace(/^(\n|\t|\s)*|(\n|\t|\s)*$/g, '');
 }
 
 // helpers

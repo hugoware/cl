@@ -77,10 +77,62 @@
 
 - id: code_action
   name: Action
-  define:
+  define: |
     Something code is doing
 
 - id: code_condition
   name: Condition
-  define:
+  define: |
     Something code is testing
+
+- id: syntax
+  name: Syntax
+  plural: Syntaxes
+  define: |
+    The arrangement of words and symbols to create well-formed code that can be understood by the computer.
+
+- id: case_sensitive
+  name: Case Sensitive
+  define:
+    Meaning that the uppercase form of a letter is not considered to be the same as the lowercase form of a letter.
+
+    Simply put, `A` is not the same as `a` when checking for case sensitivity.
+
+- id: curly_brace
+  name: Curly Brace
+  define: |
+    Creates scope
+
+- id: semi_colon
+  name: Semi-Colon
+  define: |
+    Terminates commands
+
+- id: paren
+  name: Parentheses
+  define: |
+    Groups code and operators
+
+- id: javascript_string
+  name: String
+  plural: Strings
+  define: |
+    Series of characters
+
+- id: javascript_number
+  name: Number
+  plural: Numbers
+  define: |
+    Number value
+
+- id: javascript_boolean
+  name: Boolean
+  plural: Booleans
+  define: |
+    True/false value
+
+- id: javascript_single_quote
+  name: Single Quote
+  plural: Single Quotes
+  define: |
+    True/false value

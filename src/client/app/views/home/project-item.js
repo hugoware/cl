@@ -3,14 +3,16 @@ import { semiRandomColor } from '../../utils/index';
 
 export default class ProjectItem extends Component {
 
-	constructor(data) {
+	constructor(data, previous) {
 		super({
 			template: 'project-item',
 			ui: {
-				bar: '.bar'
+				bar: '.bar',
+				requirements: '.requirements',
 			}
 		});
 
+		this.previous = previous;
 		this.data = data;
 		this.refresh();		
 	}
@@ -39,11 +41,18 @@ export default class ProjectItem extends Component {
 		const isLesson = !!data.lesson;
 		const isDone = !!data.done;
 		const isActive = !!data.active;
+		const isLocked = isLesson && !isActive;
+
+		// replace the locked message
+		if (isLocked && this.previous) {
+			const html = `Complete the lesson <strong>${this.previous.name}</strong> to unlock`;
+			this.ui.requirements.html(html);
+		}
 
 		// toggle view
 		this.toggleClassMap({
 			// 'in-progress': !!data.started && !data.finished,
-			'is-locked': isLesson && !isActive,
+			'is-locked': isLocked,
 			'is-lesson': isLesson,
 			'is-new': !isDone && isActive,
 			'is-finished': isDone && isActive,

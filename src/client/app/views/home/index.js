@@ -213,12 +213,18 @@ export default class HomeView extends View {
 
 			// remove existing items
 			this.ui.list.empty();
-			const source = this.data[view];
+			let source = this.data[view];
 
+			// are these for lessons
+			if (!isProjects)
+				source = _.orderBy(source, [ 'type', 'number' ]);
+			
 			// add each project item
+			let $previous;
 			_.each(source, data => {
-				const item = new HomeProjectItem(data);
+				const item = new HomeProjectItem(data, $previous);
 				item.appendTo(this.ui.list);
+				$previous = data;
 			});
 
 			// apply the filter, if any

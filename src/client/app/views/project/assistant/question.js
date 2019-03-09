@@ -12,7 +12,7 @@ const $converter = new Showdown.Converter();
 const MESSAGE_TITLE_DELAY = 1;
 const DEFAULT_COUNT = 4;
 const INTRO_CORRECT = `That's correct!`;
-const INTRO_INCORRECT = `Oops! That's not correct.`;
+const INTRO_INCORRECT = `That's not correct.`;
 
 export default class Question extends Component {
 

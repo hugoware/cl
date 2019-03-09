@@ -220,6 +220,13 @@ const $state = {
 		$state.flags = { };
 		$state.content = { };
 
+
+		// depending on type
+		$state.isWebProject = project.type === 'web';
+		$state.isCodeProject = project.type === 'code';
+		$state.isGameProject = project.type === 'game';
+		$state.isMobileProject = project.type === 'mobile';
+
 		// rebuild the path indexes
 		$state.projectId = project.id;
 		$state.updateVersion();

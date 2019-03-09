@@ -17,7 +17,7 @@ async function init() {
 	console.log('[lessons] parsing lesson data');
 
 	// read in the content
-	const path = $path.resolveRoot('lessons.yml');
+	const path = $path.resolveResource('lessons.yml');
 	const content = $fsx.readFileSync(path);
 	$lessonIds = $yaml.load(content.toString());
 

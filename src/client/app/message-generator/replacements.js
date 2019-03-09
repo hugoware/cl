@@ -13,5 +13,10 @@ export default {
 	'`=`': 'equal sign',
 	'`ol`': 'Oh-El',
 	'`li`': 'El-Eye',
+	'`)`': 'closing parenthesis',
+	'`(`': 'opening parenthesis',
+	"`'`": 'single quote',
+	'`"`': 'double quote',
+	'`\\\``': 'back tick',
 	'JavaScript': 'Java Script'
 };

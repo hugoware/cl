@@ -1,4 +1,4 @@
 
 
-alert('hello, world!');
+alert(100);
 
