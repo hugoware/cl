@@ -93,8 +93,11 @@ export default function generateMessage(message) {
 				display = definition.name;
 
 			// handle special things
-			if (plural)
+			if (plural) {
 				display = definition.plural;
+				if (!display)
+					display = `${definition.name}s`;
+			}
 
 			// handle special things
 			if (lowercase)

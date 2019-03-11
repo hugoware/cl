@@ -70,7 +70,7 @@ export default async function createLesson(lessonId, userId) {
 			await $fsx.copy(source, target);
 			
 			// all done
-			resolve({ success: true });
+			resolve({ id, success: true });
 		}
 		// something went wrong
 		catch (err) {

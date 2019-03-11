@@ -19,7 +19,6 @@ export default async function getProjectData(ownerId, id) {
 				description: 1,
 				lesson: 1,
 				done: 1,
-				finished: 1,
 				active: 1,
 				ownerId: 1,
 				modifiedAt: 1,
@@ -31,15 +30,13 @@ export default async function getProjectData(ownerId, id) {
 		if (!project)
 			return reject('project_not_found');
 
-		// if this is a lesson, but it's not active, then
-		// we need to reject the request - this could happen
-		// if someone knows to type in the project URL
-		const isLesson = !!project.lesson;
-		if (isLesson && !project.active)
-			return reject('lesson_not_active');
-
+		// we don't need to check if the lesson is active
+		// since we don't create database entries for
+		// placeholder lessons
+		
 		// if this is a normal project, or the lesson is
 		// all done, then just use it normally
+		const isLesson = !!project.lesson;
 		if (!isLesson || (isLesson && project.done)) {
 			delete project.lesson;
 			return resolve(project);
@@ -48,8 +45,7 @@ export default async function getProjectData(ownerId, id) {
 		// since this is a lesson, and we aren't trying to
 		// track progress across sessions, make sure to reset
 		// all file changes and progress
-		const result = await createLesson(project.lesson, ownerId);
-		console.log(result);
+		await createLesson(project.lesson, ownerId);
 		
 		// give back the project data
 		resolve(project);

@@ -711,10 +711,10 @@ var console1Lesson = function () {
         "controller": "runCodeButton",
         "content": "Let's try and run this code example and see what happens.\n\nPress the **Run Code** button and watch the [define codelab_code_output] area.\n"
       }, {
-        "content": "This is an example of using a programming feature called a _\"function\"_.\n\nWe'll learn more about how to use _functions_ in later in this lessons. For now, let's use it so we can display messages.\n"
+        "content": "This is an example of using a programming feature called a _\"function\"_.\n\nWe'll learn more about how to use _functions_ later. For now, let's use it so we can display messages.\n"
       }, {
         "controller": "customLogMessage",
-        "content": "Why don't you try changing the message that's displayed on the screen.\n\nReplace the current numbers with new numbers and then press the **Run Code** button to see the results.\n"
+        "content": "Why don't you try changing the message that's displayed on the screen.\n\nReplace the current numbers with a different set of numbers and then press the **Run Code** button to see the results.\n"
       }, {
         "content": "Now, let's try it again, but this time you'll write the entire example on your own.\n"
       }, {

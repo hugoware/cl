@@ -17,7 +17,7 @@ self.onmessage = async (msg) => {
 
 // handles standard compiling of pug files
 async function compileFile(file) {
-	let code;
+	let compiler;
 	try {
 
 		// load all files used
@@ -27,7 +27,7 @@ async function compileFile(file) {
 		});
 
 		// creates a common client compiler
-		const compiler = new BabelCompiler({
+		compiler = new BabelCompiler({
 			entry: file,
 			babel: Babel,
 			files
@@ -41,27 +41,27 @@ async function compileFile(file) {
 	}
 	// check for errors
 	catch (err) {
-		throw err;
 
 		const { loc = { } } = err;
 		let line;
 		let column = loc.column;
 		let message = err.message;
-		let source = file;
+		let source = compiler ? compiler.file : file;
 
 		// try clean up
+		console.log('rev');
 		message = message.replace(/\(\d+\:\d+\)[^$]*/g, '');
 
-		// this was an error importing a module
-		if (err.isImportError) {
-			line = loc.line;
-			source = err.file;
-		}
-		// needs to resolve the actual file and error
-		else {
-			const offset = getErrorFile(code, err.index);
-			line = loc.line - offset;
-		}
+		// // this was an error importing a module
+		// if (err.isImportError) {
+		// 	line = loc.line;
+		// 	source = err.file;
+		// }
+		// // needs to resolve the actual file and error
+		// else {
+		// 	const offset = getErrorFile(code, err.index);
+		// 	line = loc.line - offset;
+		// }
 
 		// try and determine the real line number
 		self.postMessage(['compile:ok', {

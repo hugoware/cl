@@ -3,6 +3,7 @@ import $config from './config';
 import $server from './server';
 import $database from './storage/database';
 import $lessons from './storage/lessons';
+import $fileDefaults from './file-defaults';
 import $path from './path';
 import { resolveError } from './utils';
 
@@ -19,6 +20,9 @@ async function init() {
 		
 		// preload lesson content
 		await $lessons.init();
+		
+		// preload file content
+		await $fileDefaults.init();
 		
 		// loads the server config
 		await $server.init();

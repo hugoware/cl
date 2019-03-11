@@ -1,0 +1,139 @@
+- slide:
+    mode: overlay
+    title: Understanding Page Structure
+    content: |
+      In this lesson we're going to talk about the proper way to create a new [define web_page l]. We will be learning about specific [define html_element s] that are used as the foundation for a typical [define web_page l].
+
+- slide:
+    content: |
+      So far we've used [define html] to create headings and paragraphs by adding [define html_element s] to our page.
+
+      Even though we could see what we typed in the [define codelab_html_preview], the [define html] was not written properly.
+
+- slide:
+    content: |
+      For the most part, [define web_browser s] are very forgiving when showing [define html]. Most [define web_browser s] will attempt to display the [define html] even if there are errors in the code.
+
+      However, as smart as [define web_browser s] might be, it's always a good idea to write your code in a way that it makes it easier for the browser to understand the intent of your [define web_page l].
+
+- slide:
+    content: |
+      In this lesson, we will be creating a default web page structure so we can understand the purpose of each [define html_element].
+
+      If you don't remember everything, don't worry. Most modern code editors will fill in the default HTML page structure when creating a new file.
+
+- slide:
+    mode: popup
+    content: |
+      Okay, let's get started!
+
+- slide:
+    content: |
+      Open the file named `index.html` in the [define file_browser]
+
+- slide:
+    content: |
+      Since we're going to be creating an entire page structure from scratch, this file is completely blank.
+
+- slide:
+    content: |
+      The Element that should appear in an HTML document is the `doctype`. The `doctype` is used to identify the version of HTML being used.
+
+      For modern web development, this is fairly simple as there's only one type you need to use.
+
+- slide:
+    content: |
+      Follow along with the instructions to add the correct `doctype` to the page.
+
+- slide:
+    content: |
+      The next [define html_element] that we need to use is the `html` Element. This is used to wrap the entire [define html] document. Basically, anything that falls between the opening and closing tags it's considered to be part of the document.
+
+- slide:
+    content: |
+      Follow along with instructions to add the opening and closing `html` tags.
+
+- slide:
+    content: |
+      The next [define html_element] we are going to add is the `head` Element.
+
+- slide:
+    content: |
+      The `head` Element has quite a few varied purposes.
+
+      For one, it is used to hold information about the page that is not visually displayed. This include data like descriptions, author names, copyright dates, supported languages and more. 
+
+      This information is read by search engines to identify what is on your page.
+      
+- slide:
+    content: |
+      The `head` Element is also where you define the page title. The page title is the text that appears on the tab in the browser.
+
+- slide:
+    content: |
+      Finally, the `head` is used to include external resources, for example CSS styles. We haven't talked about this yet but will cover it and a few lessons from now.
+
+
+- slide:
+    content: |
+      Follow along with the instructions to add the `head` Element and some information about this page.
+
+- slide:
+    content: |
+      Finally, the `body` Element is used to wrap all visual content for a page. This includes text, images, videos, forms, and more.
+
+      Essentially, if it should be visible to the visitor of the page, it probably should be in the `body` Element.
+
+- slide:
+    content: |
+      Follow along with the instructions to add the `body` Element to your page.
+
+- slide:
+    content: |
+      Great work! Although the page does not look different than previous examples we done, it is structured correctly now.
+
+      Following best practices and writing good code is a great way become a better software developer.
+
+- question:
+    mode: overlay
+    title: What is the purpose of the `doctype` Element?
+
+    explain: |
+      The `doctype` is used to identify which version of [define html] your page is using. However, in modern web development this is typically going to be set to simply `"html"`.
+
+    choices:
+      - Identifies the version of HTML the page is using
+      - Enables spellcheck for the page content
+      - Disables images and video files
+      - Changes the background color of the web page
+
+- question:
+    title: What is NOT a purpose of the `head` Element?
+
+    explain: |
+      The head element has many purposes, such as holding a meta-information, the page title, and references for external resources.
+
+    choices:
+      - Showing a photo of the current web page visitor
+      - Container for meta-information like description and author
+      - Holds the `title` Element for the page
+      - Container for references to external resources
+
+- question:
+    title: What should go inside of the `body` Element?
+
+    explain: |
+      Generally speaking, the `body` Element contains the content that should be seen by the webpage visitor such as text, images, videos, and more.
+
+    choices:
+      - Content that should be seen by the visitor
+      - The `title` Element for the page
+      - The `doctype` Element for the page
+      - Meta-information like a page description or author name
+
+- slide:
+    mode: popup
+    content: |
+      Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.
+
+      Great work, and I'll see you in the next lesson!

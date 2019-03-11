@@ -138,12 +138,12 @@ export default class BabelCompiler {
 			this.dependencyMap[relativeTo][absolute] = { };
 			
 			// if already compiled, skip
-			console.log('make abs', parts, item.source, absolute);
 			if (this.compiled[absolute])
 				continue;
 
 			// perform the compile
 			const code = this.files[absolute];
+			this.file = absolute;
 			const result = this.babel.transform(code, { presets: ['es2015'] });
 			this.compiled[absolute] = result.code;
 
@@ -178,6 +178,9 @@ export default class BabelCompiler {
 
 		// start compiling as required
 		const entry = this.files[this.entry];
+		
+		// try and compile
+		this.file = this.entry;
 		const result = this.babel.transform(entry, { presets: ['es2015'] });
 		this.compiled[this.entry] = result.code;
 
@@ -187,8 +190,6 @@ export default class BabelCompiler {
 		// add each file based on deepest nested dependency
 		this.resolveDependencyMap();
 		this.modules.push(this.entry);
-
-		console.log('bundle');
 
 		// assemble the final file
 		const added = { };
@@ -212,44 +213,7 @@ export default class BabelCompiler {
 		bundle.push(BUNDLE_END);
 
 		// resolve the final code
-		const f = bundle.join('\n');
-		console.log(f);
-		return f;
-
-		// const mod = makeModule(this.entry, result.code);
-		// modules.push(mod);
-
-		// console.log(this.modules);
-		// console.log(result);
-
-
-
-		// // resolve each
-		// for (let key in this.files) {
-		// 	const code = this.files[key];
-		// 	const result = this.babel.transform(code, { presets: ['es2015'] });
-
-		// 	// check dependencyMap
-		// 	console.log('rev', result);;
-			
-			
-		// 	let generated = REGISTER_MODULE.replace('%PATH%', key);
-		// 	const compiled = result.code;
-		// 	generated = generated.replace('%CODE%', compiled);
-
-		// 	// save to the correct location
-		// 	if (key === this.entry) entry = generated;
-		// 	else modules.push(generated);
-		// }
-		
-		// // finalize the result
-		// modules.unshift(BUNDLE_INIT);
-		// modules.push(entry || 'throw "No code entry point found!');
-		// modules.push(BUNDLE_END);
-		
-		// const bundle = modules.join('\n');
-		// console.log(bundle);
-		// return bundle;
+		return bundle.join('\n');
 	}
 
 }

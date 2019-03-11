@@ -13,10 +13,8 @@ export default async function finishLesson(userId, id) {
 	await $database.projects.update({ id }, {
 		$set: { 
 			done: true,
+			completed: true,
 			modifiedAt: $date.now(),
 		}
 	});
-
-	// after updating, update any lesson stats
-	await $lessons.syncLessonAccess(userId);
 }

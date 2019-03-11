@@ -7,7 +7,8 @@ export default {
 	'`>=`': 'less than or equal to',
 	'`=>`': 'less than or equal to',
 	'`=<`': 'greater than or equal to',
-	'``_': 'underscore',
+	'`=`': 'equal sign',
+	'`_`': 'underscore',
 	'`-`': 'hyphen',
 	'`==`': 'equal to sign',
 	'`=`': 'equal sign',
@@ -17,6 +18,12 @@ export default {
 	'`(`': 'opening parenthesis',
 	"`'`": 'single quote',
 	'`"`': 'double quote',
+	'`br`': 'line break',
+	'`p`': 'paragraph',
+	'`h1`': 'heading one',
+	'`img`': 'image',
+	'`src`': 'source',
+	'`a`': 'anchor',
 	'`\\\``': 'back tick',
 	'JavaScript': 'Java Script'
 };

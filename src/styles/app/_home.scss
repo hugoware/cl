@@ -4,6 +4,25 @@ $home-content-padding: 40px;
 $project-item-accent-height: 6px;
 $project-item-accent-gap: 3px;
 
+.preload {
+	color: rgba(0,0,0,0);
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 1px;
+	left: -100px;
+
+	.b {
+		font-weight: bold;
+		font-family: $default-font;
+	}
+	.i {
+		font-style: italic;
+		font-family: $default-font;
+	}
+}
+
 @mixin __create_action_button {
 	@include align_vertical(40px);
 	color: #fff;
@@ -331,7 +350,7 @@ $project-item-accent-gap: 3px;
 		display: none;
 	}
 
-	.is-new, .is-finished, .in-progress {
+	.is-new, .is-finished, .in-progress, .is-redo {
 		display: none;
 		float: right;
 		padding: 4px 12px;
@@ -348,6 +367,7 @@ $project-item-accent-gap: 3px;
 
 	&.is-lesson.is-new .is-new,
 	&.is-lesson.is-finished .is-finished,
+	&.is-lesson.is-redo .is-redo,
 	&.is-lesson.in-progress .in-progress {
 		display: block,
 	}
@@ -360,7 +380,7 @@ $project-item-accent-gap: 3px;
 		background: #39CA74;
 	}
 
-	&.is-lesson.in-progress .in-progress {
+	&.is-lesson.is-redo .is-redo {
 		background: #3A99D8;
 	}
 
@@ -399,6 +419,7 @@ $project-item-accent-gap: 3px;
 	&.type-mobile .bar { background: #F1C631; }
 
 	&.is-project .reset,
+	&.is-redo .reset,
 	&.is-lesson .remove,
 	&.is-lesson .edit,
 	&.is-lesson .open,
@@ -410,6 +431,13 @@ $project-item-accent-gap: 3px;
 
 	@at-root .local .is-lesson .reset {
 		display: block !important;
+		&:hover:after {
+			content: 'forced enabled on local development';
+			color: #f00;
+			position: absolute;
+			display: block;
+			width: 300px;
+		}
 	}
 
 	&.is-lesson.is-finished .publish,
@@ -526,6 +554,10 @@ $project-item-accent-gap: 3px;
 			padding: 0 50px;
 			top: 50%;
 		}
+	}
+
+	&.is-placeholder .time {
+		display: none;
 	}
 
 	&.is-locked {

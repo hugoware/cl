@@ -134,14 +134,14 @@
     content: |
       This is an example of using a programming feature called a _"function"_.
 
-      We'll learn more about how to use _functions_ in later in this lessons. For now, let's use it so we can display messages.
+      We'll learn more about how to use _functions_ later. For now, let's use it so we can display messages.
 
 - slide:
     controller: customLogMessage
     content: |
       Why don't you try changing the message that's displayed on the screen.
 
-      Replace the current numbers with new numbers and then press the **Run Code** button to see the results.
+      Replace the current numbers with a different set of numbers and then press the **Run Code** button to see the results.
 
 - slide:
     content: |

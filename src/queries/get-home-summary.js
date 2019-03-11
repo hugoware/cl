@@ -1,6 +1,7 @@
 
 import _ from 'lodash';
 import $database from '../storage/database';
+import $lessons from '../storage/lessons';
 import $date from '../utils/date';
 
 /** Handles getting summary information for a user
@@ -9,7 +10,7 @@ import $date from '../utils/date';
 export default async function get(id) {
 	return new Promise(async (resolve, reject) => {
 		try {
-
+			
 			// get the user info
 			const users = await $database.users.find({ id })
 				.project({
@@ -36,57 +37,53 @@ export default async function get(id) {
 					lesson: 1,
 					description: 1,
 					sequence: 1,
-					active: 1,
+					modifiedAt: 1,
+
+					// has it been finished before
+					completed: 1,
+
+					// is it currently done
 					done: 1,
-					modifiedAt: 1
 				})
 				.toArray();
 
-			// sort the projects
-			results = $date.sort(results, 'modifiedAt');
+			// order in sequence
+			results = _.sortBy(results, 'modifiedAt');
 
-			// create public version of the record
-			const projects = _.map(results, project => {
+			// adjust categories
+			const projects = [ ];
+			const lessons = [ ];
+			_.each(results, item => {
+				const target = item.lesson ? lessons : projects;
 				const record = {
-					id: project.id,
-					type: project.type,
-					name: project.name,
-					description: project.description,
-					modifiedAt: $date.timeAgo(project.modifiedAt),
-					lesson: !!project.lesson
+					id: item.id,
+					type: item.type,
+					name: item.name,
+					description: item.description,
+					modifiedAt: $date.timeAgo(item.modifiedAt),
 				};
 
-				// if this is a lesson, update the state
-				if (record.lesson) {
-					record.done = project.done;
-					record.active = project.active;
-					record.sequence = project.sequence;
+				// adjust for lessons
+				if (item.lesson) {
+					record.sequence = item.sequence;
+					record.lesson = item.lesson;
+					record.completed = !!item.completed;
+					record.done = !!item.done;
 				}
 
-				return record;
-			});
+				target.push(record);
+			})
 
-			// make a list of lessons
-			const lessons = [ ];
-			for (let i = projects.length; i-- > 0;) {
-				const project = projects[i];
-				if (project.lesson) {
-					lessons.push(project);
-					projects.splice(i, 1);
-				}
-			}
+			// setup the results
+			const result = { user, projects };
 
-			// if there's no lesson yet, and they should have one, unlock
-			// one immediately
-			// if (lessons.length === 0)
-				// results = [ ];
+			// for lessons, capture data
+			const allowUnlock = true;
+			const state = $lessons.getLessonState(id, lessons, allowUnlock);
+			_.assign(result, state);
 
-			// create the final summary
-			resolve({ 
-				user,
-				projects,
-				lessons
-			});
+			// give back the results
+			resolve(result);
 		}
 		// failed to get summary
 		catch(err) {
@@ -94,11 +91,4 @@ export default async function get(id) {
 		}
 
 	});
-}
-
-// determines the state of a project
-function getLessonState(hasLesson, state) {
-	return null;
-	// return null ? 'new' : 'in-progress' : 'finished';
-
 }

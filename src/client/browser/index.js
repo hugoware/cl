@@ -109,7 +109,7 @@
 			})(scripts[i]);
 
 		// after completely evaled, run any onload events
-		triggerEvent('load');
+		setTimeout(() => triggerEvent('load'), 10);
 	}
 
 	// broadcast local script errors
@@ -139,15 +139,15 @@
 	// capture scripting errors
 	window.addEventListener('error', handleError);
 
-	// capture console messages
-	window.console = { 
-		log: (...args) => notify('console.log', ...args),
-		warn: (...args) => notify('console.warn', ...args)
-	};
+	// // capture console messages
+	// window.console = { 
+	// 	log: (...args) => notify('console.log', ...args),
+	// 	warn: (...args) => notify('console.warn', ...args),
+	// };
 
-	// capture alert messages
-	window.alert = (...args) => notify('alert', ...args);
-	window.prompt = (...args) => notify('prompt', ...args);
+	// // capture alert messages
+	// window.alert = (...args) => notify('alert', ...args);
+	// window.prompt = (...args) => notify('prompt', ...args);
 
 	addEventListener('unload', () => {
 		notify('navigating');

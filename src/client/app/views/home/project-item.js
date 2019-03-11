@@ -32,16 +32,22 @@ export default class ProjectItem extends Component {
 		this.attr('data-type', data.type);
 		this.addClass(`type-${data.type}`);
 
+		// check for a lesson to activate
+		if (data.lesson)
+			this.attr('data-lesson', data.lesson);
+
 		// bind text
 		this.ui.name.text(data.name);
 		this.ui.description.text(data.description);
 		this.ui.lesson.text(`Lesson #${data.number}`);
 		this.ui.modifiedAt.text(data.modifiedAt);
 
+		const isPlaceholder = !data.id;
 		const isLesson = !!data.lesson;
 		const isDone = !!data.done;
-		const isActive = !!data.active;
-		const isLocked = isLesson && !isActive;
+		const isCompleted = !!data.completed;
+		const isActive = !data.isPreview;
+		const isLocked = !isActive;
 
 		// replace the locked message
 		if (isLocked && this.previous) {
@@ -52,9 +58,11 @@ export default class ProjectItem extends Component {
 		// toggle view
 		this.toggleClassMap({
 			// 'in-progress': !!data.started && !data.finished,
+			'is-placeholder': isPlaceholder,
+			'is-redo': isCompleted && !isDone,
 			'is-locked': isLocked,
 			'is-lesson': isLesson,
-			'is-new': !isDone && isActive,
+			'is-new': !isCompleted && isActive,
 			'is-finished': isDone && isActive,
 			'is-project': !isLesson,
 		});

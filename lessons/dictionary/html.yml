@@ -30,3 +30,14 @@
   name: Child Elements
   define: |
     HTML Elements that are contained inside of other HTML Elements. Also commonly referred to as **nested Elements**.
+
+- id: void_element
+  name: Void Element
+  define: |
+    An HTML Element that does not have a separate closing tag. Also does not contain content.    
+
+- id: hyperlink
+  name: Hyperlink
+  aka: Link
+  define: |
+    An HTML Element that's used to link from one page to another resource using a URL.

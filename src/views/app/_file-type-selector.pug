@@ -20,24 +20,24 @@ mixin category_type(category, name)
 
 .file-type-selector
 	
-	//- data types
-	.categories
-		+category_type('all', 'All')
-		+category_type('code', 'Code')
-		+category_type('markup', 'Markup')
-		+category_type('style', 'Style')
-		+category_type('data', 'Data')
+	//- //- data types
+	//- .categories
+	//- 	+category_type('all', 'All')
+	//- 	+category_type('code', 'Code')
+	//- 	+category_type('markup', 'Markup')
+	//- 	+category_type('style', 'Style')
+	//- 	+category_type('data', 'Data')
 
 	//- file types
 	.file-types
 		+file_type('css', 'CSS', 'style')
-		+file_type('coffee', 'CoffeeScript', 'code')
+		//- +file_type('coffee', 'CoffeeScript', 'code')
 		+file_type('html', 'HTML', 'markup')
 		+file_type('js', 'JavaScript', 'code')
-		+file_type('md', 'Markdown', 'markup')
-		+file_type('pug', 'Pug', 'markup')
-		+file_type('scss', 'SCSS', 'style')
-		+file_type('ts', 'TypeScript', 'code')
+		//- +file_type('md', 'Markdown', 'markup')
+		//- +file_type('pug', 'Pug', 'markup')
+		//- +file_type('scss', 'SCSS', 'style')
+		//- +file_type('ts', 'TypeScript', 'code')
 		+file_type('txt', 'Text', 'data')
 		+file_type('xml', 'XML', 'data')
 

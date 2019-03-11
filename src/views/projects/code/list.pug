@@ -1,0 +1,20 @@
+extends _template
+
+block content
+	#list
+		
+		if noFiles
+			h3 Project Unavailable
+			p This project has no files to run
+
+		else
+			if !isDefaultEntry
+				h3.error File #[code= entry] not found
+
+			p Choose a file to run
+			for path in files
+				ul
+					li
+						a(href=path)= path
+
+	

@@ -21,7 +21,8 @@ import { handleError } from './utils';
 async function run() {
 
 	try {
-		const result = await $lessons.syncLessonAccess('hugo')
+		// const result = await $lessons.getLessons('hugo')
+		// console.log(result);
 		// const result = await compileProject('mk1234', 'style.scss');
 		// console.log('finsie', result);
 	}

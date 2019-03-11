@@ -217,14 +217,21 @@ export default class HomeView extends View {
 
 			// are these for lessons
 			if (!isProjects)
-				source = _.orderBy(source, [ 'type', 'number' ]);
+				source = _.orderBy(source, [ 'type', 'sequence' ]);
 			
 			// add each project item
-			let $previous;
+			let previous;
 			_.each(source, data => {
-				const item = new HomeProjectItem(data, $previous);
+
+				// clear the previous if the
+				// category doesn't match
+				if (previous && previous.type !== data.type)
+					previous = null;
+
+				// create the next item
+				const item = new HomeProjectItem(data, previous);
 				item.appendTo(this.ui.list);
-				$previous = data;
+				previous = data;
 			});
 
 			// apply the filter, if any
@@ -253,7 +260,7 @@ export default class HomeView extends View {
 	onCreateProject = () =>
 		this.broadcast('open-dialog', 'create-project')
 
-	onSelectProject = event => {
+	onSelectProject = async event => {
 
 		// make sure it's not locked
 		if (Component.within(event.target, '.locked'))
@@ -262,9 +269,24 @@ export default class HomeView extends View {
 		// mark as busy before transitioning
 		if (this.busy) return;
 		this.busy = true;
-
 		this.removeClass('is-ready');
-		const id = getProjectId(event);
+
+		// get the ID of the project
+		let id = getProjectId(event);
+
+		// if there's not an ID, then that means that
+		// this might be a lesson that needs to be
+		// activated first
+		if (!id) {
+			id = await activateLesson(event);
+
+			// if there's still not an ID then there's a problem
+			if (!id) {
+				throw 'missing ID';
+			}
+		}
+
+
 		$nav.go(`project/${id}`);
 	}
 
@@ -353,6 +375,23 @@ function getProjectData(event, instance) {
 	const id = getProjectId(event);
 	const { projects, lessons } = instance.data;
 	return _.find(projects, { id }) || _.find(lessons, { id });
+}
+
+// performs server activation for a lesson
+function activateLesson(event) {
+	return new Promise(async resolve => {
+		const project = Component.locate(event.target, '[data-lesson]');
+		const lesson = project.attr('data-lesson');
+		
+		// no lesson was found
+		if (!lesson)
+			return resolve();
+		
+		// request the activation
+		const result = await $api.request('activate-lesson', { id: lesson });
+		const id = result && result.success ? result.id : null;
+		resolve(id);
+	})
 }
 
 // revise data for UI

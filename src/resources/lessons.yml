@@ -1,8 +1,9 @@
 
 web:
   - web_1
-  - web_2
-  - web_3
+  - web_headings
+  - web_page_structure
+  - web_attributes
 
 code:
   - console_1

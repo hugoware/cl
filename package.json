@@ -13,6 +13,7 @@
     "database": "mongod --dbpath ./.data/codelab/",
     "watch": "./node_modules/.bin/gulp watch",
     "workbench": "babel-node ./src/workbench.js ./config.dev.yml",
+    "dev-workbench": "nodemon -w ./dist -x \"npm run workbench\" --delay 1.5",
     "clean": "rm -rf ./dist",
     "compile": "./node_modules/.bin/gulp compile",
     "compile-lesson": "babel-node ./lessons/compiler/index.js",

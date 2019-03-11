@@ -33,6 +33,53 @@ html, body {
 	display: inline-block;
 }
 
+#list {
+	text-align: center;
+
+	h3.error {
+		display: inline-block;
+		padding: 3px 11px;
+		border-radius: 3px;
+		font-family: $default-font;
+		background: #E64B3F;
+		font-size: 16px;
+	}
+
+	p {
+		padding: 10px 0 30px 0;
+		font-family: $default-font;
+		font-size: 15px;
+		opacity: 0.5;
+	}
+
+	code {
+		font-family: $code-font;
+		background: rgba(#000, 0.3);
+		display: inline-block;
+		padding: 3px 7px;
+	}
+
+	ul li {
+		margin: 0 0 13px 0;
+		a {
+			display: inline-block;
+			width: 300px;
+			padding: 7px 0;
+			color: #999;
+			background: rgba(#000, 0.2);
+			text-decoration: none;
+			font-size: 17px;
+			@include animate('background, color');
+
+			&:hover {
+				color: #fff;
+				background: rgba(#000, 0.4);
+			}
+		}
+	}
+
+}
+
 #avatar {
 	width: 100px;
 	height: 100px;
@@ -115,6 +162,10 @@ html, body {
 
 #program {
 	padding: 100px 0 30px 0;
+
+	#error, #alert {
+		z-index: $layer-repl-alert;
+	}
 
 	.header {
 		position: fixed;

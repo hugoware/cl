@@ -3,7 +3,7 @@
 @import '_utils';
 @import './app/fonts';
 @import './app/_colors';
-
+@import './app/_layers';
 
 @include keyframes(shake_a) {
 	0% { transform: translate(1px, -1px) rotate(9deg); }
@@ -47,7 +47,7 @@
 		border-radius: 5px;
 		left: 50%;
 		transform: translate(-50%, 0);
-		
+		z-index: $layer-repl-alert;
 		pointer-events: none;
 		opacity: 0;
 	}

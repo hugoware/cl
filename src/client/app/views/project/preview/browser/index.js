@@ -161,7 +161,8 @@ export default class BrowserMode extends Component {
 		if (!this.hasActiveView) return;
 
 		// handling a script error
-		if (err === 'error') {
+		if (err === 'error' && this.activeFile) {
+			args = _.assign({ }, args);
 			args.path = this.activeFile.path;
 			this.setPageError(args);
 		}
@@ -174,7 +175,9 @@ export default class BrowserMode extends Component {
 		// else if ('console.log' === name)
 		// else if ('console.log' === name)
 
-		else console.log('preview message', err, args);
+		else {
+			// console.log('preview message', err, args);
+		}
 	}
 
 	// handles deactivating a project entirely

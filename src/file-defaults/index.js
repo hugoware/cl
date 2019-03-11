@@ -1,41 +1,38 @@
+import _ from 'lodash';
 
-import css from './css.txt';
-import scss from './scss.txt';
+import $path from '../path';
+import $fsx from 'fs-extra';
+import $yaml from 'js-yaml';
 
-import html from './html.txt';
-import pug from './pug.txt';
+let $fileDefaults;
 
-import js from './js.txt';
-import ts from './ts.txt';
+async function init() {
+	console.log('[lessons] parsing file defaults');
 
-import txt from './txt.txt';
-import xml from './xml.txt';
-
-const $types = {
-	css,
-	scss,
-	html,
-	pug,
-	js,
-	ts,
-	txt,
-	xml,
-};
+	// read in the content
+	const path = $path.resolveResource('file-defaults.yml');
+	const content = $fsx.readFileSync(path);
+	$fileDefaults = $yaml.load(content.toString());
+}
 
 /** checks if an extension has default content (including blank) 
  * @param {string} ext the extension to check for
  * @returns {boolean} does this file type exist
 */
-$types.exists = ext => {
-	return ext in $types;
+function exists(ext, projectType) {
+	return ext in $fileDefaults[projectType] || { };
 };
 
 /** returns the content for a file type
  * @param {string} ext the extension to look up
  * @returns {string} the content of the file (including blank)
  */
-$types.get = ext => {
-	return $types[ext];
+function get(ext, projectType) {
+	return _.get($fileDefaults, `${projectType}.${ext}`);
 };
 
-export default $types;
+export default {
+	init,
+	exists,
+	get
+};

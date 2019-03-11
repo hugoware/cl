@@ -1,0 +1,35 @@
+extends _template
+
+block action
+	.actions
+		.action.run Run Program
+
+block content
+
+	#program
+		.header
+			a.logo(href="http://codelabschool.com" target='codelab')
+			.about= project.name
+			.action.run Run Program
+
+		#repl.window
+			#alert
+				.header
+					.close.handle-confirm
+					.title Alert message
+				.message This is the main message
+				.actions
+					.confirm.handle-confirm OK
+
+			#error
+				h1 Code Exception
+				p Looks like there was an error while running that code!
+				.message Unspecified error
+
+			pre#output
+			#command
+				#question Please enter your name
+				#input(contenteditable='true' spellcheck='false')
+
+	script(type='text/javascript').
+		window.__CODE__ = !{JSON.stringify(code)};

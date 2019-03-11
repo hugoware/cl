@@ -1,0 +1,213 @@
+
+- slide:
+    mode: overlay
+    title: Headings and Paragraphs
+    content: |
+      In this lesson we're going to start working with the different types of blocks use for formatting text an HTML.
+
+      There are many tag types and HTML, but in this lesson we will be focusing on the heading tags and the paragraph tag.
+
+
+- slide:
+    content: |
+      Each of these tags have a different purpose in HTML.
+
+      The heading tags are used to start new sections of content on your page. By default, they're displayed in a large and bold font.
+
+      [snippet heading_example]
+
+
+- slide:
+    content: |
+      Paragraphs, on the other hand, are used to display sections of text. Most of the time, paragraphs have additional margin space around them.
+
+      Generally speaking, you'll have many more paragraphs then you will have headings on a page.
+
+
+- slide:
+    content: |
+      We'll learn more about it in later lessons, but headings actually have a specific purpose. Headings are used by screen readers help blind people read your webpage, as well as help search engines understand the structure of your page.
+
+      Headings should not be used to simply change the size or boldness of a font. In later lessons, we will be learning the correct way to change the style of a webpage.
+
+
+- slide:
+    mode: popup
+    content: |
+      Let's get started adding some headings to our page.
+
+      Open the file named `index.html` in the File Browser on the left side of the screen.
+
+
+- slide:
+    content: |
+      At this point you're already familiar with writing [define html_element s]. Let's start by adding a `h1` [define html_element element] to this page.
+
+
+- slide:
+    content: |
+      Okay, let's do that again for the remaining heading [define html_element elements].
+
+      There are six in total heading elements in [define html]. Try and added the remaining five heading elements.
+
+- slide:
+    title: Using Paragraphs
+    mode: overlay
+    content: |
+      Paragraphs are another way to add text to your webpage, but these aren't intended to mark new sections on the page.
+
+      Instead, paragraphs are typically used for large passages of text.
+
+
+- slide:
+    mode: popup
+    content: |
+      Add a new paragraph to this page by using the `p` tag.
+
+      [snippet paragraph_example]
+
+- slide:
+    content: |
+      In each of the examples we've done so far all of the text has been on one line. However, HTML allows you to put text on multiple lines.
+
+- slide:
+    content: |
+      You'll notice that even though the text is on multiple lines, the [define codelab_html_preview] displays all of the text on a single line.
+
+      In HTML, new lines are displayed as a single space between characters.
+
+- slide:
+    content: |
+      This creates a problem were trying to add a new line to our webpage. However, like with most things in HTML, we can use an [define html_element] to solve this problem.
+
+- slide:
+    title: Using Line Breaks
+    mode: overlay
+    content: |
+      The `br` tag is used to create line breaks, meaning that a new line is displayed wherever the [define html_element] is placed in the code.
+
+      [snippet linebreak]
+
+- slide:
+    content: |
+      You probably noticed that this [define html_element] looks different than the other tags you've written so far.
+
+      [snippet linebreak highlight:4,2]
+
+      Unlike the other HTML elements you've added, this [define html_element element] does not have a separate closing tag.
+
+- slide:
+    content: |
+      This is called a [define void_element], meaning that it does not have any content.
+
+      You'll also hear these referred to as _self-closing_ tag or _empty tags_.
+
+- slide:
+    mode: popup
+    content: |
+      There are many other [define html_element s] that are also [define void_element s]. You'll learn more about these and later lessons.
+
+- slide:
+    content: |
+      Let's go back and add a `br` [define html_element element] between the two lines in the previous example.
+
+      [snippet insert_linebreak]
+
+- slide:
+    mode: overlay
+    content: |
+      Great work! let's review what we've learned in this lesson!
+
+- question:
+    title: New lines in [define html] are displayed...
+
+    explain: |
+      Adding a new line to a webpage will display as a single space. Also, interestingly, multiple spaces in HTML are also displayed has a single space.
+
+    choices:
+      - ... as a space
+      - ... as a tab
+      - ... as a normal new line
+      - ... as a semi-colon
+
+- question:
+    title: The `br` [define html_element Element] is known as a...
+    content: |
+      [snippet linebreak]
+
+    explain: |
+      A `br` [define html_element Element] is known as a [define void_element], meaning it does not have content. A [define void_element] also does not have a separate closing tag.
+
+    choices:
+      - Void Element
+      - Zero Element
+      - Terminator Element
+      - Bytecode Element
+
+- question:
+    title: Using the `h1` [define html_element Element] is a great way to make large and bold text
+
+    explain: |
+      By default, the heading elements are displayed using bold letters. However, there are much better ways to apply visual styles to your web page.
+
+    choices:
+      - "False"
+      - "True"
+
+- slide:
+    mode: popup
+    content: |
+      As you can see, HTML has multiple [define html_element Elements] you can use to add content to your webpages.
+
+- slide:
+    mode: popup
+    content: |
+      Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.
+
+      Great work, and I'll see you in the next lesson!
+
+
+
+# - question:
+#     count: 4   # optional question count
+#     title: Main title
+#     
+#     hint: Optional helpful hint
+
+#     explain: |
+#       After the question is finished hint
+
+#     choices:
+#       - correct answer
+#       - wrong answer 1
+#       - wrong answer 2
+#       - wrong answer 3
+
+# - slide:
+#     flags: +OPEN_FILE
+#     emote: happy
+#     controller: name
+#     mode: popup
+#     content: |
+#       Way to go! You've finished this lesson!
+#       
+#       [snippet name highlight:0,5|20,5]
+#       
+#       [snippet html preview:50%]
+#       
+#       [image default.png]
+#       
+#       [image full.jpg frame]
+#       
+#       Inline replacement is done using ||does|duz||
+#       
+#       A normal [define html] is like this
+#       
+#       A lowercase [define html l] is like this
+#       
+#       A plural [define html p] is like this
+#       A plural [define html s] or like this
+#       
+#       Can be combined as [define html lp] [define html ls]
+#       
+#       

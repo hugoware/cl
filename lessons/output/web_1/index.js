@@ -921,13 +921,29 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.simplify = simplify;
+exports.stringRange = stringRange;
 exports.oxford = oxford;
 exports.plural = plural;
 exports.similarity = similarity;
 
+var _lib = require('./lib');
+
 // creates a text/numeric only representation for a strin
 function simplify(str) {
   return (str || '').toString().replace(/[^a-z0-9]/gi, '').toLowerCase();
+}
+
+// checks for range messages
+function stringRange(value, min, max, asSingular, asPlural) {
+  var num = !value ? 0 : _lib._.isNumber(value.length) ? value.length : value;
+
+  if (num < min) {
+    var diff = min - num;
+    return 'Expected ' + diff + ' more ' + (diff > 1 ? asPlural : asSingular);
+  } else if (num > max) {
+    var _diff = num - max;
+    return 'Expected ' + _diff + ' fewer ' + (_diff > 1 ? asPlural : asSingular);
+  }
 }
 
 // performs the oxford comma
@@ -990,7 +1006,7 @@ function editDistance(s1, s2) {
   return costs[s2.length];
 }
 
-},{}],13:[function(require,module,exports){
+},{"./lib":10}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

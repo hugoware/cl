@@ -30,7 +30,6 @@ export default class ReplMode extends Component {
 		});
 
 		// the previewer instance
-		// this.preview = preview;
 		CodeRunner.create({
 			containerSelector: '#repl',
 			outputSelector: '#repl #output',

@@ -1,4 +1,3 @@
-import { _ } from './lib';
 
 // all svgs
 import arrowRight from '../../icons/arrow-right.svg';
@@ -194,10 +193,11 @@ const $icons = {
 
 // handles creating icon generators
 const $generator = document.createElement('div');
-_.each($icons, (svg, key) => {
+for (const key in $icons) {
+	const svg = $icons[key];	
 	$generator.innerHTML = svg;
 	$icons[key] = $generator.firstChild.cloneNode(true);
-});
+}
 
 /** creates an SVG icon from a key
  * @param {string} key the icon to create an instance of
@@ -214,6 +214,10 @@ function findIcon(key, defaultTo) {
 	return get(id);
 };
 
+function trim(str) {
+	return (str || '').toString().replace(/(^ *| *$)/g, '');
+}
+
 export default { 
 	arrowRight: () => get('arrowRight'),
 	close: () => get('closeIcon'),
@@ -223,7 +227,7 @@ export default {
 	icon: findIcon,
 
 	avatar: id => {
-		id = _.trim(id).replace(/[^0-9a-zA-Z]/g, '');
+		id = trim(id).replace(/[^0-9a-zA-Z]/g, '');
 		id += 'Avatar';
 		return findIcon(id, 'defaultAvatarIcon')
 	},

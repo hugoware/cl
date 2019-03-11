@@ -7,10 +7,10 @@ import LessonTemplate from './template';
 import $date from '../../utils/date';
 import $yaml from 'js-yaml';
 
+
 // map of all lessons to load
 const $lessons = { };
-let $lessonIds;
-
+let $sequence;
 
 // handles initializing the lesson repo
 async function init() {
@@ -19,10 +19,10 @@ async function init() {
 	// read in the content
 	const path = $path.resolveResource('lessons.yml');
 	const content = $fsx.readFileSync(path);
-	$lessonIds = $yaml.load(content.toString());
+	$sequence = $yaml.load(content.toString());
 
 	// load each lesson type
-	_.each($lessonIds, (lessons, category) => {
+	_.each($sequence, (lessons, category) => {
 		const group = $lessons[category] = { };
 		_.each(lessons, lesson => {
 			group[lesson] = new LessonTemplate(lesson);
@@ -32,110 +32,110 @@ async function init() {
 }
 
 
-/** syncs a user profile and lesson progress */
-async function syncLessonAccess(userId) {
+// returns a list of available lessons
+export function getLessonState(userId, lessons, allowUnlock) {
 
 	// check if this needs to be created again or not
-	const query = { ownerId: userId, lesson: { $exists: true } };
-	const lessons = await $database.projects.find(query)
-		.project({ _id: 0, id: 1, type: 1, lesson: 1, done: 1, active: 1 })
-		.toArray();
+	const result = { lessons };
 
-	// check each of the categories
+	// process each category
 	for (const category in $lessons)
-		await evaluateLessonCategory(userId, category, lessons);
+		evaluateLessonCategory(category, result, allowUnlock);
 
+	return result;
 }
 
-// checks a category if it should unlock or activate any lessons
-async function evaluateLessonCategory(userId, category, existing) {
-	const all = _.filter(existing, { type: category });
-	const ids = _.map(all, 'lesson');
-	const roadmap = _.difference($lessonIds[category], ids);
-	const current = _.filter(all, 'active');
-	const unfinished = _.reject(current, 'done');
-	const hasUnfinished = _.some(unfinished);
+// try to determine what they have access to
+function evaluateLessonCategory(category, result, allowUnlock) {
+	const source = $lessons[category];
+	
+	// limit the categories
+	const lessons = _.filter(result.lessons, { type: category });
+	const allowed = _($sequence[category])
+		.filter(id => !_.find(lessons, { lesson: id }))
+		.value();
 
-	// check for a pending, non-active lesson
-	let pending = _.reject(all, 'active');
-	let hasPending = _.some(pending);
-
-	// if all of the lessons have been finished, then 
-	// we need to activate whatever pending lesson is
-	// found (if any)
-	if (!hasUnfinished) {
-
-		// if there's an existing pending lesson, just activate it
-		if (hasPending) {
-			await activateLesson(pending);
-		}
-		// since there's not a pending lesson then we
-		// need to grab the next one on the list
-		// and create it now
-		else {
-			const lesson = getNext(category, roadmap);
-			await createLesson(userId, lesson, { active: true });
-		}
-		
+	// if all lessons are 'completed' then the next lesson
+	// should be displayed as a placeholder
+	const active = _.reject(lessons, { completed: true });
+	const noLessons = !_.some(lessons);
+	const noActive = !_.some(active);
+	if ((noActive && allowUnlock) || noLessons) {
+		const start = allowed.shift();
+		const lesson = source[start];
+		const placeholder = createLessonPlaceholder(lesson);
+		result.lessons.push(placeholder);
 	}
-	// there's unfinished lessons - we just need to
-	// check and see if they have a queued up lesson
-	else if (!hasPending) {
-		const lesson = getNext(category, roadmap);
-		await createLesson(userId, lesson);
+
+	// when allowing unlocks, also show the next lesson
+	if (!!allowUnlock) {
+
+		// display a preview item
+		const preview = allowed.shift();
+		if (preview) {
+			const lesson = source[preview];
+			const placeholder = createLessonPlaceholder(lesson);
+			placeholder.isPreview = true;
+			result.lessons.push(placeholder);
+		}
+	}
+
+	// save to the list
+	result[`is${_.capitalize(category)}Done`] = _.some(allowed);
+}
+
+// creates a placeholder for a lesson
+function createLessonPlaceholder(lesson) {
+	const { name, type, description } = lesson;
+	return {
+		name, type, description,
+		lesson: lesson.id,
+		sequence: +new Date,
 	}
 }
 
 
 // creates a new record placeholder for a lesson
-async function createLesson(userId, lesson, active) {
-	
-	// no lesson was provided
-	if (!lesson) return;
+export function initLesson(lesson, userId) {
+	return new Promise(async resolve => {
 
-	// create the ID to use first
-	const id = await $database.generateId($database.projects, 6);
-	
-	// get the default information
-	const { name, type, description } = lesson;
-	await $database.projects.insertOne({
-		id, name, type, description,
-		lesson: lesson.id,
-		ownerId: userId,
-		done: false,
-		active: !!active,
-		modifiedAt: $date.now(),
-
-		// order of creation to make sure
-		// that the listing order stays the same
-		sequence: +new Date
-	});
-
-}
-
-
-// toggles a lesson as active
-async function activateLesson(lessons) {
-	lessons = _.isArray(lessons) ? lessons : [lessons];
-	for (let i = 0; i < lessons.length; i++) {
-		const lesson = lessons[i];
-		const { id } = lesson;
-		await $database.projects.update({ id }, {
-			$set: { active: true }
+		// no lesson was provided
+		if (!lesson) 
+			return resolve({ success: false });
+		
+		// create the ID to use first
+		const id = await $database.generateId($database.projects, 6);
+		
+		// get the default information
+		const { name, type, description } = lesson;
+		await $database.projects.insertOne({
+			id, name, type, description,
+			lesson: lesson.id,
+			ownerId: userId,
+			modifiedAt: $date.now(),
+			
+			// order of creation to make sure
+			// that the listing order stays the same
+			sequence: +new Date
 		});
-	}
+		
+		resolve({ id, success: true });
+	});
 }
 
 
-// gets the next lesson in a category
-function getNext(category, roadmap) {
-	const next = roadmap.shift();
-	if (!next) return;
-	return $lessons[category][next];
+/** finds a lesson by its id */
+export function getLessonById(id) {
+	for (const category in $lessons) {
+		const lesson = $lessons[category][id];
+		if (lesson) return lesson;
+	}
 }
 
 
 export default {
 	init,
-	syncLessonAccess
+	getLessonById,
+	getLessonState,
+	initLesson
 };
