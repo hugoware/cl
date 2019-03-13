@@ -44,21 +44,21 @@ var webAttributesLesson = function () {
       "lesson": [{
         "mode": "overlay",
         "title": "Using HTML Elements",
-        "content": "In this lesson we're going look at how to use [define html_attribute]s. [define html_attribute]s are a way to provide additional information about the behavior of an HTML element.\n"
+        "content": "In this lesson we're going look at how to use [define html_attribute s].\n\n[define html_attribute s] are a way to provide additional information about the behavior of an [define html_element].\n"
       }, {
-        "content": "To help explain the concept of an [define html_attribute], let's walk through a simple scenario. \n\nLet's say we wanted to add an image to our webpage. The correct HTML element to use in this case is the `img` element.\n\n[snippet image_no_attr]\n"
+        "content": "To help explain the concept of an [define html_attribute], let's walk through a simple scenario. \n\nLet's say we wanted to add an image to our webpage. The correct HTML element to use in this case is the `img` element.\n\n[snippet img_no_attr]\n"
       }, {
-        "content": "But what's interesting about the `img` [define html_element Element] is that it's a [define void_element], meaning it can't have any content.\n\nNot only that, all of the [define html_element s] we have written so far only support text. In this case we want to display an image file.\n\n[snippet image_no_attr]\n"
+        "content": "But what's interesting about the `img` [define html_element Element] is that it's a [define void_element], meaning it can't have any content.\n\nNot only that, all of the [define html_element s] we have written so far only support text. In this case we want to display an image file.\n\n[snippet img_no_attr]\n"
       }, {
-        "content": "This is where we can use an [define html_attribute] to provide additional information so our `img` Element knows what to do.\n\n[snippet html_attribute]\n\nLet's walk through each of the parts that make up an [define html_attribute].\n"
+        "content": "This is where we can use an [define html_attribute] to provide additional information so our `img` Element knows what to do.\n\n[snippet img_with_attr]\n\nLet's walk through each of the parts that make up an [define html_attribute].\n"
       }, {
-        "content": "To start, and a [define html_attribute] needs a name. This name will change depending on the purpose, much like the name of an HTML element changes the behavior in the browser.\n\n[snippet html_attribute highlight:5,3]\n\nIn this case, the `img` Element uses the `src` attribute as the location for where the image is found.\n"
+        "content": "To start, and a [define html_attribute] needs a name. This name will change depending on the purpose, much like the name of an HTML element changes the behavior in the browser.\n\n[snippet img_with_attr highlight:5,3]\n\nIn this case, the `img` Element uses the `src` attribute as the location for where the image is found.\n"
       }, {
-        "content": "The next character that is shown is an `||=|equal sign||`.\n\n[snippet html_attribute highlight:8,1]\n\nA good way to remember this is that the name is equal to the value, which comes at the end of the [define html_attribute].\n"
+        "content": "The next character that is shown is an `||=|equal sign||`.\n\n[snippet img_with_attr highlight:8,1]\n\nA good way to remember this is that the name is equal to the value, which comes at the end of the [define html_attribute].\n"
       }, {
-        "content": "The value of the [define html_attribute] is placed between two _double quotes_, one at the beginning of the value and the other at the end. \n\n[snippet html_attribute highlight:9,1|18,1]\n\nYou're also allowed to use _single quotes_, however an HTML most developers only use _double quotes_.\n"
+        "content": "The value of the [define html_attribute] is placed between two _double quotes_, one at the beginning of the value and the other at the end. \n\n[snippet img_with_attr highlight:9,1|18,1]\n\nYou're also allowed to use _single quotes_, however most developers only use _double quotes_ when writing [define html].\n"
       }, {
-        "content": "Everything between the two _double quotes_ is the value. In this case, the **value** is telling the Image element where it can find the image file.\n\n[snippet html_attribute highlight:9,1|18,1]\n\n_We haven't discussed how paths work in HTML just yet, but we'll be discussing them in the next lesson._\n"
+        "content": "Everything between the two _double quotes_ is the value. In this case, the **value** is telling the Image element where it can find the image file.\n\n[snippet img_with_attr highlight:10,8]\n\n_We haven't discussed how paths work in [define html] just yet, but we'll be discussing them in the next lesson._\n"
       }, {
         "mode": "popup",
         "content": "Lets give this a try so you can See it in action.\n"
@@ -144,6 +144,12 @@ var webAttributesLesson = function () {
           "id": "void_element",
           "name": "Void Element",
           "define": "An HTML Element that does not have a separate closing tag. Also does not contain content.    \n"
+        },
+        "html": {
+          "id": "html",
+          "name": "HTML",
+          "aka": "Hyper Text Markup Language",
+          "define": "This is the full definition value"
         },
         "file_browser": {
           "id": "file_browser",

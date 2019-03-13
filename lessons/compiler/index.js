@@ -80,6 +80,10 @@ _.each(['utils', 'lib'], key => {
 	$fsx.copySync(source, target);
 });
 
+const controllerSource = $path.resolve(`./lessons/compiler/controllers`);
+const controllerTarget = $path.resolve(`${tempDir}/controllers`);
+$fsx.copySync(controllerSource, controllerTarget);
+
 // include all scripts
 manifest.defs = { };
 const scripts = [];

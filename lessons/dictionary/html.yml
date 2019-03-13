@@ -41,3 +41,8 @@
   aka: Link
   define: |
     An HTML Element that's used to link from one page to another resource using a URL.
+
+- id: search_engine
+  name: Search Engine
+  define: |
+    Search Engines will index web pages to make them easier to find by using **robots**. This includes reading the HTML on a web page to better understand the page content.

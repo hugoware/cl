@@ -3,52 +3,56 @@
     mode: overlay
     title: Headings and Paragraphs
     content: |
-      In this lesson we're going to start working with the different types of blocks use for formatting text an HTML.
+      In this lesson we're going to start working with different types of [define html_element Elements] used for formatting text in [define html].
 
-      There are many tag types and HTML, but in this lesson we will be focusing on the heading tags and the paragraph tag.
+      There are many [define html_element Elements] you can use to display text in [define html], but in this lesson we will be focusing on the **heading** and **paragraph** [define html_element Elements].
 
 
 - slide:
     content: |
-      Each of these tags have a different purpose in HTML.
-
-      The heading tags are used to start new sections of content on your page. By default, they're displayed in a large and bold font.
+      The **heading** [define html_element Elements] are used when starting new sections of content on a page. By default, headings are displayed in a large and bold font.
 
       [snippet heading_example]
 
 
 - slide:
     content: |
-      Paragraphs, on the other hand, are used to display sections of text. Most of the time, paragraphs have additional margin space around them.
+      Paragraphs are used to display sections of text. [define web_browser s] will generally display **paragraphs** with additional spacing around them.
 
-      Generally speaking, you'll have many more paragraphs then you will have headings on a page.
+      In most cases, you'll have more **paragraphs** than **headings** on a page.
 
 
 - slide:
     content: |
-      We'll learn more about it in later lessons, but headings actually have a specific purpose. Headings are used by screen readers help blind people read your webpage, as well as help search engines understand the structure of your page.
+      Headings are also used by screen readers to help blind people identify sections of your web page, as well as help [define search_engine s] understand the structure of the content.
 
-      Headings should not be used to simply change the size or boldness of a font. In later lessons, we will be learning the correct way to change the style of a webpage.
+      You should not use **headings** as a means to change the size or boldness of a font. In later lessons we will learn the correct way to change the style of text on your web page.
 
 
 - slide:
     mode: popup
-    content: |
-      Let's get started adding some headings to our page.
+    controller: waitForIndex
 
-      Open the file named `index.html` in the File Browser on the left side of the screen.
+    content: |
+      Let's get started adding some headings to a page.
+
+      Open the file named `index.html` in the [define file_browser] on the left side of the screen.
 
 
 - slide:
+    controller: insertH1
     content: |
       At this point you're already familiar with writing [define html_element s]. Let's start by adding a `h1` [define html_element element] to this page.
 
+      [snippet heading_example]
+
 
 - slide:
+    controller: insertAllHeadings
     content: |
       Okay, let's do that again for the remaining heading [define html_element elements].
 
-      There are six in total heading elements in [define html]. Try and added the remaining five heading elements.
+      There are six in total heading elements in [define html]. Add the remaining five heading elements to this page.
 
 - slide:
     title: Using Paragraphs
@@ -61,6 +65,7 @@
 
 - slide:
     mode: popup
+    controller: insertParagraph
     content: |
       Add a new paragraph to this page by using the `p` tag.
 
@@ -71,6 +76,14 @@
       In each of the examples we've done so far all of the text has been on one line. However, HTML allows you to put text on multiple lines.
 
 - slide:
+    mode: popup
+    controller: insertMultilineParagraph
+    content: |
+      Let's try that again, but this time we're going to add a new line in the `p` [define html_element Element]
+
+      [snippet paragraph_multiline]
+
+- slide:
     content: |
       You'll notice that even though the text is on multiple lines, the [define codelab_html_preview] displays all of the text on a single line.
 
@@ -78,7 +91,7 @@
 
 - slide:
     content: |
-      This creates a problem were trying to add a new line to our webpage. However, like with most things in HTML, we can use an [define html_element] to solve this problem.
+      This creates a problem when we're trying to add a new line to a web page. However, like with most things in HTML, we can use an [define html_element] to solve this problem.
 
 - slide:
     title: Using Line Breaks
@@ -94,13 +107,13 @@
 
       [snippet linebreak highlight:4,2]
 
-      Unlike the other HTML elements you've added, this [define html_element element] does not have a separate closing tag.
+      Unlike the other HTML elements you've added, this [define html_element Element] does not have a separate closing tag.
 
 - slide:
     content: |
       This is called a [define void_element], meaning that it does not have any content.
 
-      You'll also hear these referred to as _self-closing_ tag or _empty tags_.
+      You'll also hear these referred to as _self-closing_ tags or _empty tags_.
 
 - slide:
     mode: popup
@@ -108,10 +121,34 @@
       There are many other [define html_element s] that are also [define void_element s]. You'll learn more about these and later lessons.
 
 - slide:
+    controller: insertLineBreak
     content: |
-      Let's go back and add a `br` [define html_element element] between the two lines in the previous example.
+      Let's add a `br` [define html_element element] between the two lines from the previous example.
 
       [snippet insert_linebreak]
+
+- slide:
+    content: |
+      It's important to learn what different [define html_element Elements] can do in [define html], but it's also important to learn which [define html_element s] to avoid.
+
+      For example, the `br` [define html_element Element] is **not the recommended** way to insert new lines in an [define html] file.
+
+- slide:
+    content: |
+      In fact, the recommended way is to use multiple paragraphs. It might seem like we're adding extra code, but this actually becomes immensely useful when we start using [define css] to apply visual styles to web pages.
+
+- slide:
+    controller: replaceLineBreak
+    content: |
+      Let's go back and replace the `br` [define html_element Element] by using two separate `p` [define html_element Elements].
+
+      [snippet replace_linebreak]
+
+- slide:
+    content: |
+      Although it doesn't seem like much of a change, it's recommended to use `p` [define html_element Elements] instead of a `br` [define html_element Element].
+
+      This'll all make much more sense when we introduce [define css] in later lessons!
 
 - slide:
     mode: overlay
@@ -149,6 +186,16 @@
 
     explain: |
       By default, the heading elements are displayed using bold letters. However, there are much better ways to apply visual styles to your web page.
+
+    choices:
+      - "False"
+      - "True"
+
+- question:
+    title: The `br` [define html_element Element] is the recommended way to separate lines of text
+
+    explain: |
+      Using the `br` [define html_element Element] will separate text onto multple lines, but it's actually recommended to use `p` [define html_element Elements] instead.
 
     choices:
       - "False"
