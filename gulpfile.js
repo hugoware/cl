@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const $fsx = require('fs-extra');
  
 const $gulp = require('gulp');
 const $source = require('vinyl-source-stream');
@@ -6,6 +7,7 @@ const $buffer = require('vinyl-buffer');
 const $sequence = require('run-sequence');
 const $utils = require('gulp-util');
 const $run = require('gulp-run-command').default;
+const $yaml = require('js-yaml');
 
   // ui/styles
 const $sass = require('gulp-sass');
@@ -151,6 +153,9 @@ _.each($config.scripts.client, source => {
 			.pipe(output);
 	}
 
+	if (PRODUCTION)
+		return bundle().end();
+
 	// create the standard build task
 	$gulp.task(action, bundle);
 
@@ -193,9 +198,8 @@ _.each($config.scripts.workers, source => {
     global: true,
     'fs': 'global:LFS'
   });
-  
-  // compiles the worker script
-  $gulp.task(action, () => {
+
+  const exec = () => {
     const output = $gulp.dest(`dist/resources/public`);
 
     return transformer
@@ -204,7 +208,13 @@ _.each($config.scripts.workers, source => {
       .pipe($source(`${source}.js`))
       .pipe($buffer())
       .pipe(output);
-  });
+  };
+
+  if (PRODUCTION)
+  	return exec().end();
+  
+  // compiles the worker script
+  $gulp.task(action, exec);
 
   // setup a watch
   $gulp.task(watch, () => {
@@ -237,9 +247,8 @@ _.each($config.scripts.viewers, source => {
   //   'fs': 'global:LFS'
   // });
   
-  // compiles the viewer script
-  $gulp.task(action, () => {
-    const output = $gulp.dest(`dist/resources/public`);
+  const exec = () => {
+  	const output = $gulp.dest(`dist/resources/public`);
 
     return transformer
       .bundle()
@@ -247,7 +256,13 @@ _.each($config.scripts.viewers, source => {
       .pipe($source(`${source}.js`))
       .pipe($buffer())
       .pipe(output);
-  });
+  };
+
+  if (PRODUCTION)
+  	return exec().end();
+  
+  // compiles the viewer script
+  $gulp.task(action, exec);
 
   // setup a watch
   $gulp.task(watch, () => {
@@ -326,6 +341,29 @@ $gulp.task('compile-styles', () => {
   return input.pipe(config).pipe(output);
 });
 
+
+// copy all lesson files
+$gulp.task('copy-lessons', () => {
+	$fsx.ensureDirSync('.lessons');
+	const lessons = $yaml.load($fsx.readFileSync('./lessons/index.yml').toString());
+
+	for (const category in lessons)
+		for (const id of lessons[category]) {
+
+			// copy the file
+			$fsx.copySync(`./lessons/output/${id}`, `.lessons/${id}`);
+
+			// compress
+			$pump([
+				$gulp.src(`.lessons/${id}/*.js`),
+				$uglify({ compress: true }),
+				$gulp.dest(`.lessons/${id}`)
+			], () => console.log(`copied ${id}...`));
+		}
+});
+
+
+
 // compiles all server scripts
 $gulp.task('compile-server-scripts', () => {
   const config = $babel({
@@ -389,8 +427,12 @@ $gulp.task('deploy', done => $sequence(
 	'production-build',
   [ 'clean-svg-icons', 'copy-views', 'compile-styles', 'copy-resources', 'compile-viewer-scripts', 'compile-worker-scripts', 'compile-client-scripts', 'compile-server-scripts' ],
   'compress',
+  'exit',
   done 
 ));
+
+// clean up
+$gulp.task('exit', process.exit);
 
 // general development
 $gulp.task('dev', ['compile', 'watch']);

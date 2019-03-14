@@ -18,6 +18,7 @@
     "compile": "./node_modules/.bin/gulp compile",
     "compile-lesson": "babel-node ./lessons/compiler/index.js",
     "deploy": "./scripts/deploy.sh",
+    "deploy-lessons": "./scripts/deploy-lessons.sh",
     "marker": "electron ./lessons/marker/index.html",
     "create-lesson": "./scripts/new-lesson.sh",
     "test": "./node_modules/.bin/jasmine --config=./jasmine.json",

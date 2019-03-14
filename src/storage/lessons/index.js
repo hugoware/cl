@@ -1,12 +1,13 @@
 import _ from 'lodash';
 
+import { watch } from 'fs';
 import $fsx from 'fs-extra';
+import $config from '../../config';
 import $path from '../../path';
 import $database from '../database';
 import LessonTemplate from './template';
 import $date from '../../utils/date';
 import $yaml from 'js-yaml';
-
 
 // map of all lessons to load
 const $lessons = { };
@@ -15,22 +16,37 @@ let $sequence;
 // handles initializing the lesson repo
 async function init() {
 	console.log('[lessons] parsing lesson data');
+	reload();
+
+	// watch for lesson changes
+	watch($config.lessonsDirectory, () => {
+		console.log('[lessons] reloading lesson data');
+		reload();
+	});
+
+}
+
+
+// handles reloading content
+function reload() {
+	// remove existing
+	for (let k in $lessons)
+		delete $lessons[k];
 
 	// read in the content
-	const path = $path.resolveResource('lessons.yml');
+	const location = `${$config.lessonsDirectory}/index.yml`;
+	const path = $path.resolveRoot(location);
 	const content = $fsx.readFileSync(path);
 	$sequence = $yaml.load(content.toString());
 
 	// load each lesson type
 	_.each($sequence, (lessons, category) => {
-		const group = $lessons[category] = { };
+		const group = $lessons[category] = {};
 		_.each(lessons, lesson => {
 			group[lesson] = new LessonTemplate(lesson);
 		});
 	});
-
 }
-
 
 // returns a list of available lessons
 export function getLessonState(userId, lessons, allowUnlock) {
