@@ -146,6 +146,13 @@
 		.title {
 			font-size: 22px;
 		}
+
+		.snippet {
+			padding: 7px 5px;
+			.ace_editor {
+				font-size: 20px !important;
+			}
+		}
 	}
 
 	.container {

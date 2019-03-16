@@ -4,6 +4,7 @@ import $path from 'path';
 import $fsx from 'fs-extra';
 import $yml from 'js-yaml';
 import $uglify from 'uglify-js';
+import $browserify from 'browserify';
 import { exec as $exec } from 'child_process';
 import * as $babel from 'babel-core';
 import $dictionary from './dictionary';
@@ -173,14 +174,23 @@ $fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
   type: manifest.type,
 }));
 
-// compile this
-$exec(
-	`./node_modules/.bin/browserify .compile/index.js -o ${dist}/index.js`,
-	// './node_modules/.bin/browserify ./.compile/index.js -o./.compile/index.d.js',
-	err => {
-		if (err) console.log(err);
-		else console.log(`generated: ${dist}`);
-	});
+
+$browserify('.compile/index.js')
+  .transform('babelify', {
+  	presets: ['es2015'],
+  	plugins: [ 'transform-class-properties', 'async-to-promises' ],
+  })
+  .bundle()
+  .pipe($fsx.createWriteStream(`${dist}/index.js`));
+
+// // compile this
+// $exec(
+// 	`./node_modules/.bin/browserify  --presets=es2015 --plugins=transform-class-properties,async-to-promises -o `,
+// 	// './node_modules/.bin/browserify ./.compile/index.js -o./.compile/index.d.js',
+// 	err => {
+// 		if (err) console.log(err);
+// 		else console.log(`generated: ${dist}`);
+// 	});
   
 // notify this is done
 // console.log('generated', JSON.stringify(manifest, null, 2));

@@ -19,7 +19,9 @@ async function init() {
 	reload();
 
 	// watch for lesson changes
-	watch($config.lessonsDirectory, () => {
+	const path = $path.resolveRoot($config.lessonManifest);
+	console.log('watching', path);
+	watch(path, () => {
 		console.log('[lessons] reloading lesson data');
 		reload();
 	});
@@ -34,7 +36,7 @@ function reload() {
 		delete $lessons[k];
 
 	// read in the content
-	const location = `${$config.lessonsDirectory}/index.yml`;
+	const location = `${$config.lessonManifest}/index.yml`;
 	const path = $path.resolveRoot(location);
 	const content = $fsx.readFileSync(path);
 	$sequence = $yaml.load(content.toString());

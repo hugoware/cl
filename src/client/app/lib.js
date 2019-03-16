@@ -12,7 +12,6 @@ import lib__mousetrap from 'mousetrap';
 import lib__socket_io from 'socket.io-client';
 import lib__dexie from 'dexie';
 import lib__brace from 'brace';
-import * as lib__validator from 'code-validator';
 
 // exports
 export const _ = lib__lodash;
@@ -32,9 +31,6 @@ export const Mousetrap = lib__mousetrap;
 export const SocketIO = lib__socket_io;
 export const Dexie = lib__dexie;
 export const Brace = lib__brace;
-export const CodeValidator = lib__validator.CodeValidator;
-export const CssValidator = lib__validator.CssValidator;
-export const HtmlValidator = lib__validator.HtmlValidator;
 
 // brace editor support
 import 'brace/ext/language_tools';
@@ -64,31 +60,5 @@ export default {
 	Mousetrap,
 	SocketIO,
 	Dexie,
-	CodeValidator,
-	CssValidator,
-	HtmlValidator,
 	Brace
 }
-
-// // export defaults
-// export default {
-// 	_: null,
-// 	JQuery: null,
-// 	$: null,
-// 	Promise: null,
-// 	Bluebird: null,
-// 	Showdown: null,
-// 	Cheerio: null,
-// 	XmlChecker: null,
-// 	Howl: null,
-// 	measureText: null,
-// 	RandomColor: null,
-// 	url: null,
-// 	Mousetrap: null,
-// 	SocketIO: null,
-// 	Dexie: null,
-// 	CodeValidator: null,
-// 	CssValidator: null,
-// 	HtmlValidator: null,
-// 	Brace: null,
-// }

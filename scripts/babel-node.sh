@@ -1,0 +1,1 @@
+./node_modules/.bin/babel-node --presets=es2015 --plugins=transform-class-properties,async-to-promises "$@"

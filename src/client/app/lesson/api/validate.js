@@ -1,5 +1,7 @@
 
-import { CodeValidator, CssValidator, HtmlValidator } from '../../lib';
+import CodeValidator from '../../validation/code-validator';
+import HtmlValidator from '../../validation/html-validator';
+import CssValidator from '../../validation/css-validator';
 
 export default class ValidationAPI {
 

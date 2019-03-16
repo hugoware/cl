@@ -36,6 +36,9 @@ class Config {
 	/** @returns {number} the database port number */
 	get databasePort() { return this.data.database_port; }
 
+	/** @returns {string} the directory the list of lessons is found */
+	get lessonManifest() { return this.data.lesson_manifest; }
+
 	/** @returns {string} the directory where all lesson files are found */
 	get lessonDirectory() { return this.data.lesson_directory; }
 

@@ -2,7 +2,7 @@
     mode: overlay
     title: Using HTML Elements
     content: |
-      In this lesson we're going look at how to use [define html_attribute s].
+      In this lesson we're going to look at how to use [define html_attribute s].
 
       [define html_attribute s] are a way to provide additional information about the behavior of an [define html_element].
 
@@ -10,21 +10,21 @@
     content: |
       To help explain the concept of an [define html_attribute], let's walk through a simple scenario. 
 
-      Let's say we wanted to add an image to our webpage. The correct HTML element to use in this case is the `img` element.
+      Let's say we wanted to add an image to a web page. The correct [define html_element] to use in this case is the `img` Element.
 
       [snippet img_no_attr]
 
 - slide:
     content: |
-      But what's interesting about the `img` [define html_element Element] is that it's a [define void_element], meaning it can't have any content.
+      However, what's interesting about the `img` [define html_element Element] is that it's a [define void_element], meaning it can't have any content.
 
-      Not only that, all of the [define html_element s] we have written so far only support text. In this case we want to display an image file.
+      All of the [define html_element s] you have written so far have only allowed you to use text. In this case, we want to display an image file.
 
       [snippet img_no_attr]
 
 - slide:
     content: |
-      This is where we can use an [define html_attribute] to provide additional information so our `img` Element knows what to do.
+      This is where you can use an [define html_attribute] to provide additional information so our `img` [define html_element Element] knows what to do.
 
       [snippet img_with_attr]
 
@@ -32,11 +32,11 @@
 
 - slide:
     content: |
-      To start, and a [define html_attribute] needs a name. This name will change depending on the purpose, much like the name of an HTML element changes the behavior in the browser.
+      To start, an [define html_attribute] needs a name. This name will change depending on the purpose, much like the name of an [define html_element] changes its behavior in the [define web_browser].
 
       [snippet img_with_attr highlight:5,3]
 
-      In this case, the `img` Element uses the `src` attribute as the location for where the image is found.
+      In this case, the `img` [define html_element Element] uses the `src` [define html_attribute Attribute] to tell the [define web_browser] where to find the image file to display.
 
 
 - slide:
@@ -57,70 +57,79 @@
 
 - slide:
     content: |
-      Everything between the two _double quotes_ is the value. In this case, the **value** is telling the Image element where it can find the image file.
+      Everything between the two _double quotes_ is the value. In this case, the value tells the `img` [define html_element Element] the location of the image file to display.
 
       [snippet img_with_attr highlight:10,8]
 
-      _We haven't discussed how paths work in [define html] just yet, but we'll be discussing them in the next lesson._
+      _The "value" everything between the in this example is called a [define url]. We haven't discussed how [define url s] work just yet, but we'll be covering them very soon._
 
 - slide:
     mode: popup
     content: |
-      Lets give this a try so you can See it in action.
+      Trying something out on our own is a much better way to understand a new concept. Let's give this a try so you can see it in action.
 
 - slide:
+    controller: waitForIndex
     content: |
       Open the `index.html` file in the [define file_browser]
 
 - slide:
+    controller: srcExample
     content: |
-      Follow along with the instructions to add an image to this page. Use the `src` [define html_attribute attribute] to tell the `img` [define html_element element] where to find the image file to display.
+      Follow along with the instructions to add an image to this page. Use the `src` [define html_attribute Attribute] to tell the `img` [define html_element Element] where to find the image file to display.
+
+- slide:
+    start: true
+    flags: +OPEN_FILE
+    content: |
+      When the web page was read by the [define web_browser] it found the `img` [define html_element Element] and ||read|red|| the `src` [define html_attribute Attribute]. This gave the [define web_browser] the location of the file to display on the page.
+
+- slide:
+    controller: multipleImages
+    content: |
+      Let's try that again! Choose any two images that you like and then add them to the page. Use an `img` [define html_element Element] as you did with the previous example.
+
+      Look at the [define file_browser] for a list of images that are available in this project.
 
 - slide:
     content: |
-      Let's try that again, but this time add the other two images in the project to the page. This should include `/cat.png` and `/fish.png`
-
-- slide:
-    content: |
-      Great! You can see that an [define html_attribute] allows us to provide additional instructions for [define html_element elements] to change its behavior.
+      Great! You can see that an [define html_attribute] allows us to provide additional instructions for [define html_element Elements] to change its behavior.
 
 - slide:
     mode: overlay
     content: |
-      Let's look at another [define html_attribute] that's frequently used when creating web pages.
+      HTML elements are not limited to just one single attribute. You're actually able to use many HTML attributes at a time.
 
 - slide:
     content: |
-      This is the `a` [define html_element Element], which is used for creating [define hyperlink s]. You've seen [define hyperlink s] on most websites since you click on them to navigate between pages.
+      You can see in the example below, it's possible to add more than one [define html_attribute] to an [define html_element Element] so long as there's a space placed between each one.
 
-      [snippet anchor_example]
-
-- slide:
-    content: |
-      You can see that this [define html_attribute] is written exactly the same as the previous example.
-
-      [snippet anchor_example highlight:3,24]
-
-      There is a name, an `=`, a pair of double quotes, and a value. In this case, the value is the address of the webpage to navigate to.
+      [snippet multiple_attrs]
 
 - slide:
     content: |
-      However, unlike the `img` [define html_element Element], we are able to set the content of this [define html_element Element] using text.
+      In fact, it's not at all uncommon to have an [define html_element] that has multiple [define html_attribute Attributes].
 
-      [snippet anchor_example highlight:31,16]
-
-      When you're writing a [define hyperlink] for a webpage, this text is typically used to describe where the link will navigate the visitor to.
+      [snippet multiple_attrs]
 
 - slide:
-    slide: popup
+    mode: popup
     content: |
-      Let's give it a try! Follow along with instructions to add a link to the other page in this project.
+      Let's try adding more [define html_attribute Attributes] to the images that you just added to the page.
 
-      [snippet other_page]
+- slide:
+    start: true
+    controller: multipleAttributes
+    content: |
+      Try adding a `width` and `height` [define html_attribute Attribute] to each of the images on the page.
+
+      Use the code example below as a reference if you are unsure on what to type. Trying something out
+
+      [snippet width_height]
 
 - slide:
     content: |
-      Looks like that worked! Click on the [define hyperlink] on this page to return back to the `index.html` page.
+      Let's try out a few more examples that use attributes.
 
 - slide:
     slide: overlay

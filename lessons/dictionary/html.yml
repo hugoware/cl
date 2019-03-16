@@ -46,3 +46,9 @@
   name: Search Engine
   define: |
     Search Engines will index web pages to make them easier to find by using **robots**. This includes reading the HTML on a web page to better understand the page content.
+
+- id: url
+  name: URL
+  aka: Universal Resource Locator
+  define: |
+    A location of a resource, such as a webpage or a file, somewhere on the Internet
