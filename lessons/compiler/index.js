@@ -181,16 +181,9 @@ $browserify('.compile/index.js')
   	plugins: [ 'transform-class-properties', 'async-to-promises' ],
   })
   .bundle()
-  .pipe($fsx.createWriteStream(`${dist}/index.js`));
+  .on('end', () => console.log(`generated: ${dist}`))
+  .pipe($fsx.createWriteStream(`${dist}/index.js`))
 
-// // compile this
-// $exec(
-// 	`./node_modules/.bin/browserify  --presets=es2015 --plugins=transform-class-properties,async-to-promises -o `,
-// 	// './node_modules/.bin/browserify ./.compile/index.js -o./.compile/index.d.js',
-// 	err => {
-// 		if (err) console.log(err);
-// 		else console.log(`generated: ${dist}`);
-// 	});
   
 // notify this is done
 // console.log('generated', JSON.stringify(manifest, null, 2));
