@@ -38,7 +38,8 @@ const id = _.snakeCase(source);
 const tempDir = $path.resolve('./.compile');
 const root = $path.resolve(`./lessons/content/${source}`);
 const scriptDirectory = `${root}/scripts`;
-const dist = $path.resolve(`./lessons/output/${id}`);
+const dist = $path.resolve(`./.lessons/${id}`);
+const deployTo = $path.resolve(`./lessons/output/${id}`);
 const snippets = $path.resolve(`${root}/snippets`);
 const manifest = readYml('manifest.yml');
 // const zones = readYml('zones.yml');
@@ -181,7 +182,10 @@ $browserify('.compile/index.js')
   	plugins: [ 'transform-class-properties', 'async-to-promises' ],
   })
   .bundle()
-  .on('end', () => console.log(`generated: ${dist}`))
+  .on('end', () => {
+		console.log(`generated: ${deployTo}`);
+		$fsx.moveSync(dist, deployTo);
+  })
   .pipe($fsx.createWriteStream(`${dist}/index.js`))
 
   

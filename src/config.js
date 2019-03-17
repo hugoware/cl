@@ -35,6 +35,12 @@ class Config {
 
 	/** @returns {number} the database port number */
 	get databasePort() { return this.data.database_port; }
+	
+	/** @returns {number} the username to connect to the database */
+	get databaseUsername() { return this.data.database_username; }
+	
+	/** @returns {number} the password to connect to the database */
+	get databasePassword() { return this.data.database_password; }
 
 	/** @returns {string} the directory the list of lessons is found */
 	get lessonManifest() { return this.data.lesson_manifest; }

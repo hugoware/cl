@@ -198,14 +198,22 @@ var webPageStructureLesson = function () {
     // resets any required information between slides
 
   }, {
-    key: "clear",
-    value: function clear() {
+    key: "clearTimers",
+    value: function clearTimers() {
       _lib._.each(this._delays, function (cancel) {
         return cancel();
       });
       _lib._.each(this._intervals, function (cancel) {
         return cancel();
       });
+    }
+
+    // resets any required information between slides
+
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.clearTimers();
     }
 
     // sets a timed delay

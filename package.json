@@ -6,7 +6,7 @@
   "scripts": {
     "prod": "npm run prod-database & npm run prod-server",
     "prod-server": "nodemon ./dist/index.js --watch ./dist/version --delay 1.5 ./config.yml",
-    "prod-database": "mongod --dbpath ./data/codelab",
+    "prod-database": "mongod --dbpath ./data/codelab --bind_ip_all",
     "dev": "npm run database & npm run dev-server & npm run watch",
     "dev-server": "nodemon ./dist/index.js --watch dist/ --ignore 'dist/workbench.js' --ignore 'dist/resources/' --ignore 'dist/views/' --delay 1.5 -- ./config.dev.yml",
     "dev-lessons": "./scripts/babel-node.sh -- ./scripts/compile-lesson.js",

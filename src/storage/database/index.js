@@ -12,9 +12,14 @@ class Database {
 	// handles loading the database
 	async init() {
 
+		// check for authentication
+		let auth = '';
+		if ($config.isProduction)
+			auth = `${$config.databaseUsername}:${$config.databasePassword}@`;
+
 		// connect to the database
 		const port = $config.databasePort || DEFAULT_PORT;
-		const url = `mongodb://localhost:${port}/codelab`;
+		const url = `mongodb://${auth}localhost:${port}/codelab`;
 		this.connection = await $client.connect(url);
 
 		// setup collections
