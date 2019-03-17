@@ -77,9 +77,14 @@ class $LESSON_TYPE$Lesson {
 
 
 	// resets any required information between slides
-	clear() {
+	clearTimers() {
 		_.each(this._delays, cancel => cancel());
 		_.each(this._intervals, cancel => cancel());
+	}
+
+	// resets any required information between slides
+	clear() {
+		this.clearTimers();
 	}
 
 	// sets a timed delay

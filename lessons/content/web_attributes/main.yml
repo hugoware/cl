@@ -24,7 +24,7 @@
 
 - slide:
     content: |
-      This is where you can use an [define html_attribute] to provide additional information so our `img` [define html_element Element] knows what to do.
+      This is where you can use an [define html_attribute] to provide additional information so the `img` [define html_element Element] knows what to do.
 
       [snippet img_with_attr]
 
@@ -32,7 +32,7 @@
 
 - slide:
     content: |
-      To start, an [define html_attribute] needs a name. This name will change depending on the purpose, much like the name of an [define html_element] changes its behavior in the [define web_browser].
+      To start, an [define html_attribute] needs a **name**. This name will change depending on the purpose, much like the name of an [define html_element] changes its behavior in the [define web_browser].
 
       [snippet img_with_attr highlight:5,3]
 
@@ -61,7 +61,7 @@
 
       [snippet img_with_attr highlight:10,8]
 
-      _The "value" everything between the in this example is called a [define url]. We haven't discussed how [define url s] work just yet, but we'll be covering them very soon._
+      The _"value"_ in this example is called a [define url]. We haven't discussed what a [define url] is just yet, but we'll cover them in later lessons.
 
 - slide:
     mode: popup
@@ -79,21 +79,17 @@
       Follow along with the instructions to add an image to this page. Use the `src` [define html_attribute Attribute] to tell the `img` [define html_element Element] where to find the image file to display.
 
 - slide:
-    start: true
-    flags: +OPEN_FILE
     content: |
       When the web page was read by the [define web_browser] it found the `img` [define html_element Element] and ||read|red|| the `src` [define html_attribute Attribute]. This gave the [define web_browser] the location of the file to display on the page.
 
 - slide:
     controller: multipleImages
     content: |
-      Let's try that again! Choose any two images that you like and then add them to the page. Use an `img` [define html_element Element] as you did with the previous example.
-
-      Look at the [define file_browser] for a list of images that are available in this project.
+      Let's try that again! Choose two more images that you'd like to add to the page. Use `img` [define html_element Elements] and the `src` [define html_attribute Attribute] like you did in the previous example.
 
 - slide:
     content: |
-      Great! You can see that an [define html_attribute] allows us to provide additional instructions for [define html_element Elements] to change its behavior.
+      You can see that an [define html_attribute] allows us to provide additional instructions for [define html_element Elements] to change its behavior.
 
 - slide:
     mode: overlay
@@ -118,32 +114,94 @@
       Let's try adding more [define html_attribute Attributes] to the images that you just added to the page.
 
 - slide:
-    start: true
     controller: multipleAttributes
     content: |
       Try adding a `width` and `height` [define html_attribute Attribute] to each of the images on the page.
 
-      Use the code example below as a reference if you are unsure on what to type. Trying something out
+      Use the code example below as a reference if you are unsure on what to type.
 
       [snippet width_height]
 
 - slide:
+    mode: overlay
     content: |
-      Let's try out a few more examples that use attributes.
+      Let's look at one more type of [define html_attribute Attribute] you will see from time to time.
 
 - slide:
-    slide: overlay
+    content: |
+      This is called a [define boolean_attribute]. Unlike the previous examples this [define html_attribute] does not have a value that's explicitly set.
+      
+      [snippet boolean_attribute_simple]
+
+- slide:
+    content: |
+      For a [define boolean_attribute], simply having it added to an [define html_element Element] is enough for it to be treated as if it were _true_.
+      
+      [snippet boolean_attribute_simple]
+
+      In this example, the `button` [define html_element Element] is being set to a _"disabled"_ state, meaning it can't be pressed.
+
+
+- slide:
+    content: |
+      From time to time you may see an [define html_attribute] that has a *value* that's the same as its *name*. In many cases, this is another example of a [define boolean_attribute].
+
+      [snippet boolean_attribute_expanded]
+
+      While it's generally not required, sometimes developers will choose to write [define boolean_attribute s] like this.
+
+- slide:
+    mode: popup
+    content: |
+      Lets give this a try using the `input` [define html_element Element].
+
+- slide:
+    controller: inputEntry
+    content: |
+      Start by adding an input element to the page.
+
+      [snippet input_element_basic]      
+
+- slide:
+    content: |
+      The `input` [define html_element Element] has many [define html_attribute Attributes] that can dramatically change its behavior. By default though, an `input` [define html_element Element] will display as a simple text field.
+
+- slide:
+    controller: previewInput
+    content: |
+      Click on the `input` [define html_element Element] in the [define preview_area] and then type in some letters.
+
+      You should be able to make changes to the text field without any issue.
+
+- slide:
+    content: |
+      Now let's use an [define html_attribute] to prevent a user from making changes to this `input` [define html_element Element].
+
+- slide:
+    controller: inputReadOnly
+    content: |
+      Follow along with the instructions to include a `readonly` [define html_attribute Attribute]. If you pay close attention you'll notice when the `input` [define html_element Element] becomes disabled.
+
+- slide:
+    controller: previewBlocked
+    content: |
+      Now the `input` [define html_element Element] is disabled and won't allow users to make changes.
+
+      Click on the `input` [define html_element Element] in the [define preview_area] and try to enter something into the text field.
+
+- slide:
     content: |
       Great work! Let's review what we've learned in this lesson.
 
 - question:
-    title: What is the name the the `highlighted` section of code?
+    mode: overlay
+    title: What is the name of the `highlighted` section of code?
 
     content: |
-      [snippet anchor_example highlight:3,20]
+      [snippet anchor_example highlight:5,14]
 
     explain: |
-      And [define html_attribute] is an additional instruction that can be added to an [define html_element] to change its behavior. An [define html_attribute] is placed within and [define html_element Elements] opening tag.
+      An [define html_attribute] is an additional instruction that can be added to an [define html_element] to change its behavior. An [define html_attribute] is placed within and [define html_element Elements] opening tag.
 
     choices:
       - HTML Attribute
@@ -165,7 +223,7 @@
     title: What is the highlighted part of this [define html_attribute]?
 
     content: |
-      [snippet anchor_example highlight:3,4]
+      [snippet anchor_example highlight:5,3]
 
     explain: |
       An [define html_attribute] always starts with its name. The **name** decides the behavior of the [define html_attribute].
@@ -180,7 +238,7 @@
     title: What is the highlighted part of this [define html_attribute]?
 
     content: |
-      [snippet anchor_example highlight:9,13]
+      [snippet anchor_example highlight:10,8]
 
     explain: |
       The characters between the _double quotes_ are the value of the [define html_attribute]. The **value** of an [define html_attribute] can greatly change the behavior of an [define html_element].

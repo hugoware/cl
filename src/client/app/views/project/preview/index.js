@@ -53,6 +53,7 @@ export default class Preview extends Component {
 	// includes an event to watch for
 	addEvent(event) {
 		this.events.push(event);
+		this.attachEvent(event);
 	}
 
 	// remove all events
@@ -124,11 +125,18 @@ export default class Preview extends Component {
 		setTimeout(this.syncEvents, 100);
 	}
 
+	attachEvent(event) {
+		const root = $(this.handler.output);
+		const args = [ event.event ];
+		if (event.selector) args.push(event.selector);
+		args.push(event.action);
+		root.on(...args);
+	}
+
 	// attaches any events to the preview area
 	syncEvents = () => {
-		const root = $(this.handler.output);
 		_.each(this.events, event => {
-			root.on(event.event, event.selector, event.action);
+			this.attachEvent(event);	
 		});
 	}
 

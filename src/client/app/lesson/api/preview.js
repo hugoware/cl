@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { broadcast } from '../../events';
 import $state from '../../state'
 
-export default class FileAPI {
+export default class PreviewAPI {
 
 	constructor(lesson) {
 		this.lesson = lesson;

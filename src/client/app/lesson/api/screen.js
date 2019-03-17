@@ -30,6 +30,12 @@ export default class ScreenAPI {
 		// highlights
 		this.highlight.clear = () => $focus.clearHighlights();
 		this.marker.clear = () => $focus.clearMarkers();
+		
+		this.highlight.previewArea = (selector, options) =>
+			this.highlight(`::preview ${selector}`, options);
+
+		this.marker.previewArea = (selector, options) =>
+			this.marker(`::preview ${selector}`, options);
 
 	}
 

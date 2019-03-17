@@ -52,3 +52,10 @@
   aka: Universal Resource Locator
   define: |
     A location of a resource, such as a webpage or a file, somewhere on the Internet
+
+- id: boolean_attribute
+  name: Boolean Attribute
+  define: |
+    An HTML Attribute that's generally written without a value. When interpreted by the browser, it treats the attribute as if it is *true*. For example, in the snippet below the `readonly` Attribute prevents users from editing the input field.
+
+    `<input readonly />`

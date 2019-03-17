@@ -68,10 +68,13 @@ export default function waitForValidation(obj, config) {
 		state,
 		validation,
 
-		onEnter() {
+		onEnter(...args) {
 			this.editor.focus();
 			this.progress.block();
 			this.file.allowEdit({ path: config.file });
+
+			if (config.onEnter)
+				config.onEnter.apply(this, args);
 		},
 
 		onInit() {

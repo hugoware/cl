@@ -306,6 +306,7 @@ export default class HtmlValidator extends SyntaxValidator {
 	// finds a collection of attributes
 	attrs(...args) {
 		const options = this.captureOptions();
+		delete this.__previous__value__;
 
 		// check for the type
 		let map;
@@ -317,14 +318,17 @@ export default class HtmlValidator extends SyntaxValidator {
 
 		// get each name to check
 		const names = _.map(map, item => item[0]);
+		const ignore = [ ];
 
 		// determine how to proceed
 		for (let i = 0, total = map.length; i < total; i++) {
-
+			
 			// must be in order
 			let sequence;
+			let sequenceIndex;
 			if (options.matchAttributeSequence) {
-				sequence = [].concat(map[i]);
+				sequence = _.flatten(map[i]);
+				sequenceIndex = i;
 			}
 			// find anything that matches
 			else {
@@ -332,7 +336,8 @@ export default class HtmlValidator extends SyntaxValidator {
 					const check = map[j][0];
 					if (!check) continue;
 					if (check === this.remainingCode.substr(0, check.length)) {
-						sequence = [].concat(map[j]);
+						sequence = _.flatten(map[j]);
+						sequenceIndex = j;
 						break;
 					}
 				}
@@ -342,6 +347,10 @@ export default class HtmlValidator extends SyntaxValidator {
 			// attribute
 			if (!sequence)
 				return this.setError('attrs', `Expected attribute name: ${oxfordize(names, 'or')}`);
+
+			// check if already added
+			if (ignore.indexOf(sequenceIndex) > -1)
+				return this.setError('attrs', `Duplicate attribute found: \`${name}\``, this.index, this.index + name.length);
 
 			// since this worked, now check for it
 			const name = sequence.shift();
@@ -373,25 +382,29 @@ export default class HtmlValidator extends SyntaxValidator {
 				if (!match)
 					return this.setError('value', sequence[1]);
 
+				// capture the match
+				this.__previous__value__ = match;
+
 				// since it worked, we need to move forward
 				this.index += match[0].length;
 			}
 			// checking for a value
 			else this.value.apply(this, sequence);
 
-			// checking the ending quote
-			if (this.error) return this;
-			this.closeQuote();
-			
-			// check for a validator
+			// check for a validator since it's only
+			// valid after the value has been found
 			if (this.error) return this;
 			if (validator) {
-				const error = validator(name, name, this.__previous__value__);
+				const error = validator(this.__previous__value__, this);
 				delete this.__previous__value__;
 				if (error)
 					return this.setError('attr', error);
 			}
-			
+
+			// checking the ending quote
+			if (this.error) return this;
+			this.closeQuote();
+
 			// if not the last value, expect a single space
 			if (i < (total - 1))
 				this._s;
@@ -400,7 +413,7 @@ export default class HtmlValidator extends SyntaxValidator {
 			// sequence from the group
 			const index = names.indexOf(name);
 			names.splice(index, 1);
-			sequence.splice(0, sequence.length);
+			ignore.push(sequenceIndex);
 
 		}
 
@@ -435,6 +448,7 @@ export default class HtmlValidator extends SyntaxValidator {
 
 SyntaxValidator.createNext(HtmlValidator, 'attr', {
 	literal: true,
+	matchCase: true,
 	name: 'attribute name'
 });
 

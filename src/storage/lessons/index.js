@@ -80,9 +80,15 @@ function evaluateLessonCategory(category, result, allowUnlock) {
 	const noActive = !_.some(active);
 	if ((noActive && allowUnlock) || noLessons) {
 		const start = allowed.shift();
+
+		// create the next lesson
 		const lesson = source[start];
-		const placeholder = createLessonPlaceholder(lesson);
-		result.lessons.push(placeholder);
+		if (lesson) {	
+			const placeholder = createLessonPlaceholder(lesson);
+			result.lessons.push(placeholder);
+		}
+		// no more lessons to unlock
+		else markAtEnd(result, category);
 	}
 
 	// when allowing unlocks, also show the next lesson
@@ -92,14 +98,20 @@ function evaluateLessonCategory(category, result, allowUnlock) {
 		const preview = allowed.shift();
 		if (preview) {
 			const lesson = source[preview];
-			const placeholder = createLessonPlaceholder(lesson);
-			placeholder.isPreview = true;
-			result.lessons.push(placeholder);
+			if (lesson) {	
+				const placeholder = createLessonPlaceholder(lesson);
+				placeholder.isPreview = true;
+				result.lessons.push(placeholder);
+			}
+			// no more lessons to unlock
+			else markAtEnd(result, category);
 		}
 	}
+}
 
-	// save to the list
-	result[`is${_.capitalize(category)}Done`] = _.some(allowed);
+// mark as finished
+function markAtEnd(result, category) {
+	// result[`is${_.capitalize(category)}Done`] = true;
 }
 
 // creates a placeholder for a lesson

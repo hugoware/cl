@@ -1,10 +1,12 @@
-
+import { _ } from './lib';
 
 export const first_src = test => test
 	.__w$
 	.open('img')
 	._s
-	.attr({ src: '/cat.png' })
+	.attrs([
+		[ 'src', '/cat.png']
+	])
 	._s$
 	.close('/>')
 	._n
@@ -31,15 +33,15 @@ export const multiple_images = test => {
 	for (let i = 0; i < 2; i++) {
 		test.open('img')
 			._s
-			.attrs('src', ...allowed, validate)
+			.attrs([
+				[ 'src', ...allowed, validate ]
+			])
 			._s$
 			.close('/>')
 			._n
 			.__w$;
 	}
 
-	// don't allow anymore
-	test.eof();
 }
 
 
@@ -49,6 +51,13 @@ export const multiple_images_with_sizes = test => {
 	const validate = match => {
 		const index = allowed.indexOf(match);
 		allowed.splice(index, 1);
+	};
+
+	// dont' get too big
+	const validateNumberSize = num => {
+		const value = 0 | num;
+		if (isNaN(value) || value < 100 || value > 200)
+			return `Expected a number between 100 and 200`;
 	};
 
 	// check for the remaining two
@@ -67,9 +76,12 @@ export const multiple_images_with_sizes = test => {
 		test.open('img')
 			._s
 			.attrs([
-				[ 'height', /^[0-9]{3,4}/, 'Expected number' ],
-				[ 'width', /^[0-9]{3,4}/, 'Expected number' ],
-				[ 'src', '/cat.jpg', 'dog.jpg' ]
+				[ 'height', /^[0-9]{3}/, 'Expected number between 100 and 200', validateNumberSize ],
+				[ 'width', /^[0-9]{3}/, 'Expected number between 100 and 200', validateNumberSize ],
+				[ 'src', allowed, value => {
+					const index = _.indexOf(allowed, value);
+					allowed.splice(index, 1);
+				}]
 			])
 			._s$
 			.close('/>')
@@ -77,6 +89,24 @@ export const multiple_images_with_sizes = test => {
 			.__w$;
 	}
 
-	// don't allow anymore
-	test.eof();
 }
+
+export const input_only = test => test
+	.merge(multiple_images_with_sizes)
+	.open('input')
+	._s
+	.close('/>')
+	.__w$;
+
+export const input_readonly = test => test
+	.merge(multiple_images_with_sizes)
+	.open('input')
+	._s
+	.attrs([
+		[ 'readonly' ]
+	])
+	._s
+	.close('/>');
+
+
+

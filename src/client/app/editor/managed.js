@@ -162,10 +162,9 @@ export default class ManagedEditor {
 
 		// just in case
 		const samePosition = end.row === start.row && end.column === start.column;
-		const invalidPosition = end.row <= start.row || (end.row === start.row && end.column < start.column);
-		
+
 		// replace the posiiton, if needed
-		if (samePosition || invalidPosition) {
+		if (samePosition) { 
 			end.row = start.row;
 			end.column = start.column + 1;
 		}
@@ -764,14 +763,24 @@ function getPosition(managed, position, {
 		range.end = toPosition(doc, position.range.end, offsetEnd);
 	}
 
-	if (_.isNumber(position.start)) {
+	const hasStart = _.isNumber(position.start);
+	if (hasStart) {
 		if (isLine) range.start = { row: position.start - 1, column: 0 };
 		else range.start = toPosition(doc, position.start, offsetStart);
 	}
 	
-	if (_.isNumber(position.end)) {
+	const hasEnd = _.isNumber(position.end);
+	if (hasEnd) {
 		if (isLine) range.end = { row: position.end, column: 0 };
 		else range.end = toPosition(doc, position.end, offsetEnd);
+	}
+
+	// if this has the start and end, check that the indexes
+	// are valid, and if not, fix it
+	if (hasEnd && position.end <= position.start) {
+		const tmp = position.end;
+		position.end = position.start;
+		position.start = tmp;
 	}
 
 	return range;

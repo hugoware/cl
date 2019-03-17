@@ -17,7 +17,7 @@ waitForValidation(module.exports, {
 	onValid() {
 		this.progress.allow();
 		this.assistant.say({
-			message: `Check it out! The \`img\` [define html_element Element] is now displayed as an actual image in the [define preview_area].`
+			message: `Wow! This web page is starting to look like a zoo!`
 		});
 	}
 

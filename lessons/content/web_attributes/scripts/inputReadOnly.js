@@ -2,23 +2,22 @@
 import { _ } from './lib';
 import waitForValidation from './controllers/waitForValidation';
 import {
-	first_src,
+	input_readonly,
 } from './validation';
 
 
 waitForValidation(module.exports, {
 
 	file: '/index.html',
-	cursor: 6,
 
 	validation: test => test
-		.merge(first_src)
+		.merge(input_readonly)
 		.eof(),
 
 	onValid() {
 		this.progress.allow();
 		this.assistant.say({
-			message: `Check it out! The \`img\` [define html_element Element] is now displayed as an actual image in the [define preview_area].`
+			message: `Great! The \`readonly\` [define html_attribute Attribute] has changed the behavior of the \`input\` [define html_element Element]!`
 		});
 	}
 

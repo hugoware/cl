@@ -27,6 +27,13 @@ export function evaluateSelector(selector) {
 	// be used for actions
 	const commands = {};
 
+	// check if this is for the iframe preview
+	let isPreviewArea;
+	selector = selector.replace(/^:{2}preview/, () => {
+		isPreviewArea = true;
+		return '';
+	});
+
 	// remove all special rules that I added
 	selector = selector.replace(/:{2}[^\(]+\([^\)]*\)( |$)*/g, match => {
 		match = match.substr(2);
@@ -62,10 +69,13 @@ export function evaluateSelector(selector) {
 		commands,
 		hasSelector,
 		hasCommands,
+		isPreviewArea,
 
 		// gives back the element
 		getInstance() {
-			return $(selector)
+			return isPreviewArea
+				? getPreview().contents().find(selector)
+				: $(selector);
 		},
 
 		// update the position of the selected element
@@ -73,7 +83,7 @@ export function evaluateSelector(selector) {
 
 			// find the element, if needed
 			if (hasSelector) {
-				instance.element = $(selector);
+				instance.element = instance.getInstance();
 				instance.isMissing = !instance.element[0];
 			}
 			else {
@@ -87,7 +97,18 @@ export function evaluateSelector(selector) {
 
 			// get the bounding info
 			const bounds = instance.element[0].getBoundingClientRect();
-			const { left, right, top, bottom } = bounds;
+			let { left, right, top, bottom } = bounds;
+
+			// adjust for preview
+			if (isPreviewArea) {
+				const offset = getPreview().offset();
+				left += offset.left;
+				right += offset.left;
+				top += offset.top;
+				bottom += offset.top;
+			}
+
+			// calculate the size
 			const width = right - left;
 			const height = bottom - top;
 
@@ -105,6 +126,10 @@ export function evaluateSelector(selector) {
 	// prepare for use
 	instance.refresh();
 	return instance;
+}
+
+function getPreview() {
+	return $('iframe.output');
 }
 
 // makes sure the argument is an array
