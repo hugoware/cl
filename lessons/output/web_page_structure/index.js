@@ -48,7 +48,7 @@ var webPageStructureLesson = function () {
       }, {
         "content": "So far we've used [define html] to create headings and paragraphs by adding [define html_element s] to our page.\n\nEven though we could see what we typed in the [define codelab_html_preview], the [define html] was not written properly.\n"
       }, {
-        "content": "For the most part, [define web_browser s] are very forgiving when showing [define html]. Most [define web_browser s] will attempt to display the [define html] even if there are errors in the code.\n\nHowever, as smart as [define web_browser s] might be, it's always a good idea to write your code in a way that it makes it easier for the browser to understand the intent of your [define web_page l].\n"
+        "content": "For the most part, [define web_browser s] are very forgiving when displaying [define html]. Most [define web_browser s] will attempt to display the [define html] even if there are errors in the code.\n\nHowever, as smart as [define web_browser s] might be, it's always a good idea to write your code in a way that it makes it easier for the browser to understand the intent of your [define web_page l].\n"
       }, {
         "content": "In this lesson, we will be creating a default web page structure so we can understand the purpose of each [define html_element].\n\nIf you don't remember everything, don't worry. Most modern code editors will fill in the default HTML page structure when creating a new file.\n"
       }, {

@@ -22,6 +22,7 @@ async function init() {
 	const path = $path.resolveRoot($config.lessonManifest);
 	console.log('watching', path);
 	watch(path, () => {
+		if (!_.endsWith(path, '/index.yml')) return;
 		console.log('[lessons] reloading lesson data');
 		reload();
 	});

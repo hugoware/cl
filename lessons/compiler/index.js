@@ -184,7 +184,7 @@ $browserify('.compile/index.js')
   .bundle()
   .on('end', () => {
 		console.log(`generated: ${deployTo}`);
-		$fsx.moveSync(dist, deployTo);
+		$fsx.moveSync(dist, deployTo, { overwrite: true });
   })
   .pipe($fsx.createWriteStream(`${dist}/index.js`))
 

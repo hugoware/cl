@@ -7,5 +7,6 @@ deploy/
 .publish/
 .data/
 .audio/
+.lessons/
 .compile/
 npm-debug.log
