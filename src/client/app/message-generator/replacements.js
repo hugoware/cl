@@ -24,6 +24,7 @@ export default {
 	'`img`': 'image',
 	'`src`': 'source',
 	'`a`': 'anchor',
+	'`href`': 'h ref',
 	'`\\\``': 'back tick',
 	'JavaScript': 'Java Script'
 };

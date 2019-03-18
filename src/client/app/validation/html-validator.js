@@ -12,6 +12,12 @@ export default class HtmlValidator extends SyntaxValidator {
 		this.stack = [ ];
 	}
 
+	/** sets a limit for the next match */
+	limit(count) {
+		this.options.limit = count;
+		return this;
+	}
+
 	/** activates the trim option */
 	get singleLine() {
 		this.options.singleLine = true;
@@ -303,6 +309,11 @@ export default class HtmlValidator extends SyntaxValidator {
 		return this;
 	}
 
+	// matching for a single attribute
+	attr(...args) {
+		return this.limit(1).attrs(...args);
+	}
+
 	// finds a collection of attributes
 	attrs(...args) {
 		const options = this.captureOptions();
@@ -319,6 +330,11 @@ export default class HtmlValidator extends SyntaxValidator {
 		// get each name to check
 		const names = _.map(map, item => item[0]);
 		const ignore = [ ];
+
+		// check for a limit - otherwise
+		// just use a number that won't be reached
+		if (isNaN(options.limit))
+			options.limit = 999;
 
 		// determine how to proceed
 		for (let i = 0, total = map.length; i < total; i++) {
@@ -414,6 +430,10 @@ export default class HtmlValidator extends SyntaxValidator {
 			const index = names.indexOf(name);
 			names.splice(index, 1);
 			ignore.push(sequenceIndex);
+
+			// check if we have enough matches
+			if (i >= options.limit)
+				break;
 
 		}
 

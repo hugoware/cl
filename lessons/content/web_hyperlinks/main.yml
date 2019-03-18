@@ -1,0 +1,172 @@
+- slide:
+    mode: overlay
+    title: Using Hyperlinks
+    content: |
+      In this lesson we're going to discuss using [define hyperlink s] to connect web pages together.
+
+      [define hyperlink s] are more commonly known as simply *links*. These are the clickable areas on a web page that are used to navigate from one location to another on the [define internet].
+
+- slide:
+    content: |
+      This is an example of a [define hyperlink]. Despite the fact that it's typically called a "hyperlink", the correct [define html_element] to use is the `a` [define html_element Element].
+
+      [snippet base_link]
+
+      This can be confusing for new developers since there's also a `link` [define html_element Element] that does something completely different.
+
+
+- slide:
+    content: |
+      For now, just remember that a [define hyperlink] is created using the `a` [define html_element Element].
+
+      [snippet base_link]
+
+- slide:
+    content: |
+      Something worth noting is that an `a` [define html_element Element] allows for content, which means that whatever is inside of this [define html_element Element] is the clickable area for the [define hyperlink link].
+
+      [snippet base_link highlight:27,13]
+
+      In this case, the content is the text _"Go to website"_. By default, a web browser would display this using blue text that is underlined.
+
+- slide:
+    content: |
+      Other [define html_element s] can also be used inside of a [define hyperlink]. Another common [define html_element] used is the `img` [define html_element Element].
+
+      [snippet img_link highlight:27,22]
+
+      Using an `img` [define html_element] would create a clickable image on the web page.
+
+- slide:
+    content: |
+      The next thing to look at is the [define html_attribute Attribute] used with a [define hyperlink]. The `href` [define html_attribute Attribute] is the _hypertext reference_. 
+
+      [snippet base_link highlight:3,20]
+
+      This decides the location of where the browser should navigate to when the [define hyperlink] is clicked. In this example, the location the browser will navigate to is the file `website.html`
+
+- slide:
+    content: |
+      The value inside of the `href` [define html_attribute Attribute] is called a [define url]. This stands for *Uniform Resource Locator*, which is a very technical way of saying _a location of a file or website on the [define internet]_.
+
+      [snippet base_link highlight:3,20]
+
+      In later lessons we will learn a lot more about [define url s] and how they work. For now, just remember that it's essentially an address for something on the [define internet]
+
+- slide:
+    mode: popup
+    content: |
+      Let's try connecting a few web pages together using the `a` [define html_element Element].
+
+- slide:
+    waitForFile: /index.html
+    content: |
+      There are a few different pages already added to this project. Let's start by making changes to `index.html`
+
+      Open the `index.html` file by [define double_click double clicking] on it.
+
+- slide:
+    content: |
+      The hyperlink isn't clickable yet
+
+- slide:
+    controller: hrefToAnimals
+    content: |
+      This page already has an `a` [define html_element Element]. Let's update it to include a `href` [define html_attribute Attribute] that will navigate to `||/animals.html|animals.html||`.
+
+- slide:
+    content: |
+      Now we can navigate to the page, but we can't navigate back. Let's create a back button
+
+- slide:
+    waitForFile: /animals.html
+    content: |
+      Open the `animals.html` file to edit
+
+- slide:
+    controller: hrefToIndex
+    content: |
+      Now we can navigate to the page, but we can't navigate back. Let's create a [define hyperlink] to return to the starting page.
+
+- slide:
+    # watch navigation
+    content: |
+      Navigate to the index and back to the animals to make sure the links work as expected
+
+- slide:
+    # highlight url
+    content: |
+      You'll notice the url in the preview area is updating
+
+- slide:
+    # wait for tab
+    content: |
+      Let's add some more hyperlinks - Click on the `animals.html` tab so we can 
+
+- slide:
+    flags: +OPEN_FILE
+    start: true
+    controller: addSingleImageLink
+    content: |
+      Let's add an image link this time. Follow along with the instructions to add a link to one of the animal facts
+
+
+- slide:
+    # wait for tab
+    content: |
+      Navigate to each page
+
+- slide:
+    flags: +OPEN_FILE
+    start: true
+    controller: addAllImageLinks
+    content: |
+      Let's add an image link this time. Follow along with the instructions to add a link to one of the animal facts
+
+- slide:
+    content: |
+      This page already has an `a` 
+
+# - question:
+#     count: 4   # optional question count
+#     title: Main title
+#     
+#     hint: Optional helpful hint
+
+#     explain: |
+#       After the question is finished hint
+
+#     choices:
+#       - correct answer
+#       - wrong answer 1
+#       - wrong answer 2
+#       - wrong answer 3
+
+# - slide:
+#     flags: +OPEN_FILE
+#     emote: happy
+#     controller: name
+#     mode: popup
+#     content: |
+#       Way to go! You've finished this lesson!
+#       
+#       [snippet name highlight:0,5|20,5]
+#       
+#       [snippet html preview:50%]
+#       
+#       [image default.png]
+#       
+#       [image full.jpg frame]
+#       
+#       Inline replacement is done using ||does|duz||
+#       
+#       A normal [define html] is like this
+#       
+#       A lowercase [define html l] is like this
+#       
+#       A plural [define html p] is like this
+#       A plural [define html s] or like this
+#       
+#       Can be combined as [define html lp] [define html ls]
+#       
+#       

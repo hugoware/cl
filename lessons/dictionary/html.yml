@@ -59,3 +59,9 @@
     An HTML Attribute that's generally written without a value. When interpreted by the browser, it treats the attribute as if it is *true*. For example, in the snippet below the `readonly` Attribute prevents users from editing the input field.
 
     `<input readonly />`
+
+- id: root_relative_url
+  name: Root Relative URL
+  define: |
+    A URL that resolves to the root of a website. These urls start `/`
+    

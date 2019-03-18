@@ -4,6 +4,7 @@ web:
   - web_headings
   - web_attributes
   - web_page_structure
+  - web_hyperlinks
 
 code:
   - console_1
