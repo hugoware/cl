@@ -550,9 +550,6 @@ var webPageStructureLesson = function () {
       "name": "Page Structure",
       "type": "web",
       "description": "Understanding the core structure of a web page",
-      "init": {
-        "files": ["/index.html"]
-      },
       "lesson": [{
         "mode": "overlay",
         "title": "Understanding Page Structure",
@@ -632,7 +629,6 @@ var webPageStructureLesson = function () {
       }, {
         "content": "A `meta` [define html_element Element] is sometimes used by [define search_engine s] to collect extra information about your page. There are many `meta` [define html_element Elements] that you can use to describe the content of your page.\n"
       }, {
-        "start": true,
         "controller": "addMeta",
         "content": "Let's add a `meta` [define html_element Element] that describes the author of the page. Follow along with that example to create a new `meta` [define html_element Element].\n"
       }, {
@@ -647,7 +643,7 @@ var webPageStructureLesson = function () {
         "content": "This project already has a premade [define css] [define css_stylesheet] called `style.css`. The rules in the file will change the background color of the page, as well as the font type and font color.\n"
       }, {
         "controller": "addLink",
-        "content": "Follow the instructions to add a `link` [define html_element Element] to the `/style.css` file.\n\nDon't forget that this [define html_element Element] should be placed inside of the `head` [define html_element Element].\n"
+        "content": "Follow the instructions to add a `link` [define html_element Element] to the `style.css` file.\n\nDon't forget that this [define html_element Element] should be placed inside of the `head` [define html_element Element].\n"
       }, {
         "emote": "happy",
         "content": "Great work! By using a `doctype`, and the `html`, `head`, and `body` [define html_element Elements], we've now created a correctly structured web page!\n\nFollowing best practices and writing good code is a great way become a better developer.\n"

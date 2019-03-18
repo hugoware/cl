@@ -186,7 +186,6 @@
       A `meta` [define html_element Element] is sometimes used by [define search_engine s] to collect extra information about your page. There are many `meta` [define html_element Elements] that you can use to describe the content of your page.
 
 - slide:
-    start: true
     controller: addMeta
     content: |
       Let's add a `meta` [define html_element Element] that describes the author of the page. Follow along with that example to create a new `meta` [define html_element Element].
@@ -216,7 +215,7 @@
 - slide:
     controller: addLink
     content: |
-      Follow the instructions to add a `link` [define html_element Element] to the `/style.css` file.
+      Follow the instructions to add a `link` [define html_element Element] to the `style.css` file.
 
       Don't forget that this [define html_element Element] should be placed inside of the `head` [define html_element Element].
 
