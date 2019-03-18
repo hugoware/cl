@@ -2,5 +2,9 @@ name: Page Structure
 type: web
 description: Understanding the core structure of a web page
 
+init:
+  files:
+    - /index.html
+
 lesson:
   - main

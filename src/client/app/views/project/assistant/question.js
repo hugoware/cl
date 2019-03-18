@@ -124,6 +124,9 @@ export default class Question extends Component {
 		const delay = _.some(title.speak) && _.some(message.speak) ? MESSAGE_TITLE_DELAY : 0;
 		const speak = _.flatten([ title.speak, delay, message.speak ]);
 		$speech.speak(speak);
+		
+		// use neutral
+		this.assistant.onSetEmotion();
 
 		// empty out old answers
 		this.ui.choices.empty();

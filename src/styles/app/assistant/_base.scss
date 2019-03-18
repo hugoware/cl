@@ -94,9 +94,13 @@
 			background: rgba($snippet-highlight-color, 0.2);
 			box-shadow: inset 0 0 0 1px rgba($snippet-highlight-color, 0.9);
 			padding: 0 1px;
-			margin: 0 0 0 -3px;
+			margin: 0 0 0 -2px;
 			position: absolute;
 			z-index: 0;
+
+			&.is-full-line {
+				margin: 0;
+			}
 		}
 
 		.snippet-preview {

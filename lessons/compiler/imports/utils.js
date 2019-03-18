@@ -1,5 +1,58 @@
 import { _ } from './lib';
 
+
+// finds a trimmed code boundary
+export function findBoundary(code, options) {
+	let index;
+
+	// literal match
+	if (_.isString(options.expression))
+		index = code.indexOf(options.expression);
+
+	// regular expression
+	else if (_.isRegExp(options.expression)) {
+		const match = options.expression.exec(code);
+		index = match ? match.index : -1;
+	}
+	// just a number
+	else if (_.isNumber(options.index)) {
+		index = options.index;
+	}
+
+	// trim at the first newline
+	let trim = 0;
+	if (!!options.trimToLine) {
+		
+		while (true) {
+			const char = code.charAt(index - ++trim);
+
+			// whitespace, we can continue
+			if (char === ' ' || char === '\t')
+				continue;
+
+			// if it's a newline, apply it
+			if (char !== '\n')
+				trim = 0;
+
+			break;
+		}
+
+	}
+
+	// // check for trimming
+	// if (options.trim !== false) {
+	// 	const range = _.trimEnd(code.substr(0, index));
+	// 	index = range.length;
+	// }
+	
+	if (isNaN(index))
+		console.warn('find boundary: NaN');
+
+	// return the final value
+	return Math.max(-1, index - trim);
+}
+
+
 // creates a text/numeric only representation for a strin
 export function simplify(str) {
 	return (str || '').toString().replace(/[^a-z0-9]/gi, '').toLowerCase();

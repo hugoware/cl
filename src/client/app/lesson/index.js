@@ -302,6 +302,9 @@ function initialize(lesson) {
 
 		if (!slide.title)
 			slide.title = prior.title;
+			
+		if (!!slide.clearTitle || !!slide.hideTitle || !!slide.noTitle)
+			slide.title = null;
 
 		if ('title' in slide)
 			prior.title = slide.title;
@@ -358,6 +361,7 @@ function setActiveSlide(lesson, slide) {
 
 	// let other systems know the slide changed
 	broadcast('slide-changed', slide);
+	lesson.instance.activateSlide(slide);
 	lesson.instance.invoke('enter');
 	setTimeout(() => {
 

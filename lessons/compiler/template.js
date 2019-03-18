@@ -1,4 +1,5 @@
 import { _ } from './lib';
+import waitForFile from './controllers/waitForFile';
 
 // import controllers
 $IMPORTS$
@@ -58,6 +59,20 @@ class $LESSON_TYPE$Lesson {
 	// returns the current slide
 	get slide() {
 		return this.lesson.slide;
+	}
+
+	// helpers
+	activateSlide(slide) {
+
+		// check for common controller scenarios
+		if (slide.waitForFile) {
+			slide.controller = _.uniqueId(`controller_`);
+			const controller = this.controllers[slide.controller] = { };
+			waitForFile(controller, {
+				file: slide.waitForFile
+			});
+		}
+
 	}
 
 	// executes an action if available

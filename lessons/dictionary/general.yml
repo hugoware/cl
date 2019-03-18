@@ -136,3 +136,11 @@
   plural: Single Quotes
   define: |
     True/false value
+
+- id: code_editor
+  name: Code Editor
+  aka: IDE
+  define: |
+    A program that is designed to make it easier to modify code files by including features such as syntax highlighting, auto-complete, and code validation.
+
+    

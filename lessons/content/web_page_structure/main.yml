@@ -6,13 +6,13 @@
 
 - slide:
     content: |
-      So far we've used [define html] to create headings and paragraphs by adding [define html_element s] to our page.
+      So far we've used [define html] to create headings and paragraphs by adding [define html_element s] to a page.
 
-      Even though we could see what we typed in the [define codelab_html_preview], the [define html] was not written properly.
+      Even though we could see what we typed in the [define codelab_html_preview], the code was not written properly according to [define html] rules.
 
 - slide:
     content: |
-      For the most part, [define web_browser s] are very forgiving when displaying [define html]. Most [define web_browser s] will attempt to display the [define html] even if there are errors in the code.
+      For the most part, [define web_browser s] are very forgiving when displaying [define html]. Most [define web_browser s] will attempt to show a result for the [define html] even if there are errors in the code.
 
       However, as smart as [define web_browser s] might be, it's always a good idea to write your code in a way that it makes it easier for the browser to understand the intent of your [define web_page l].
 
@@ -20,14 +20,67 @@
     content: |
       In this lesson, we will be creating a default web page structure so we can understand the purpose of each [define html_element].
 
-      If you don't remember everything, don't worry. Most modern code editors will fill in the default HTML page structure when creating a new file.
+      If you don't remember everything, don't worry. Most modern [define code_editor s] will automatically create the required [define html] page structure when you create a new file.
+
+- slide:
+    clearTitle: true
+    content: |
+      This is an example of a basic [define html] page. There are additional [define html_element Elements] here you haven't seen before.
+
+      [snippet base_empty]
+
+- slide:
+    content: |
+      The `doctype` [define html_element Element] is used to decide the version of [define html] being used. In modern web development, this is normally set to `html`.
+
+      [snippet base_empty highlight:0,15]
+
+- slide:
+    content: |
+      The `head` [define html_element Element] acts as a container for other [define html_element s]. For the most part, [define html_element Elements] inside of the `head` [define html_element Element] are used to update page information that's not visible to the user.
+
+      [snippet base_empty highlight:23,17,line]
+
+- slide:
+    content: |
+      By contrast, the `body` [define html_element Element] is where most [define html_element s] that are displayed to the user are added.
+
+      For example, the [define html_element s] you have already learned about, such as headings, paragraphs, and images, should be added to the `body` [define html_element Element].
+
+      [snippet base_empty highlight:41,17,line]
+
+- slide:
+    content: |
+      The `html` [define html_element Element] is used to tell the web browser that the contents of this file are an [define html] document. Both the `head` and `body` [define html_element Elements] should always be placed within the `html` [define html_element Element].
+
+      [snippet base_empty highlight:16,50,line]
+
+
+- slide:
+    content: |
+      Let's look at an example of an [define html] document that has some content.
+
+      [snippet base_empty]
+
+- slide:
+    content: |
+      The `head` [define html_element Element] contains several [define html_element s] that are not visible to the user. This includes information like the page title, author name, and links to external resources.
+
+      [snippet base highlight:24,134,line size:small]
+
+- slide:
+    content: |
+      The `body` [define html_element Element] contains the [define html] that's displayed to the user. If you were to look at this page in a web browser, you'd see the heading and image file displayed, but not anything from inside the `head` [define html_element Element]
+      
+      [snippet base highlight:160,58,line size:small]
 
 - slide:
     mode: popup
     content: |
-      Okay, let's get started!
+      Now that we've covered the basic structure of an [define html] page, let's try to write one for ourselves.
 
 - slide:
+    waitForFile: /index.html
     content: |
       Open the file named `index.html` in the [define file_browser]
 
@@ -37,30 +90,34 @@
 
 - slide:
     content: |
-      The Element that should appear in an HTML document is the `doctype`. The `doctype` is used to identify the version of HTML being used.
+      The first [define html_element Element] that should appear in an [define html] document is the `doctype`. The `doctype` is used to identify the version of HTML being used.
 
       For modern web development, this is fairly simple as there's only one type you need to use.
 
 - slide:
+    controller: addDoctype
     content: |
       Follow along with the instructions to add the correct `doctype` to the page.
 
 - slide:
     content: |
-      The next [define html_element] that we need to use is the `html` Element. This is used to wrap the entire [define html] document. Basically, anything that falls between the opening and closing tags it's considered to be part of the document.
+      The next [define html_element] that we need to create is the `html` [define html_element Element]. This is used to wrap the entire [define html] document.
+
+      Basically, any [define html_element s] between the opening and closing `html` tag are considered to be part of the document.
 
 - slide:
+    controller: addHtml
     content: |
-      Follow along with instructions to add the opening and closing `html` tags.
+      Follow along with the instructions to add the opening and closing `html` tags.
 
 - slide:
     content: |
       The next [define html_element] we are going to add is the `head` Element.
 
+      The `head` [define html_element Element] has quite a few varied purposes.
+
 - slide:
     content: |
-      The `head` Element has quite a few varied purposes.
-
       For one, it is used to hold information about the page that is not visually displayed. This include data like descriptions, author names, copyright dates, supported languages and more. 
 
       This information is read by search engines to identify what is on your page.
@@ -71,10 +128,10 @@
 
 - slide:
     content: |
-      Finally, the `head` is used to include external resources, for example CSS styles. We haven't talked about this yet but will cover it and a few lessons from now.
-
+      Finally, the `head` is used to include external resources, for example [define css] styles. We haven't talked about [define css] just yet but will cover it and a few lessons from now.
 
 - slide:
+    controller: addHead
     content: |
       Follow along with the instructions to add the `head` Element and some information about this page.
 
@@ -85,14 +142,90 @@
       Essentially, if it should be visible to the visitor of the page, it probably should be in the `body` Element.
 
 - slide:
+    controller: addBody
     content: |
       Follow along with the instructions to add the `body` Element to your page.
 
 - slide:
+    controller: showCurrentTitle
     content: |
-      Great work! Although the page does not look different than previous examples we done, it is structured correctly now.
+      Let's start by adding a title to this page. The `title` [define html_element Element] will change the name of the page as it appears in a browser tab.
 
-      Following best practices and writing good code is a great way become a better software developer.
+      You can see in the [define preview_area] that the current title is _"Untitled Page"_
+
+- slide:
+    controller: addTitle
+    content: |
+      Use the `title` [define html_element Element] to add a title to your page.
+
+      Don't forget that the `title` [define html_element Element] should be placed inside of the `head` [define html_element Element].
+
+- slide:
+    content: |
+      You probably noticed that even though you added an [define html_element Element] to the page it did not show up in the [define preview_area]. Instead, the title of the page was changed.
+
+      The `title` is a special [define html_element] that is not displayed visually as content.
+
+- slide:
+    content: |
+      Now that there's a title for this page why not try adding some content.
+
+- slide:
+    controller: addContent
+    content: |
+      Add a `h1` and `p` [define html_element Element] to this page.
+
+      Don't forget that content like the `h1` and `p` [define html_element Elements] should be placed inside of the `body` [define html_element Element].
+
+- slide:
+    content: |
+      Let's add some more [define html_element s] to the `head` [define html_element Element] on the page.
+
+- slide:
+    content: |
+      A `meta` [define html_element Element] is sometimes used by [define search_engine s] to collect extra information about your page. There are many `meta` [define html_element Elements] that you can use to describe the content of your page.
+
+- slide:
+    start: true
+    controller: addMeta
+    content: |
+      Let's add a `meta` [define html_element Element] that describes the author of the page. Follow along with that example to create a new `meta` [define html_element Element].
+
+- slide:
+    content: |
+      There are other purposes for `meta` [define html_element Elements], but we will cover those in later lessons.
+
+- slide:
+    content: |
+      The `head` [define html_element Element] also acts as a container for external resources. One of the most common examples of an external resource is a [define css] [define css_stylesheet].
+
+- slide:
+    content: |
+      Similar to using the `img` element, a [define css] [define css_stylesheet] is a file that must be included in a web page using a special [define html_element].
+
+- slide:
+    content: |
+      We haven't learned much about [define css] just yet, but to summarize [define css] is a list of rules used to change things like colors, fonts, layout, and more. 
+
+      When a [define css] [define css_stylesheet] is linked to a web page the rules in the file are used to change what the page looks like.
+
+- slide:
+    content: |
+      This project already has a premade [define css] [define css_stylesheet] called `style.css`. The rules in the file will change the background color of the page, as well as the font type and font color.
+
+- slide:
+    controller: addLink
+    content: |
+      Follow the instructions to add a `link` [define html_element Element] to the `/style.css` file.
+
+      Don't forget that this [define html_element Element] should be placed inside of the `head` [define html_element Element].
+
+- slide:
+    emote: happy
+    content: |
+      Great work! By using a `doctype`, and the `html`, `head`, and `body` [define html_element Elements], we've now created a correctly structured web page!
+
+      Following best practices and writing good code is a great way become a better developer.
 
 - question:
     mode: overlay
@@ -111,7 +244,7 @@
     title: What is NOT a purpose of the `head` Element?
 
     explain: |
-      The head element has many purposes, such as holding a meta-information, the page title, and references for external resources.
+      The head element has many purposes, such as holding meta-information, the page title, and references for external resources.
 
     choices:
       - Showing a photo of the current web page visitor
@@ -130,6 +263,14 @@
       - The `title` Element for the page
       - The `doctype` Element for the page
       - Meta-information like a page description or author name
+
+- slide:
+    mode: popup
+    emote: happy
+    content: |
+      We will be learning more about [define css] in later lessons, but for now you're free to open the `style.css` file and make changes to it.
+
+      If you do, make sure to try changing color names and sizes to see what happens!
 
 - slide:
     mode: popup

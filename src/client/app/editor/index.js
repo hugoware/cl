@@ -60,10 +60,15 @@ export function createInstance(container) {
  * @param {HTMLElement} element the element to colorize
 */
 export function colorize(element, options) {
+
+	// check for adjusted font sizes
+	let fontSize = DEFAULT_SNIPPET_FONT_SIZE;
+	if (options.fontSize)
+		fontSize += options.fontSize;
 	
 	// view only editor area
 	const editor = createEditor(element, {
-		fontSize: options.fontSize || DEFAULT_SNIPPET_FONT_SIZE,
+		fontSize,
 		useWorker: false,
 		readOnly: true,
 		maxLines: 500
@@ -86,9 +91,13 @@ export function colorize(element, options) {
 		const range = new Brace.Range(start.row, start.column, end.row, end.column);
 
 		// save the highlight
-		const index = session.addMarker(range);
+		const index = session.addMarker(
+			range,
+			`snippet-highlight ${isLine ? 'is-full-line' : ''}`,
+			isLine ? 'fullLine' : ''
+		);
+
 		const marker = session.getMarkers()[index];
-		marker.clazz = `snippet-highlight ${isLine ? 'fullLine' : ''}`;
 		marker.inFront = false;
 	});
 

@@ -39,8 +39,14 @@ export function applySnippets(slide, lesson) {
 			return { start, end, isLine };
 		});
 
+		// check for resizing
+		const size = _.trim(element.getAttribute('size'));
+		const fontSize = size === 'small' ? -3
+			: size === 'xsmall' ? -5
+			: null;
+
 		// convert to ranges
-		$editor.colorize(example, { snippet, highlight });
+		$editor.colorize(example, { snippet, highlight, fontSize });
 	});
 
 }

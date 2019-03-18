@@ -4,3 +4,8 @@
   aka: Cascading Style Sheets
   define: |
     Special rules for styling
+
+- id: css_stylesheet
+  name: Stylesheet
+  define:
+    The name of a file with CSS rules

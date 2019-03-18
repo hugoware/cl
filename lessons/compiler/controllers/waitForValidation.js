@@ -24,7 +24,13 @@ export default function waitForValidation(obj, config) {
 		// 	validator = CssValidator;
 		
 		// perform the validaton
-		const args = [content].concat(config.validation);
+		const func = test => {
+			config.validation.call(instance, test, content);
+			return test;
+		};
+
+		// perform the validation
+		const args = [content].concat(func);
 		const result = validator.validate.apply(null, args);
 
 		// update the result

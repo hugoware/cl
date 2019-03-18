@@ -155,7 +155,7 @@ export default class HtmlValidator extends SyntaxValidator {
 
 			this.next('open-end-bracket', /^\>/, close => {
 				if (!close)
-					return `Expected self closing tag: \`>\``;
+					return `Expected closing tag: \`>\``;
 
 				if (validator)
 					return validator(close);
@@ -182,7 +182,7 @@ export default class HtmlValidator extends SyntaxValidator {
 		else {
 			this.next('close-tag-start', /^\</, close => {
 				if (!close)
-					return `Expected closing tag: \`<\``;
+					return `Expected closing tag: \`</\``;
 			});
 
 			this.next('close-tag-slash', /^\//, close => {

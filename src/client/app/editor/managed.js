@@ -58,7 +58,7 @@ export default class ManagedEditor {
 		// prevent auto complete events when
 		// an entry is not allowed - check if there's
 		// a better way to handle this
-		this.editor.setOptions({ enableBasicAutocompletion: false, enableLiveAutocompletion: false });
+		// this.editor.setOptions({ enableBasicAutocompletion: false, enableLiveAutocompletion: false });
 
 		// handle events
 		this.editor.commands.on('exec', this.onExecuteCommand);

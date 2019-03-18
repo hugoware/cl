@@ -5,17 +5,12 @@ import { getValidator, oxfordize , containsMatch} from './common';
 
 export default class SyntaxValidator {
 
-	constructor(code, options = { }) {;
+	constructor(code, params = { }) {;
 
 		// config and setup
-		this.options = options;
 		this.code = code;
-		this.index = 0;
-		this.length = _.size(this.code);
-		this.meta = { };
-		this.state = {
-			stack: []
-		};
+		this.params = params;
+		this.reset();
 	}
 
 	// handles navigating forward through the code
@@ -27,7 +22,7 @@ export default class SyntaxValidator {
 
 		// perform the test
 		try {
-			const match = this.code.substr(this.index).match(expression);
+			const match = this.remainingCode.match(expression);
 			const value = match && match[0];
 
 			// apply the match
@@ -68,6 +63,51 @@ export default class SyntaxValidator {
 		// save the error
 		this.error = { type, message, start, end };
 		this.hasError = true;
+		return this;
+	}
+
+	/** navigates to an index */
+	setBounds(start, end) {
+
+		// single number used
+		if (isNaN(end)) {
+			end = start;
+			start = 0;
+		}
+
+		if (end < start) {
+			console.log('invalid bounding range');
+			this.clearBounds();
+			return this;
+		}
+
+		// create the ending bound
+		end = _.clamp(end, start, this.length);
+		this.bounds = { start, end };
+		return this;
+	}
+
+	/** remove any test bounds */
+	clearBounds() {
+		delete this.bounds;
+		return this;
+	}
+
+	/** start a test over */
+	reset() {
+		delete this.error
+		delete this.hasError;
+		delete this.bounds;
+
+		// reset params
+		this.options = { };
+		this.index = 0; // this.bounds ? this.bounds.start : 0;
+		this.length = _.size(this.code);
+		this.meta = {};
+		this.state = {
+			stack: [ ]
+		};
+
 		return this;
 	}
 
@@ -140,7 +180,18 @@ export default class SyntaxValidator {
 
 	/** returns the code starting from the current index */
 	get remainingCode() {
-		return this.code.substr(this.index);
+		let code = this.code;
+
+		// check for limited bounding
+		if (!!this.bounds) {
+			let range = [ Math.max(this.bounds.start, 0) ];
+			if (!isNaN(this.bounds.end))
+				range.push(this.bounds.end - this.bounds.start);
+			code = code.substr(...range);
+		}
+
+		// give back the active code
+		return code.substr(this.index);
 	}
 
 	/** activates the optional flag */
@@ -192,8 +243,10 @@ export default class SyntaxValidator {
 	newlines() { return this.newline(true); }
 	newline(multi = false) {
 		return this.next('newline', multi ? /^\n+/ : /^\n/, content => {
-			if (!content)
+			if (!content) {
+				if (!this._optional) this.index--;
 				return `Expected new line`;
+			}
 		});
 	}
 
@@ -361,7 +414,7 @@ function createLiteralNext(func, params) {
 		
 		// check for a match
 		const match = _.find(args, arg => {
-			let value = this.code.substr(this.index, arg.length);
+			let value = this.remainingCode.substr(0, arg.length);
 			let compare = _.toString(arg);
 
 			if (!!options.ignoreCase || params.ignoreCase) {

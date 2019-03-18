@@ -163,6 +163,10 @@ var _createClass = function () {
 
 var _lib = require('./lib');
 
+var _waitForFile = require('./controllers/waitForFile');
+
+var _waitForFile2 = _interopRequireDefault(_waitForFile);
+
 var _inputEntry = require('./inputEntry');
 
 var inputEntry = _interopRequireWildcard(_inputEntry);
@@ -209,6 +213,10 @@ function _interopRequireWildcard(obj) {
       }
     }newObj.default = obj;return newObj;
   }
+}
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
 }
 
 function _classCallCheck(instance, Constructor) {
@@ -462,9 +470,25 @@ var webAttributesLesson = function () {
 
 
   _createClass(webAttributesLesson, [{
-    key: 'invoke',
+    key: 'activateSlide',
+
+    // helpers
+    value: function activateSlide(slide) {
+
+      // check for common controller scenarios
+      if (slide.waitForFile) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var controller = this.controllers[slide.controller] = { exports: {} };
+        (0, _waitForFile2.default)(controller, {
+          file: slide.waitForFile
+        });
+      }
+    }
 
     // executes an action if available
+
+  }, {
+    key: 'invoke',
     value: function invoke(action) {
       if (!this.respondsTo(action)) return null;
       action = toActionName(action);
@@ -571,7 +595,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_attributes', webAttributesLesson);
 
-},{"./inputEntry":4,"./inputReadOnly":5,"./lib":6,"./multipleAttributes":7,"./multipleImages":8,"./previewBlocked":9,"./previewInput":10,"./srcExample":11,"./validation":12,"./waitForIndex":13}],4:[function(require,module,exports){
+},{"./controllers/waitForFile":1,"./inputEntry":4,"./inputReadOnly":5,"./lib":6,"./multipleAttributes":7,"./multipleImages":8,"./previewBlocked":9,"./previewInput":10,"./srcExample":11,"./validation":12,"./waitForIndex":13}],4:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
