@@ -33,7 +33,7 @@ waitForValidation(module.exports, {
 			._t$._t$._n;
 
 		// include animal facts
-		this.selectedAnimal = animal_fact(test, allowed);
+		this.state.animalType = animal_fact(test, allowed);
 
 		// resume testing
 		test.clearBounds()
@@ -45,10 +45,9 @@ waitForValidation(module.exports, {
 	},
 
 	onValid() {
-		const animal = this.selectedAnimal;
 		this.progress.allow();
 		this.assistant.say({
-			message: `Great! Click on the picture of the ${animal} to navigate to the \`${animal}.html\` page!`
+			message: `Great! Now we have an \`img\` [define html_element Element] that's also a [define hyperlink link] to another page!`
 		});
 	}
 

@@ -330,12 +330,14 @@ function setActiveSlide(lesson, slide) {
 	// 	broadcast('set-editor-cursor', slide.cursor);
 
 	// check for markers
-	const markers = slide.markers || slide.marker;
-	if (markers) $focus.setMarker(markers);
-
-	// check for any highlights
-	const highlights = slide.highlights || slide.highlight;
-	if (highlights) $focus.setHighlight(highlights);
+	setTimeout(() => {
+		const markers = slide.markers || slide.marker;
+		if (markers) $focus.setMarker(markers);
+		
+		// check for any highlights
+		const highlights = slide.highlights || slide.highlight;
+		if (highlights) $focus.setHighlight(highlights);
+	}, 100)
 
 	// setup the wait events
 	// let wait = slide.waitFor || slide.wait;
@@ -358,6 +360,8 @@ function setActiveSlide(lesson, slide) {
 	// set the events for this slide
 	// disposeSlideEvents(lesson);
 	// registerSlideEvents(lesson, slide);
+
+	// deactivate the 
 
 	// let other systems know the slide changed
 	broadcast('slide-changed', slide);

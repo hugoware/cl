@@ -82,6 +82,7 @@ export default class TabBar extends Component {
 			message: "Can't Switch Files",
 			allowed: () => {
 				this.setActive(tab);
+				$state.setActiveFile(tab.file);
 				this.broadcast('activate-file', tab.file);
 			}
 		});
@@ -150,6 +151,7 @@ export default class TabBar extends Component {
 		// if there's a new tab selected, update it
 		if (!!replace) {
 			this.setActive(replace);
+			$state.setActiveFile(replace.file);
 			this.broadcast('activate-file', replace.file);
 		}
 		// there's nothing to show -- deactivate the view

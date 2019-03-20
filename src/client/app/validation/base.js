@@ -60,6 +60,15 @@ export default class SyntaxValidator {
 		start = isNaN(start) ? this.index : start;
 		end = isNaN(end) ? this.index : end;
 
+		// // check for better whitespace errors
+		// const previous = this.code.charAt(start - 1);
+		// if (previous === '\t')
+		// 	message = 'Unexpected tab';
+		// else if (previous === ' ')
+		// 	message = 'Unexpected space';
+		// else if (previous === '\n')
+		// 	message = 'Unexpected new line';
+
 		// save the error
 		this.error = { type, message, start, end };
 		this.hasError = true;
@@ -220,6 +229,48 @@ export default class SyntaxValidator {
 	get _w$() { return this.optional.whitespace(); }
 	get __w() { return this.whitespace(true); }
 	get __w$() { return this.optional.whitespace(true); }
+
+	// captures lines until reaching a limit
+	lines(min, max) {
+		const remaining = this.remainingCode;
+		const total = remaining.length;
+
+		// max is the default value
+		if (isNaN(max)) {
+			max = min;
+			min = 0;
+		}
+
+		// seek the next point
+		let lines = 0;
+		let jump = 0;
+		for (let i = 0; i < total; i++) {
+			const char = remaining.charAt(i);
+			if (char === ' ' || char === '\t') continue;
+			else if (char === '\n') {
+				lines++;
+				jump = i + 1;
+				if (--max <= 0) break;
+			}
+			else break;
+		}
+
+		// move forward by the first
+		this.index += jump;
+
+		// if not enough
+		if (lines < min)
+			return this.setError('lines', `Expected new line`);
+
+		return this;
+	}
+
+	// finds the next line with content -- starts at
+	// the beginning of the line and not from the
+	// first character
+	get __b() {
+		return this.lines();
+	}
 
 	// checks for spaces
 	spaces() { return this.space(true); }

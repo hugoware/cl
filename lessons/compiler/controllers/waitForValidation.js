@@ -109,6 +109,6 @@ export default function waitForValidation(obj, config) {
 
 	// extra logic as required
 	if (config.init)
-		config.init(obj);
+		config.init.call(obj, obj);
 
 }

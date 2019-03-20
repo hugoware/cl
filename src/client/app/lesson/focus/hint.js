@@ -23,6 +23,8 @@ export default class HintDisplay extends Component {
 		this.listen('refresh-hint', this.onRefreshHint);
 		this.listen('show-hint', this.onShowHint);
 		this.listen('clear-hint', this.onClearHint);
+		this.listen('enable-hints', this.onEnableHints);
+		this.listen('disable-hints', this.onDisableHints);
 
 		// always looking for the focus area
 		this.hint = evaluateSelector('.ace_editor .focus_point');
@@ -41,6 +43,14 @@ export default class HintDisplay extends Component {
 	// is the hint visible
 	get isHidden() {
 		return !this.hasClass('show');
+	}
+
+	onDisableHints = () => {
+		this.addClass('disabled');
+	}
+
+	onEnableHints = () => {
+		this.removeClass('disabled');
 	}
 
 	// when resetting the document

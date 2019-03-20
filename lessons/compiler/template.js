@@ -23,6 +23,7 @@ class $LESSON_TYPE$Lesson {
 
 		// expose API tools
 		this.assistant = api.assistant;
+		this.events = api.events;
 		this.preview = api.preview;
 		this.screen = api.screen;
     this.progress = api.progress;
@@ -74,6 +75,11 @@ class $LESSON_TYPE$Lesson {
 		}
 
 	}
+
+	// // leaves a slide
+	// deactivateSlide(slide) {
+
+	// }
 
 	// executes an action if available
 	invoke(action, ...args) {

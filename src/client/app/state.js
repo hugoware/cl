@@ -340,8 +340,20 @@ const $state = {
 			await $lfs.write(file.path, file.content);
 
 		// mark the file as open
+		$state.setActiveFile(file);
 		broadcast('activate-file', file);
 		file.isOpen = true;
+	},
+
+	/** replaces active files */
+	setActiveFile(file) {
+		console.log('do?');
+		_.each($state.files, item => {
+			delete item.isActive;
+		});
+		
+		file.isOpen = true;
+		file.isActive = true;
 	},
 
 	/** handles marking a file as closed 
@@ -769,12 +781,13 @@ function disposeLesson() {
 	delete $state.lesson;
 }
 
-// clean up open files
-listen('activate-file', file => {
-	_.each($state.files, file => file.isActive = false);
-	file.isOpen = true;
-	file.isActive = true;
-});
+// // clean up open files
+// listen('activate-file', file => {
+// 	console.log('rev');
+// 	_.each($state.files, file => file.isActive = false);
+// 	file.isOpen = true;
+// 	file.isActive = true;
+// });
 
 // setup opened file
 listen('open-file', file => {

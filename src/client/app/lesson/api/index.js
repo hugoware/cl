@@ -2,6 +2,7 @@ import _ from 'lodash';
 import $state from '../../state';
 
 import AssistantAPI from './assistant';
+import EventAPI from './event';
 import ScreenAPI from './screen';
 import ProgressAPI from './progress';
 import FileAPI from './file';
@@ -15,6 +16,7 @@ export default class LessonAPI {
 		this.lesson = lesson;
 
 		// attach apis
+		this.events = new EventAPI(this);
 		this.assistant = new AssistantAPI(this);
 		this.preview = new PreviewAPI(this);
 		this.screen = new ScreenAPI(this);

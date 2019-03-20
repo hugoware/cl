@@ -76,8 +76,10 @@ export function stringRange(value, min, max, asSingular, asPlural) {
 }
 
 // performs the oxford comma
-export function oxford(items, conjunction) {
+export function oxfordize(items, conjunction, options = { }) {
 	const total = items.length;
+	if (!options.asLiteral)
+		items = _.map(items, item => "`" + item.replace("`", '\\`') + "`");
 
 	// determine the best
 	if (total === 1)
@@ -93,12 +95,17 @@ export function oxford(items, conjunction) {
 }
 
 // pluralizes a word
-export function plural(count, single, plural, none, delimeter = '@') {
-	const value = Math.abs(count);
-	const message = value === 1 ? single
-		: value > 1 ? (plural ? plural : `${single}s`)
-			: none || plural;
-	return message.replace(delimeter, count);
+export function pluralize(value, single, plural, none) {
+	plural = plural || `${single}s`;
+	none = none || plural;
+
+	if (value === null || value === undefined) value = 0;
+	if (!isNaN(value.length)) value = value.length;
+	value = Math.abs(value);
+
+	return value === 0 ? none
+		: value === 1 ? single
+		: plural;
 }
 
 // checks for string similarity

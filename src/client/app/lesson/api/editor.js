@@ -29,7 +29,15 @@ export default class EditorAPI {
 		this.hint.clear = ({ path, file } = { }) => {
 			path = getPath(path || file);
 			broadcast('clear-hint', path);
-		}
+		};
+
+		this.hint.disable = options => {
+			broadcast('disable-hints', options);
+		};
+
+		this.hint.enable = options => {
+			broadcast('enable-hints', options);
+		};
 			
 		// standard inline hint validation
 		this.hint.validate = ({ path, file, result }) => {
@@ -41,6 +49,11 @@ export default class EditorAPI {
 				this.hint.clear({ path, file });
 		};
 
+	}
+
+	// gives back the active item
+	activeTab = () => {
+		return $state.activeFile;
 	}
 
 	// sets the working area for the editor

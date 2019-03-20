@@ -37,8 +37,16 @@ waitForValidation(module.exports, {
 	onValid() {
 		this.progress.allow();
 		this.assistant.say({
-			message: `That's correct! Unlike the \`title\` [define html_element Element] we can see this content displayed in the [define preview_area]`
+			message: `Looks good! The [define hyperlink link] even changed colors to blue which means it's now able to be used.`
 		});
+	},
+
+	init() {
+
+		this.onBeforePreviewAreaNavigate = () => {
+			return false;
+		};
+
 	}
 
 });

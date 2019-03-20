@@ -168,6 +168,7 @@ export default function generateMessage(message) {
 		// check to add text or not
 		if (!silent) {
 			let markup = fixSpeech(line);
+			markup = populateVariables(markup);
 			markup = converter.makeHtml(markup);
 			markup = Cheerio.load(markup).text();
 			markup = replacePronunciation(markup, { spoken: true });
@@ -177,6 +178,7 @@ export default function generateMessage(message) {
 		// if visible, add it to the content
 		if (!hidden) {
 			let markup = _.trim(converter.makeHtml(line));
+			markup = populateVariables(markup);
 			markup = replacePronunciation(markup, { content: true });
 			content.push(markup);
 		}
@@ -195,6 +197,13 @@ export default function generateMessage(message) {
 
 }
 
+// populates values from state variables
+function populateVariables(str) {
+	return str.replace(/\%{2}[a-z0-9\_]+\%{2}/gi, match => {
+		let key = match.substr(0, match.length - 2).substr(2);
+		return $state.lesson.instance.state[key];
+	});
+}
 
 // handles special replacement words for unusual pronunciation
 function replacePronunciation(str, type) {

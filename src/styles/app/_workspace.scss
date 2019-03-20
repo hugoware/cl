@@ -71,17 +71,46 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 			}
 		}
 
+		.right {
+			float: right;
+
+			.action {
+				float: left;
+			}
+		}
+	
+		.enable-hints {
+			display: none;
+			background: rgba(0,0,0,0);
+			box-shadow: inset 0 0 0 1px rgba(#fff, 0.4);
+			.label {
+				color: rgba(#fff, 0.6);
+			}
+
+			&:hover {
+				background: rgba(#fff, 0.2);
+				.label {
+					color: #fff;
+				}
+			}
+		}
+
 		// special
 		.action.reset {
 			background: #8C49AB;
-			float: right;
-			display: none;
+			// display: none;
 		}
 
 	}
 
-	.code-editor.has-reset .action.reset {
-		display: block !important;
+	.code-editor{
+		&.has-reset .action.reset {
+			display: block !important;
+		}
+
+		&.allow-activate-code-hints .action.enable-hints {
+			display: block;
+		}
 	}
 
 	.editors {

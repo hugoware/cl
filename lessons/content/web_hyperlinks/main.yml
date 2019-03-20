@@ -67,106 +67,135 @@
 
 - slide:
     content: |
-      The hyperlink isn't clickable yet
+      This page already has an `a` [define html_element Element] but it isn't clickable yet. This is because it's missing an `href` [define html_attribute Attribute].
 
 - slide:
     controller: hrefToAnimals
     content: |
-      This page already has an `a` [define html_element Element]. Let's update it to include a `href` [define html_attribute Attribute] that will navigate to `||/animals.html|animals.html||`.
+      Let's update the [define hyperlink link] to include an `href` [define html_attribute Attribute] so it will navigate to `||/animals.html|animals.html||`.
+
+- slide:
+    controller: navigateToList
+    content: |
+      Let's make sure that the [define hyperlink link] works as expected. Try to navigate to `animals.html` by clicking on *"See the animals"*
+
+- slide:
+    highlight: $preview .url
+    content: |
+      That worked! We were able to navigate to the `animals.html` page!
+
+      You'll notice that the address bar has changed and now says `||/animals.html|animals.html||`.
 
 - slide:
     content: |
-      Now we can navigate to the page, but we can't navigate back. Let's create a back button
+      However, this page doesn't have a link that returns to the previous page so we're not able to navigate back.
+
+      Let's add another [define hyperlink link] to this page to take us back to `index.html`.
 
 - slide:
     waitForFile: /animals.html
     content: |
-      Open the `animals.html` file to edit
+      Start by opening the `animals.html` file by [define double_click double clicking] on it so we can make some changes.
+
+- slide:
+    highlight: $workspace .tab[file="/animals.html"]
+    controller: showSwitchingTabs
+    content: |
+      You'll notice that now we have more than one file open. You can switch back and forth between the two files by clicking on the tab of the file you want to view.
+
+      This is very useful when you're trying to work with more than one page at a time.
+
+- slide:
+    controller: requireAnimalsTab
 
 - slide:
     controller: hrefToIndex
     content: |
-      Now we can navigate to the page, but we can't navigate back. Let's create a [define hyperlink] to return to the starting page.
+      Alright, let's continue adding a [define hyperlink link] to take the user back to the `index.html` page.
+
+      Follow along with instructions to create a complete [define hyperlink link].
 
 - slide:
-    # watch navigation
+    controller: navigateIndex
     content: |
-      Navigate to the index and back to the animals to make sure the links work as expected
+      Before we continue, let's make sure the [define hyperlink links] behave as expected. 
+
+      Navigate to `index.html` and then back to the `animals.html` page.
 
 - slide:
-    # highlight url
-    content: |
-      You'll notice the url in the preview area is updating
-
-- slide:
-    # wait for tab
-    content: |
-      Let's add some more hyperlinks - Click on the `animals.html` tab so we can 
-
-- slide:
-    flags: +OPEN_FILE
-    start: true
     controller: addSingleImageLink
     content: |
-      Let's add an image link this time. Follow along with the instructions to add a link to one of the animal facts
+      Let's add some more [define hyperlink links] to the `animals.html` page, but this time let's use an `img` [define html_element Element]!
 
+      Follow along with the instructions to add an image [define hyperlink link] to one of the animal facts
 
 - slide:
-    # wait for tab
+    controller: navigateSinglePage
+
+- slide:
     content: |
-      Navigate to each page
+      Let's practice that a few more times by adding the remaining animal images as [define hyperlink links] to each of their pages.
+
+      Code hints will be turned off this time so make sure to look at the previous example for help. If you get stuck, use the *"Enable Hints"* button to turn them back on.
 
 - slide:
-    flags: +OPEN_FILE
-    start: true
     controller: addAllImageLinks
     content: |
-      Let's add an image link this time. Follow along with the instructions to add a link to one of the animal facts
+      Add image [define hyperlink links] for the remaining animals like you did with the %%animalType%%.
 
 - slide:
+    controller: navigateAnimalPages
+
+- slide:
+    emote: happy
     content: |
-      This page already has an `a` 
+      Great work! We've created a whole website with [define hyperlink links] that connect each of the pages together!
 
-# - question:
-#     count: 4   # optional question count
-#     title: Main title
-#     
-#     hint: Optional helpful hint
+- slide:
+    mode: overlay
+    content: |
+      We've learned a lot in this lesson so let's take a few minutes to review!
 
-#     explain: |
-#       After the question is finished hint
+- question:
+    title: What is another name for a *link* on a web page?
 
-#     choices:
-#       - correct answer
-#       - wrong answer 1
-#       - wrong answer 2
-#       - wrong answer 3
+    explain: |
+      Links are also known as [define hyperlink s] although most people will use the former name as opposed to the latter.
 
-# - slide:
-#     flags: +OPEN_FILE
-#     emote: happy
-#     controller: name
-#     mode: popup
-#     content: |
-#       Way to go! You've finished this lesson!
-#       
-#       [snippet name highlight:0,5|20,5]
-#       
-#       [snippet html preview:50%]
-#       
-#       [image default.png]
-#       
-#       [image full.jpg frame]
-#       
-#       Inline replacement is done using ||does|duz||
-#       
-#       A normal [define html] is like this
-#       
-#       A lowercase [define html l] is like this
-#       
-#       A plural [define html p] is like this
-#       A plural [define html s] or like this
-#       
-#       Can be combined as [define html lp] [define html ls]
-#       
-#       
+    choices:
+      - Hyperlink
+      - Hypercard
+      - URL Binder
+      - Meta Resource 
+
+- question:
+    title: What is the `a` [define html_element Element] used for?
+
+    explain: |
+      The `a` element is used to create [define hyperlink s]. Hyperlinks can be used to navigate between different locations on the [define internet] among other things.
+
+    choices:
+      - Creating links to other pages
+      - Displaying images and videos
+      - Meta information like author names and page keywords
+      - Setting a font to use bold letters
+
+- question:
+    title: What does the phrase **URL** stand for?
+
+    explain: |
+      URL stands for *Uniform Resource Locator*. Although they're not exactly the same, you'll sometimes hear developers call them a *||URI|u r i||* instead.
+
+    choices:
+      - Uniform Resource Locator
+      - Undefined Rail Laser
+      - Unified Radio Logistics
+      - Unidirectional Repeating Loopback
+
+- slide:
+    mode: popup
+    content: |
+      Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.
+
+      Great work, and I'll see you in the next lesson!
+

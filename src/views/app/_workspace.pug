@@ -10,9 +10,13 @@
 				.label Save Changes
 				+shortcut('mod', 'S')
 			
-			.action.reset.with-shortcut.mini-shortcut
-				.icon(icon='refresh')
-				.label Reset Example
+			.right
+				.action.enable-hints
+					.label Show Hints
+
+				.action.reset.with-shortcut.mini-shortcut
+					.icon(icon='refresh')
+					.label Reset Example
 		.editor
 
 +template('workspace-image-viewer')

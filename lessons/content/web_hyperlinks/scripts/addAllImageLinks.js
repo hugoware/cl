@@ -29,19 +29,23 @@ waitForValidation(module.exports, {
 
 		// set the testing bounds
 		test.setBounds(limitTo)
-			.merge(animals_start)._n
-			._t$._t$._n;
+			.merge(animals_start)
+			.lines(1, 3);
 
 		// include animal facts
 		animal_fact(test, allowed);
+		test.lines(1, 3);
+
 		animal_fact(test, allowed);
+		test.lines(1, 3);
+
 		animal_fact(test, allowed);
 
 		// resume testing
 		test.clearBounds()
-			._t$._t$._n
-			.merge(return_home_link)._n
-			._t$._t$._n
+			.lines(1, 3)
+			.merge(return_home_link)
+			.lines(1, 3)
 			.merge(animals_end)
 			.eof();
 	},
@@ -50,8 +54,12 @@ waitForValidation(module.exports, {
 		const animal = this.selectedAnimal;
 		this.progress.allow();
 		this.assistant.say({
-			message: `Great! Click on the picture of the ${animal} to navigate to the \`${animal}.html\` page!`
+			message: `Fantastic! That looks like you got all of them!`
 		});
+	},
+
+	onEnter() {
+		this.editor.hint.disable();
 	}
 
 });

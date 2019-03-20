@@ -34,8 +34,17 @@ waitForValidation(module.exports, {
 	onValid() {
 		this.progress.allow();
 		this.assistant.say({
-			message: `That's correct! Unlike the \`title\` [define html_element Element] we can see this content displayed in the [define preview_area]`
+			emote: 'happy',
+			message: `Perfect! Now we have two [define hyperlink links] that connect the \`index.html\` and \`animals.html\` pages together!`
 		});
+	},
+
+	init() {
+
+		this.onBeforeNavigatePreviewArea = () => {
+			return false;
+		};
+
 	}
 
 });

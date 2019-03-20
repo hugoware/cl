@@ -29,26 +29,33 @@ function _interopRequireDefault(obj) {
 		var allowed = ['fox', 'bear', 'cat'];
 
 		// set the testing bounds
-		test.setBounds(limitTo).merge(_validation.animals_start)._n._t$._t$._n;
+		test.setBounds(limitTo).merge(_validation.animals_start).lines(1, 3);
 
 		// include animal facts
 		(0, _validation.animal_fact)(test, allowed);
+		test.lines(1, 3);
+
 		(0, _validation.animal_fact)(test, allowed);
+		test.lines(1, 3);
+
 		(0, _validation.animal_fact)(test, allowed);
 
 		// resume testing
-		test.clearBounds()._t$._t$._n.merge(_validation.return_home_link)._n._t$._t$._n.merge(_validation.animals_end).eof();
+		test.clearBounds().lines(1, 3).merge(_validation.return_home_link).lines(1, 3).merge(_validation.animals_end).eof();
 	},
 	onValid: function onValid() {
 		var animal = this.selectedAnimal;
 		this.progress.allow();
 		this.assistant.say({
-			message: 'Great! Click on the picture of the ' + animal + ' to navigate to the `' + animal + '.html` page!'
+			message: 'Fantastic! That looks like you got all of them!'
 		});
+	},
+	onEnter: function onEnter() {
+		this.editor.hint.disable();
 	}
 });
 
-},{"./controllers/waitForValidation":4,"./lib":8,"./utils":9,"./validation":10}],2:[function(require,module,exports){
+},{"./controllers/waitForValidation":4,"./lib":8,"./utils":15,"./validation":16}],2:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -82,21 +89,20 @@ function _interopRequireDefault(obj) {
 		test.setBounds(limitTo).merge(_validation.animals_start)._n._t$._t$._n;
 
 		// include animal facts
-		this.selectedAnimal = (0, _validation.animal_fact)(test, allowed);
+		this.state.animalType = (0, _validation.animal_fact)(test, allowed);
 
 		// resume testing
 		test.clearBounds()._t$._t$._n.merge(_validation.return_home_link)._n._t$._t$._n.merge(_validation.animals_end).eof();
 	},
 	onValid: function onValid() {
-		var animal = this.selectedAnimal;
 		this.progress.allow();
 		this.assistant.say({
-			message: 'Great! Click on the picture of the ' + animal + ' to navigate to the `' + animal + '.html` page!'
+			message: 'Great! Now we have an `img` [define html_element Element] that\'s also a [define hyperlink link] to another page!'
 		});
 	}
 });
 
-},{"./controllers/waitForValidation":4,"./lib":8,"./utils":9,"./validation":10}],3:[function(require,module,exports){
+},{"./controllers/waitForValidation":4,"./lib":8,"./utils":15,"./validation":16}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -246,7 +252,7 @@ function waitForValidation(obj, config) {
 	});
 
 	// extra logic as required
-	if (config.init) config.init(obj);
+	if (config.init) config.init.call(obj, obj);
 }
 
 },{"../lib":8}],5:[function(require,module,exports){
@@ -283,12 +289,18 @@ function _interopRequireDefault(obj) {
 	onValid: function onValid() {
 		this.progress.allow();
 		this.assistant.say({
-			message: 'That\'s correct! Unlike the `title` [define html_element Element] we can see this content displayed in the [define preview_area]'
+			message: 'Looks good! The [define hyperlink link] even changed colors to blue which means it\'s now able to be used.'
 		});
+	},
+	init: function init() {
+
+		this.onBeforePreviewAreaNavigate = function () {
+			return false;
+		};
 	}
 });
 
-},{"./controllers/waitForValidation":4,"./lib":8,"./utils":9,"./validation":10}],6:[function(require,module,exports){
+},{"./controllers/waitForValidation":4,"./lib":8,"./utils":15,"./validation":16}],6:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -322,12 +334,19 @@ function _interopRequireDefault(obj) {
 	onValid: function onValid() {
 		this.progress.allow();
 		this.assistant.say({
-			message: 'That\'s correct! Unlike the `title` [define html_element Element] we can see this content displayed in the [define preview_area]'
+			emote: 'happy',
+			message: 'Perfect! Now we have two [define hyperlink links] that connect the `index.html` and `animals.html` pages together!'
 		});
+	},
+	init: function init() {
+
+		this.onBeforeNavigatePreviewArea = function () {
+			return false;
+		};
 	}
 });
 
-},{"./controllers/waitForValidation":4,"./lib":8,"./utils":9,"./validation":10}],7:[function(require,module,exports){
+},{"./controllers/waitForValidation":4,"./lib":8,"./utils":15,"./validation":16}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -364,6 +383,30 @@ var hrefToAnimals = _interopRequireWildcard(_hrefToAnimals);
 var _hrefToIndex = require('./hrefToIndex');
 
 var hrefToIndex = _interopRequireWildcard(_hrefToIndex);
+
+var _navigateAnimalPages = require('./navigateAnimalPages');
+
+var navigateAnimalPages = _interopRequireWildcard(_navigateAnimalPages);
+
+var _navigateIndex = require('./navigateIndex');
+
+var navigateIndex = _interopRequireWildcard(_navigateIndex);
+
+var _navigateSinglePage = require('./navigateSinglePage');
+
+var navigateSinglePage = _interopRequireWildcard(_navigateSinglePage);
+
+var _navigateToList = require('./navigateToList');
+
+var navigateToList = _interopRequireWildcard(_navigateToList);
+
+var _requireAnimalsTab = require('./requireAnimalsTab');
+
+var requireAnimalsTab = _interopRequireWildcard(_requireAnimalsTab);
+
+var _showSwitchingTabs = require('./showSwitchingTabs');
+
+var showSwitchingTabs = _interopRequireWildcard(_showSwitchingTabs);
 
 var _validation = require('./validation');
 
@@ -433,38 +476,66 @@ var webHyperlinksLesson = function () {
         "waitForFile": "/index.html",
         "content": "There are a few different pages already added to this project. Let's start by making changes to `index.html`\n\nOpen the `index.html` file by [define double_click double clicking] on it.\n"
       }, {
-        "content": "The hyperlink isn't clickable yet\n"
+        "content": "This page already has an `a` [define html_element Element] but it isn't clickable yet. This is because it's missing an `href` [define html_attribute Attribute].\n"
       }, {
         "controller": "hrefToAnimals",
-        "content": "This page already has an `a` [define html_element Element]. Let's update it to include a `href` [define html_attribute Attribute] that will navigate to `||/animals.html|animals.html||`.\n"
+        "content": "Let's update the [define hyperlink link] to include an `href` [define html_attribute Attribute] so it will navigate to `||/animals.html|animals.html||`.\n"
       }, {
-        "content": "Now we can navigate to the page, but we can't navigate back. Let's create a back button\n"
+        "controller": "navigateToList",
+        "content": "Let's make sure that the [define hyperlink link] works as expected. Try to navigate to `animals.html` by clicking on *\"See the animals\"*\n"
+      }, {
+        "highlight": "$preview .url",
+        "content": "That worked! We were able to navigate to the `animals.html` page!\n\nYou'll notice that the address bar has changed and now says `||/animals.html|animals.html||`.\n"
+      }, {
+        "content": "However, this page doesn't have a link that returns to the previous page so we're not able to navigate back.\n\nLet's add another [define hyperlink link] to this page to take us back to `index.html`.\n"
       }, {
         "waitForFile": "/animals.html",
-        "content": "Open the `animals.html` file to edit\n"
+        "content": "Start by opening the `animals.html` file by [define double_click double clicking] on it so we can make some changes.\n"
+      }, {
+        "highlight": "$workspace .tab[file=\"/animals.html\"]",
+        "controller": "showSwitchingTabs",
+        "content": "You'll notice that now we have more than one file open. You can switch back and forth between the two files by clicking on the tab of the file you want to view.\n\nThis is very useful when you're trying to work with more than one page at a time.\n"
+      }, {
+        "controller": "requireAnimalsTab"
       }, {
         "controller": "hrefToIndex",
-        "content": "Now we can navigate to the page, but we can't navigate back. Let's create a [define hyperlink] to return to the starting page.\n"
+        "content": "Alright, let's continue adding a [define hyperlink link] to take the user back to the `index.html` page.\n\nFollow along with instructions to create a complete [define hyperlink link].\n"
       }, {
-        "content": "Navigate to the index and back to the animals to make sure the links work as expected\n"
+        "controller": "navigateIndex",
+        "content": "Before we continue, let's make sure the [define hyperlink links] behave as expected. \n\nNavigate to `index.html` and then back to the `animals.html` page.\n"
       }, {
-        "content": "You'll notice the url in the preview area is updating\n"
-      }, {
-        "content": "Let's add some more hyperlinks - Click on the `animals.html` tab so we can \n"
-      }, {
-        "flags": "+OPEN_FILE",
-        "start": true,
         "controller": "addSingleImageLink",
-        "content": "Let's add an image link this time. Follow along with the instructions to add a link to one of the animal facts\n"
+        "content": "Let's add some more [define hyperlink links] to the `animals.html` page, but this time let's use an `img` [define html_element Element]!\n\nFollow along with the instructions to add an image [define hyperlink link] to one of the animal facts\n"
       }, {
-        "content": "Navigate to each page\n"
+        "controller": "navigateSinglePage"
       }, {
-        "flags": "+OPEN_FILE",
-        "start": true,
+        "content": "Let's practice that a few more times by adding the remaining animal images as [define hyperlink links] to each of their pages.\n\nCode hints will be turned off this time so make sure to look at the previous example for help. If you get stuck, use the *\"Enable Hints\"* button to turn them back on.\n"
+      }, {
         "controller": "addAllImageLinks",
-        "content": "Let's add an image link this time. Follow along with the instructions to add a link to one of the animal facts\n"
+        "content": "Add image [define hyperlink links] for the remaining animals like you did with the %%animalType%%.\n"
       }, {
-        "content": "This page already has an `a` \n"
+        "controller": "navigateAnimalPages"
+      }, {
+        "emote": "happy",
+        "content": "Great work! We've created a whole website with [define hyperlink links] that connect each of the pages together!\n"
+      }, {
+        "mode": "overlay",
+        "content": "We've learned a lot in this lesson so let's take a few minutes to review!\n"
+      }, {
+        "title": "What is another name for a *link* on a web page?",
+        "explain": "Links are also known as [define hyperlink s] although most people will use the former name as opposed to the latter.\n",
+        "choices": ["Hyperlink", "Hypercard", "URL Binder", "Meta Resource"]
+      }, {
+        "title": "What is the `a` [define html_element Element] used for?",
+        "explain": "The `a` element is used to create [define hyperlink s]. Hyperlinks can be used to navigate between different locations on the [define internet] among other things.\n",
+        "choices": ["Creating links to other pages", "Displaying images and videos", "Meta information like author names and page keywords", "Setting a font to use bold letters"]
+      }, {
+        "title": "What does the phrase **URL** stand for?",
+        "explain": "URL stands for *Uniform Resource Locator*. Although they're not exactly the same, you'll sometimes hear developers call them a *||URI|u r i||* instead.\n",
+        "choices": ["Uniform Resource Locator", "Undefined Rail Laser", "Unified Radio Logistics", "Unidirectional Repeating Loopback"]
+      }, {
+        "mode": "popup",
+        "content": "Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.\n\nGreat work, and I'll see you in the next lesson!\n"
       }],
       "snippets": {
         "base_link": {
@@ -482,11 +553,6 @@ var webHyperlinksLesson = function () {
           "id": "html_element",
           "name": "HTML Element",
           "define": "This is about HTML elements\n"
-        },
-        "preview_area": {
-          "id": "preview_area",
-          "name": "Preview Area",
-          "define": "The right side of the screen that shows the current output of the project being worked on"
         },
         "hyperlink": {
           "id": "hyperlink",
@@ -524,6 +590,7 @@ var webHyperlinksLesson = function () {
 
     // expose API tools
     this.assistant = api.assistant;
+    this.events = api.events;
     this.preview = api.preview;
     this.screen = api.screen;
     this.progress = api.progress;
@@ -537,7 +604,7 @@ var webHyperlinksLesson = function () {
 
     // setup each included entry
     var refs = {
-      addAllImageLinks: addAllImageLinks, addSingleImageLink: addSingleImageLink, hrefToAnimals: hrefToAnimals, hrefToIndex: hrefToIndex, validation: validation
+      addAllImageLinks: addAllImageLinks, addSingleImageLink: addSingleImageLink, hrefToAnimals: hrefToAnimals, hrefToIndex: hrefToIndex, navigateAnimalPages: navigateAnimalPages, navigateIndex: navigateIndex, navigateSinglePage: navigateSinglePage, navigateToList: navigateToList, requireAnimalsTab: requireAnimalsTab, showSwitchingTabs: showSwitchingTabs, validation: validation
     };
 
     // setup each reference
@@ -567,6 +634,11 @@ var webHyperlinksLesson = function () {
         });
       }
     }
+
+    // // leaves a slide
+    // deactivateSlide(slide) {
+
+    // }
 
     // executes an action if available
 
@@ -678,7 +750,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_hyperlinks', webHyperlinksLesson);
 
-},{"./addAllImageLinks":1,"./addSingleImageLink":2,"./controllers/waitForFile":3,"./hrefToAnimals":5,"./hrefToIndex":6,"./lib":8,"./validation":10}],8:[function(require,module,exports){
+},{"./addAllImageLinks":1,"./addSingleImageLink":2,"./controllers/waitForFile":3,"./hrefToAnimals":5,"./hrefToIndex":6,"./lib":8,"./navigateAnimalPages":9,"./navigateIndex":10,"./navigateSinglePage":11,"./navigateToList":12,"./requireAnimalsTab":13,"./showSwitchingTabs":14,"./validation":16}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -705,11 +777,245 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.controller = undefined;
+exports.onEnter = onEnter;
+exports.onNavigatePreviewArea = onNavigatePreviewArea;
+exports.onExit = onExit;
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+var controller = exports.controller = true;
+
+var DEFAULT_MESSAGE = 'Try to navigate to each of the animal pages to make sure each link works.';
+
+var $done = void 0;
+var $remaining = ['fox.html', 'bear.html', 'cat.html'];
+
+function getMessage() {
+
+	if (!_lib._.some($remaining)) {
+		return 'Navigate back to the `animals.html` page by using the link that says _"Go back to Animals"_.';
+	}
+
+	// needs to show animals
+	var remains = (0, _utils.oxfordize)($remaining, 'and');
+	var pages = (0, _utils.pluralize)($remaining, 'page');
+	return DEFAULT_MESSAGE + '\n\nNavigate to the ' + remains + ' ' + pages + ' by clicking on the image of the animal.';
+}
+
+function onEnter() {
+	this.file.readOnly({ path: '/index.html' });
+	this.file.readOnly({ path: '/animals.html' });
+	this.progress.block();
+
+	this.assistant.say({
+		message: getMessage()
+	});
+}
+
+function onNavigatePreviewArea(url) {
+	if ($done) return;
+
+	// remove a page
+	var remove = $remaining.indexOf(url.substr(1));
+	if (remove > -1) $remaining.splice(remove, 1);
+
+	// check if finished
+	if (url !== '/animals.html' || _lib._.some($remaining)) {
+		return this.assistant.say({
+			message: getMessage(),
+			silent: !($remaining.length === 3 || $remaining.length === 0)
+		});
+	}
+
+	// looks like it worked
+	$done = true;
+	this.progress.allow();
+	this.assistant.say({
+		emote: 'happy',
+		message: 'Way to go! It looks like all of the [define hyperlink links] work as expected!'
+	});
+}
+
+function onExit() {
+
+	this.events.clear();
+}
+
+},{"./lib":8,"./utils":15}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onBeforeNavigatePreviewArea = onBeforeNavigatePreviewArea;
+exports.onNavigatePreviewArea = onNavigatePreviewArea;
+var controller = exports.controller = true;
+
+var $hasIndex = void 0;
+var $hasAnimals = void 0;
+
+function onEnter() {
+	this.progress.block();
+}
+
+function onBeforeNavigatePreviewArea() {
+	return !($hasAnimals || $hasIndex);
+}
+
+function onNavigatePreviewArea(url) {
+
+	if (url === '/index.html') {
+		$hasIndex = true;
+		return;
+	}
+
+	if (url === '/animals.html' && $hasIndex) {
+		$hasAnimals = true;
+		this.assistant.say({
+			emote: 'happy',
+			message: 'Looks good! Both of the [define hyperlink links] are working as expected!'
+		});
+
+		return this.progress.allow();
+	}
+}
+
+},{}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onNavigatePreviewArea = onNavigatePreviewArea;
+exports.onExit = onExit;
+var controller = exports.controller = true;
+
+var $remaining = ['/fox.html', '/bear.html', '/cat.html', '/animals.html'];
+
+var $toAnimals = void 0;
+var $toList = void 0;
+
+function onEnter() {
+	this.file.readOnly({ path: '/index.html' });
+	this.file.readOnly({ path: '/animals.html' });
+	this.progress.block();
+
+	var animal = this.state.animalType;
+	this.assistant.say({
+		message: 'Let\'s try out the new [define hyperlink link] we just added! Click on the picture of the ' + animal + ' to navigate to the `' + animal + '.html` page!'
+	});
+}
+
+function onNavigatePreviewArea(url) {
+
+	// animal page
+	if (!$toAnimals && /\/(fox|bear|cat)\.html/i.test(url)) {
+		$toAnimals = true;
+		this.assistant.say({
+			message: 'Now use the `Go back to Animals` link to return to the previous page.'
+		});
+	}
+
+	// has visited the animal page
+	if ($toAnimals && /\/animals\.html/i.test(url)) $toList = true;
+
+	// not far enough
+	if (!($toAnimals && $toList)) return;
+
+	// looks like it worked
+	this.progress.allow();
+	this.assistant.say({
+		emote: 'happy',
+		message: 'Fantastic! That looks like it worked!'
+	});
+}
+
+function onExit() {
+
+	this.events.clear();
+}
+
+},{}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onNavigatePreviewArea = onNavigatePreviewArea;
+var controller = exports.controller = true;
+
+function onEnter() {
+	this.progress.block();
+}
+
+function onNavigatePreviewArea(url) {
+	if (url !== '/animals.html') return;
+	return this.progress.next();
+}
+
+},{}],13:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onChangeTab = onChangeTab;
+exports.onEnter = onEnter;
+var controller = exports.controller = true;
+
+function onChangeTab(tab) {
+	if (tab.path !== '/animals.html') return;
+	this.progress.next();
+	return true;
+}
+
+function onEnter() {
+
+	// check if already active
+	var tab = this.editor.activeTab();
+	if (tab && tab.path === '/animals.html') {
+		return this.progress.next();
+	}
+
+	// must be on the correct tab
+	this.progress.block();
+	this.screen.highlight('#workspace .tab[file="/animals.html"]');
+	this.assistant.say({
+		message: 'Switch to the `animals.html` tab by clicking on it.'
+	});
+}
+
+},{}],14:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onChangeTab = onChangeTab;
+var controller = exports.controller = true;
+
+function onChangeTab() {
+	this.screen.highlight.clear();
+	return true;
+}
+
+},{}],15:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 exports.findBoundary = findBoundary;
 exports.simplify = simplify;
 exports.stringRange = stringRange;
-exports.oxford = oxford;
-exports.plural = plural;
+exports.oxfordize = oxfordize;
+exports.pluralize = pluralize;
 exports.similarity = similarity;
 
 var _lib = require('./lib');
@@ -779,8 +1085,13 @@ function stringRange(value, min, max, asSingular, asPlural) {
 }
 
 // performs the oxford comma
-function oxford(items, conjunction) {
+function oxfordize(items, conjunction) {
+	var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
 	var total = items.length;
+	if (!options.asLiteral) items = _lib._.map(items, function (item) {
+		return "`" + item.replace("`", '\\`') + "`";
+	});
 
 	// determine the best
 	if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
@@ -793,12 +1104,15 @@ function oxford(items, conjunction) {
 }
 
 // pluralizes a word
-function plural(count, single, plural, none) {
-	var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
+function pluralize(value, single, plural, none) {
+	plural = plural || single + 's';
+	none = none || plural;
 
-	var value = Math.abs(count);
-	var message = value === 1 ? single : value > 1 ? plural ? plural : single + 's' : none || plural;
-	return message.replace(delimeter, count);
+	if (value === null || value === undefined) value = 0;
+	if (!isNaN(value.length)) value = value.length;
+	value = Math.abs(value);
+
+	return value === 0 ? none : value === 1 ? single : plural;
 }
 
 // checks for string similarity
@@ -838,7 +1152,7 @@ function editDistance(s1, s2) {
 	return costs[s2.length];
 }
 
-},{"./lib":8}],10:[function(require,module,exports){
+},{"./lib":8}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

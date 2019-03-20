@@ -31,6 +31,7 @@ export default class CodeEditor extends Component {
 				editor: '.editor',
 				save: '.save',
 				reset: '.reset',
+				hint: '.enable-hints',
 			}
 		});
 
@@ -58,8 +59,11 @@ export default class CodeEditor extends Component {
 		this.listen('close-file', this.onCloseFile);
 		this.listen('lesson-finished', this.onLessonFinished);
 		this.listen('project-errors', this.onProjectErrors);
+		this.listen('disable-hints', this.onDisableHints);
+		this.listen('enable-hints', this.onHintsEnabled);
 		this.ui.save.on('click', this.onSaveChanges);
 		this.ui.reset.on('click', this.onResetFile);
+		this.ui.hint.on('click', this.onEnableHints);
 
 		/** @type {ManagedEditor} */
 		const disableBraceMatching = !!$state.lesson;
@@ -108,6 +112,21 @@ export default class CodeEditor extends Component {
 	// need to discard the workspaces
 	onCloseFile = file => {
 		this.editor.deactivateFile(file.path);
+	}
+
+	onDisableHints = options => {
+		const allowEnableHints = _.get(options, 'allowEnableHints', true);
+		if (allowEnableHints)
+			this.addClass('allow-activate-code-hints');
+	}
+
+	onHintsEnabled = () => {
+		this.removeClass('allow-activate-code-hints');
+	}
+	
+	onEnableHints = () => {
+		this.onHintsEnabled();
+		this.broadcast('enable-hints');
 	}
 
 	// done with the lesson

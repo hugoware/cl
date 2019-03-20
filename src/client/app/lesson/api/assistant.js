@@ -15,9 +15,9 @@ export default class AssistantAPI {
 	}
 
 	/** speaks a message */
-	say = ({ message, emote }) => {
+	say = ({ message, emote, silent }) => {
 		message = trimLeading(message);
-		broadcast('set-message', { message, emote });
+		broadcast('set-message', { message, emote, silent });
 	}
 	
 	// return to the original message
