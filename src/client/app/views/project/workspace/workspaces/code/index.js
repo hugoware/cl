@@ -176,6 +176,9 @@ export default class CodeEditor extends Component {
 		delete this.activeFile;
 		this.editor.clear();
 		this.activateMaintainSize();
+
+		// no reset button
+		this.removeClass('has-reset');
 	}
 
 	// handle when the project is exited

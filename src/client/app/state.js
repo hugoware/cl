@@ -347,11 +347,10 @@ const $state = {
 
 	/** replaces active files */
 	setActiveFile(file) {
-		console.log('do?');
 		_.each($state.files, item => {
 			delete item.isActive;
 		});
-		
+
 		file.isOpen = true;
 		file.isActive = true;
 	},

@@ -255,16 +255,17 @@ export default class BrowserMode extends Component {
 	navigate = url => {
 
 		// check for canceling
-		if ($state.lesson.respondsTo('beforePreviewAreaNavigate')) {
+		if ($state.lesson && $state.lesson.respondsTo('beforePreviewAreaNavigate')) {
 			if ($state.lesson.invoke('beforePreviewAreaNavigate', url) === false)
 				return;
 		}
 
-		this.broadcast('preview-area-navigate', url)
-
 		// notify the action
 		if ($state.lesson)
 			$state.lesson.invoke('navigatePreviewArea', url);
+
+		// navigate
+		this.broadcast('preview-area-navigate', url)
 		
 		// this should be for another file in the project
 		url = _.trim(url).split('?')[0];

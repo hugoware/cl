@@ -1,6 +1,7 @@
 
 import _ from 'lodash';
 import $http from 'http';
+import $https from 'https';
 import $express from 'express';
 import $session from 'express-session';
 import $io from 'socket.io';
@@ -312,9 +313,52 @@ function as404(response) {
 
 // kick off the http server
 function startServer(instance) {
-  instance.server.listen($config.httpPort, () => {
-    console.log(`[listening] :${$config.httpPort}`);
-  });
+	const { app } = instance;
+
+	// configure servers
+	if ($config.isDevelopment) {
+		console.log(`[development mode]`);
+
+		// start in dev mode
+		app.listen($config.httpPort, () => {
+			console.log(`[server] started at http://localhost:${$config.httpPort}`);
+		});
+
+	}
+	// use production
+	else {
+		console.log('[production mode]');
+
+		// load certificates
+		const keyPath = $path.resolveRoot($config.sslKey);
+		const certPath = $path.resolveRoot($config.sslCert);
+		const caPath = $path.resolveRoot($config.sslCA);
+		const key = $fs.readFileSync(keyPath, 'utf8');
+		const cert = $fs.readFileSync(certPath, 'utf8');
+		const ca = $fs.readFileSync(caPath, 'utf8');
+
+		// cannot load
+		if (!(key && cert && ca)) 
+			throw 'missing secure certificates!';
+
+		// create the server
+		const secureHttp = $https.createServer({ key, cert, ca }, app);
+		secureHttp.listen(443, () => {
+			console.log(`[server] started at http://localhost:443`);
+		});
+
+		// redirect non-secure requests
+		$http.createServer((request, response) => {
+			response.writeHead(301, {
+				Location: `https://${request.headers['host']}${request.url}`
+			});
+			response.end();
+		})
+		.listen(80, () => {
+			console.log(`[server] started at http://localhost:80`);
+		});
+	}
+
 }
 
 export default new WebServer();

@@ -20,6 +20,15 @@ class Config {
 		this.root = $path.resolve('./');
 		return true;
 	}
+
+	/** @return {string} the SSL key */
+	get sslKey() { return this.data.ssl_key; }
+
+	/** @return {string} the SSL certificate */
+	get sslCert() { return this.data.ssl_cert; }
+
+	/** @return {string} the SSL certificate authority */
+	get sslCA() { return this.data.ssl_ca; }
 	
 	/** @returns {string} key for recording speech */
 	get azureSubscriptionKey() { return this.data.azure_subscription_key; }

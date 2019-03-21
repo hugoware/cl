@@ -3,6 +3,10 @@ session_secret: 1b7e2d6e-b912-4664-a079-22522be0ea08
 http_port: 4500
 database: codelab
 
+ssl_key: ~/../ssl/key
+ssl_cert: ~/../ssl/cert
+ssl_ca: ~/../ssl/ca
+
 lesson_manifest: ~/lessons/
 lesson_directory: ~/lessons/output/
 audio_directory: ~/.audio/

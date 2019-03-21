@@ -148,8 +148,8 @@ async function generateTemplate(view, path) {
 			
 			// make sure it's a type of stylesheet
 			const isStylesheet =
-				/^stylesheet$/i.test(item.attribs.rel) && // is stylesheet ref
-				/^text\/(s?css|sass)$/i.test(item.attribs.type); // some sort of CSS type
+				/^stylesheet$/i.test(item.attribs.rel); // is stylesheet ref
+				//  && /^text\/(s?css|sass)$/i.test(item.attribs.type); // some sort of CSS type
 
 			// skip if it's another kind of link
 			if (!isStylesheet) return;
