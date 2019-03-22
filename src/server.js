@@ -14,6 +14,7 @@ import $cookieParser from 'cookie-parser';
 import $config from './config';
 import $path, { resolveLesson, resolveAudio } from './path';
 import $fs from './storage/file-system';
+import $fsx from 'fs-extra';
 import $database from './storage/database';
 
 // checking user access
@@ -313,7 +314,7 @@ function as404(response) {
 
 // kick off the http server
 function startServer(instance) {
-	const { app } = instance;
+	const { app, io } = instance;
 
 	// configure servers
 	if ($config.isDevelopment) {
@@ -333,9 +334,9 @@ function startServer(instance) {
 		const keyPath = $path.resolveRoot($config.sslKey);
 		const certPath = $path.resolveRoot($config.sslCert);
 		const caPath = $path.resolveRoot($config.sslCA);
-		const key = $fs.readFileSync(keyPath, 'utf8');
-		const cert = $fs.readFileSync(certPath, 'utf8');
-		const ca = $fs.readFileSync(caPath, 'utf8');
+		const key = $fsx.readFileSync(keyPath, 'utf8');
+		const cert = $fsx.readFileSync(certPath, 'utf8');
+		const ca = $fsx.readFileSync(caPath, 'utf8');
 
 		// cannot load
 		if (!(key && cert && ca)) 
@@ -346,6 +347,9 @@ function startServer(instance) {
 		secureHttp.listen(443, () => {
 			console.log(`[server] started at http://localhost:443`);
 		});
+
+		// listen for https socket connections
+		io.listen(secureHttp);
 
 		// redirect non-secure requests
 		$http.createServer((request, response) => {

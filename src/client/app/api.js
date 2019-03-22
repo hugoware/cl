@@ -16,7 +16,7 @@ const $listening = { }
 */
 export async function init(namespace, args) {
   return new Promise((resolve, reject) => {
-		$socket = SocketIO(namespace, args);
+		$socket = SocketIO(namespace, { secure: true });
     $socket.on('connect', async () => {
       try {
         const connect = await request('authenticate');
