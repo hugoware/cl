@@ -16,7 +16,9 @@ const $listening = { }
 */
 export async function init(namespace, args) {
   return new Promise((resolve, reject) => {
-		$socket = SocketIO(namespace, { secure: true });
+		const secure = window.location.protocol === 'https:';
+		const init = Object.assign({ }, args, { secure });
+		$socket = SocketIO(namespace, init);
     $socket.on('connect', async () => {
       try {
         const connect = await request('authenticate');

@@ -444,7 +444,7 @@ function waitForValidation(obj, config) {
 	});
 
 	// extra logic as required
-	if (config.init) config.init(obj);
+	if (config.init) config.init.call(obj, obj);
 }
 
 },{"../lib":12}],11:[function(require,module,exports){
@@ -747,6 +747,7 @@ var webPageStructureLesson = function () {
 
     // expose API tools
     this.assistant = api.assistant;
+    this.events = api.events;
     this.preview = api.preview;
     this.screen = api.screen;
     this.progress = api.progress;
@@ -790,6 +791,11 @@ var webPageStructureLesson = function () {
         });
       }
     }
+
+    // // leaves a slide
+    // deactivateSlide(slide) {
+
+    // }
 
     // executes an action if available
 
@@ -949,8 +955,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.findBoundary = findBoundary;
 exports.simplify = simplify;
 exports.stringRange = stringRange;
-exports.oxford = oxford;
-exports.plural = plural;
+exports.oxfordize = oxfordize;
+exports.pluralize = pluralize;
 exports.similarity = similarity;
 
 var _lib = require('./lib');
@@ -1020,8 +1026,13 @@ function stringRange(value, min, max, asSingular, asPlural) {
 }
 
 // performs the oxford comma
-function oxford(items, conjunction) {
+function oxfordize(items, conjunction) {
+	var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
 	var total = items.length;
+	if (!options.asLiteral) items = _lib._.map(items, function (item) {
+		return "`" + item.replace("`", '\\`') + "`";
+	});
 
 	// determine the best
 	if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
@@ -1034,12 +1045,15 @@ function oxford(items, conjunction) {
 }
 
 // pluralizes a word
-function plural(count, single, plural, none) {
-	var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
+function pluralize(value, single, plural, none) {
+	plural = plural || single + 's';
+	none = none || plural;
 
-	var value = Math.abs(count);
-	var message = value === 1 ? single : value > 1 ? plural ? plural : single + 's' : none || plural;
-	return message.replace(delimeter, count);
+	if (value === null || value === undefined) value = 0;
+	if (!isNaN(value.length)) value = value.length;
+	value = Math.abs(value);
+
+	return value === 0 ? none : value === 1 ? single : plural;
 }
 
 // checks for string similarity

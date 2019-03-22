@@ -55,8 +55,40 @@ class WebServer {
 
 // create the web server
 function createHttpServer(instance) {
-  const app = $express();
-  const server = $http.createServer(app);
+	const app = $express();
+
+	// create the correct server
+	let server;
+	let redirectToHttps;
+	if ($config.isDevelopment) {
+		server = $http.createServer(app);
+	}
+	// production server
+	else {
+
+		// load certificates
+		const keyPath = $path.resolveRoot($config.sslKey);
+		const certPath = $path.resolveRoot($config.sslCert);
+		const caPath = $path.resolveRoot($config.sslCA);
+		const key = $fsx.readFileSync(keyPath, 'utf8');
+		const cert = $fsx.readFileSync(certPath, 'utf8');
+		const ca = $fsx.readFileSync(caPath, 'utf8');
+
+		// missing certs
+		if (!(key && cert && ca))
+			throw 'missing secure certificates!';
+
+		// create the server
+		server = $https.createServer({ key, cert, ca }, app);
+
+		// redirect non-secure requests
+		redirectToHttps = $http.createServer((request, response) => {
+			response.writeHead(301, {
+				Location: `https://${request.headers['host']}${request.url}`
+			});
+			response.end();
+		});
+	}
 
   // general configuration
   app.set('subdomain offset', 1);
@@ -68,6 +100,7 @@ function createHttpServer(instance) {
 	instance.io = $io(server);
 	instance.app = app;
 	instance.server = server;
+	instance.redirectToHttps = redirectToHttps;
 }
 
 // share public resources
@@ -314,14 +347,14 @@ function as404(response) {
 
 // kick off the http server
 function startServer(instance) {
-	const { app, io } = instance;
+	const { server } = instance;
 
-	// configure servers
+	// start servers
 	if ($config.isDevelopment) {
 		console.log(`[development mode]`);
-
+		
 		// start in dev mode
-		app.listen($config.httpPort, () => {
+		server.listen($config.httpPort, () => {
 			console.log(`[server] started at http://localhost:${$config.httpPort}`);
 		});
 
@@ -330,37 +363,16 @@ function startServer(instance) {
 	else {
 		console.log('[production mode]');
 
-		// load certificates
-		const keyPath = $path.resolveRoot($config.sslKey);
-		const certPath = $path.resolveRoot($config.sslCert);
-		const caPath = $path.resolveRoot($config.sslCA);
-		const key = $fsx.readFileSync(keyPath, 'utf8');
-		const cert = $fsx.readFileSync(certPath, 'utf8');
-		const ca = $fsx.readFileSync(caPath, 'utf8');
-
-		// cannot load
-		if (!(key && cert && ca)) 
-			throw 'missing secure certificates!';
-
-		// create the server
-		const secureHttp = $https.createServer({ key, cert, ca }, app);
-		secureHttp.listen(443, () => {
-			console.log(`[server] started at http://localhost:443`);
+		// start the secure server
+		server.listen(443, () => {
+			console.log(`[server] started at https://localhost:443`);
 		});
 
-		// listen for https socket connections
-		io.listen(secureHttp);
-
-		// redirect non-secure requests
-		$http.createServer((request, response) => {
-			response.writeHead(301, {
-				Location: `https://${request.headers['host']}${request.url}`
-			});
-			response.end();
-		})
-		.listen(80, () => {
-			console.log(`[server] started at http://localhost:80`);
+		// start the redirect server
+		instance.redirectToHttps.listen(80, () => {
+			console.log(`[server] redirecting to https from http://localhost:80`);
 		});
+
 	}
 
 }

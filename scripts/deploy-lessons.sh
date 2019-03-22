@@ -8,6 +8,9 @@ echo cleaning...
 rm -r .lessons/
 mkdir .lessons/
 
+echo rebuilding lessons...
+node ./scripts/compile-all-lessons.js
+
 # write an updated version for the file -- this will
 # trigger an update on the server
 echo $(eval date +%s) > ./dist/version

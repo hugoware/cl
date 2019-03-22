@@ -70,7 +70,13 @@ function waitForValidation(obj, config) {
 		// 	validator = CssValidator;
 
 		// perform the validaton
-		var args = [content].concat(config.validation);
+		var func = function func(test) {
+			config.validation.call(instance, test, content);
+			return test;
+		};
+
+		// perform the validation
+		var args = [content].concat(func);
 		var result = validator.validate.apply(null, args);
 
 		// update the result
@@ -142,7 +148,7 @@ function waitForValidation(obj, config) {
 	});
 
 	// extra logic as required
-	if (config.init) config.init(obj);
+	if (config.init) config.init.call(obj, obj);
 }
 
 },{"../lib":6}],3:[function(require,module,exports){
@@ -441,6 +447,7 @@ var webAttributesLesson = function () {
 
     // expose API tools
     this.assistant = api.assistant;
+    this.events = api.events;
     this.preview = api.preview;
     this.screen = api.screen;
     this.progress = api.progress;
@@ -478,12 +485,17 @@ var webAttributesLesson = function () {
       // check for common controller scenarios
       if (slide.waitForFile) {
         slide.controller = _lib._.uniqueId('controller_');
-        var controller = this.controllers[slide.controller] = { exports: {} };
+        var controller = this.controllers[slide.controller] = {};
         (0, _waitForFile2.default)(controller, {
           file: slide.waitForFile
         });
       }
     }
+
+    // // leaves a slide
+    // deactivateSlide(slide) {
+
+    // }
 
     // executes an action if available
 

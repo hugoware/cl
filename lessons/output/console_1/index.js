@@ -67,6 +67,51 @@ function onExit() {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onOpenFile: function onOpenFile(file) {
+
+			if (file.path === config.file) {
+				this.progress.next();
+				return true;
+			}
+		},
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			this.file.readOnly({ path: config.file });
+			this.screen.highlight.fileBrowserItem(config.file);
+
+			// get the actual name
+			var name = config.file.split('/').pop();
+
+			this.delay(15000, function () {
+				_this.assistant.say({
+					message: '\n\t\t\t\t\t\tTo open the `' + name + '` file, [define double_click double click] the item in the [define file_browser File Browser].\n\t\t\t\t\t\tTo [define double_click double click], move the mouse cursor over the file on the list then press the _left mouse button_ twice quickly.'
+				});
+			});
+		},
+		onExit: function onExit() {
+			this.screen.highlight.clear();
+		}
+	}, config.extend);
+}
+
+},{"../lib":15}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 exports.controller = undefined;
 exports.onInit = onInit;
 exports.onReset = onReset;
@@ -158,7 +203,7 @@ function onRunCodeAlert(context, message) {
 	});
 }
 
-},{"./lib":14}],5:[function(require,module,exports){
+},{"./lib":15}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -238,7 +283,7 @@ function onRunCodeAlert() {
 	});
 }
 
-},{"./lib":14,"./validation":18}],6:[function(require,module,exports){
+},{"./lib":15,"./validation":19}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -325,7 +370,7 @@ function onRunCodeAlert() {
 	});
 }
 
-},{"./lib":14,"./validation":18}],7:[function(require,module,exports){
+},{"./lib":15,"./validation":19}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -418,7 +463,7 @@ function onRunCode() {
 	return true;
 }
 
-},{"./lib":14,"./validation":18}],8:[function(require,module,exports){
+},{"./lib":15,"./validation":19}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -522,7 +567,7 @@ function onRunCode() {
 	return true;
 }
 
-},{"./lib":14,"./validation":18}],9:[function(require,module,exports){
+},{"./lib":15,"./validation":19}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -540,7 +585,7 @@ function onEnter() {
 	this.screen.highlight.fileBrowser();
 }
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -557,6 +602,10 @@ var _createClass = function () {
 
 
 var _lib = require('./lib');
+
+var _waitForFile = require('./controllers/waitForFile');
+
+var _waitForFile2 = _interopRequireDefault(_waitForFile);
 
 var _aboutSaving = require('./aboutSaving');
 
@@ -632,6 +681,10 @@ function _interopRequireWildcard(obj) {
       }
     }newObj.default = obj;return newObj;
   }
+}
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
 }
 
 function _classCallCheck(instance, Constructor) {
@@ -941,6 +994,7 @@ var console1Lesson = function () {
 
     // expose API tools
     this.assistant = api.assistant;
+    this.events = api.events;
     this.preview = api.preview;
     this.screen = api.screen;
     this.progress = api.progress;
@@ -970,9 +1024,30 @@ var console1Lesson = function () {
 
 
   _createClass(console1Lesson, [{
-    key: 'invoke',
+    key: 'activateSlide',
+
+    // helpers
+    value: function activateSlide(slide) {
+
+      // check for common controller scenarios
+      if (slide.waitForFile) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var controller = this.controllers[slide.controller] = {};
+        (0, _waitForFile2.default)(controller, {
+          file: slide.waitForFile
+        });
+      }
+    }
+
+    // // leaves a slide
+    // deactivateSlide(slide) {
+
+    // }
 
     // executes an action if available
+
+  }, {
+    key: 'invoke',
     value: function invoke(action) {
       if (!this.respondsTo(action)) return null;
       action = toActionName(action);
@@ -999,14 +1074,22 @@ var console1Lesson = function () {
     // resets any required information between slides
 
   }, {
-    key: 'clear',
-    value: function clear() {
+    key: 'clearTimers',
+    value: function clearTimers() {
       _lib._.each(this._delays, function (cancel) {
         return cancel();
       });
       _lib._.each(this._intervals, function (cancel) {
         return cancel();
       });
+    }
+
+    // resets any required information between slides
+
+  }, {
+    key: 'clear',
+    value: function clear() {
+      this.clearTimers();
     }
 
     // sets a timed delay
@@ -1071,7 +1154,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('console_1', console1Lesson);
 
-},{"./aboutSaving":1,"./codeEditorIntro":2,"./codeOutputIntro":3,"./customLogMessage":4,"./fixNumberError":5,"./fixStringError":6,"./freeConsoleMessage":7,"./freeStringAlert":8,"./highlightFileBrowser":9,"./insertNumberError":11,"./insertStringAlert":12,"./insertStringError":13,"./lib":14,"./repeatConsoleMessage":15,"./runCodeButton":16,"./validation":18,"./waitForMainJs":19}],11:[function(require,module,exports){
+},{"./aboutSaving":1,"./codeEditorIntro":2,"./codeOutputIntro":3,"./controllers/waitForFile":4,"./customLogMessage":5,"./fixNumberError":6,"./fixStringError":7,"./freeConsoleMessage":8,"./freeStringAlert":9,"./highlightFileBrowser":10,"./insertNumberError":12,"./insertStringAlert":13,"./insertStringError":14,"./lib":15,"./repeatConsoleMessage":16,"./runCodeButton":17,"./validation":19,"./waitForMainJs":20}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1112,7 +1195,7 @@ function onRunCode() {
 	return true;
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1217,7 +1300,7 @@ function onRunCode() {
 	return true;
 }
 
-},{"./lib":14,"./validation":18}],13:[function(require,module,exports){
+},{"./lib":15,"./validation":19}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1248,7 +1331,7 @@ function onReady() {
 	this.editor.cursor({ path: '/main.js', index: 16 });
 }
 
-},{"./lib":14}],14:[function(require,module,exports){
+},{"./lib":15}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1269,7 +1352,7 @@ exports.default = {
 	CssValidator: CssValidator
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1375,7 +1458,7 @@ function onExit() {
 	this.file.readOnly({ path: '/main.js' });
 }
 
-},{"./lib":14,"./validation":18}],16:[function(require,module,exports){
+},{"./lib":15,"./validation":19}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1405,99 +1488,154 @@ function onRunCodeAlert(context, message) {
 	});
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
+exports.findBoundary = findBoundary;
 exports.simplify = simplify;
 exports.stringRange = stringRange;
-exports.oxford = oxford;
-exports.plural = plural;
+exports.oxfordize = oxfordize;
+exports.pluralize = pluralize;
 exports.similarity = similarity;
 
 var _lib = require('./lib');
 
+// finds a trimmed code boundary
+function findBoundary(code, options) {
+	var index = void 0;
+
+	// literal match
+	if (_lib._.isString(options.expression)) index = code.indexOf(options.expression);
+
+	// regular expression
+	else if (_lib._.isRegExp(options.expression)) {
+			var match = options.expression.exec(code);
+			index = match ? match.index : -1;
+		}
+		// just a number
+		else if (_lib._.isNumber(options.index)) {
+				index = options.index;
+			}
+
+	// trim at the first newline
+	var trim = 0;
+	if (!!options.trimToLine) {
+
+		while (true) {
+			var char = code.charAt(index - ++trim);
+
+			// whitespace, we can continue
+			if (char === ' ' || char === '\t') continue;
+
+			// if it's a newline, apply it
+			if (char !== '\n') trim = 0;
+
+			break;
+		}
+	}
+
+	// // check for trimming
+	// if (options.trim !== false) {
+	// 	const range = _.trimEnd(code.substr(0, index));
+	// 	index = range.length;
+	// }
+
+	if (isNaN(index)) console.warn('find boundary: NaN');
+
+	// return the final value
+	return Math.max(-1, index - trim);
+}
+
 // creates a text/numeric only representation for a strin
 function simplify(str) {
-  return (str || '').toString().replace(/[^a-z0-9]/gi, '').toLowerCase();
+	return (str || '').toString().replace(/[^a-z0-9]/gi, '').toLowerCase();
 }
 
 // checks for range messages
 function stringRange(value, min, max, asSingular, asPlural) {
-  var num = !value ? 0 : _lib._.isNumber(value.length) ? value.length : value;
+	var num = !value ? 0 : _lib._.isNumber(value.length) ? value.length : value;
 
-  if (num < min) {
-    var diff = min - num;
-    return 'Expected ' + diff + ' more ' + (diff > 1 ? asPlural : asSingular);
-  } else if (num > max) {
-    var _diff = num - max;
-    return 'Expected ' + _diff + ' fewer ' + (_diff > 1 ? asPlural : asSingular);
-  }
+	if (num < min) {
+		var diff = min - num;
+		return 'Expected ' + diff + ' more ' + (diff > 1 ? asPlural : asSingular);
+	} else if (num > max) {
+		var _diff = num - max;
+		return 'Expected ' + _diff + ' fewer ' + (_diff > 1 ? asPlural : asSingular);
+	}
 }
 
 // performs the oxford comma
-function oxford(items, conjunction) {
-  var total = items.length;
+function oxfordize(items, conjunction) {
+	var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  // determine the best
-  if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
+	var total = items.length;
+	if (!options.asLiteral) items = _lib._.map(items, function (item) {
+		return "`" + item.replace("`", '\\`') + "`";
+	});
 
-  // return the result
-  else {
-      var last = items.pop();
-      return items.join(', ') + ', ' + conjunction + ' ' + last;
-    }
+	// determine the best
+	if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
+
+	// return the result
+	else {
+			var last = items.pop();
+			return items.join(', ') + ', ' + conjunction + ' ' + last;
+		}
 }
 
 // pluralizes a word
-function plural(count, single, plural, none) {
-  var delimeter = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '@';
+function pluralize(value, single, plural, none) {
+	plural = plural || single + 's';
+	none = none || plural;
 
-  var value = Math.abs(count);
-  var message = value === 1 ? single : value > 1 ? plural ? plural : single + 's' : none || plural;
-  return message.replace(delimeter, count);
+	if (value === null || value === undefined) value = 0;
+	if (!isNaN(value.length)) value = value.length;
+	value = Math.abs(value);
+
+	return value === 0 ? none : value === 1 ? single : plural;
 }
 
 // checks for string similarity
 function similarity(s1, s2) {
-  var longer = s1;
-  var shorter = s2;
-  if (s1.length < s2.length) {
-    longer = s2;
-    shorter = s1;
-  }
-  var longerLength = longer.length;
-  if (longerLength == 0) {
-    return 1.0;
-  }
-  return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+	var longer = s1;
+	var shorter = s2;
+	if (s1.length < s2.length) {
+		longer = s2;
+		shorter = s1;
+	}
+	var longerLength = longer.length;
+	if (longerLength == 0) {
+		return 1.0;
+	}
+	return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
 }
 
 function editDistance(s1, s2) {
-  s1 = s1.toLowerCase();
-  s2 = s2.toLowerCase();
+	s1 = s1.toLowerCase();
+	s2 = s2.toLowerCase();
 
-  var costs = new Array();
-  for (var i = 0; i <= s1.length; i++) {
-    var lastValue = i;
-    for (var j = 0; j <= s2.length; j++) {
-      if (i == 0) costs[j] = j;else {
-        if (j > 0) {
-          var newValue = costs[j - 1];
-          if (s1.charAt(i - 1) != s2.charAt(j - 1)) newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
-          costs[j - 1] = lastValue;
-          lastValue = newValue;
-        }
-      }
-    }
-    if (i > 0) costs[s2.length] = lastValue;
-  }
-  return costs[s2.length];
+	var costs = new Array();
+	for (var i = 0; i <= s1.length; i++) {
+		var lastValue = i;
+		for (var j = 0; j <= s2.length; j++) {
+			if (i == 0) costs[j] = j;else {
+				if (j > 0) {
+					var newValue = costs[j - 1];
+					if (s1.charAt(i - 1) != s2.charAt(j - 1)) newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+					costs[j - 1] = lastValue;
+					lastValue = newValue;
+				}
+			}
+		}
+		if (i > 0) costs[s2.length] = lastValue;
+	}
+	return costs[s2.length];
 }
 
-},{"./lib":14}],18:[function(require,module,exports){
+},{"./lib":15}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1576,7 +1714,7 @@ var validate_complete_fix_string_alert = exports.validate_complete_fix_string_al
 	return test.__w$.merge(validate_fix_string)._n.__w$.eof();
 };
 
-},{"./lib":14,"./utils":17}],19:[function(require,module,exports){
+},{"./lib":15,"./utils":18}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1614,4 +1752,4 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}]},{},[10]);
+},{}]},{},[11]);

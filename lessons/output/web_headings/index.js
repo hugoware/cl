@@ -70,7 +70,13 @@ function waitForValidation(obj, config) {
 		// 	validator = CssValidator;
 
 		// perform the validaton
-		var args = [content].concat(config.validation);
+		var func = function func(test) {
+			config.validation.call(instance, test, content);
+			return test;
+		};
+
+		// perform the validation
+		var args = [content].concat(func);
 		var result = validator.validate.apply(null, args);
 
 		// update the result
@@ -115,6 +121,12 @@ function waitForValidation(obj, config) {
 			this.editor.focus();
 			this.progress.block();
 			this.file.allowEdit({ path: config.file });
+
+			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+				args[_key] = arguments[_key];
+			}
+
+			if (config.onEnter) config.onEnter.apply(this, args);
 		},
 		onInit: function onInit() {
 			if ('area' in config) this.editor.area({ path: config.file, start: config.area.start, end: config.area.end });
@@ -136,7 +148,7 @@ function waitForValidation(obj, config) {
 	});
 
 	// extra logic as required
-	if (config.init) config.init(obj);
+	if (config.init) config.init.call(obj, obj);
 }
 
 },{"../lib":9}],3:[function(require,module,exports){
@@ -156,6 +168,10 @@ var _createClass = function () {
 
 
 var _lib = require('./lib');
+
+var _waitForFile = require('./controllers/waitForFile');
+
+var _waitForFile2 = _interopRequireDefault(_waitForFile);
 
 var _insertAllHeadings = require('./insertAllHeadings');
 
@@ -199,6 +215,10 @@ function _interopRequireWildcard(obj) {
       }
     }newObj.default = obj;return newObj;
   }
+}
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
 }
 
 function _classCallCheck(instance, Constructor) {
@@ -402,6 +422,7 @@ var webHeadingsLesson = function () {
 
     // expose API tools
     this.assistant = api.assistant;
+    this.events = api.events;
     this.preview = api.preview;
     this.screen = api.screen;
     this.progress = api.progress;
@@ -431,9 +452,30 @@ var webHeadingsLesson = function () {
 
 
   _createClass(webHeadingsLesson, [{
-    key: 'invoke',
+    key: 'activateSlide',
+
+    // helpers
+    value: function activateSlide(slide) {
+
+      // check for common controller scenarios
+      if (slide.waitForFile) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var controller = this.controllers[slide.controller] = {};
+        (0, _waitForFile2.default)(controller, {
+          file: slide.waitForFile
+        });
+      }
+    }
+
+    // // leaves a slide
+    // deactivateSlide(slide) {
+
+    // }
 
     // executes an action if available
+
+  }, {
+    key: 'invoke',
     value: function invoke(action) {
       if (!this.respondsTo(action)) return null;
       action = toActionName(action);
@@ -460,14 +502,22 @@ var webHeadingsLesson = function () {
     // resets any required information between slides
 
   }, {
-    key: 'clear',
-    value: function clear() {
+    key: 'clearTimers',
+    value: function clearTimers() {
       _lib._.each(this._delays, function (cancel) {
         return cancel();
       });
       _lib._.each(this._intervals, function (cancel) {
         return cancel();
       });
+    }
+
+    // resets any required information between slides
+
+  }, {
+    key: 'clear',
+    value: function clear() {
+      this.clearTimers();
     }
 
     // sets a timed delay
@@ -532,7 +582,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_headings', webHeadingsLesson);
 
-},{"./insertAllHeadings":4,"./insertH1":5,"./insertLineBreak":6,"./insertMultilineParagraph":7,"./insertParagraph":8,"./lib":9,"./replaceLineBreak":10,"./validation":11,"./waitForIndex":12}],4:[function(require,module,exports){
+},{"./controllers/waitForFile":1,"./insertAllHeadings":4,"./insertH1":5,"./insertLineBreak":6,"./insertMultilineParagraph":7,"./insertParagraph":8,"./lib":9,"./replaceLineBreak":10,"./validation":11,"./waitForIndex":12}],4:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -543,7 +593,9 @@ var _waitForValidation = require('./controllers/waitForValidation');
 
 var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
 
 (0, _waitForValidation2.default)(module.exports, {
 
@@ -574,7 +626,9 @@ var _waitForValidation = require('./controllers/waitForValidation');
 
 var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
 
 (0, _waitForValidation2.default)(module.exports, {
 
@@ -590,7 +644,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 			message: 'That looks good! The [define preview_area] now shows the heading you just added.'
 		});
 	},
-
 
 	// setup any custom stuff
 	init: function init(controller) {
@@ -612,7 +665,9 @@ var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
 
 var _validation = require('./validation');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
 
 (0, _waitForValidation2.default)(module.exports, {
 
@@ -647,7 +702,9 @@ var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
 
 var _validation = require('./validation');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
 
 (0, _waitForValidation2.default)(module.exports, {
 
@@ -683,7 +740,9 @@ var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
 
 var _validation = require('./validation');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
 
 var $inTag = void 0;
 
@@ -741,7 +800,9 @@ var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
 
 var _validation = require('./validation');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
 
 (0, _waitForValidation2.default)(module.exports, {
 
@@ -772,7 +833,15 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _toConsumableArray(arr) {
+	if (Array.isArray(arr)) {
+		for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+			arr2[i] = arr[i];
+		}return arr2;
+	} else {
+		return Array.from(arr);
+	}
+}
 
 var validate_all_headings = exports.validate_all_headings = function validate_all_headings(test) {
 	var headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -824,7 +893,9 @@ var _waitForFile = require('./controllers/waitForFile');
 
 var _waitForFile2 = _interopRequireDefault(_waitForFile);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
 
 (0, _waitForFile2.default)(module.exports, {
 	file: '/index.html'
