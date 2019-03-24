@@ -694,7 +694,7 @@ line 2`
 			.open('a')
 			.close('/>'));
 
-		expect(result.error.message).toMatch(/expected self closing/i);
+		expect(result.error.message).toMatch(/expected closing tag/i);
 	});
 
 

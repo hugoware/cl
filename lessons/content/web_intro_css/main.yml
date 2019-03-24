@@ -1,0 +1,362 @@
+- slide:
+    mode: overlay
+    title: Introduction to CSS
+    content: |
+      Welcome to your first lesson about how to use [define css].
+
+      [define css] is very different than the [define html] you have been learning so far.
+
+- slide:
+    content: |
+      [define css] stands for Cascading Style Sheet and is used to apply visual styles to an [define html] page.
+
+      In a sense, [define html] decides what a web page says, whereas [define css] decides what a web page looks like.
+
+- slide:
+    start: true
+    content: |
+      Before [define css] was introduced styles, such as fonts and colors, were applied to a page using even more [define html_element s].
+
+      [snippet old_way]
+
+      This might seem like a straightforward approach, however it quickly became very difficult for developers to manage.
+      
+- slide:
+    content: |
+      For example, if you wanted to change the color you would simply update the [define html] attribute.
+
+      [snippet old_way]
+
+      This might not seem like a lot for a single [define html_element], but if you had a website that had hundreds of instances of the same color you'd have to find and update each one.
+
+- slide:
+    content: |
+      Additionally, if you were to make a mistake you could potentially cause the page to display incorrectly.
+
+      [snippet old_way]
+
+      Needless to say, the old way was very time-consuming and prone to errors.
+
+- slide:
+    content: |
+      Fortunately, [define css] was created to eliminate this problem and make it easier to control the visual style of an entire web site using just one single file.
+
+- slide:
+    content: |
+      You may remember from an earlier lesson that we used the `link` [define html_element Element] to attach a file named `style.css` to a web page. That file was an example of a [define css_stylesheet].
+
+      After the [define css_stylesheet] was linked the appearance of the web page changed dramatically.
+
+- slide:
+    content: |
+      Let's take a look at a simple example of [define css]. We'll start by breaking down what each part is responsible for.
+
+      [snippet basic_example]
+
+- slide:
+    content: |
+      A [define css] [define css_stylesheet] is made up of many individual style rules called [define css_declaration_block s]. You will normally find many of these indvidual blocks in a single [define css_stylesheet]
+
+      [snippet basic_example highlight:0,19,line]
+
+
+- slide:
+    start: true
+    content: |
+      The first part of a [define css_declaration_block l] is the [define css_selector]. You'll notice that this is the same name as an [define html_element] that you have used in earlier lessons.
+
+      [snippet basic_example highlight:0,2]
+
+- slide:
+    content: |
+      A [define css_selector] is responsible for _"selecting"_ the [define html_element Element] that should have the visual style applied to it.
+
+      [snippet basic_example highlight:0,2]
+
+      In this example, the [define web_browser] would _"select"_ any `h1` [define html_element Elements] it found on the page and then apply the style to it.
+
+      
+- slide:
+    content: |
+      After the [define css_selector] is a `{`. This starts the [define css] [define css_declaration_block].
+
+      [snippet basic_example highlight:3,1|18,1]
+
+      Everything that's between the starting and ending curly braces are visual styles that will be applied to the [define html_element Element] that the [define css_selector] matched.
+
+- slide:
+    start: true
+    content: |
+      Each visual style inside of a [define css] [define css_declaration_block l] is called a [define css_declaration l].
+
+      [snippet basic_example highlight:6,11]
+
+- slide:
+    content: |
+      The first part of a [define css_declaration l] is the [define css_property l]. This identifies what should be changed on the [define html_element Element], such as colors, font types, and more.
+      
+      [snippet basic_example highlight:6,5]
+
+      In this example, the [define css_property l] is `color`, meaning that the text color of the selected `h1` [define html_element Elements] will be changed.
+
+- slide:
+    content: |
+      After each [define css_property l] you must use a `:` before writing the next part of the [define css_declaration l].
+
+      [snippet basic_example highlight:11,1]
+
+- slide:
+    content: |
+      Next, the following [define css_value l] will be applied to the [define css_property l] of the selected [define html_element Elements].
+      
+      [snippet basic_example highlight:13,3]
+
+      In this example, all selected `h1` [define html_element Elements] would have their text color changed to the color _"red"_.
+
+
+- slide:
+    content: |
+      Finally, you must end each [define css_declaration l] with a `;`. [define css] allows for [define css_declaration l] [define css_value ls] to go across multiple lines.
+      
+      [snippet basic_example highlight:16,1]
+
+      Without the `;`, the [define css] [define css_declaration l] would not know where to end.
+
+- slide:
+    content: |
+      After you have finished writing all of the [define css_declaration ls] you plan to use it's important to use a `}` to end the [define css_declaration_block l].
+      
+      [snippet basic_example highlight:18,1]
+
+      Forgetting a `}` will most likely cause a [define css] [define css_stylesheet] to have errors and not display correctly.
+
+- slide:
+  content: |
+    Typically you'll find that [define css_declaration_block ls] have many individual [define css_declaration s] to apply styles to a variety of different things about an [define html_element].
+
+- slide:
+    content: |
+      Here's an example of a somewhat more realistic [define css] file.
+
+      [snippet multiple_props]
+
+      You'll notice each [define css_selector] has multiple [define css_declaration ls] that change the visual style of a variety of properties for each _"selected"_ [define html_element]
+
+- slide:
+    content: |
+      There's a lot to learn when it comes to using [define css].
+
+      In later lessons we'll learn more about different types of [define css_selector s] you can use. We will also discuss good practices for organizing your [define css] files.
+
+- slide:
+    start: true
+    mode: popup
+    emote: happy
+    content: |
+      As usual, the best way to learn something new is to try it out for yourself!
+
+- slide:
+    waitForFile: /index.html
+    content: |
+      Let's get started!
+
+      Open the file named `index.html` by [define double_click double-clicking] on it!
+
+- slide:
+    content: |
+      You can see in the [define preview_area] that we have a basic web page that has no styles applied to it. The background is white and the font is a standard serif style black font.
+
+- slide:
+    controller: linkIndex
+    content: |
+      Let's include the `||/style.css|style.css||` file by using a `link` [define html_element Element].
+
+      _If you're having a hard time remembering how to add a `link` [define html_element Element] then use the *"Show Hints"* button for help._
+
+- slide:
+    waitForFile: /style.css
+    content: |
+      Open the `style.css` file so we can take a look at the [define css_declaration ls]
+
+- slide:
+    content: |
+      read the current data
+
+
+- slide:
+    content: |
+      point out it needs to be linked
+
+
+- slide:
+    waitForFile: /index.html
+    content: |
+      open html file
+
+
+- slide:
+    content: |
+      edit html file to include `link`
+
+
+- slide:
+    content: |
+      css is now updated
+
+
+- slide:
+    content: |
+      switch back to CSS file
+
+
+- slide:
+    content: |
+      edit the color for the background
+
+
+- slide:
+    content: |
+      write a new rule for styling the header
+
+
+- slide:
+    content: |
+      write another rule to style the paragraph
+
+
+- slide:
+    content: |
+      as mentioned before, you can target more than one element with a comma
+
+
+- slide:
+    content: |
+      write a rule for both the heading and paragraph to make the font sans-serif
+
+
+- slide:
+    content: |
+      Looks good
+
+
+- slide:
+    content: |
+      advantage of CSS is you can write it in one place and use it on many pages
+
+
+- slide:
+    content: |
+      open other.html
+
+
+- slide:
+    content: |
+      add the link to the css file (no hint)
+
+
+- slide:
+    content: |
+      css is very flexible and works 
+
+
+- slide:
+    mode: popup
+    content: |
+      let's review what we've learned
+
+- question:
+    title: what does CSS stand for
+
+    explain: |
+      After the question is finished hint
+
+    choices:
+      - Cascading Style Sheets
+      - Central Style System
+      - Cover Stenci and Slice
+      - Creative Syntax for Styles
+
+- question:
+    title: What is the highlighted part called?
+
+    content:
+      selector
+
+    explain: |
+      After the question is finished hint
+
+    choices:
+      - A selector
+      - A segmenter
+      - A property
+      - A value
+
+- question:
+    title: What is the highlighted part called?
+
+    content:
+      declaration
+
+    explain: |
+      After the question is finished hint
+
+    choices:
+      - A declaration
+      - A selector
+      - A linker
+      - A bytecode
+
+- question:
+    title: CSS can be linked on multiple pages
+
+    explain: |
+      After the question is finished hint
+
+    choices:
+      - 'True'
+      - 'False'
+
+
+# - question:
+#     count: 4   # optional question count
+#     title: Main title
+#     
+#     hint: Optional helpful hint
+
+#     explain: |
+#       After the question is finished hint
+
+#     choices:
+#       - correct answer
+#       - wrong answer 1
+#       - wrong answer 2
+#       - wrong answer 3
+
+# - slide:
+#     flags: +OPEN_FILE
+#     emote: happy
+#     controller: name
+#     mode: popup
+#     content: |
+#       Way to go! You've finished this lesson!
+#       
+#       [snippet name highlight:0,5|20,5]
+#       
+#       [snippet html preview:50%]
+#       
+#       [image default.png]
+#       
+#       [image full.jpg frame]
+#       
+#       Inline replacement is done using ||does|duz||
+#       
+#       A normal [define html] is like this
+#       
+#       A lowercase [define html l] is like this
+#       
+#       A plural [define html p] is like this
+#       A plural [define html s] or like this
+#       
+#       Can be combined as [define html lp] [define html ls]
+#       
+#       

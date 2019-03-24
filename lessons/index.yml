@@ -5,6 +5,7 @@ web:
   - web_attributes
   - web_page_structure
   - web_hyperlinks
+  - web_intro_css
 
 code:
   - console_1

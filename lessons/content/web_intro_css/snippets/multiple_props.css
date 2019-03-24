@@ -1,0 +1,10 @@
+h1 {
+	color: red;
+	font-weight: bold;
+	font-size: 32px;
+}
+
+p {
+	color: purple;
+	font-style: italic;
+}

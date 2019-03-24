@@ -9,3 +9,28 @@
   name: Stylesheet
   define:
     The name of a file with CSS rules
+
+- id: css_selector
+  name: Selector
+  define:
+    Selection note
+
+- id: css_declaration
+  name: Declaration
+  define:
+    A property and value pair
+
+- id: css_declaration_block
+  name: Declaration Block
+  define:
+    A complete CSS definition including the Selector and Declarations
+
+- id: css_property
+  name: Property
+  define:
+    The target for a CSS declaration, such as color, background, font, and more
+
+- id: css_value
+  name: Value
+  define:
+    The value to use with the leading Property

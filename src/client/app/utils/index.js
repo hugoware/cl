@@ -149,6 +149,7 @@ export function getFileInfo(fileName) {
  * @returns {string} the file path found
  */
 export function resolvePathFromUrl(path, relativeTo) {
+	if (_.size(path) === 0) return null;
 	path = url.resolve(relativeTo + '/', path);
 	return $lfs.normalizePath(path);
 }
