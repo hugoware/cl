@@ -1,5 +1,5 @@
 
-import { _, CodeValidator, HtmlValidator } from '../lib';
+import { _, CodeValidator, HtmlValidator, CssValidator } from '../lib';
 
 
 export default function waitForValidation(obj, config) {
@@ -20,8 +20,8 @@ export default function waitForValidation(obj, config) {
 			validator = CodeValidator;
 		else if (config.validator === 'html' || /\.html?$/.test(config.file))
 			validator = HtmlValidator;
-		// else if (config.validator === 'css' || /\.css$/.test(config.file))
-		// 	validator = CssValidator;
+		else if (config.validator === 'css' || /\.css$/.test(config.file))
+			validator = CssValidator;
 		
 		// perform the validaton
 		const func = test => {
@@ -84,11 +84,16 @@ export default function waitForValidation(obj, config) {
 		},
 
 		onInit() {
+			console.log('vv', config);
 			if ('area' in config)
 				this.editor.area({ path: config.file, start: config.area.start, end: config.area.end });
 
-			if ('cursor' in config)
-				this.editor.cursor({ path: config.file, index: config.cursor });
+			if ('cursor' in config) {
+				this.editor.focus();
+				setTimeout(() => {
+					this.editor.cursor({ path: config.file, index: config.cursor });
+				}, 10)
+			}
 
 			validate(this);
 		},
@@ -101,11 +106,14 @@ export default function waitForValidation(obj, config) {
 			this.assistant.revert();
 		},
 
-		onExit() {
+		onExit(...args) {
 			this.file.readOnly({ path: config.file });
+
+			if (config.onExit)
+				config.onExit.apply(this, args);
 		}
 
-	});
+	}, config.extend);
 
 	// extra logic as required
 	if (config.init)

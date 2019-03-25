@@ -24,7 +24,10 @@ export default class ScreenAPI {
 			const source = this[key];
 
 			source.fileBrowserItem = (path, options) =>
-				this[key](`.item[file="${path}"]`, options);
+				this[key](`#file-browser .item[file="${path}"]`, options);
+
+			source.tab = (path, options) =>
+				this[key](`#workspace .tab[file="${path}"]`, options);
 		});
 
 		// highlights

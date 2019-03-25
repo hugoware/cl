@@ -4,6 +4,106 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.controller = undefined;
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+var _waitForValidation = require('./controllers/waitForValidation');
+
+var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
+
+var _validation = require('./validation');
+
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var controller = exports.controller = true;
+
+(0, _waitForValidation2.default)(module.exports, {
+
+	file: '/style.css',
+
+	validation: function validation(test, code) {
+		(0, _validation.validate_css_file)(this.state, false, test);
+	},
+	onValid: function onValid() {
+		this.progress.allow();
+		this.assistant.say({
+			emote: 'happy',
+			message: 'Great! Now the `h1` [define html_element Element] on this page is using a new color!'
+		});
+	}
+});
+
+},{"./controllers/waitForValidation":5,"./lib":8,"./utils":12,"./validation":13}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+var _waitForValidation = require('./controllers/waitForValidation');
+
+var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
+
+var _validation = require('./validation');
+
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var controller = exports.controller = true;
+
+(0, _waitForValidation2.default)(module.exports, {
+
+	file: '/style.css',
+
+	validation: function validation(test, code) {
+		(0, _validation.validate_css_file)(this.state, true, test);
+	},
+	onValid: function onValid() {
+		this.progress.allow();
+		this.assistant.say({
+			emote: 'happy',
+			message: 'You got it! Now the `p` [define html_element Elements] are also using a new color!'
+		});
+	},
+	onEnter: function onEnter() {
+		this.editor.hint.disable();
+	},
+	onExit: function onExit() {
+		this.editor.hint.enable();
+	},
+
+	extend: {
+		onConfigure: function onConfigure(data) {
+
+			var colors = ['white', 'yellow', 'pink', 'aqua', 'silver'];
+			var remove = colors.indexOf(this.state.selectedHeadingColor);
+			if (remove > -1) colors.splice(remove, 1);
+
+			data.content = "Write a [define css_declaration_block] that selects all `p` [define html_element Elements] and sets the `color` [define css_property l] to any of the following colors." + "\n\n" + "[silent] " + _lib._.map(colors, function (color) {
+				return "`" + color + "`";
+			}).join(', ');
+		}
+	}
+
+});
+
+},{"./controllers/waitForValidation":5,"./lib":8,"./utils":12,"./validation":13}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 exports.default = configure;
 
 var _lib = require('../lib');
@@ -43,7 +143,55 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":4}],2:[function(require,module,exports){
+},{"../lib":8}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onChangeTab: function onChangeTab(file) {
+
+			if (file.path === config.file) {
+				this.progress.next();
+				return true;
+			}
+		},
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			this.file.readOnly({ path: config.file });
+			this.screen.highlight.tab(config.file);
+
+			// get the actual name
+			var name = config.file.split('/').pop();
+
+			this.delay(15000, function () {
+				_this.assistant.say({
+					message: '\n\t\t\t\t\t\tSwitch to the `' + name + '` file by clicking on the highlighted [define codelab_tab tab] in the [define codelab_editor]'
+				});
+			});
+		},
+		onExit: function onExit() {
+			this.screen.highlight.clear();
+		}
+	}, config.extend);
+
+	// initialization
+	if (obj.init) obj.init(obj);
+}
+
+},{"../lib":8}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -65,9 +213,7 @@ function waitForValidation(obj, config) {
 		var validator = void 0;
 
 		// check for a named validator
-		if (config.validator === 'code' || /\.js$/.test(config.file)) validator = _lib.CodeValidator;else if (config.validator === 'html' || /\.html?$/.test(config.file)) validator = _lib.HtmlValidator;
-		// else if (config.validator === 'css' || /\.css$/.test(config.file))
-		// 	validator = CssValidator;
+		if (config.validator === 'code' || /\.js$/.test(config.file)) validator = _lib.CodeValidator;else if (config.validator === 'html' || /\.html?$/.test(config.file)) validator = _lib.HtmlValidator;else if (config.validator === 'css' || /\.css$/.test(config.file)) validator = _lib.CssValidator;
 
 		// perform the validaton
 		var func = function func(test) {
@@ -129,9 +275,17 @@ function waitForValidation(obj, config) {
 			if (config.onEnter) config.onEnter.apply(this, args);
 		},
 		onInit: function onInit() {
+			var _this = this;
+
+			console.log('vv', config);
 			if ('area' in config) this.editor.area({ path: config.file, start: config.area.start, end: config.area.end });
 
-			if ('cursor' in config) this.editor.cursor({ path: config.file, index: config.cursor });
+			if ('cursor' in config) {
+				this.editor.focus();
+				setTimeout(function () {
+					_this.editor.cursor({ path: config.file, index: config.cursor });
+				}, 10);
+			}
 
 			validate(this);
 		},
@@ -144,14 +298,56 @@ function waitForValidation(obj, config) {
 		},
 		onExit: function onExit() {
 			this.file.readOnly({ path: config.file });
+
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			if (config.onExit) config.onExit.apply(this, args);
 		}
-	});
+	}, config.extend);
 
 	// extra logic as required
 	if (config.init) config.init.call(obj, obj);
 }
 
-},{"../lib":4}],3:[function(require,module,exports){
+},{"../lib":8}],6:[function(require,module,exports){
+'use strict';
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+var _waitForValidation = require('./controllers/waitForValidation');
+
+var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
+
+var _validation = require('./validation');
+
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
+
+(0, _waitForValidation2.default)(module.exports, {
+
+	file: '/style.css',
+
+	validation: function validation(test, code) {
+		this.state.selectedBackgroundColor = (0, _validation.validate_background_color)(null, test);
+	},
+	onValid: function onValid() {
+
+		var color = this.state.selectedBackgroundColor;
+		var message = color === 'green' ? 'What a nice color of green! Makes me think of a nice walk in the forest!' : color === 'red' ? 'What a bold color of red! It definitely draws a lot of attention!' : color === 'gray' ? 'Using gray? It\'s neutral, sophisticated, and classy -- I like it!' : color === 'purple' ? 'Great color! Did you know that purple has been associated with royalty for centuries?' : "Oh my! You selected _magenta_? Such a bright and vibrant color!";
+
+		var emote = color === 'magenta' ? 'surprised' : 'normal';
+
+		this.progress.allow();
+		this.assistant.say({ emote: emote, message: message });
+	}
+});
+
+},{"./controllers/waitForValidation":5,"./lib":8,"./utils":12,"./validation":13}],7:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -173,13 +369,45 @@ var _waitForFile = require('./controllers/waitForFile');
 
 var _waitForFile2 = _interopRequireDefault(_waitForFile);
 
+var _waitForTab = require('./controllers/waitForTab');
+
+var _waitForTab2 = _interopRequireDefault(_waitForTab);
+
+var _addH1Rule = require('./addH1Rule');
+
+var addH1Rule = _interopRequireWildcard(_addH1Rule);
+
+var _addPRule = require('./addPRule');
+
+var addPRule = _interopRequireWildcard(_addPRule);
+
+var _firstBackgroundChange = require('./firstBackgroundChange');
+
+var firstBackgroundChange = _interopRequireWildcard(_firstBackgroundChange);
+
+var _linkAbout = require('./linkAbout');
+
+var linkAbout = _interopRequireWildcard(_linkAbout);
+
 var _linkIndex = require('./linkIndex');
 
 var linkIndex = _interopRequireWildcard(_linkIndex);
 
+var _secondBackgroundChange = require('./secondBackgroundChange');
+
+var secondBackgroundChange = _interopRequireWildcard(_secondBackgroundChange);
+
 var _validation = require('./validation');
 
 var validation = _interopRequireWildcard(_validation);
+
+var _verifyStyles = require('./verifyStyles');
+
+var verifyStyles = _interopRequireWildcard(_verifyStyles);
+
+var _waitForStyleTab = require('./waitForStyleTab');
+
+var waitForStyleTab = _interopRequireWildcard(_waitForStyleTab);
 
 function _interopRequireWildcard(obj) {
   if (obj && obj.__esModule) {
@@ -227,9 +455,8 @@ var webIntroCssLesson = function () {
         "title": "Introduction to CSS",
         "content": "Welcome to your first lesson about how to use [define css].\n\n[define css] is very different than the [define html] you have been learning so far.\n"
       }, {
-        "content": "[define css] stands for Cascading Style Sheet and is used to apply visual styles to an [define html] page.\n\nIn a sense, [define html] decides what a web page says, whereas [define css] decides what a web page looks like.\n"
+        "content": "[define css] stands for Cascading Style Sheets and is used to apply visual styles to an [define html] page.\n\nIn a sense, [define html] decides what a web page says, whereas [define css] decides what a web page looks like.\n"
       }, {
-        "start": true,
         "content": "Before [define css] was introduced styles, such as fonts and colors, were applied to a page using even more [define html_element s].\n\n[snippet old_way]\n\nThis might seem like a straightforward approach, however it quickly became very difficult for developers to manage.\n"
       }, {
         "content": "For example, if you wanted to change the color you would simply update the [define html] attribute.\n\n[snippet old_way]\n\nThis might not seem like a lot for a single [define html_element], but if you had a website that had hundreds of instances of the same color you'd have to find and update each one.\n"
@@ -244,14 +471,12 @@ var webIntroCssLesson = function () {
       }, {
         "content": "A [define css] [define css_stylesheet] is made up of many individual style rules called [define css_declaration_block s]. You will normally find many of these indvidual blocks in a single [define css_stylesheet]\n\n[snippet basic_example highlight:0,19,line]\n"
       }, {
-        "start": true,
         "content": "The first part of a [define css_declaration_block l] is the [define css_selector]. You'll notice that this is the same name as an [define html_element] that you have used in earlier lessons.\n\n[snippet basic_example highlight:0,2]\n"
       }, {
         "content": "A [define css_selector] is responsible for _\"selecting\"_ the [define html_element Element] that should have the visual style applied to it.\n\n[snippet basic_example highlight:0,2]\n\nIn this example, the [define web_browser] would _\"select\"_ any `h1` [define html_element Elements] it found on the page and then apply the style to it.\n"
       }, {
         "content": "After the [define css_selector] is a `{`. This starts the [define css] [define css_declaration_block].\n\n[snippet basic_example highlight:3,1|18,1]\n\nEverything that's between the starting and ending curly braces are visual styles that will be applied to the [define html_element Element] that the [define css_selector] matched.\n"
       }, {
-        "start": true,
         "content": "Each visual style inside of a [define css] [define css_declaration_block l] is called a [define css_declaration l].\n\n[snippet basic_example highlight:6,11]\n"
       }, {
         "content": "The first part of a [define css_declaration l] is the [define css_property l]. This identifies what should be changed on the [define html_element Element], such as colors, font types, and more.\n\n[snippet basic_example highlight:6,5]\n\nIn this example, the [define css_property l] is `color`, meaning that the text color of the selected `h1` [define html_element Elements] will be changed.\n"
@@ -268,7 +493,6 @@ var webIntroCssLesson = function () {
       }, {
         "content": "There's a lot to learn when it comes to using [define css].\n\nIn later lessons we'll learn more about different types of [define css_selector s] you can use. We will also discuss good practices for organizing your [define css] files.\n"
       }, {
-        "start": true,
         "mode": "popup",
         "emote": "happy",
         "content": "As usual, the best way to learn something new is to try it out for yourself!\n"
@@ -282,61 +506,72 @@ var webIntroCssLesson = function () {
         "content": "Let's include the `||/style.css|style.css||` file by using a `link` [define html_element Element].\n\n_If you're having a hard time remembering how to add a `link` [define html_element Element] then use the *\"Show Hints\"* button for help._\n"
       }, {
         "waitForFile": "/style.css",
-        "content": "Open the `style.css` file so we can take a look at the [define css_declaration ls]\n"
+        "content": "Open the `style.css` file so we can take a look at what's inside!\n"
       }, {
-        "content": "read the current data\n"
+        "content": "This [define css] file only has one [define css_declaration l] in it. The [define css_selector] locates the `body` [define html_element Element] on the page and then applies a background color of _orange_.\n\nIn this case, the `body` [define html_element Element] represents the entire page.\n"
       }, {
-        "content": "point out it needs to be linked\n"
+        "controller": "firstBackgroundChange",
+        "content": "Let's start by trying to change the background color to something else. There are many different color names that you can use with [define css], but for this example let's limit it to just a few choices.\n\nChange the background color to one of the following colors.\n\n[silent] `red`, `green`, `purple`, `magenta`, `gray`\n"
       }, {
-        "waitForFile": "/index.html",
-        "content": "open html file\n"
+        "content": "Now try writing the entire [define css] [define css_declaration l], however this time we're going to use `h1` as the [define css_selector].\n\nDoing this will change the font color for all `h1` [define html_element Elements] on the page.\n"
       }, {
-        "content": "edit html file to include `link`\n"
+        "controller": "addH1Rule",
+        "content": "Write a [define css_declaration_block] that selects all `h1` [define html_element Elements] and sets the `color` [define css_property l] to any of the following colors.\n\n[silent] `white`, `yellow`, `pink`, `aqua`, `silver`\n"
       }, {
-        "content": "css is now updated\n"
+        "content": "Let's try that again, but this time we're going to change the `color` [define css_property l] for the `p` [define html_element Elements] on the page.\n\nThis time code hints will be turned off, but if you get stuck, use the *\"Show Hints\"* button for help.\n"
       }, {
-        "content": "switch back to CSS file\n"
+        "controller": "addPRule"
       }, {
-        "content": "edit the color for the background\n"
+        "emote": "happy",
+        "content": "Looks good! While there's still plenty to do this website is starting to have some personality!\n"
       }, {
-        "content": "write a new rule for styling the header\n"
+        "waitForFile": "/about.html",
+        "content": "Let's take a look at the other [define html] page in this project.\n\nOpen the file named `about.html` by [define double_click double clicking] on it.\n"
       }, {
-        "content": "write another rule to style the paragraph\n"
+        "emote": "sad",
+        "content": "Hmm, it seems like this page does not have any of the same visual styles as `index.html`!\n"
       }, {
-        "content": "as mentioned before, you can target more than one element with a comma\n"
+        "content": "As mentioned before, one of the advantages to using [define css] is that many [define html] pages can share the same [define css_stylesheet l].\n\nFortunately, since all of the styles are in a single file it will be easy to use the `link` [define html_element Element] to add them to this page.\n"
       }, {
-        "content": "write a rule for both the heading and paragraph to make the font sans-serif\n"
+        "controller": "linkAbout",
+        "content": "Create a `link` [define html_element Element] that attaches the `style.css` file.\n\nCode hints will be turned off for this exercise, but if you get stuck then you can always use the *Show Hints* button to turn them back on.\n"
       }, {
-        "content": "Looks good\n"
+        "content": "At this point, both HTML pages use the same stylesheet. This means that if you make a change to the stylesheet, both pages will show the change.\n"
       }, {
-        "content": "advantage of CSS is you can write it in one place and use it on many pages\n"
+        "waitForTab": "/style.css",
+        "content": "Let's make a change to the stylesheet so we can see this in action.\n\nSwitch to `style.css` by clicking on the [define codelab_tab tab] and the [define codelab_editor].\n"
       }, {
-        "content": "open other.html\n"
+        "controller": "secondBackgroundChange",
+        "content": "Change the background color for the `body` [define html_element Element] to one of the following colors.\n\n[silent] `red`, `green`, `purple`, `magenta`, `gray`\n"
       }, {
-        "content": "add the link to the css file (no hint)\n"
+        "highlight": "::preview a",
+        "controller": "verifyStyles",
+        "content": "Try navigating between the two pages by clicking on the links in the [define preview_area].\n\nYou should see the new background color on both the `index.html` and `about.html` pages.\n"
       }, {
-        "content": "css is very flexible and works \n"
+        "emote": "happy",
+        "mode": "overlay",
+        "content": "They're still a lot left to learn about CSS but for now we've made some good progress.\n\nLet's review what we've learned so far!\n"
       }, {
-        "mode": "popup",
-        "content": "let's review what we've learned\n"
-      }, {
-        "title": "what does CSS stand for",
-        "explain": "After the question is finished hint\n",
+        "title": "What does **CSS** stand for?",
+        "explain": "[define css] stands for Cascading Style Sheets which is a language used for describing the visual appearance of [define html] documents.\n",
         "choices": ["Cascading Style Sheets", "Central Style System", "Cover Stenci and Slice", "Creative Syntax for Styles"]
       }, {
-        "title": "What is the highlighted part called?",
-        "content": "selector",
-        "explain": "After the question is finished hint\n",
+        "title": "What is the `highlighted` section of code called?",
+        "content": "[snippet quiz_example highlight:0,2]\n",
+        "explain": "A [define css_selector] identifies the [define html_element Element] that each of the [define css_declaration ls] should be applied to.\n",
         "choices": ["A selector", "A segmenter", "A property", "A value"]
       }, {
-        "title": "What is the highlighted part called?",
-        "content": "declaration",
-        "explain": "After the question is finished hint\n",
-        "choices": ["A declaration", "A selector", "A linker", "A bytecode"]
+        "title": "What is the `highlighted` section of code called?",
+        "content": "[snippet quiz_example highlight:6,10]\n",
+        "explain": "The [define css] [define css_property l] is used to identify what attribute will be changed about an [define html_element]. This normally includes visual properties such as backgrounds, colors, and fonts.\n",
+        "choices": ["A property", "A selector", "A linker", "A bytecode"]
       }, {
-        "title": "CSS can be linked on multiple pages",
-        "explain": "After the question is finished hint\n",
+        "title": "CSS can be linked on multiple pages?",
+        "explain": "One of the biggest advantages to using [define css] is that it's easy to share the styles between many web pages by simply including a `link` [define html_element Element] to the correct [define css_stylesheet l].\n",
         "choices": ["True", "False"]
+      }, {
+        "mode": "popup",
+        "content": "Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.\n\nGreat work, and I'll see you in the next lesson!\n"
       }],
       "snippets": {
         "basic_example": {
@@ -350,41 +585,55 @@ var webIntroCssLesson = function () {
         "old_way": {
           "content": "<font size=\"5\" color=\"red\">\n\t<b>\n\t\t<u>\n\t\t\tHello, Old Way!\n\t\t</u>\n\t</b>\n</font>",
           "type": "html"
+        },
+        "quiz_example": {
+          "content": "h1 {\n\tbackground: green;\n}",
+          "type": "css"
         }
       },
       "resources": [],
       "definitions": {
+        "html_element": {
+          "id": "html_element",
+          "name": "HTML Element",
+          "define": "This is about HTML elements\n"
+        },
+        "css_declaration_block": {
+          "id": "css_declaration_block",
+          "name": "Declaration Block",
+          "define": "A complete CSS definition including the Selector and Declarations"
+        },
+        "css_property": {
+          "id": "css_property",
+          "name": "Property",
+          "define": "The target for a CSS declaration, such as color, background, font, and more"
+        },
         "css": {
           "id": "css",
           "name": "CSS",
           "aka": "Cascading Style Sheets",
           "define": "Special rules for styling\n"
         },
+        "css_stylesheet": {
+          "id": "css_stylesheet",
+          "name": "Stylesheet",
+          "define": "The name of a file with CSS rules"
+        },
         "css_declaration": {
           "id": "css_declaration",
           "name": "Declaration",
           "define": "A property and value pair"
+        },
+        "preview_area": {
+          "id": "preview_area",
+          "name": "Preview Area",
+          "define": "The right side of the screen that shows the current output of the project being worked on"
         },
         "html": {
           "id": "html",
           "name": "HTML",
           "aka": "Hyper Text Markup Language",
           "define": "This is the full definition value"
-        },
-        "html_element": {
-          "id": "html_element",
-          "name": "HTML Element",
-          "define": "This is about HTML elements\n"
-        },
-        "css_stylesheet": {
-          "id": "css_stylesheet",
-          "name": "Stylesheet",
-          "define": "The name of a file with CSS rules"
-        },
-        "css_declaration_block": {
-          "id": "css_declaration_block",
-          "name": "Declaration Block",
-          "define": "A complete CSS definition including the Selector and Declarations"
         },
         "css_selector": {
           "id": "css_selector",
@@ -396,11 +645,6 @@ var webIntroCssLesson = function () {
           "name": "Web Browser",
           "define": "An program that is used to view websites. Some common examples are **Chrome**, **Firefox**, **Safari**, and **Edge**\n"
         },
-        "css_property": {
-          "id": "css_property",
-          "name": "Property",
-          "define": "The target for a CSS declaration, such as color, background, font, and more"
-        },
         "css_value": {
           "id": "css_value",
           "name": "Value",
@@ -411,10 +655,15 @@ var webIntroCssLesson = function () {
           "name": "Double Click",
           "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
         },
-        "preview_area": {
-          "id": "preview_area",
-          "name": "Preview Area",
-          "define": "The right side of the screen that shows the current output of the project being worked on"
+        "codelab_tab": {
+          "id": "codelab_tab",
+          "name": "Editor Tab",
+          "define": "A tab in the code editor that allows you to switch between open files.\n"
+        },
+        "codelab_editor": {
+          "id": "codelab_editor",
+          "name": "Code Editor",
+          "define": "The CodeLab editing area\n"
         }
       }
     };
@@ -439,7 +688,7 @@ var webIntroCssLesson = function () {
 
     // setup each included entry
     var refs = {
-      linkIndex: linkIndex, validation: validation
+      addH1Rule: addH1Rule, addPRule: addPRule, firstBackgroundChange: firstBackgroundChange, linkAbout: linkAbout, linkIndex: linkIndex, secondBackgroundChange: secondBackgroundChange, validation: validation, verifyStyles: verifyStyles, waitForStyleTab: waitForStyleTab
     };
 
     // setup each reference
@@ -467,6 +716,18 @@ var webIntroCssLesson = function () {
         (0, _waitForFile2.default)(controller, {
           file: slide.waitForFile
         });
+      }
+
+      if (slide.waitForTab) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var _controller = this.controllers[slide.controller] = {};
+        (0, _waitForTab2.default)(_controller, {
+          file: slide.waitForTab
+        });
+      }
+
+      if (slide.onActivate) {
+        slide.onActivate.call(this, slide);
       }
     }
 
@@ -585,7 +846,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_intro_css', webIntroCssLesson);
 
-},{"./controllers/waitForFile":1,"./lib":4,"./linkIndex":5,"./validation":7}],4:[function(require,module,exports){
+},{"./addH1Rule":1,"./addPRule":2,"./controllers/waitForFile":3,"./controllers/waitForTab":4,"./firstBackgroundChange":6,"./lib":8,"./linkAbout":9,"./linkIndex":10,"./secondBackgroundChange":11,"./validation":13,"./verifyStyles":14,"./waitForStyleTab":15}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -606,7 +867,51 @@ exports.default = {
 	CssValidator: CssValidator
 };
 
-},{}],5:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+'use strict';
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+var _waitForValidation = require('./controllers/waitForValidation');
+
+var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
+
+var _validation = require('./validation');
+
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
+
+(0, _waitForValidation2.default)(module.exports, {
+
+	file: '/about.html',
+	cursor: 61,
+
+	validation: function validation(test, code) {
+
+		var limitTo = (0, _utils.findBoundary)(code, {
+			expression: '</head>',
+			trimToLine: true
+		});
+
+		// set the testing bounds
+		test.setBounds(limitTo).merge(_validation.start_link_about).clearBounds()._n.__b.merge(_validation.finish_link_about).eof();
+	},
+	onValid: function onValid() {
+		this.progress.allow();
+		this.assistant.say({
+			emote: 'happy',
+			message: 'Wonderful! Now the same [define css] [define css_stylesheet] is being used on two separate pages!'
+		});
+	},
+	onEnter: function onEnter() {
+		this.editor.hint.disable();
+	}
+});
+
+},{"./controllers/waitForValidation":5,"./lib":8,"./utils":12,"./validation":13}],10:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -626,6 +931,7 @@ function _interopRequireDefault(obj) {
 (0, _waitForValidation2.default)(module.exports, {
 
 	file: '/index.html',
+	cursor: 62,
 
 	validation: function validation(test, code) {
 
@@ -641,15 +947,51 @@ function _interopRequireDefault(obj) {
 		this.progress.allow();
 		this.assistant.say({
 			emote: 'happy',
-			message: 'Great! It appears that this [define css] file already has some [define css_declaration ls] in it!'
+			message: 'Great! The background color changed to _orange_ which means that this [define css] file already has some [define css_declaration ls] in it!'
 		});
 	},
 	onEnter: function onEnter() {
 		this.editor.hint.disable();
+	},
+	onExit: function onExit() {
+		this.editor.hint.enable();
 	}
 });
 
-},{"./controllers/waitForValidation":2,"./lib":4,"./utils":6,"./validation":7}],6:[function(require,module,exports){
+},{"./controllers/waitForValidation":5,"./lib":8,"./utils":12,"./validation":13}],11:[function(require,module,exports){
+'use strict';
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+var _waitForValidation = require('./controllers/waitForValidation');
+
+var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
+
+var _validation = require('./validation');
+
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
+
+(0, _waitForValidation2.default)(module.exports, {
+
+	file: '/style.css',
+
+	validation: function validation(test, code) {
+		(0, _validation.validate_background_color)(this.state.selectedBackgroundColor, test);
+	},
+	onValid: function onValid() {
+		this.progress.allow();
+		this.assistant.say({
+			emote: 'happy',
+			message: 'That looks great! The background color has changed in the [define preview_area]!'
+		});
+	}
+});
+
+},{"./controllers/waitForValidation":5,"./lib":8,"./utils":12,"./validation":13}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -796,12 +1138,73 @@ function editDistance(s1, s2) {
 	return costs[s2.length];
 }
 
-},{"./lib":4}],7:[function(require,module,exports){
+},{"./lib":8}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+
+function _toConsumableArray(arr) {
+	if (Array.isArray(arr)) {
+		for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+			arr2[i] = arr[i];
+		}return arr2;
+	} else {
+		return Array.from(arr);
+	}
+}
+
+var ALT_COLORS = ['white', 'yellow', 'pink', 'aqua', 'silver'];
+
+var validate_css_file = exports.validate_css_file = function validate_css_file(state, includeParagraph, test) {
+
+	test.__w$.selector('body').block().declare([['background', state.selectedBackgroundColor]])._n.endBlock()._n._n.__b;
+
+	// determine what colors to match for
+	var headingColor = void 0;
+	var headingDeclaration = ['color'];
+	if (state.selectedHeadingColor) headingDeclaration.push(state.selectedHeadingColor);else {
+		headingDeclaration = headingDeclaration.concat(ALT_COLORS);
+		headingDeclaration.push(function (match) {
+			headingColor = match;
+		});
+	}
+
+	test.selector('h1').block().declare([headingDeclaration])._n.endBlock();
+
+	// done matching
+	if (!includeParagraph) {
+		test.eof();
+		return headingColor;
+	}
+
+	// get the choices
+	var allow = [].concat(ALT_COLORS);
+	var remove = allow.indexOf(state.selectedHeadingColor);
+	if (remove > -1) allow.splice(remove, 1);
+
+	// else, do this again
+	test._n._n.__b.selector('p').block().declare([['color'].concat(_toConsumableArray(allow))])._n.endBlock().eof();
+};
+
+var validate_background_color = exports.validate_background_color = function validate_background_color(except, test) {
+
+	var colors = ['red', 'green', 'purple', 'magenta', 'gray'];
+
+	// check for removing a color
+	var remove = colors.indexOf(except);
+	if (remove > -1) colors.splice(remove, 1);
+
+	// test the result
+	var color = void 0;
+	test.selector('body').block().declare([['background'].concat(colors, [function (match) {
+		color = match;
+	}])])._n.endBlock();
+
+	return color;
+};
+
 var start_link_index = exports.start_link_index = function start_link_index(test) {
 	return test.__w$.doctype('html')._n.tag('html')._n._t.tag('head')._n._t._t.tag('title').content(5, 25).close('title')._n.__b._t._t.open('link')._s.attrs([['rel', 'stylesheet'], ['href', '/style.css']])._s$.close('/>');
 };
@@ -810,4 +1213,50 @@ var finish_link_index = exports.finish_link_index = function finish_link_index(t
 	return test._t.close('head')._n.__b._t.tag('body')._n.__b._t._t.tag('h1').content(5, 50).close('h1')._n.__b._t._t.tag('p').content(5, 50).close('p')._n.__b._t._t.open('a')._s.attrs([['href', '/about.html']])._s$.close('>').content(5, 25).close('a')._n.__b._t.close('body').__b.close('html').__w$.eof();
 };
 
-},{}]},{},[3]);
+var start_link_about = exports.start_link_about = function start_link_about(test) {
+	return test.__w$.doctype('html')._n.tag('html')._n._t.tag('head')._n._t._t.tag('title').content(5, 25).close('title')._n.__b._t._t.open('link')._s.attrs([['rel', 'stylesheet'], ['href', '/style.css']])._s$.close('/>');
+};
+
+var finish_link_about = exports.finish_link_about = function finish_link_about(test) {
+	return test._t.close('head')._n.__b._t.tag('body')._n.__b._t._t.tag('h1').content(5, 50).close('h1')._n.__b._t._t.tag('p').content(5, 200).close('p')._n.__b._t._t.tag('p').content(5, 100).close('p')._n.__b._t._t.open('a')._s.attrs([['href', '/index.html']])._s$.close('>').content(5, 25).close('a')._n.__b._t.close('body').__b.close('html').__w$.eof();
+};
+
+},{}],14:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onNavigatePreviewArea = onNavigatePreviewArea;
+exports.onEnter = onEnter;
+var controller = exports.controller = true;
+
+var $count = 0;
+var $done = void 0;
+
+function onNavigatePreviewArea(url) {
+	if ($done) return;
+
+	// make sure the url is right
+	if (url !== '/about.html' && url !== '/index.html') return false;
+
+	// good to go
+	if (++$count < 2) return;
+	$done = true;
+
+	this.screen.highlight.clear();
+	this.progress.allow();
+	this.assistant.say({
+		emote: 'happy',
+		message: 'Looks like it worked! Both pages are using the new background color!'
+	});
+}
+
+function onEnter() {
+	this.progress.block();
+}
+
+},{}],15:[function(require,module,exports){
+"use strict";
+
+},{}]},{},[7]);

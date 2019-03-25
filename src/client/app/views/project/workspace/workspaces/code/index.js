@@ -53,6 +53,7 @@ export default class CodeEditor extends Component {
 		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('rename-item', this.onRenameItem);
 		this.listen('execution-finished', this.onExecutionFinished);
+		this.listen('leave-slide', this.onLeaveSlide);
 		this.listen('slide-changed', this.onSlideChanged);
 		this.listen('save-all', this.onSaveAll);
 		this.listen('save-target', this.onSaveTarget);
@@ -101,6 +102,11 @@ export default class CodeEditor extends Component {
 	 */
 	get canResetFiles() {
 		return $state.lesson && !!this.activeFile;
+	}
+
+	// disable show hints button
+	onLeaveSlide = () => {
+		this.onHintsEnabled();
 	}
 
 	// matches the editor size for a period of time

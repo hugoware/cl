@@ -25,7 +25,7 @@ export default class AssistantAPI {
 		const { slide } = $state.lesson;
 		broadcast('set-message', { 
 			message: slide.content,
-			emote: slide.emote || slide.emotion,
+			emote: slide.emote || slide.emotion || 'normal',
 			silent
 		});
 	}

@@ -3,15 +3,15 @@ import { _ } from './lib';
 import { findBoundary } from './utils';
 import waitForValidation from './controllers/waitForValidation';
 import {
-	start_link_index,
-	finish_link_index,
+	start_link_about,
+	finish_link_about,
 } from './validation';
 
 
 waitForValidation(module.exports, {
 
-	file: '/index.html',
-	cursor: 62,
+	file: '/about.html',
+	cursor: 61,
 
 	validation(test, code) {
 
@@ -22,10 +22,10 @@ waitForValidation(module.exports, {
 
 		// set the testing bounds
 		test.setBounds(limitTo)
-			.merge(start_link_index)
+			.merge(start_link_about)
 			.clearBounds()
 			._n.__b
-			.merge(finish_link_index)
+			.merge(finish_link_about)
 			.eof();
 	},
 
@@ -33,16 +33,12 @@ waitForValidation(module.exports, {
 		this.progress.allow();
 		this.assistant.say({
 			emote: 'happy',
-			message: `Great! The background color changed to _orange_ which means that this [define css] file already has some [define css_declaration ls] in it!`
+			message: `Wonderful! Now the same [define css] [define css_stylesheet] is being used on two separate pages!`
 		});
 	},
 
 	onEnter() {
 		this.editor.hint.disable();
-	},
-
-	onExit() {
-		this.editor.hint.enable();
 	}
 
 });

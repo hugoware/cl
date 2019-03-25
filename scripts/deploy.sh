@@ -68,8 +68,6 @@ done
 echo
 echo copying to server...
 scp package.json root@codelabschool.com:/srv/www/cl/
-scp lessons.yml root@codelabschool.com:/srv/www/cl/
-rsync -ruv --chmod=ugo=rwX -e ssh lessons/output/* root@codelabschool.com:/srv/www/cl/lessons/
 rsync -ruv --chmod=ugo=rwX -e ssh dist/* root@codelabschool.com:/srv/www/cl/dist/
 sleep 4s
 

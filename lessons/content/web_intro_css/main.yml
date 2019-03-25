@@ -8,12 +8,11 @@
 
 - slide:
     content: |
-      [define css] stands for Cascading Style Sheet and is used to apply visual styles to an [define html] page.
+      [define css] stands for Cascading Style Sheets and is used to apply visual styles to an [define html] page.
 
       In a sense, [define html] decides what a web page says, whereas [define css] decides what a web page looks like.
 
 - slide:
-    start: true
     content: |
       Before [define css] was introduced styles, such as fonts and colors, were applied to a page using even more [define html_element s].
 
@@ -59,9 +58,7 @@
 
       [snippet basic_example highlight:0,19,line]
 
-
 - slide:
-    start: true
     content: |
       The first part of a [define css_declaration_block l] is the [define css_selector]. You'll notice that this is the same name as an [define html_element] that you have used in earlier lessons.
 
@@ -85,7 +82,6 @@
       Everything that's between the starting and ending curly braces are visual styles that will be applied to the [define html_element Element] that the [define css_selector] matched.
 
 - slide:
-    start: true
     content: |
       Each visual style inside of a [define css] [define css_declaration_block l] is called a [define css_declaration l].
 
@@ -149,7 +145,6 @@
       In later lessons we'll learn more about different types of [define css_selector s] you can use. We will also discuss good practices for organizing your [define css] files.
 
 - slide:
-    start: true
     mode: popup
     emote: happy
     content: |
@@ -176,99 +171,115 @@
 - slide:
     waitForFile: /style.css
     content: |
-      Open the `style.css` file so we can take a look at the [define css_declaration ls]
+      Open the `style.css` file so we can take a look at what's inside!
 
 - slide:
     content: |
-      read the current data
+      This [define css] file only has one [define css_declaration l] in it. The [define css_selector] locates the `body` [define html_element Element] on the page and then applies a background color of _orange_.
 
+      In this case, the `body` [define html_element Element] represents the entire page.
+
+- slide:
+    controller: firstBackgroundChange
+    content: |
+      Let's start by trying to change the background color to something else. There are many different color names that you can use with [define css], but for this example let's limit it to just a few choices.
+
+      Change the background color to one of the following colors.
+
+      [silent] `red`, `green`, `purple`, `magenta`, `gray`
 
 - slide:
     content: |
-      point out it needs to be linked
+      Now try writing the entire [define css] [define css_declaration l], however this time we're going to use `h1` as the [define css_selector].
 
-
-- slide:
-    waitForFile: /index.html
-    content: |
-      open html file
-
+      Doing this will change the font color for all `h1` [define html_element Elements] on the page.
 
 - slide:
+    controller: addH1Rule
     content: |
-      edit html file to include `link`
+      Write a [define css_declaration_block] that selects all `h1` [define html_element Elements] and sets the `color` [define css_property l] to any of the following colors.
 
+      [silent] `white`, `yellow`, `pink`, `aqua`, `silver`
 
 - slide:
     content: |
-      css is now updated
+      Let's try that again, but this time we're going to change the `color` [define css_property l] for the `p` [define html_element Elements] on the page.
+
+      This time code hints will be turned off, but if you get stuck, use the *"Show Hints"* button for help.
 
 
 - slide:
-    content: |
-      switch back to CSS file
+    controller: addPRule
 
+- slide:
+    emote: happy
+    content: |
+      Looks good! While there's still plenty to do this website is starting to have some personality!
+
+- slide:
+    waitForFile: /about.html
+    content: |
+      Let's take a look at the other [define html] page in this project.
+
+      Open the file named `about.html` by [define double_click double clicking] on it.
+
+- slide:
+    emote: sad
+    content: |
+      Hmm, it seems like this page does not have any of the same visual styles as `index.html`!
 
 - slide:
     content: |
-      edit the color for the background
+      As mentioned before, one of the advantages to using [define css] is that many [define html] pages can share the same [define css_stylesheet l].
+      
+      Fortunately, since all of the styles are in a single file it will be easy to use the `link` [define html_element Element] to add them to this page.
 
+- slide:
+    controller: linkAbout
+    content: |
+      Create a `link` [define html_element Element] that attaches the `style.css` file.
+
+      Code hints will be turned off for this exercise, but if you get stuck then you can always use the *Show Hints* button to turn them back on.
 
 - slide:
     content: |
-      write a new rule for styling the header
-
-
-- slide:
-    content: |
-      write another rule to style the paragraph
-
+      At this point, both HTML pages use the same stylesheet. This means that if you make a change to the stylesheet, both pages will show the change.
 
 - slide:
+    waitForTab: /style.css
     content: |
-      as mentioned before, you can target more than one element with a comma
+      Let's make a change to the stylesheet so we can see this in action.
 
+      Switch to `style.css` by clicking on the [define codelab_tab tab] and the [define codelab_editor].
 
 - slide:
+    controller: secondBackgroundChange
     content: |
-      write a rule for both the heading and paragraph to make the font sans-serif
+      Change the background color for the `body` [define html_element Element] to one of the following colors.
 
+      [silent] `red`, `green`, `purple`, `magenta`, `gray`
 
 - slide:
+    highlight: "::preview a"
+    controller: verifyStyles
     content: |
-      Looks good
+      Try navigating between the two pages by clicking on the links in the [define preview_area].
 
+      You should see the new background color on both the `index.html` and `about.html` pages.
 
 - slide:
+    emote: happy
+    mode: overlay
     content: |
-      advantage of CSS is you can write it in one place and use it on many pages
+      They're still a lot left to learn about CSS but for now we've made some good progress.
 
-
-- slide:
-    content: |
-      open other.html
-
-
-- slide:
-    content: |
-      add the link to the css file (no hint)
-
-
-- slide:
-    content: |
-      css is very flexible and works 
-
-
-- slide:
-    mode: popup
-    content: |
-      let's review what we've learned
+      Let's review what we've learned so far!
 
 - question:
-    title: what does CSS stand for
+    title: What does **CSS** stand for?
 
     explain: |
-      After the question is finished hint
+      [define css] stands for Cascading Style Sheets which is a language used for describing the visual appearance of [define html] documents.
 
     choices:
       - Cascading Style Sheets
@@ -277,13 +288,13 @@
       - Creative Syntax for Styles
 
 - question:
-    title: What is the highlighted part called?
+    title: What is the `highlighted` section of code called?
 
-    content:
-      selector
+    content: |
+      [snippet quiz_example highlight:0,2]
 
     explain: |
-      After the question is finished hint
+      A [define css_selector] identifies the [define html_element Element] that each of the [define css_declaration ls] should be applied to.
 
     choices:
       - A selector
@@ -292,71 +303,33 @@
       - A value
 
 - question:
-    title: What is the highlighted part called?
+    title: What is the `highlighted` section of code called?
 
-    content:
-      declaration
+    content: |
+      [snippet quiz_example highlight:6,10]
 
     explain: |
-      After the question is finished hint
+      The [define css] [define css_property l] is used to identify what attribute will be changed about an [define html_element]. This normally includes visual properties such as backgrounds, colors, and fonts.
 
     choices:
-      - A declaration
+      - A property
       - A selector
       - A linker
       - A bytecode
 
 - question:
-    title: CSS can be linked on multiple pages
+    title: CSS can be linked on multiple pages?
 
     explain: |
-      After the question is finished hint
+      One of the biggest advantages to using [define css] is that it's easy to share the styles between many web pages by simply including a `link` [define html_element Element] to the correct [define css_stylesheet l].
 
     choices:
       - 'True'
       - 'False'
 
+- slide:
+    mode: popup
+    content: |
+      Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.
 
-# - question:
-#     count: 4   # optional question count
-#     title: Main title
-#     
-#     hint: Optional helpful hint
-
-#     explain: |
-#       After the question is finished hint
-
-#     choices:
-#       - correct answer
-#       - wrong answer 1
-#       - wrong answer 2
-#       - wrong answer 3
-
-# - slide:
-#     flags: +OPEN_FILE
-#     emote: happy
-#     controller: name
-#     mode: popup
-#     content: |
-#       Way to go! You've finished this lesson!
-#       
-#       [snippet name highlight:0,5|20,5]
-#       
-#       [snippet html preview:50%]
-#       
-#       [image default.png]
-#       
-#       [image full.jpg frame]
-#       
-#       Inline replacement is done using ||does|duz||
-#       
-#       A normal [define html] is like this
-#       
-#       A lowercase [define html l] is like this
-#       
-#       A plural [define html p] is like this
-#       A plural [define html s] or like this
-#       
-#       Can be combined as [define html lp] [define html ls]
-#       
-#       
+      Great work, and I'll see you in the next lesson!

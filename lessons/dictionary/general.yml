@@ -144,3 +144,9 @@
     A program that is designed to make it easier to modify code files by including features such as syntax highlighting, auto-complete, and code validation.
 
     
+- id: codelab_tab
+  name: Editor Tab
+  define: |
+    A tab in the code editor that allows you to switch between open files.
+
+    

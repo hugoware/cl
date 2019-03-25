@@ -364,6 +364,7 @@ function setActiveSlide(lesson, slide) {
 	// deactivate the 
 
 	// let other systems know the slide changed
+	lesson.instance.invoke('configure', slide);
 	broadcast('slide-changed', slide);
 	lesson.instance.activateSlide(slide);
 	lesson.instance.invoke('enter');

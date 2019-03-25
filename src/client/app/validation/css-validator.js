@@ -267,7 +267,8 @@ SyntaxValidator.createNext(CssValidator, 'font', {
 SyntaxValidator.createNext(CssValidator, 'value', {
 	literal: true,
 	matchCase: true,
-	name: 'value'
+	name: 'value',
+	after: (match, test) => test.__previous__value__ = match
 });
 
 SyntaxValidator.createNext(CssValidator, 'color', {
