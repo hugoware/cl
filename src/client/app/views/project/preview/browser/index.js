@@ -1,11 +1,12 @@
 /// <reference path="../../../../types/index.js" />
 
-import { _ } from '../../../../lib';
+import { _, $, HtmlTagValidator } from '../../../../lib';
 import View from './view';
 import $state from '../../../../state';
 import Component from '../../../../component';
 import { getExtension } from '../../../../utils/index';
 import $errorManager from '../../../../error-manager';
+import HtmlValidationHelper from '../../../../utils/html-validation-helper';
 
 const NO_PREVIEW_LOADED = `
 	<div style="font: 24px sans-serif; opacity: 0.3; text-align: center; position: absolute; top: 20%; left: 0; right: 0;" >
@@ -20,6 +21,10 @@ const VIEWABLE_TYPES = [
 	'html',
 	'htm'
 ];
+
+function getPreviewAccess() {
+	return $('iframe.output').contents();
+}
 
 // create the preview mode
 export default class BrowserMode extends Component {
@@ -262,7 +267,7 @@ export default class BrowserMode extends Component {
 
 		// notify the action
 		if ($state.lesson)
-			$state.lesson.invoke('navigatePreviewArea', url);
+			$state.lesson.invoke('navigatePreviewArea', url, getPreviewAccess());
 
 		// navigate
 		this.broadcast('preview-area-navigate', url)
@@ -349,6 +354,20 @@ export default class BrowserMode extends Component {
 		this.hasRunScripts = false;
 		if (shouldRunScripts)
 			this.runScripts();
+
+		// notify this has access
+		setTimeout(() => {
+			if ($state.lesson) {
+
+				// check the markup first
+				const markup = view.file.current || view.file.content;
+				HtmlTagValidator(markup, (err, ast) => {
+					const helper = new HtmlValidationHelper(err, ast);
+					$state.lesson.invoke('updatePreviewArea', this.url, getPreviewAccess(), helper);
+				});
+
+			}
+		}, 100);
 
 	}
 

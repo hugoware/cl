@@ -96,17 +96,35 @@ class $LESSON_TYPE$Lesson {
 
 	// executes an action if available
 	invoke(action, ...args) {
-		if (!this.respondsTo(action)) return null;
-		action = toActionName(action);
 		const { controller } = this;
+		if (!controller)
+			return;
+
+		action = toActionName(action);
+
+		// check the action
+		if (controller.invoke)
+			return controller.invoke.call(this, action, ...args);
+
 		return controller[action].apply(this, args);
 	}
 
 	// checks if there's an action for this event
 	respondsTo(action) {
-		action = toActionName(action);
 		const { controller } = this;
-		return !!controller && controller[action];
+		if (!controller)
+			return false;
+
+		action = toActionName(action);
+
+		// tasks lists will handle this themselves
+		// it's safe to return true here since there
+		// are no gate keepers
+		if (controller.respondsTo)
+			return controller.respondsTo(action);
+
+		// perform normally
+		return !!controller[action];
 	}
 
 

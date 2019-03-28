@@ -7,6 +7,11 @@ export const HtmlValidator = lib.HtmlValidator;
 export const CssValidator = lib.CssValidator;
 
 
+$.preview = function() {
+	return $('#preview .output').contents();
+};
+
+
 export default { 
 	_, $,
 	CodeValidator,

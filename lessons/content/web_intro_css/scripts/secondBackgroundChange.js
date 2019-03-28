@@ -23,5 +23,9 @@ waitForValidation(module.exports, {
 		});
 	},
 
+	onEnter() {
+		this.editor.hint.enable();
+	}
+
 
 });

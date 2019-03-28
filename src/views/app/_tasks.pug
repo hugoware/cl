@@ -1,0 +1,25 @@
++template('tasks')
+	.heading
+		.title Objectives
+		.progress #[span.completed 0] of #[span.total 0] #[span.tail completed]
+
+	.list
+		.items
+
++template('task-item')
+	.task
+		.entry
+			.activity
+				.state
+					.done
+
+				.count #[span.value] tasks
+				.label Name of task
+
+			//- additional details popup
+			.details 
+				.icon(icon='actionEdit')
+				.content Additional data for task
+
+		//- tracking child items
+		.items

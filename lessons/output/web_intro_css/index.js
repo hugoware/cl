@@ -988,6 +988,9 @@ function _interopRequireDefault(obj) {
 			emote: 'happy',
 			message: 'That looks great! The background color has changed in the [define preview_area]!'
 		});
+	},
+	onEnter: function onEnter() {
+		this.editor.hint.enable();
 	}
 });
 

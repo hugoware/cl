@@ -55,6 +55,7 @@
     "watchify": "^3.11.0"
   },
   "dependencies": {
+    "html-tag-validator": "hugoware/htmlTagValidator#master",
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "ast-query": "^2.0.0",

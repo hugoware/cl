@@ -6,6 +6,7 @@ web:
   - web_page_structure
   - web_hyperlinks
   - web_intro_css
+  - web_project_1
 
 code:
   - console_1

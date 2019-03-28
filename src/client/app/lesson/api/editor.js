@@ -65,7 +65,6 @@ export default class EditorAPI {
 	// sets the cursor posiiton
 	cursor = ({ path, file, row, column, start, end, index }) => {
 		path = getPath(path || file);
-		console.log('set to', path, index);
 		broadcast('set-editor-cursor', { path, row, column, start, end, index });
 	}
 

@@ -3,7 +3,8 @@ import lib__jquery from 'jquery';
 import lib__bluebird from 'bluebird';
 import lib__showdown from 'showdown';
 import lib__cheerio from 'cheerio';
-import lib__xmlchecker from 'xmlchecker';
+// import lib__xmlchecker from 'xmlchecker';
+import lib__htmlTagValidator from 'html-tag-validator';
 import { Howl as lib__howler } from 'howler';
 import lib__measure_text from 'measure-text';
 import lib__random_color from 'randomcolor';
@@ -22,7 +23,7 @@ export const Promise = lib__bluebird;
 export const Bluebird = lib__bluebird;
 export const Showdown = lib__showdown;
 export const Cheerio = lib__cheerio;
-export const XmlChecker = lib__xmlchecker;
+export const HtmlTagValidator = lib__htmlTagValidator;
 export const Howl = lib__howler;
 export const measureText = lib__measure_text;
 export const RandomColor = lib__random_color;
@@ -45,6 +46,8 @@ import 'brace/theme/monokai';
 Brace.Range = Brace.acequire('ace/range').Range;
 Brace.LanguageTools = Brace.acequire('ace/ext/language_tools');
 
+window.CHEERIO = Cheerio;
+
 // export defaults
 export default {
 	_,
@@ -52,8 +55,9 @@ export default {
 	Promise, Bluebird: lib__bluebird,
 	Showdown,
 	Cheerio,
-	XmlChecker,
+	// XmlChecker,
 	Howl,
+	HtmlTagValidator,
 	measureText,
 	RandomColor,
 	url,

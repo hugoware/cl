@@ -64,8 +64,12 @@ export default class Console extends Component {
 		const keys = _.keys(result.all);
 		keys.sort();
 
+		// clear the state
+		$state.hasConsoleMessages = false;
+
 		// start creating each error
 		for (const key of keys) {
+			$state.hasConsoleMessages = true;
 			const error = result.all[key];
 
 			// create the message

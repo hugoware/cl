@@ -113,6 +113,16 @@ export default class Lesson {
 		return this.instance.invoke(action, ...args);
 	}
 
+	/** checks if there are tasks for a slide */
+	get hasTasks() {
+		return !!_.get(this, 'instance.controller.taskList', false);
+	}
+
+	/** returns all tasks for this controller */
+	get tasks() {
+		return this.instance.controller.state;
+	}
+
 	/** returns a snippet by ID */
 	getSnippet = type => {
 		return this.snippets[type];

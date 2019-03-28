@@ -11,7 +11,10 @@ export default function checkPermissions(state, permissions, args = [ ]) {
 		return true;
 
 	// all permissions allowed
-	if (state.flags['sandbox-mode'] || state.flags['open-mode'])
+	if (state.flags['sandbox-mode']
+		|| state.flags['open-mode']
+		|| state.flags['SANDBOX-MODE']
+		|| state.flags['OPEN-MODE'])
 		return true;
 
 	// start checking each requested permission
@@ -20,7 +23,6 @@ export default function checkPermissions(state, permissions, args = [ ]) {
 
 		// check if this is a boolean
 		if (permission === true || permission === false) {
-			console.log('prevla', permission);
 			return permission;
 		}
 

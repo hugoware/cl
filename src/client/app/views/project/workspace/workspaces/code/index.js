@@ -173,7 +173,6 @@ export default class CodeEditor extends Component {
 
 	// handles saving a single file
 	onSaveTarget = file => {
-		console.log('wants to save', file);
 		this.saveTarget(file);
 	}
 

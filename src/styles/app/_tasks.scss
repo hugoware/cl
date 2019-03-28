@@ -1,0 +1,184 @@
+
+.task-list {
+	right: 10px;
+	position: absolute;
+	z-index: $layer-task-list;
+
+	// height: $header-height;
+	height: auto;
+	overflow: hidden;
+	border-radius: 0 0 5px 5px;
+
+	background-color: rgba(#000, 0.9);
+	color: #fff;
+	
+	.heading {
+		height: $header-height;
+		.title, .progress {
+			line-height: $header-height;
+			padding: 0 22px;
+		}
+
+		.title {
+			font-weight: bold;
+			float: left;
+			padding-right: 100px;
+		}
+
+		.progress {
+			float: right;
+		}
+	}
+
+	.list {
+		clear: both;
+		padding: 10px 0 10px 0;
+	}
+
+	// tree depth - anything deeper is just silly
+	@for $i from 0 through 8 {
+		.task-depth-#{$i} .entry {
+			padding: 8px 20px 8px ((15px * $i) + 20px);
+		}
+	}
+	
+	.task-depth-0 > .entry {
+		// margin-top: 5px;
+		font-size: 16px !important;
+	}
+
+	.task {
+		.count {
+			visibility: hidden;
+		}
+		
+		&.has-tasks.complete > .entry > .activity > .count {
+			visibility: visible;
+		}
+
+	}
+
+	.task .entry {
+		opacity: 0.6;
+		font-size: 15px;
+		clear: both;
+		cursor: pointer;
+		@include animate('background', 0.3s);
+		border-bottom: 1px solid rgba(#fff, 0.1);
+
+		&:hover {
+			background: rgba(#000, 0.6);
+			opacity: 1;
+		}
+
+		.activity {
+			$container-size: 14px;
+			$check-size: 10px;
+
+			.state {
+				display: inline-block;
+				width: $container-size;
+				height: $container-size;
+				border-radius: 2px;
+				background: #444;
+				
+				.done {
+					width: $check-size;
+					height: $check-size;
+					border-radius: 2px;
+					border: 1px solid rgba(0,0,0,0);
+					position: relative;
+					top: 1px;
+					left: 1px;
+				}
+			}
+
+			.count {
+				float: right;
+				font-size: 13px;
+				color: #fff;
+				background: rgba(#000, 0.3);
+				display: block;
+				padding: 3px 10px;
+				margin-left: 30px;
+				border-radius: 25px;
+				
+			}
+
+			.label {
+				color: #aaa;
+				padding-left: 10px;
+				display: inline-block;
+			}
+		}
+
+		.details {
+			display: none;
+			float: right;
+
+			svg {
+				@include uniform_size(16px);
+				float: left;
+			}
+
+			.content {
+				position: absolute;
+				left: 0;
+				right: 0;
+			}
+		}
+
+		// &.has-details .details {
+		// 	display: block;
+		// }
+
+	}
+
+
+	.task.complete {
+		.entry {
+			opacity: 1;
+			cursor: help;
+		}
+
+		.label {
+			color: #fff !important;
+		}
+
+		.state {
+			background: darken(#39CA74, 15%) !important;
+		}
+
+		.done {
+			background: #39CA74;
+			border-color: #555 !important;
+		}
+
+		.items {
+			height: 0;
+			overflow: hidden;
+			@include animate('height', 0.3s);
+		}
+		
+		&:hover {
+			background: rgba(#fff, 0.1);
+			
+			.task {
+				background: none !important;
+			}
+			
+			.entry:hover {
+				background: rgba(#fff, 0.1);
+			}
+			> .items {
+				height: auto;
+			}
+		}
+
+		
+
+	}
+
+	
+
+}

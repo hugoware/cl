@@ -2,6 +2,7 @@
 import { _ } from './lib';
 import Component from "./component";
 import $state from './state'
+import TaskList from './lesson/tasks';
 
 export default class Header extends Component {
 
@@ -17,8 +18,12 @@ export default class Header extends Component {
 				shareProject: '.share-project',
 				projectSettings: '.settings',
 				signOut: '.sign-out',
+				tasks: '.task-list',
 			}
 		});
+
+		const tasks = new TaskList();
+		tasks.appendTo(this.ui.tasks);
 
 		// events
 		this.listen('reset', this.onReset);

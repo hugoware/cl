@@ -213,11 +213,11 @@ const $state = {
 	 * @param {Project} project the data to replace
 	*/
 	updateProject: async project => {
+		console.log('did update project');
 		$state.project = project;
 		$state.paths = { };
 		$state.items = { };
 		$state.config = { };
-		$state.flags = { };
 		$state.content = { };
 
 
@@ -418,6 +418,10 @@ const $state = {
 		file.content = content;
 		file.modified = false;
 
+		// saving file content
+		if ($state.lesson)
+			$state.lesson.invoke('saveFile', file);
+
 		// version updates
 		$state.updateVersion();
 
@@ -477,6 +481,10 @@ const $state = {
 		await $state.updateProject($state.project);
 		$state.setSelection(selected);
 
+		// saving file content
+		if ($state.lesson)
+			$state.lesson.invoke('moveItems', renames);
+
 		// move each file in the file system as well
 		// for (let i = 0; i < renames.length; i++) {
 		// 	const rename = renames[i];
@@ -523,6 +531,10 @@ const $state = {
 
 		// save the record
 		target.children.push(create);
+
+		// if needed
+		if ($state.lesson)
+			$state.lesson.invoke('uploadFile', this.file);
 
 		// update to project data
 		await $state.updateProject($state.project);
@@ -634,6 +646,13 @@ const $state = {
 			parent = parent.parent;
 		}
 
+
+		// notify file creation
+		if ($state.lesson) {
+			result.file.path = `${(parent && parent.path) || ''}/${result.file.name}`;
+			$state.lesson.invoke('createFile', result.file);
+		}
+		
 		// update the project data
 		await $state.updateProject($state.project);
 		broadcast('update-project', $state.project);
@@ -666,6 +685,10 @@ const $state = {
 		// with the list of files to remove, clear the local
 		// stored versions of the file
 		$lfs.remove(remove);
+
+		// notify
+		if ($state.lesson)
+			$state.lesson.invoke('removeItems', paths);
 
 		// share that files have been removed so the
 		// UI can update
@@ -797,6 +820,11 @@ listen('open-file', file => {
 listen('close-file', file => {
 	file.isOpen = false;
 	file.isActive = false;
+});
+
+// handle lesson setup
+listen('activate-project', () => {
+	$state.flags = {};
 });
 
 // handle lesson cleanup

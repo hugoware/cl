@@ -55,7 +55,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":4,"./lib":8,"./utils":15,"./validation":16}],2:[function(require,module,exports){
+},{"./controllers/waitForValidation":5,"./lib":9,"./utils":16,"./validation":17}],2:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -102,7 +102,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":4,"./lib":8,"./utils":15,"./validation":16}],3:[function(require,module,exports){
+},{"./controllers/waitForValidation":5,"./lib":9,"./utils":16,"./validation":17}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -147,7 +147,55 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":8}],4:[function(require,module,exports){
+},{"../lib":9}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onChangeTab: function onChangeTab(file) {
+
+			if (file.path === config.file) {
+				this.progress.next();
+				return true;
+			}
+		},
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			this.file.readOnly({ path: config.file });
+			this.screen.highlight.tab(config.file);
+
+			// get the actual name
+			var name = config.file.split('/').pop();
+
+			this.delay(15000, function () {
+				_this.assistant.say({
+					message: '\n\t\t\t\t\t\tSwitch to the `' + name + '` file by clicking on the highlighted [define codelab_tab tab] in the [define codelab_editor]'
+				});
+			});
+		},
+		onExit: function onExit() {
+			this.screen.highlight.clear();
+		}
+	}, config.extend);
+
+	// initialization
+	if (obj.init) obj.init(obj);
+}
+
+},{"../lib":9}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -169,9 +217,7 @@ function waitForValidation(obj, config) {
 		var validator = void 0;
 
 		// check for a named validator
-		if (config.validator === 'code' || /\.js$/.test(config.file)) validator = _lib.CodeValidator;else if (config.validator === 'html' || /\.html?$/.test(config.file)) validator = _lib.HtmlValidator;
-		// else if (config.validator === 'css' || /\.css$/.test(config.file))
-		// 	validator = CssValidator;
+		if (config.validator === 'code' || /\.js$/.test(config.file)) validator = _lib.CodeValidator;else if (config.validator === 'html' || /\.html?$/.test(config.file)) validator = _lib.HtmlValidator;else if (config.validator === 'css' || /\.css$/.test(config.file)) validator = _lib.CssValidator;
 
 		// perform the validaton
 		var func = function func(test) {
@@ -233,9 +279,17 @@ function waitForValidation(obj, config) {
 			if (config.onEnter) config.onEnter.apply(this, args);
 		},
 		onInit: function onInit() {
+			var _this = this;
+
+			console.log('vv', config);
 			if ('area' in config) this.editor.area({ path: config.file, start: config.area.start, end: config.area.end });
 
-			if ('cursor' in config) this.editor.cursor({ path: config.file, index: config.cursor });
+			if ('cursor' in config) {
+				this.editor.focus();
+				setTimeout(function () {
+					_this.editor.cursor({ path: config.file, index: config.cursor });
+				}, 10);
+			}
 
 			validate(this);
 		},
@@ -248,14 +302,20 @@ function waitForValidation(obj, config) {
 		},
 		onExit: function onExit() {
 			this.file.readOnly({ path: config.file });
+
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			if (config.onExit) config.onExit.apply(this, args);
 		}
-	});
+	}, config.extend);
 
 	// extra logic as required
 	if (config.init) config.init.call(obj, obj);
 }
 
-},{"../lib":8}],5:[function(require,module,exports){
+},{"../lib":9}],6:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -300,7 +360,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":4,"./lib":8,"./utils":15,"./validation":16}],6:[function(require,module,exports){
+},{"./controllers/waitForValidation":5,"./lib":9,"./utils":16,"./validation":17}],7:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -346,7 +406,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":4,"./lib":8,"./utils":15,"./validation":16}],7:[function(require,module,exports){
+},{"./controllers/waitForValidation":5,"./lib":9,"./utils":16,"./validation":17}],8:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -367,6 +427,10 @@ var _lib = require('./lib');
 var _waitForFile = require('./controllers/waitForFile');
 
 var _waitForFile2 = _interopRequireDefault(_waitForFile);
+
+var _waitForTab = require('./controllers/waitForTab');
+
+var _waitForTab2 = _interopRequireDefault(_waitForTab);
 
 var _addAllImageLinks = require('./addAllImageLinks');
 
@@ -633,6 +697,18 @@ var webHyperlinksLesson = function () {
           file: slide.waitForFile
         });
       }
+
+      if (slide.waitForTab) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var _controller = this.controllers[slide.controller] = {};
+        (0, _waitForTab2.default)(_controller, {
+          file: slide.waitForTab
+        });
+      }
+
+      if (slide.onActivate) {
+        slide.onActivate.call(this, slide);
+      }
     }
 
     // // leaves a slide
@@ -750,7 +826,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_hyperlinks', webHyperlinksLesson);
 
-},{"./addAllImageLinks":1,"./addSingleImageLink":2,"./controllers/waitForFile":3,"./hrefToAnimals":5,"./hrefToIndex":6,"./lib":8,"./navigateAnimalPages":9,"./navigateIndex":10,"./navigateSinglePage":11,"./navigateToList":12,"./requireAnimalsTab":13,"./showSwitchingTabs":14,"./validation":16}],8:[function(require,module,exports){
+},{"./addAllImageLinks":1,"./addSingleImageLink":2,"./controllers/waitForFile":3,"./controllers/waitForTab":4,"./hrefToAnimals":6,"./hrefToIndex":7,"./lib":9,"./navigateAnimalPages":10,"./navigateIndex":11,"./navigateSinglePage":12,"./navigateToList":13,"./requireAnimalsTab":14,"./showSwitchingTabs":15,"./validation":17}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -771,7 +847,7 @@ exports.default = {
 	CssValidator: CssValidator
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -844,7 +920,7 @@ function onExit() {
 	this.events.clear();
 }
 
-},{"./lib":8,"./utils":15}],10:[function(require,module,exports){
+},{"./lib":9,"./utils":16}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -884,7 +960,7 @@ function onNavigatePreviewArea(url) {
 	}
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -940,7 +1016,7 @@ function onExit() {
 	this.events.clear();
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -959,7 +1035,7 @@ function onNavigatePreviewArea(url) {
 	return this.progress.next();
 }
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -991,7 +1067,7 @@ function onEnter() {
 	});
 }
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1005,7 +1081,7 @@ function onChangeTab() {
 	return true;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1152,7 +1228,7 @@ function editDistance(s1, s2) {
 	return costs[s2.length];
 }
 
-},{"./lib":8}],16:[function(require,module,exports){
+},{"./lib":9}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1218,4 +1294,4 @@ var animal_fact = exports.animal_fact = function animal_fact(test, allowed) {
 	return selected;
 };
 
-},{"./lib":8}]},{},[7]);
+},{"./lib":9}]},{},[8]);

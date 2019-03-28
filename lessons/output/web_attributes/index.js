@@ -43,7 +43,55 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":6}],2:[function(require,module,exports){
+},{"../lib":7}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onChangeTab: function onChangeTab(file) {
+
+			if (file.path === config.file) {
+				this.progress.next();
+				return true;
+			}
+		},
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			this.file.readOnly({ path: config.file });
+			this.screen.highlight.tab(config.file);
+
+			// get the actual name
+			var name = config.file.split('/').pop();
+
+			this.delay(15000, function () {
+				_this.assistant.say({
+					message: '\n\t\t\t\t\t\tSwitch to the `' + name + '` file by clicking on the highlighted [define codelab_tab tab] in the [define codelab_editor]'
+				});
+			});
+		},
+		onExit: function onExit() {
+			this.screen.highlight.clear();
+		}
+	}, config.extend);
+
+	// initialization
+	if (obj.init) obj.init(obj);
+}
+
+},{"../lib":7}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -65,9 +113,7 @@ function waitForValidation(obj, config) {
 		var validator = void 0;
 
 		// check for a named validator
-		if (config.validator === 'code' || /\.js$/.test(config.file)) validator = _lib.CodeValidator;else if (config.validator === 'html' || /\.html?$/.test(config.file)) validator = _lib.HtmlValidator;
-		// else if (config.validator === 'css' || /\.css$/.test(config.file))
-		// 	validator = CssValidator;
+		if (config.validator === 'code' || /\.js$/.test(config.file)) validator = _lib.CodeValidator;else if (config.validator === 'html' || /\.html?$/.test(config.file)) validator = _lib.HtmlValidator;else if (config.validator === 'css' || /\.css$/.test(config.file)) validator = _lib.CssValidator;
 
 		// perform the validaton
 		var func = function func(test) {
@@ -129,9 +175,17 @@ function waitForValidation(obj, config) {
 			if (config.onEnter) config.onEnter.apply(this, args);
 		},
 		onInit: function onInit() {
+			var _this = this;
+
+			console.log('vv', config);
 			if ('area' in config) this.editor.area({ path: config.file, start: config.area.start, end: config.area.end });
 
-			if ('cursor' in config) this.editor.cursor({ path: config.file, index: config.cursor });
+			if ('cursor' in config) {
+				this.editor.focus();
+				setTimeout(function () {
+					_this.editor.cursor({ path: config.file, index: config.cursor });
+				}, 10);
+			}
 
 			validate(this);
 		},
@@ -144,14 +198,20 @@ function waitForValidation(obj, config) {
 		},
 		onExit: function onExit() {
 			this.file.readOnly({ path: config.file });
+
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			if (config.onExit) config.onExit.apply(this, args);
 		}
-	});
+	}, config.extend);
 
 	// extra logic as required
 	if (config.init) config.init.call(obj, obj);
 }
 
-},{"../lib":6}],3:[function(require,module,exports){
+},{"../lib":7}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -172,6 +232,10 @@ var _lib = require('./lib');
 var _waitForFile = require('./controllers/waitForFile');
 
 var _waitForFile2 = _interopRequireDefault(_waitForFile);
+
+var _waitForTab = require('./controllers/waitForTab');
+
+var _waitForTab2 = _interopRequireDefault(_waitForTab);
 
 var _inputEntry = require('./inputEntry');
 
@@ -490,6 +554,18 @@ var webAttributesLesson = function () {
           file: slide.waitForFile
         });
       }
+
+      if (slide.waitForTab) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var _controller = this.controllers[slide.controller] = {};
+        (0, _waitForTab2.default)(_controller, {
+          file: slide.waitForTab
+        });
+      }
+
+      if (slide.onActivate) {
+        slide.onActivate.call(this, slide);
+      }
     }
 
     // // leaves a slide
@@ -607,7 +683,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_attributes', webAttributesLesson);
 
-},{"./controllers/waitForFile":1,"./inputEntry":4,"./inputReadOnly":5,"./lib":6,"./multipleAttributes":7,"./multipleImages":8,"./previewBlocked":9,"./previewInput":10,"./srcExample":11,"./validation":12,"./waitForIndex":13}],4:[function(require,module,exports){
+},{"./controllers/waitForFile":1,"./controllers/waitForTab":2,"./inputEntry":5,"./inputReadOnly":6,"./lib":7,"./multipleAttributes":8,"./multipleImages":9,"./previewBlocked":10,"./previewInput":11,"./srcExample":12,"./validation":13,"./waitForIndex":14}],5:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -635,7 +711,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":2,"./lib":6,"./validation":12}],5:[function(require,module,exports){
+},{"./controllers/waitForValidation":3,"./lib":7,"./validation":13}],6:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -666,7 +742,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":2,"./lib":6,"./validation":12}],6:[function(require,module,exports){
+},{"./controllers/waitForValidation":3,"./lib":7,"./validation":13}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -687,7 +763,7 @@ exports.default = {
 	CssValidator: CssValidator
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -718,7 +794,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":2,"./lib":6,"./validation":12}],8:[function(require,module,exports){
+},{"./controllers/waitForValidation":3,"./lib":7,"./validation":13}],9:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -749,7 +825,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":2,"./lib":6,"./validation":12}],9:[function(require,module,exports){
+},{"./controllers/waitForValidation":3,"./lib":7,"./validation":13}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -801,7 +877,7 @@ function onExit() {
 	this.screen.clear();
 }
 
-},{"lodash":14}],10:[function(require,module,exports){
+},{"lodash":15}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -841,7 +917,7 @@ function onExit() {
 	this.screen.clear();
 }
 
-},{"lodash":14}],11:[function(require,module,exports){
+},{"lodash":15}],12:[function(require,module,exports){
 'use strict';
 
 var _lib = require('./lib');
@@ -873,7 +949,7 @@ function _interopRequireDefault(obj) {
 	}
 });
 
-},{"./controllers/waitForValidation":2,"./lib":6,"./validation":12}],12:[function(require,module,exports){
+},{"./controllers/waitForValidation":3,"./lib":7,"./validation":13}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -943,7 +1019,7 @@ var input_readonly = exports.input_readonly = function input_readonly(test) {
 	return test.merge(multiple_images_with_sizes).open('input')._s.attrs([['readonly']])._s.close('/>');
 };
 
-},{"./lib":6}],13:[function(require,module,exports){
+},{"./lib":7}],14:[function(require,module,exports){
 'use strict';
 
 var _waitForFile = require('./controllers/waitForFile');
@@ -958,7 +1034,7 @@ function _interopRequireDefault(obj) {
 	file: '/index.html'
 });
 
-},{"./controllers/waitForFile":1}],14:[function(require,module,exports){
+},{"./controllers/waitForFile":1}],15:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -18069,4 +18145,4 @@ function _interopRequireDefault(obj) {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[3]);
+},{}]},{},[4]);

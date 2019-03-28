@@ -1,0 +1,56 @@
+- slide:
+    mode: popup
+    flags: +OPEN-MODE
+    controller: webProject
+    title: Title
+    content: ""
+
+- slide:
+    controller: webProject
+    mode: popup
+    content: |
+      Let's get started! This time you're all on your own!
+
+# - question:
+#     count: 4   # optional question count
+#     title: Main title
+#     
+#     hint: Optional helpful hint
+
+#     explain: |
+#       After the question is finished hint
+
+#     choices:
+#       - correct answer
+#       - wrong answer 1
+#       - wrong answer 2
+#       - wrong answer 3
+
+# - slide:
+#     flags: +OPEN_FILE
+#     emote: happy
+#     controller: name
+#     mode: popup
+#     content: |
+#       Way to go! You've finished this lesson!
+#       
+#       [snippet name highlight:0,5|20,5]
+#       
+#       [snippet html preview:50%]
+#       
+#       [image default.png]
+#       
+#       [image full.jpg frame]
+#       
+#       Inline replacement is done using ||does|duz||
+#       
+#       A normal [define html] is like this
+#       
+#       A lowercase [define html l] is like this
+#       
+#       A plural [define html p] is like this
+#       A plural [define html s] or like this
+#       
+#       Can be combined as [define html lp] [define html ls]
+#       
+#       
