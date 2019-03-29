@@ -28,7 +28,11 @@ waitForValidation(module.exports, {
 
 		controller.onBeforeContentChange = (file, change) => {
 			return !change.hasNewlines || (change.hasNewlines && !controller.validation.inTag);
-		}
+		};
+
+		controller.onActivateLesson = () => {
+			$inTag = undefined;
+		};
 
 	}
 

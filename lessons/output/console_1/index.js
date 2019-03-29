@@ -258,6 +258,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.controller = undefined;
+exports.onActivateLesson = onActivateLesson;
 exports.onEnter = onEnter;
 exports.onContentChange = onContentChange;
 exports.onInit = onInit;
@@ -292,6 +293,10 @@ function validate(instance) {
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
 	});
+}
+
+function onActivateLesson() {
+	$isValid = false;
 }
 
 function onEnter() {
@@ -338,6 +343,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.controller = undefined;
+exports.onActivateLesson = onActivateLesson;
 exports.onEnter = onEnter;
 exports.onContentChange = onContentChange;
 exports.onInit = onInit;
@@ -375,6 +381,11 @@ function validate(instance) {
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
 	});
+}
+
+function onActivateLesson() {
+	$isValid = false;
+	$isShowingHelp = false;
 }
 
 function onEnter() {
@@ -425,6 +436,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.controller = undefined;
+exports.onActivateLesson = onActivateLesson;
 exports.onEnter = onEnter;
 exports.onRunCodeAlert = onRunCodeAlert;
 exports.onReady = onReady;
@@ -462,6 +474,11 @@ function validate(instance) {
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
 	});
+}
+
+function onActivateLesson() {
+	$alertCount = 0;
+	$isValid = false;
 }
 
 function onEnter() {
@@ -518,6 +535,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.controller = undefined;
+exports.onActivateLesson = onActivateLesson;
 exports.onEnter = onEnter;
 exports.onRunCodeAlert = onRunCodeAlert;
 exports.onInit = onInit;
@@ -554,6 +572,10 @@ function validate(instance) {
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
 	});
+}
+
+function onActivateLesson() {
+	$isValid = false;
 }
 
 function onEnter() {
@@ -1065,7 +1087,12 @@ var console1Lesson = function () {
 
     // setup each reference
     _lib._.each(refs, function (ref, key) {
-      if (ref.controller) _this.controllers[key] = ref;
+      if (ref.controller) {
+        _this.controllers[key] = ref;
+
+        // handle resets
+        if (ref.onActivateLesson) ref.onActivateLesson.call(ref, _this);
+      }
     });
 
     // debugging
@@ -1113,13 +1140,21 @@ var console1Lesson = function () {
   }, {
     key: 'invoke',
     value: function invoke(action) {
-      if (!this.respondsTo(action)) return null;
-      action = toActionName(action);
+      var _controller$invoke;
+
       var controller = this.controller;
+
+      if (!controller) return;
+
+      action = toActionName(action);
+
+      // check the action
 
       for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
+
+      if (controller.invoke) return (_controller$invoke = controller.invoke).call.apply(_controller$invoke, [this, action].concat(args));
 
       return controller[action].apply(this, args);
     }
@@ -1129,10 +1164,19 @@ var console1Lesson = function () {
   }, {
     key: 'respondsTo',
     value: function respondsTo(action) {
-      action = toActionName(action);
       var controller = this.controller;
 
-      return !!controller && controller[action];
+      if (!controller) return false;
+
+      action = toActionName(action);
+
+      // tasks lists will handle this themselves
+      // it's safe to return true here since there
+      // are no gate keepers
+      if (controller.respondsTo) return controller.respondsTo(action);
+
+      // perform normally
+      return !!controller[action];
     }
 
     // resets any required information between slides
@@ -1266,6 +1310,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.controller = undefined;
+exports.onActivateLesson = onActivateLesson;
 exports.onEnter = onEnter;
 exports.onRunCodeAlert = onRunCodeAlert;
 exports.onInit = onInit;
@@ -1302,6 +1347,10 @@ function validate(instance) {
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
 	});
+}
+
+function onActivateLesson() {
+	$isValid = false;
 }
 
 function onEnter() {
@@ -1396,7 +1445,7 @@ function onReady() {
 }
 
 },{"./lib":16}],16:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -1408,12 +1457,18 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+
+$.preview = function () {
+	return $('#preview .output').contents();
+};
 
 exports.default = {
 	_: _, $: $,
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
-	CssValidator: CssValidator
+	CssValidator: CssValidator,
+	validateHtmlDocument: validateHtmlDocument
 };
 
 },{}],17:[function(require,module,exports){
@@ -1423,6 +1478,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.controller = undefined;
+exports.onActivateLesson = onActivateLesson;
 exports.onReset = onReset;
 exports.onEnter = onEnter;
 exports.onInit = onInit;
@@ -1465,6 +1521,12 @@ function validate(instance) {
 		deny: instance.assistant.revert,
 		always: instance.sound.notify
 	});
+}
+
+function onActivateLesson() {
+	$endIndex = undefined;
+	$hasShownFirstAlert = undefined;
+	$allowRunCode = undefined;
 }
 
 function onReset() {

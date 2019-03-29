@@ -27,6 +27,10 @@ function validate(instance) {
 	
 }
 
+export function onActivateLesson() {
+	$isValid = false;
+}
+
 export function onEnter() {
 	this.file.allowEdit({ path: '/main.js' });
 }

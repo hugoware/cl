@@ -1,8 +1,13 @@
 
 export const controller = true;
 
-let $count = 0;
+let $count;
 let $done;
+
+export function onActivateLesson() {
+	$count = 0;
+	$done;
+}
 
 export function onNavigatePreviewArea(url) {
 	if ($done) return;

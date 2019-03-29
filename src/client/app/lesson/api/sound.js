@@ -10,5 +10,6 @@ export default class SoundAPI {
 	notify = $sound.notify
 	success = $sound.success
 	error = $sound.error
+	task = $sound.task
 
 }

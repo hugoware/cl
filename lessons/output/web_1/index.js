@@ -139,6 +139,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.controller = undefined;
+exports.onActivateLesson = onActivateLesson;
 exports.onEnter = onEnter;
 exports.onExit = onExit;
 exports.onContentChange = onContentChange;
@@ -151,6 +152,10 @@ var _utils = require('./utils');
 var controller = exports.controller = true;
 
 var $valid = void 0;
+
+function onActivateLesson() {
+	$valid = false;
+}
 
 function onEnter() {
 	this.progress.block();
@@ -869,7 +874,12 @@ var web1Lesson = function () {
 
     // setup each reference
     _lib._.each(refs, function (ref, key) {
-      if (ref.controller) _this.controllers[key] = ref;
+      if (ref.controller) {
+        _this.controllers[key] = ref;
+
+        // handle resets
+        if (ref.onActivateLesson) ref.onActivateLesson.call(ref, _this);
+      }
     });
 
     // debugging
@@ -917,13 +927,21 @@ var web1Lesson = function () {
   }, {
     key: 'invoke',
     value: function invoke(action) {
-      if (!this.respondsTo(action)) return null;
-      action = toActionName(action);
+      var _controller$invoke;
+
       var controller = this.controller;
+
+      if (!controller) return;
+
+      action = toActionName(action);
+
+      // check the action
 
       for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
+
+      if (controller.invoke) return (_controller$invoke = controller.invoke).call.apply(_controller$invoke, [this, action].concat(args));
 
       return controller[action].apply(this, args);
     }
@@ -933,10 +951,19 @@ var web1Lesson = function () {
   }, {
     key: 'respondsTo',
     value: function respondsTo(action) {
-      action = toActionName(action);
       var controller = this.controller;
 
-      return !!controller && controller[action];
+      if (!controller) return false;
+
+      action = toActionName(action);
+
+      // tasks lists will handle this themselves
+      // it's safe to return true here since there
+      // are no gate keepers
+      if (controller.respondsTo) return controller.respondsTo(action);
+
+      // perform normally
+      return !!controller[action];
     }
 
     // resets any required information between slides
@@ -1023,7 +1050,7 @@ function toActionName(name) {
 window.registerLesson('web_1', web1Lesson);
 
 },{"./aboutSaving":1,"./addListItems":2,"./browserType":3,"./changeHeadingContent":4,"./codeEditorIntro":5,"./controllers/waitForFile":6,"./controllers/waitForTab":7,"./freeButtonInsert":8,"./freeHeadingInsert":9,"./highlightFileBrowser":10,"./lib":12,"./previewAreaIntro":13,"./validation":15,"./waitForIndexHtml":16}],12:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -1035,12 +1062,18 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+
+$.preview = function () {
+	return $('#preview .output').contents();
+};
 
 exports.default = {
 	_: _, $: $,
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
-	CssValidator: CssValidator
+	CssValidator: CssValidator,
+	validateHtmlDocument: validateHtmlDocument
 };
 
 },{}],13:[function(require,module,exports){

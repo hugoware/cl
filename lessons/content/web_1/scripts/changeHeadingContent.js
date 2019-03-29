@@ -5,6 +5,10 @@ export const controller = true;
 
 let $valid;
 
+export function onActivateLesson() {
+	$valid = false;
+}
+
 export function onEnter() {
 	this.progress.block();
 	this.file.readOnly({ path: '/index.html', readOnly: false });

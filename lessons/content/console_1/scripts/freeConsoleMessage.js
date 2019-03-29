@@ -31,6 +31,11 @@ function validate(instance) {
 	
 }
 
+export function onActivateLesson() {
+	$alertCount = 0;
+	$isValid = false;
+}
+
 export function onEnter() {
 	this.editor.focus();
 	this.progress.block();

@@ -33,6 +33,12 @@ function validate(instance) {
 	
 }
 
+export function onActivateLesson() {
+	$endIndex = undefined;
+	$hasShownFirstAlert = undefined;
+	$allowRunCode = undefined;
+}
+
 export function onReset() {
 	this.progress.block();
 	this.assistant.revert();

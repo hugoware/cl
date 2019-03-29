@@ -1,20 +1,27 @@
-import _ from 'lodash';
+import { _, HtmlTagValidator } from '../lib';
 
 export default class HtmlValidationHelper {
+
+	// performs validation
+	static validate(html, callback) {
+		HtmlTagValidator(html, (err, ast) => {
+			callback(new HtmlValidationHelper(err, ast));
+		});
+	}
 	
 	constructor(err, ast) {
 		this.err = err;
 
-		// can't do anything else with an error
-		if (err) {
-			console.log(err);
-			return;
-		}
+		// // can't do anything else with an error
+		// if (err) {
+		// 	console.log(err);
+		// 	return;
+		// }
 
-		// create a flat array of nodes
-		this.ast = ast;
-		this.nodes = [ ];
-		flatten(this.ast, this.nodes);
+		// // create a flat array of nodes
+		// this.ast = ast;
+		// this.nodes = [ ];
+		// flatten(this.ast, this.nodes);
 	}
 
 	get hasError() {

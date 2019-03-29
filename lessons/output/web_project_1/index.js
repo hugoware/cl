@@ -35,6 +35,9 @@ var Task = function () {
 		this.label = label;
 		this.id = _lib._.uniqueId('task:');
 		_lib._.assign(this, options);
+
+		// constructor logic
+		if (this.onCreateTask) this.onCreateTask.apply(this);
 	}
 
 	// get the current state
@@ -75,37 +78,67 @@ var TaskList = function () {
 		this.total = 0;
 	}
 
-	// refreshes state data
-
-
 	_createClass(TaskList, [{
+		key: 'taskSound',
+		value: function taskSound(all) {
+
+			// don't play sounds too fast
+			var now = +new Date();
+			if ((this._nextAllowed || -1) > now) return;
+			this._nextAllowed = now + 1000;
+
+			// play the sound
+			this.sound.task(!!all);
+		}
+
+		// refreshes state data
+
+	}, {
 		key: 'update',
-		value: function update(immediate) {
+		value: function update(immediate, silent) {
 			var _this = this;
+
+			if (this.isLoading) return;
 
 			// tracking state
 			if (immediate) {
+				var starting = this.completed || 0;
 				this.completed = 0;
 				this.state = [];
 
 				// creates state for a node
 				createState(this.root, this, this.state);
 
-				// renewed state
-				this.broadcast('task-list-updated', {
+				var data = {
 					total: this.total,
 					complete: this.completed,
 					state: this.state
-				});
+				};
+
+				var increased = this.completed > starting;
+				var done = increased && this.completed === this.total;
+
+				// renewed state
+				this.broadcast('task-list-updated', data);
+
+				if (done) {
+					if (!silent) this.taskSound(done);
+					this.broadcast('task-list-complete', data);
+				} else if (increased) if (!silent) this.taskSound();
 
 				return;
 			}
 
 			// queue an update
-			clearTimeout(this._update);
+			this.cancelUpdate();
 			this._update = setTimeout(function () {
 				return _this.update(true);
 			}, 100);
+		}
+	}, {
+		key: 'cancelUpdate',
+		value: function cancelUpdate() {
+			clearTimeout(this._update);
 		}
 	}]);
 
@@ -169,57 +202,64 @@ function createState(tasks, project, node) {
 
 // handles creating a new project
 function createTasks(obj, options, builder) {
-	var project = new TaskList(options);
-
-	// handle setting up the work tree
-	var stack = [project.root];
-	var createTask = function createTask(label, arg) {
-		project.total++;
-
-		// create the new task
-		var task = new Task(project, label, arg);
-		stack[0].push(task);
-
-		// if the args are a function then
-		// it's just a grouping for more tasks
-		if (_lib._.isFunction(arg)) {
-			task.tasks = [];
-			stack.unshift(task.tasks);
-			arg();
-
-			// remove project task from the stack
-			stack.shift();
-		}
-		// it's an actual task that does something
-		else {
-				project.tasks.push(task);
-			}
-	};
-
-	// setup tasks
-	builder(createTask);
+	var project = void 0;
 
 	// returns the current project state
 	_lib._.assign(obj, {
 		controller: true,
-		taskList: true,
+		isTaskList: true,
+
+		// prepares the lesson
+		onActivateLesson: function onActivateLesson() {
+			console.log('did activate');
+
+			// setup the new project
+			project = new TaskList(options);
+			project.instance = this;
+			project.broadcast = this.events.broadcast;
+			project.sound = this.sound;
+
+			// handle setting up the work tree
+			var stack = [project.root];
+			function createTask(label, arg) {
+				project.total++;
+
+				// create the new task
+				var task = new Task(project, label, arg);
+				stack[0].push(task);
+
+				// if the args are a function then
+				// it's just a grouping for more tasks
+				if (_lib._.isFunction(arg)) {
+					task.tasks = [];
+					stack.unshift(task.tasks);
+					arg();
+
+					// remove project task from the stack
+					stack.shift();
+				}
+				// it's an actual task that does something
+				else {
+						project.tasks.push(task);
+					}
+			}
+
+			// setup tasks
+			project.isLoading = true;
+			builder(createTask);
+			project.isLoading = false;
+
+			// perform the update
+			project.update(true, true);
+		},
 
 		// execute an action against all tasks
 		invoke: function invoke(action) {
-
-			// if entering
-			if (action === 'onEnter' && !project.broadcast) {
-				project.instance = this;
-				project.broadcast = this.events.broadcast;
-				project.update(true);
-			}
-
-			// handle other actions
-
 			for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 				args[_key - 1] = arguments[_key];
 			}
 
+			// handle other actions
 			var _iteratorNormalCompletion2 = true;
 			var _didIteratorError2 = false;
 			var _iteratorError2 = undefined;
@@ -257,15 +297,15 @@ function createTasks(obj, options, builder) {
 
 		// props
 		get state() {
-			return project.state;
+			return project ? project.state : [];
 		},
 
 		get total() {
-			return project.total;
+			return project ? project.total : 0;
 		},
 
 		get complete() {
-			return project.complete;
+			return project ? project.complete : 0;
 		}
 
 	});
@@ -410,9 +450,13 @@ var _waitForTab = require('./controllers/waitForTab');
 
 var _waitForTab2 = _interopRequireDefault(_waitForTab);
 
-var _webProject = require('./webProject');
+var _list = require('./list');
 
-var webProject = _interopRequireWildcard(_webProject);
+var list = _interopRequireWildcard(_list);
+
+var _tasks = require('./tasks');
+
+var tasks = _interopRequireWildcard(_tasks);
 
 function _interopRequireWildcard(obj) {
 	if (obj && obj.__esModule) {
@@ -458,11 +502,11 @@ var webProject1Lesson = function () {
 			"lesson": [{
 				"mode": "popup",
 				"flags": "+OPEN-MODE",
-				"controller": "webProject",
+				"controller": "list",
 				"title": "Title",
 				"content": ""
 			}, {
-				"controller": "webProject",
+				"controller": "list",
 				"mode": "popup",
 				"content": "Let's get started! This time you're all on your own!\n"
 			}],
@@ -491,12 +535,17 @@ var webProject1Lesson = function () {
 
 		// setup each included entry
 		var refs = {
-			webProject: webProject
+			list: list, tasks: tasks
 		};
 
 		// setup each reference
 		_lib._.each(refs, function (ref, key) {
-			if (ref.controller) _this.controllers[key] = ref;
+			if (ref.controller) {
+				_this.controllers[key] = ref;
+
+				// handle resets
+				if (ref.onActivateLesson) ref.onActivateLesson.call(_this);
+			}
 		});
 
 		// debugging
@@ -666,7 +715,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_project_1', webProject1Lesson);
 
-},{"./controllers/waitForFile":2,"./controllers/waitForTab":3,"./lib":5,"./webProject":6}],5:[function(require,module,exports){
+},{"./controllers/waitForFile":2,"./controllers/waitForTab":3,"./lib":5,"./list":6,"./tasks":7}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -679,6 +728,7 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
 
 $.preview = function () {
 	return $('#preview .output').contents();
@@ -688,11 +738,17 @@ exports.default = {
 	_: _, $: $,
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
-	CssValidator: CssValidator
+	CssValidator: CssValidator,
+	validateHtmlDocument: validateHtmlDocument
 };
 
 },{}],6:[function(require,module,exports){
 'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.controller = undefined;
 
 var _lib = require('./lib');
 
@@ -700,16 +756,185 @@ var _taskList = require('./controllers/task-list');
 
 var _taskList2 = _interopRequireDefault(_taskList);
 
+var _tasks = require('./tasks');
+
+var tasks = _interopRequireWildcard(_tasks);
+
+function _interopRequireWildcard(obj) {
+	if (obj && obj.__esModule) {
+		return obj;
+	} else {
+		var newObj = {};if (obj != null) {
+			for (var key in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+			}
+		}newObj.default = obj;return newObj;
+	}
+}
+
 function _interopRequireDefault(obj) {
 	return obj && obj.__esModule ? obj : { default: obj };
 }
 
+var controller = exports.controller = true;
+
+// when activating a new 
+exports.default = (0, _taskList2.default)(module.exports, {
+	title: 'Create a small website'
+},
+
+// setup the main task
+function (task) {
+
+	task('Fix any validation errors', {
+		onCreateTask: function onCreateTask() {
+			this.validation = {};
+			this.isValid = true;
+		},
+		onContentChange: function onContentChange(file) {
+			var _this = this;
+
+			if (!this.validation) {
+				this.validation = {};
+			}
+
+			(0, _lib.validateHtmlDocument)(file.current, function (html) {
+				_this.validation[file.path] = !html.hasErrors;
+				_this.isValid = _lib._.every(_this.validation);
+			});
+		}
+	});
+
+	task('Create an `index.html` page', function () {
+
+		task('Create index.html', {
+			onCreateFile: tasks.checkNewFile('/index.html', true),
+			onUploadFile: tasks.checkNewFile('/index.html', false),
+			onRemoveItems: tasks.checkRemoveFile('/index.html')
+		});
+
+		task('Add a page title', function () {
+
+			task('Create the `title` Element', {
+				onUpdatePreviewArea: tasks.expectElement('/index.html', 'head > title'),
+				onRemoveFile: tasks.checkRemoveFile('/index.html')
+			});
+
+			task('Enter between 5 and 20 characters in the title', {
+				onUpdatePreviewArea: tasks.expectElementContent('/index.html', 'head > title', 5, 20),
+				onRemoveFile: tasks.checkRemoveFile('/index.html')
+			});
+		});
+	});
+
+	task('Create an `about.html` page', function () {
+
+		task('Use **Create new file** button to add `about.html`', {
+			onCreateFile: tasks.checkNewFile('/about.html', true),
+			onUploadFile: tasks.checkNewFile('/about.html', false)
+		});
+
+		task('Add a page title', function () {
+
+			task('Create a `title` Element', {
+				onUpdatePreviewArea: tasks.expectElement('/about.html', 'head > title'),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+
+			task('Enter between 5 and 20 characters in the title', {
+				onUpdatePreviewArea: tasks.expectElementContent('/about.html', 'head > title', 5, 20),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+		});
+
+		task('Add a page heading', function () {
+
+			task('Create a `h1` Element', {
+				onUpdatePreviewArea: tasks.expectElement('/about.html', 'body > h1'),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+
+			task('Enter between 5 and 20 characters in the heading', {
+				onUpdatePreviewArea: tasks.expectElementContent('/about.html', 'body > h1', 5, 20),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+		});
+
+		task('Add a page paragraph', function () {
+
+			task('Create a `p` Element', {
+				onUpdatePreviewArea: tasks.expectElement('/about.html', 'body > p'),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+
+			task('Place the `p` Element after the `h1` Element', {
+				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
+					if (url !== '/about.html') return;
+					this.isValid = preview.find('body > h1').after('p').length === 1;
+				}
+			});
+
+			task('Type at least 15 characters in the paragraph', {
+				onUpdatePreviewArea: tasks.expectElementContent('/about.html', 'body > p', 15, NaN),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+		});
+
+		task('Add the `/cat.png` image', function () {
+
+			task('Create an `img` Element', {
+				onUpdatePreviewArea: tasks.expectElement('/about.html', 'body > img'),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+
+			task('Set the `src` attribute to `/cat.png`', {
+				onRemoveFile: tasks.checkRemoveFile('/about.html'),
+				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
+					if (url !== '/about.html') return;
+					this.isValid = preview.find('body > img[src="/cat.png"]').length === 1;
+				}
+			});
+		});
+
+		task('Add a link from `/about.html` to `/index.html`', function () {
+
+			task('Create an `a` Element', {
+				onUpdatePreviewArea: tasks.expectElement('/about.html', 'body > a'),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+
+			task('Type at least 5 characters in the hyperlink', {
+				onUpdatePreviewArea: tasks.expectElementContent('/about.html', 'body > a', 15, NaN),
+				onRemoveFile: tasks.checkRemoveFile('/about.html')
+			});
+
+			task('Set the `href` attribute to `/index.html`', {
+				onRemoveFile: tasks.checkRemoveFile('/about.html'),
+				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
+					if (url !== '/about.html') return;
+					this.isValid = preview.find('body > a[href="/index.html"]').length === 1;
+				}
+			});
+		});
+	});
+});
+
+},{"./controllers/task-list":1,"./lib":5,"./tasks":7}],7:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.checkNewFile = checkNewFile;
+exports.checkRemoveFile = checkRemoveFile;
+exports.expectElement = expectElement;
+exports.expectElementContent = expectElementContent;
 function checkNewFile(path, replaceContent) {
 	return function (file) {
 		if (file.path !== path) return;
 
 		// creating a new file defaults to missing the title
-		if (replaceContent) file.content = '<!DOCTYPE html>\n<html>\n\t<head>\n\n\t</head>\n\t<body>\n\n\t</body>\n</html>';
+		if (replaceContent) file.content = "<!DOCTYPE html>\n<html>\n\t<head>\n\n\t</head>\n\t<body>\n\n\t</body>\n</html>";
 
 		this.isValid = true;
 	};
@@ -735,146 +960,11 @@ function expectElementContent(path, selector, min, max) {
 	return function (url, preview, html) {
 		if (url !== path) return;
 
-		var text = _lib._.trim(preview.find(selector).text());
+		var text = _.trim(preview.find(selector).text());
 		var length = text.length;
 		var upper = isNaN(max || NaN) ? length + 1 : max;
 		this.isValid = length > min && length < upper;
 	};
 }
 
-(0, _taskList2.default)(module.exports, {
-	title: 'Create a small website'
-},
-
-// setup the main task
-function (task) {
-
-	task('Create an `index.html` page', function () {
-
-		task('Create index.html', {
-			onCreateFile: checkNewFile('/index.html', true),
-			onUploadFile: checkNewFile('/index.html', false),
-			onRemoveItems: checkRemoveFile('/index.html')
-		});
-
-		task('Fix all validation errors', {
-			onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
-				if (url !== '/index.html') return;
-				this.isValid = !html.hasErrors;
-			}
-		});
-
-		task('Add a page title', function () {
-
-			task('Create the `title` Element', {
-				onUpdatePreviewArea: expectElement('/index.html', 'head > title'),
-				onRemoveFile: checkRemoveFile('/index.html')
-			});
-
-			task('Enter between 5 and 20 characters in the title', {
-				onUpdatePreviewArea: expectElementContent('/index.html', 'head > title', 5, 20),
-				onRemoveFile: checkRemoveFile('/index.html')
-			});
-		});
-	});
-
-	task('Create an `about.html` page', function () {
-
-		task('Fix all validation errors', {
-			onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
-				if (url !== '/about.html') return;
-				this.isValid = !html.hasErrors;
-			}
-		});
-
-		task('Use **Create new file** button to add `about.html`', {
-			onCreateFile: checkNewFile('/about.html', true),
-			onUploadFile: checkNewFile('/about.html', false)
-		});
-
-		task('Add a page title', function () {
-
-			task('Create a `title` Element', {
-				onUpdatePreviewArea: expectElement('/about.html', 'head > title'),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-
-			task('Enter between 5 and 20 characters in the title', {
-				onUpdatePreviewArea: expectElementContent('/about.html', 'head > title', 5, 20),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-		});
-
-		task('Add a page heading', function () {
-
-			task('Create a `h1` Element', {
-				onUpdatePreviewArea: expectElement('/about.html', 'body > h1'),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-
-			task('Enter between 5 and 20 characters in the heading', {
-				onUpdatePreviewArea: expectElementContent('/about.html', 'body > h1', 5, 20),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-		});
-
-		task('Add a page paragraph', function () {
-
-			task('Create a `p` Element', {
-				onUpdatePreviewArea: expectElement('/about.html', 'body > p'),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-
-			task('Place the `p` Element after the `h1` Element', {
-				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
-					if (url !== '/about.html') return;
-					this.isValid = preview.find('body > h1').after('p').length === 1;
-				}
-			});
-
-			task('Type at least 15 characters in the paragraph', {
-				onUpdatePreviewArea: expectElementContent('/about.html', 'body > p', 15, NaN),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-		});
-
-		task('Add the `/cat.png` image', function () {
-
-			task('Create an `img` Element', {
-				onUpdatePreviewArea: expectElement('/about.html', 'body > img'),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-
-			task('Set the `src` attribute to `/cat.png`', {
-				onRemoveFile: checkRemoveFile('/about.html'),
-				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
-					if (url !== '/about.html') return;
-					this.isValid = preview.find('body > img[src="/cat.png"]').length === 1;
-				}
-			});
-		});
-
-		task('Add a link from `/about.html` to `/index.html`', function () {
-
-			task('Create an `a` Element', {
-				onUpdatePreviewArea: expectElement('/about.html', 'body > a'),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-
-			task('Type at least 5 characters in the hyperlink', {
-				onUpdatePreviewArea: expectElementContent('/about.html', 'body > a', 15, NaN),
-				onRemoveFile: checkRemoveFile('/about.html')
-			});
-
-			task('Set the `href` attribute to `/index.html`', {
-				onRemoveFile: checkRemoveFile('/about.html'),
-				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
-					if (url !== '/about.html') return;
-					this.isValid = preview.find('body > a[href="/index.html"]').length === 1;
-				}
-			});
-		});
-	});
-});
-
-},{"./controllers/task-list":1,"./lib":5}]},{},[4]);
+},{}]},{},[4]);

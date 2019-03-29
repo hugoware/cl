@@ -9,6 +9,10 @@ class Task {
 		this.label = label;
 		this.id = _.uniqueId('task:');
 		_.assign(this, options);
+
+		// constructor logic
+		if (this.onCreateTask)
+			this.onCreateTask.apply(this);
 	}
 
 	// get the current state
@@ -42,30 +46,59 @@ class TaskList {
 
 	}
 
+	taskSound(all) {
+
+		// don't play sounds too fast
+		const now = +new Date;
+		if ((this._nextAllowed || -1) > now) return;
+		this._nextAllowed = now + 1000;
+
+		// play the sound
+		this.sound.task(!!all);
+	}
+
 	// refreshes state data
-	update(immediate) {
+	update(immediate, silent) {
+		if (this.isLoading) return;
 
 		// tracking state
 		if (immediate) {
+			const starting = this.completed || 0;
 			this.completed = 0;
 			this.state = [ ];
 
 			// creates state for a node
 			createState(this.root, this, this.state);
-			
-			// renewed state
-			this.broadcast('task-list-updated', {
+
+			const data = {
 				total: this.total,
 				complete: this.completed,
 				state: this.state
-			});
+			};
+
+			const increased = this.completed > starting;
+			const done = increased && this.completed === this.total;
+			
+			// renewed state
+			this.broadcast('task-list-updated', data);
+			
+			if (done) {
+				if (!silent) this.taskSound(done);
+				this.broadcast('task-list-complete', data);
+			}
+			else if (increased)
+				if (!silent) this.taskSound();
 
 			return;
 		}
 
 		// queue an update
-		clearTimeout(this._update);
+		this.cancelUpdate();
 		this._update = setTimeout(() => this.update(true), 100);
+	}
+
+	cancelUpdate() {
+		clearTimeout(this._update);
 	}
 
 }
@@ -108,52 +141,60 @@ function createState(tasks, project, node) {
 
 // handles creating a new project
 export default function createTasks(obj, options, builder) {
-	const project = new TaskList(options);
-
-	// handle setting up the work tree
-	const stack = [ project.root ];
-	const createTask = (label, arg) => {
-		project.total++;
-
-		// create the new task
-		const task = new Task(project, label, arg);
-		stack[0].push(task);
-		
-		// if the args are a function then
-		// it's just a grouping for more tasks
-		if (_.isFunction(arg)) {
-			task.tasks = [ ];
-			stack.unshift(task.tasks);
-			arg();
-
-			// remove project task from the stack
-			stack.shift();
-		}
-		// it's an actual task that does something
-		else {
-			project.tasks.push(task);
-		}
-
-	}
-
-
-	// setup tasks
-	builder(createTask);
+	let project;
 
 	// returns the current project state
 	_.assign(obj, {
 		controller: true,
-		taskList: true,
+		isTaskList: true,
+
+		// prepares the lesson
+		onActivateLesson() {
+			console.log('did activate');
+
+			// setup the new project
+			project = new TaskList(options);
+			project.instance = this;
+			project.broadcast = this.events.broadcast;
+			project.sound = this.sound;
+
+			// handle setting up the work tree
+			const stack = [ project.root ];
+			function createTask(label, arg) {
+				project.total++;
+
+				// create the new task
+				const task = new Task(project, label, arg);
+				stack[0].push(task);
+				
+				// if the args are a function then
+				// it's just a grouping for more tasks
+				if (_.isFunction(arg)) {
+					task.tasks = [ ];
+					stack.unshift(task.tasks);
+					arg();
+
+					// remove project task from the stack
+					stack.shift();
+				}
+				// it's an actual task that does something
+				else {
+					project.tasks.push(task);
+				}
+			}
+
+
+			// setup tasks
+			project.isLoading = true;
+			builder(createTask);
+			project.isLoading = false;
+
+			// perform the update
+			project.update(true, true);
+		},
 
 		// execute an action against all tasks
 		invoke(action, ...args) {
-
-			// if entering
-			if (action === 'onEnter' && !project.broadcast) {
-				project.instance = this;
-				project.broadcast = this.events.broadcast;
-				project.update(true);
-			}
 
 			// handle other actions
 			for (const task of project.tasks) {
@@ -174,15 +215,15 @@ export default function createTasks(obj, options, builder) {
 
 		// props
 		get state() {
-			return project.state;
+			return project ? project.state : [ ];
 		},
 
 		get total() {
-			return project.total;
+			return project ? project.total : 0;
 		},
 
 		get complete() {
-			return project.complete;
+			return project ? project.complete : 0;
 		}
 
 	})

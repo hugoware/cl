@@ -9,7 +9,9 @@ const $sounds = new Howl({
 	sprite: {
 		notify: [0, 500],
 		success: [1000, 1750],
-		error: [3000, 500]
+		error: [3000, 500],
+		taskComplete: [6500, 900],
+		taskListComplete: [3900, 2500],
 	}
 });
 
@@ -48,9 +50,17 @@ function error(options) {
 	play('error', options);
 }
 
+/** plays a task noise 
+ * @param {SoundOptions} [options] sound choices
+*/
+function task(all, options) {
+	play(all ? 'taskListComplete' : 'taskComplete', options);
+}
+
 // export sound choices
 export default {
 	notify,
 	success,
-	error
+	error,
+	task
 };

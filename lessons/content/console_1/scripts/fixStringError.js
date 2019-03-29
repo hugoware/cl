@@ -31,6 +31,11 @@ function validate(instance) {
 	
 }
 
+export function onActivateLesson() {
+	$isValid = false;
+	$isShowingHelp = false;
+}
+
 export function onEnter() {
 	this.file.allowEdit({ path: '/main.js' });
 	this.delay(15000, () => {

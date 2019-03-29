@@ -43,8 +43,13 @@ class $LESSON_TYPE$Lesson {
 
 		// setup each reference
 		_.each(refs, (ref, key) => {
-			if (ref.controller)
+			if (ref.controller) {
 				this.controllers[key] = ref;
+
+				// handle resets
+				if (ref.onActivateLesson)
+					ref.onActivateLesson.call(this);
+			}
 		});
 
 		// debugging

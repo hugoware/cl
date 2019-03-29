@@ -7,10 +7,44 @@
 	// height: $header-height;
 	height: auto;
 	overflow: hidden;
-	border-radius: 0 0 5px 5px;
 
-	background-color: rgba(#000, 0.9);
 	color: #fff;
+	background-color: rgba(#000, 0.15);
+
+	strong {
+		font-weight: bold;
+	}
+
+	em {
+		font-style: italic;
+	}
+
+	> .list {
+		display: none !important;
+		overflow-y: auto;
+	}
+
+	&:hover {
+		background-color: rgba(#000, 0.9);
+
+		> .list {
+			clear: both;
+			padding: 0 0 10px 0;
+			display: block !important;
+			max-height: 660px;
+		}
+
+		border-radius: 0 0 5px 5px;
+	}
+
+	code {
+		font-family: $code-font;
+		display: inline-block;
+		padding: 2px 5px;
+		background: rgba(#fff, 0.1);
+		border-radius: 3px;
+		box-shadow: inset 0 0 0 1px rgba(#fff, 0.2)
+	}
 	
 	.heading {
 		height: $header-height;
@@ -30,26 +64,28 @@
 		}
 	}
 
-	.list {
-		clear: both;
-		padding: 10px 0 10px 0;
-	}
-
 	// tree depth - anything deeper is just silly
 	@for $i from 0 through 8 {
 		.task-depth-#{$i} .entry {
-			padding: 8px 20px 8px ((15px * $i) + 20px);
+			padding: 8px 20px 8px ((25px * $i) + 20px);
 		}
 	}
 	
 	.task-depth-0 > .entry {
-		// margin-top: 5px;
 		font-size: 16px !important;
 	}
 
 	.task {
 		.count {
 			visibility: hidden;
+		}
+
+		&.has-tasks.task-depth-0 {
+			margin-top: 5px;
+		}
+
+		&.has-tasks.task-depth-1 {
+			margin-bottom: 10px;
 		}
 		
 		&.has-tasks.complete > .entry > .activity > .count {
@@ -170,9 +206,9 @@
 			.entry:hover {
 				background: rgba(#fff, 0.1);
 			}
-			> .items {
-				height: auto;
-			}
+			// > .items {
+			// 	height: auto;
+			// }
 		}
 
 		

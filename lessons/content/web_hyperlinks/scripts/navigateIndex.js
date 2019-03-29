@@ -4,6 +4,11 @@ export const controller = true;
 let $hasIndex;
 let $hasAnimals;
 
+export function onActivateLesson() {
+	$hasIndex = undefined;
+	$hasAnimals	= undefined;
+}
+
 export function onEnter() {
 	this.progress.block();
 }

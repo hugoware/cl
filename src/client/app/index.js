@@ -2,6 +2,7 @@ import { $, _, Bluebird, Cheerio } from './lib';
 import CodeValidator from './validation/code-validator';
 import HtmlValidator from './validation/html-validator';
 import CssValidator from './validation/css-validator';
+import HtmlValidationHelper from './utils/html-validation-helper'
 
 // extensions
 import * as __extensions__ from './extensions';
@@ -50,6 +51,7 @@ window.__CODELAB_LIBS__ = {
 	CodeValidator,
 	HtmlValidator,
 	CssValidator,
+	HtmlValidationHelper,
 };
 
 // the main app class

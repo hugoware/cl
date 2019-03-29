@@ -15,9 +15,6 @@ export default class TaskList extends Component {
 			}
 		});
 
-		// list of task IDs
-		this.tasks = { };
-
 		// events
 		this.listen('slide-changed', this.onSlideChanged);
 		this.listen('task-list-updated', this.onTaskUpdate);
@@ -29,6 +26,7 @@ export default class TaskList extends Component {
 
 	// update task list results
 	onTaskUpdate = tasks => {
+		console.log('up', tasks);
 
 		// update totals
 		this.ui.total.text(tasks.total);
@@ -56,7 +54,7 @@ export default class TaskList extends Component {
 		this.tasks = undefined;
 
 		// hide all tasks
-		if ($state.lesson.hasTasks) {
+		if ($state.lesson.isTaskList) {
 			this.hide();
 		}
 	}

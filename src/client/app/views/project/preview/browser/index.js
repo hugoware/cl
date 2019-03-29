@@ -6,7 +6,6 @@ import $state from '../../../../state';
 import Component from '../../../../component';
 import { getExtension } from '../../../../utils/index';
 import $errorManager from '../../../../error-manager';
-import HtmlValidationHelper from '../../../../utils/html-validation-helper';
 
 const NO_PREVIEW_LOADED = `
 	<div style="font: 24px sans-serif; opacity: 0.3; text-align: center; position: absolute; top: 20%; left: 0; right: 0;" >
@@ -357,16 +356,8 @@ export default class BrowserMode extends Component {
 
 		// notify this has access
 		setTimeout(() => {
-			if ($state.lesson) {
-
-				// check the markup first
-				const markup = view.file.current || view.file.content;
-				HtmlTagValidator(markup, (err, ast) => {
-					const helper = new HtmlValidationHelper(err, ast);
-					$state.lesson.invoke('updatePreviewArea', this.url, getPreviewAccess(), helper);
-				});
-
-			}
+			if ($state.lesson)
+				$state.lesson.invoke('updatePreviewArea', this.url, getPreviewAccess());
 		}, 100);
 
 	}

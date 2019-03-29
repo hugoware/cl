@@ -6,11 +6,7 @@ export const controller = true;
 const DEFAULT_MESSAGE = `Try to navigate to each of the animal pages to make sure each link works.`
 
 let $done;
-let $remaining = [
-	'fox.html',
-	'bear.html',
-	'cat.html'
-];
+let $remaining;
 
 function getMessage() {
 
@@ -25,6 +21,15 @@ function getMessage() {
 	return `${DEFAULT_MESSAGE}
 
 Navigate to the ${remains} ${pages} by clicking on the image of the animal.`;
+}
+
+export function onActivateLesson() {
+	$done = undefined;
+	$remaining = [
+		'fox.html',
+		'bear.html',
+		'cat.html'
+	];
 }
 
 export function onEnter() {

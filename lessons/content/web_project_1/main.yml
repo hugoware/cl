@@ -1,12 +1,12 @@
 - slide:
     mode: popup
     flags: +OPEN-MODE
-    controller: webProject
+    controller: list
     title: Title
     content: ""
 
 - slide:
-    controller: webProject
+    controller: list
     mode: popup
     content: |
       Let's get started! This time you're all on your own!

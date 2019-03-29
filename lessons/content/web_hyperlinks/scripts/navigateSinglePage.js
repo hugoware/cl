@@ -1,14 +1,20 @@
 export const controller = true;
 
-let $remaining = [
-	'/fox.html',
-	'/bear.html',
-	'/cat.html',
-	'/animals.html',
-];
-
+let $remaining;
 let $toAnimals;
 let $toList;
+
+export function onActivateLesson() {
+	$toAnimals = undefined;
+	$toList = undefined;
+	$remaining = [
+		'/fox.html',
+		'/bear.html',
+		'/cat.html',
+		'/animals.html',
+	];
+}
+
 
 export function onEnter() {
 	this.file.readOnly({ path: '/index.html' });

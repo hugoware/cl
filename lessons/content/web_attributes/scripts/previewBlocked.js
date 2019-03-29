@@ -4,6 +4,10 @@ export const controller = true;
 
 let $count = 0;
 
+export function onActivateLesson() {
+	$count = 0;
+}
+
 export function onEnter() {
 	this.progress.block();
 	this.file.readOnly({ path: '/index.html' });

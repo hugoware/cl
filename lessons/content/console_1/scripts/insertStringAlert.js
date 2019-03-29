@@ -28,6 +28,10 @@ function validate(instance) {
 	
 }
 
+export function onActivateLesson() {
+	$isValid = false;
+}
+
 export function onEnter() {
 	this.editor.focus();
 	this.progress.block();

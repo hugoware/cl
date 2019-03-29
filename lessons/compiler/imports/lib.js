@@ -5,6 +5,7 @@ export const $ = lib.$;
 export const CodeValidator = lib.CodeValidator;
 export const HtmlValidator = lib.HtmlValidator;
 export const CssValidator = lib.CssValidator;
+export const validateHtmlDocument = lib.HtmlValidationHelper.validate;
 
 
 $.preview = function() {
@@ -17,4 +18,5 @@ export default {
 	CodeValidator,
 	HtmlValidator,
 	CssValidator,
+	validateHtmlDocument,
 };
