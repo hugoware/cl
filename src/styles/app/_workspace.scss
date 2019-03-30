@@ -170,3 +170,6 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 
 }	
 
+.is-project-lesson #workspace .actions .action.reset {
+	display: none !important;
+}

@@ -4,6 +4,7 @@
 }
 
 #assistant {
+	@include animate('opacity, transform', 0.7s);
 	position: fixed;
 	bottom: $footer-height;
 	right: 0;
@@ -16,8 +17,7 @@
 		float: right;
 	}
 
-	&.leave {
-		@include animate('opacity, transform', 0.7s);
+	&.leave, &.hide-assistant {
 		pointer-events: none;
 		transform: translate(100%, 0);
 		opacity: 0 !important;

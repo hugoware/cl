@@ -12,6 +12,7 @@ export default class Task extends Component {
 			ui: {
 				label: '.label',
 				details: '.details .content',
+				topic: '.topic .content',
 				items: '.items',
 				count: '.count .value',
 			}
@@ -29,6 +30,12 @@ export default class Task extends Component {
 			this.addClass('has-details');
 			const message = generateMessage(task.details);
 			this.ui.details.html(message.content);
+		}
+
+		// if there's a topic
+		if (task.topic) {
+			this.addClass('has-topic');
+			this.ui.topic.text(task.topic);
 		}
 
 		// check for sub tasks

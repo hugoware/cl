@@ -28,7 +28,8 @@ export default class Assistant extends Component {
 				panel: '.panel',
 				toggleSpeech: '.toggle',
 				showPanel: '.show-panel',
-				hide: '.hide'
+				hide: '.hide',
+				// next: '.next'
 			},
 		});
 
@@ -79,6 +80,13 @@ export default class Assistant extends Component {
 	get view() {
 		const { slide } = $state.lesson;
 		return slide.isQuestion ? this.views.question : this.views.slide
+	}
+	
+	// checks the next action should just move the assistant
+	// out of the way or not
+	get shouldNextActionHideAssistant() {
+		const { controller } = $state.lesson.instance;
+		return controller && controller.isTaskList;
 	}
 
 	// // decides what to do with a result
@@ -227,6 +235,17 @@ export default class Assistant extends Component {
 
 	// handle button navigation
 	onNext = async force => {
+		force = force === true;
+
+		// check is the action is to hide or not
+		if (!force && this.shouldNextActionHideAssistant) {
+			$speech.stop();
+			this.addClass('hide-assistant');
+			return;
+		}
+
+		// stop hiding
+		this.removeClass('hide-assistant');
 
 		// don't allow clicking forward too fast
 		const now = +new Date;
@@ -348,7 +367,12 @@ export default class Assistant extends Component {
 		view.show();
 
 		// update labels as needed
-		this.find('.next').text(slide.isLast ? 'Finish' : 'Next');
+		const label = this.shouldNextActionHideAssistant ? 'Hide'
+			: slide.isLast ? 'Finish'
+			: 'Next';
+
+		// note: I don't remember why but using the ui prop doesn't work
+		this.find('.next').text(label);
 
 		// check for initial content
 		if (slide.isQuestion)

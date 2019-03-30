@@ -22,7 +22,14 @@ const VIEWABLE_TYPES = [
 ];
 
 function getPreviewAccess() {
-	return $('iframe.output').contents();
+	// const frame = $('#preview iframe.output').contents();
+	// const body = frame.find('body');
+	// const head = frame.find('head');
+	// const doc = $(body).add(head);
+	// console.log(doc);
+	// return $('<div />');
+	// // return $(.find('body')[0].parentElement);
+	return $('#preview iframe.output').contents();
 }
 
 // create the preview mode

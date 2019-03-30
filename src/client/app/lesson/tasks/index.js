@@ -9,6 +9,7 @@ export default class TaskList extends Component {
 		super({
 			template: 'tasks',
 			ui: {
+				heading: '.heading',
 				items: '.items',
 				completed: '.completed',
 				total: '.total',
@@ -16,8 +17,24 @@ export default class TaskList extends Component {
 		});
 
 		// events
+		this.listen('activate-project', this.onActivateProject);
+		this.listen('deactivate-project', this.onDeactivateProject);
 		this.listen('slide-changed', this.onSlideChanged);
 		this.listen('task-list-updated', this.onTaskUpdate);
+		this.listen('toggle-objective-list', this.onToggleObjectiveList);
+
+		// notify the task list was being looked at
+		this.ui.heading.on('mouseover', () => {
+			this.broadcast('expand-objectives-list');
+		});
+	}
+
+	onToggleObjectiveList = show => {
+		this.toggleClassMap({ 'active': show });
+	}
+
+	onActivateProject = () => {
+		this.removeClass('active');
 	}
 
 	onDeactivateProject = () => {
@@ -26,7 +43,6 @@ export default class TaskList extends Component {
 
 	// update task list results
 	onTaskUpdate = tasks => {
-		console.log('up', tasks);
 
 		// update totals
 		this.ui.total.text(tasks.total);
@@ -34,7 +50,6 @@ export default class TaskList extends Component {
 
 		// create the new list
 		if (!this.tasks) {
-			this.show();
 
 			// create the task list
 			this.tasks = { };

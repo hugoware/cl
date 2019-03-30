@@ -1,10 +1,11 @@
 +template('tasks')
-	.heading
-		.title Objectives
-		.progress #[span.completed 0] of #[span.total 0] #[span.tail completed]
+	.task-list-container
+		.heading
+			.title Objectives
+			.progress #[span.completed 0] of #[span.total 0] #[span.tail completed]
 
-	.list
-		.items
+		.list
+			.items
 
 +template('task-item')
 	.task
@@ -16,10 +17,17 @@
 				.count #[span.value] tasks
 				.label Name of task
 
+			//- additional topic info
+			.topic 
+				.icon(icon='actionPublish')
+				.topic-source
+					span.source From Lesson  
+					span.content
+
 			//- additional details popup
-			.details 
-				.icon(icon='actionEdit')
-				.content Additional data for task
+			//- .details 
+			//- 	.icon(icon='actionEdit')
+			//- 	.content Additional data for task
 
 		//- tracking child items
 		.items

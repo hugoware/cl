@@ -1,6 +1,6 @@
 /// <reference path="../types/index.js" />
 
-import { _ } from '../lib';
+import { _, $ } from '../lib';
 import $state from '../state';
 import $api from '../api';
 import $focus from './focus';
@@ -284,6 +284,9 @@ function initialize(lesson) {
 	const total = _.size(lesson.slides);
 	const prior = { };
 
+	// special lesson types
+	$(document.body).toggleClass('is-project-lesson', lesson.instance.data.isProject);
+
 	_.each(lesson.slides, (slide, index) => {
 		slide.id = _.uniqueId('slide:');
 		slide.isLast = index === (total - 1);
@@ -372,6 +375,11 @@ function setActiveSlide(lesson, slide) {
 	// registerSlideEvents(lesson, slide);
 
 	// deactivate the 
+
+	// show the objective list if needed
+	console.log(slide);
+	if (slide.showObjectiveList === true || slide.showObjectiveList === false)
+		broadcast('toggle-objective-list', slide.showObjectiveList);
 
 	// let other systems know the slide changed
 	lesson.instance.invoke('configure', slide);

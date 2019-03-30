@@ -111,7 +111,8 @@ class $LESSON_TYPE$Lesson {
 		if (controller.invoke)
 			return controller.invoke.call(this, action, ...args);
 
-		return controller[action].apply(this, args);
+		else if (controller[action])
+			return controller[action].apply(this, args);
 	}
 
 	// checks if there's an action for this event

@@ -1,3 +1,4 @@
+import { _ } from './lib';
 
 export function checkNewFile(path, replaceContent) {
 	return function(file) {
@@ -31,20 +32,57 @@ export function checkRemoveFile(path) {
 
 // helper functions
 export function expectElement(path, selector) {
-	return function(url, preview, html) {
+	return function(url, preview) {
 		if (url !== path) return;
 		this.isValid = preview.find(selector).length === 1;
 	}
 }
 
 // check for content 
-export function expectElementContent(path, selector, min, max) {
-	return function(url, preview, html) {
+export function expectElementContent(path, selector, options) {
+	const min = isNaN(options.min) ? 0 : options.min;
+	const max = isNaN(options.max) ? Number.MAX_SAFE_INTEGER : options.max;
+
+	return function(url, preview) {
 		if (url !== path) return;
 
-		const text = _.trim(preview.find(selector).text());
+		// get the text length
+		let text = preview.find(selector).text();
+		if (options.trim !== false)
+			text = _.trim(text);
+
+		// check the result
 		const length = text.length;
-		const upper = (isNaN(max || NaN)) ? length + 1 : max;
-		this.isValid = length > min && length < upper;
+		this.isValid = length >= min && length <= max;
 	}
 }
+
+
+// expect selectors in a certain order
+export function expectOrder(path, ...selectors) {
+	return function(url, preview) {
+		if (url !== path) return;
+
+		// make sure all elements are present
+		const sequence = _.map(selectors, selector => preview.find(selector).index());
+
+		// make sure each match is in the sequential order
+		let hwm = -1;
+		for (const index of sequence) {
+			if (index === -1) {
+				this.isValid = false;
+				return;
+			}
+
+			if (index < hwm) {
+				this.isValid = false;
+				return;
+			}
+
+			hwm = index;
+		}
+
+		this.isValid = true;
+	}
+}
+

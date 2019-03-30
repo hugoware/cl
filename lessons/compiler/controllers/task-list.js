@@ -84,7 +84,10 @@ class TaskList {
 			
 			if (done) {
 				if (!silent) this.taskSound(done);
-				this.broadcast('task-list-complete', data);
+				setTimeout(() => {
+					this.broadcast('task-list-complete', data);
+					this.progress.next();
+				});
 			}
 			else if (increased)
 				if (!silent) this.taskSound();
@@ -110,6 +113,7 @@ function createState(tasks, project, node) {
 		const item = {
 			id: task.id,
 			label: task.label,
+			topic: task.topic,
 			valid: !!task.isValid,
 			count: 1,
 		};
@@ -150,12 +154,12 @@ export default function createTasks(obj, options, builder) {
 
 		// prepares the lesson
 		onActivateLesson() {
-			console.log('did activate');
 
 			// setup the new project
 			project = new TaskList(options);
 			project.instance = this;
 			project.broadcast = this.events.broadcast;
+			project.progress = this.progress;
 			project.sound = this.sound;
 
 			// handle setting up the work tree
@@ -213,47 +217,19 @@ export default function createTasks(obj, options, builder) {
 			return true;
 		},
 
-		// props
-		get state() {
-			return project ? project.state : [ ];
-		},
+		// // props
+		// get state() {
+		// 	return project ? project.state : [ ];
+		// },
 
-		get total() {
-			return project ? project.total : 0;
-		},
+		// get total() {
+		// 	return project ? project.total : 0;
+		// },
 
-		get complete() {
-			return project ? project.complete : 0;
-		}
+		// get complete() {
+		// 	return project ? project.completed : 0;
+		// }
 
 	})
 
-
-
-
 }
-
-
-// // handles overall project controller state
-// export default class TaskList {
-
-// 	// creates a new project
-// 	constructor(options, builder) {
-		
-
-// 	}
-
-// 	// notifies the project tree should update
-// 	update() {
-// 		clearTimeout(this._update);
-// 		this._update = setTimeout(() => {
-
-// 		}, 100);
-// 	}
-
-
-// }
-
-
-
-
