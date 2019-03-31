@@ -830,7 +830,12 @@ var webPageStructureLesson = function () {
 
     // setup each reference
     _lib._.each(refs, function (ref, key) {
-      if (ref.controller) _this.controllers[key] = ref;
+      if (ref.controller) {
+        _this.controllers[key] = ref;
+
+        // handle resets
+        if (ref.onActivateLesson) ref.onActivateLesson.call(_this);
+      }
     });
 
     // debugging
@@ -878,15 +883,21 @@ var webPageStructureLesson = function () {
   }, {
     key: 'invoke',
     value: function invoke(action) {
-      if (!this.respondsTo(action)) return null;
-      action = toActionName(action);
+      var _controller$invoke;
+
       var controller = this.controller;
+
+      if (!controller) return;
+
+      action = toActionName(action);
+
+      // check the action
 
       for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
 
-      return controller[action].apply(this, args);
+      if (controller.invoke) return (_controller$invoke = controller.invoke).call.apply(_controller$invoke, [this, action].concat(args));else if (controller[action]) return controller[action].apply(this, args);
     }
 
     // checks if there's an action for this event
@@ -894,10 +905,19 @@ var webPageStructureLesson = function () {
   }, {
     key: 'respondsTo',
     value: function respondsTo(action) {
-      action = toActionName(action);
       var controller = this.controller;
 
-      return !!controller && controller[action];
+      if (!controller) return false;
+
+      action = toActionName(action);
+
+      // tasks lists will handle this themselves
+      // it's safe to return true here since there
+      // are no gate keepers
+      if (controller.respondsTo) return controller.respondsTo(action);
+
+      // perform normally
+      return !!controller[action];
     }
 
     // resets any required information between slides
@@ -984,7 +1004,7 @@ function toActionName(name) {
 window.registerLesson('web_page_structure', webPageStructureLesson);
 
 },{"./addBody":1,"./addContent":2,"./addDoctype":3,"./addHead":4,"./addHtml":5,"./addLink":6,"./addMeta":7,"./addTitle":8,"./controllers/waitForFile":9,"./controllers/waitForTab":10,"./lib":13,"./showCurrentTitle":14,"./validation":16}],13:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -996,12 +1016,18 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+
+$.preview = function () {
+	return $('#preview .output').contents();
+};
 
 exports.default = {
 	_: _, $: $,
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
-	CssValidator: CssValidator
+	CssValidator: CssValidator,
+	validateHtmlDocument: validateHtmlDocument
 };
 
 },{}],14:[function(require,module,exports){

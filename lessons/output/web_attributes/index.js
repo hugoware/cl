@@ -534,7 +534,7 @@ var webAttributesLesson = function () {
         _this.controllers[key] = ref;
 
         // handle resets
-        if (ref.onActivateLesson) ref.onActivateLesson.call(ref, _this);
+        if (ref.onActivateLesson) ref.onActivateLesson.call(_this);
       }
     });
 
@@ -597,9 +597,7 @@ var webAttributesLesson = function () {
         args[_key - 1] = arguments[_key];
       }
 
-      if (controller.invoke) return (_controller$invoke = controller.invoke).call.apply(_controller$invoke, [this, action].concat(args));
-
-      return controller[action].apply(this, args);
+      if (controller.invoke) return (_controller$invoke = controller.invoke).call.apply(_controller$invoke, [this, action].concat(args));else if (controller[action]) return controller[action].apply(this, args);
     }
 
     // checks if there's an action for this event

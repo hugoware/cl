@@ -19,7 +19,7 @@ class Database {
 
 		// connect to the database
 		const port = $config.databasePort || DEFAULT_PORT;
-		const url = `mongodb://${auth}localhost:${port}/codelab`;
+		const url = `mongodb://${auth}127.0.0.1:${port}/codelab`;
 		this.connection = await $client.connect(url);
 
 		// setup collections
