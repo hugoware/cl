@@ -102,6 +102,7 @@
       Alright! Let's jump into writing some code and see what happens!
 
 - slide:
+    start: true
     controller: highlightFileBrowser
     content: |
       On the left side of the screen is the [define file_browser]. This is a list of all files in your project.

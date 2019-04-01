@@ -1,8 +1,12 @@
 import { _ } from 'lodash';
 import { listen } from '../events';
 
-import * as speech from './azure';
-// import * as speech from './local';
+// load the correct library
+import * as streamed from './streamed';
+import * as local from './local';
+const useStream = false;
+const isLocal = /https?:\/{2}localhost/.test(window.location.href);
+const speech = isLocal || useStream ? local : streamed;
 
 // stop text when the window closes
 listen('window-unload', () => {

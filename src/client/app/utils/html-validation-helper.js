@@ -1,27 +1,59 @@
 import { _, HtmlTagValidator } from '../lib';
 
+// helper 
+class FindResult {
+	
+	constructor(results) {
+		this.results = results;
+	}
+
+	parents() {
+		return _.map(this.results, 'parent');
+	}
+
+	total() {
+		return _.size(this.results);
+	}
+
+	text() {
+		return _.map(this.results.text).join(' ');
+	}
+
+	exists() {
+		return this.total() > 0;
+	}
+
+	index() {
+		return this.results[0] ? this.results[0].index : -1;
+	}
+
+	get(index) {
+		return this.results[index];
+	}
+
+}
+
+// const $cache = { };
+
 export default class HtmlValidationHelper {
 
 	// performs validation
 	static validate(html, callback) {
+
+		// // already cached
+		// if ($cache[html])
+		// 	return callback($cache[html]);
+
+		// validate
 		HtmlTagValidator(html, (err, ast) => {
-			callback(new HtmlValidationHelper(err, ast));
+			const validator = new HtmlValidationHelper(err, ast);
+			callback(validator);
 		});
 	}
 	
 	constructor(err, ast) {
 		this.err = err;
-
-		// // can't do anything else with an error
-		// if (err) {
-		// 	console.log(err);
-		// 	return;
-		// }
-
-		// // create a flat array of nodes
-		// this.ast = ast;
-		// this.nodes = [ ];
-		// flatten(this.ast, this.nodes);
+		this.ast = ast;
 	}
 
 	get hasError() {
@@ -34,9 +66,17 @@ export default class HtmlValidationHelper {
 
 	// finds the result of a selector
 	find(selector) {
+		if (this.hasErrors)
+			return new FindResult([ ]);
 
-		// clean up the selector first
-		const parts = selector.split(/s+/g).reverse();
+		// prepare all nodes to track down
+		if (!this.nodes) {
+			this.nodes = [ ];
+			flatten(this.ast, this.nodes);
+		}
+
+		// // clean up the selector first
+		const parts = selector.split(/ +/g).reverse();
 		for (let i = 0, total = parts.length; i <	total; i++) {
 			const match = { };
 
@@ -59,27 +99,51 @@ export default class HtmlValidationHelper {
 				match.direct = true;
 			}
 
+			// remove attribute matches
+			value = value.replace(/\[[^\]]+\]/, attr => {
+				const parts = attr.substr(0, attr.length - 1).substr(1).split('=');
+				const name = parts[0];
+				let value = parts[1];
+				value = value.substr(0, value.length - 1).substr(1);
+				match.attr = { name, value };
+				return '';
+			});
+
+
 			// save the result
 			match.value = value;
+			parts[i] = match;
 		}
 
-
 		// check for each match
+		const results = [ ];
 		for (const node of this.nodes) {
 			if (isMatch(node, [].concat(parts)))
 				results.push(node);
 		}
+
+		return new FindResult(results);
 	}
 
 }
 
 // check if this matches or not
-function compareMatch(node, options) {
-	return (options.className && _.trim(node.attributes['class']).indexOf(options.value) > -1)
-		|| (options.id && node.attributes.id === options.value)
-		|| (options.value == node.name);
+function compareMatch(node, match) {
+	const baseMatch = match.className ? _.trim((node.attributes && node.attributes['class']) || '').split(' ').indexOf(match.value) > -1
+		: match.id ? ((node.attributes && node.attributes.id) || '') === match.value
+		: match.value == node.name;
+
+	if (!baseMatch) return false;
+
+	// check for match
+	if (match.attr) {
+		return (node.attributes || { })[match.attr.name] === match.attr.value;
+	}
+	
+	return true;
 }
 
+// matching all index values
 function isMatch(node, parts) {
 	let match = parts.shift();
 	let nextOnly;
@@ -106,6 +170,10 @@ function isMatch(node, parts) {
 			match = parts.shift();
 			nextOnly = false;
 
+			// ran out of items
+			if (!match)
+				break;
+
 			// check for special rules
 			if (match.value === '>') {
 				nextOnly = true;
@@ -114,7 +182,7 @@ function isMatch(node, parts) {
 		}
 
 		// not a match
-		const isMatch = compareMatch(match, compare);
+		const isMatch = compareMatch(compare, match);
 		if (nextOnly && !isMatch)
 			return;
 
@@ -133,19 +201,26 @@ function isMatch(node, parts) {
 
 	// keep the result
 	if (parts.length === 0)
-		results.push(found);
+		return found;
 
 }
 
 
 // creates a flat list
-function flatten(node, list) {
+function flatten(node, list, track = { index: 0 }) {
+	node.index = ++track.index;
 	list.push(node);
 
-	if (node.children) {
-		for (const child of node.children) {
+	if (!node.name) {
+		if (node.type === 'title')
+			node.name = 'title';
+	}
+
+	const children = node.children || node.document;
+	if (_.some(children)) {
+		for (const child of children) {
 			child.parent = node;
-			flatten(child, list);
+			flatten(child, list, track);
 		}
 	}
 }

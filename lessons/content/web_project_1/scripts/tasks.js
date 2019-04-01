@@ -1,4 +1,4 @@
-import { _ } from './lib';
+import { _, validateHtmlDocument } from './lib';
 
 export function checkNewFile(path, replaceContent) {
 	return function(file) {
@@ -32,9 +32,11 @@ export function checkRemoveFile(path) {
 
 // helper functions
 export function expectElement(path, selector) {
-	return function(url, preview) {
+	return function(url, html, preview) {
 		if (url !== path) return;
-		this.isValid = preview.find(selector).length === 1;
+		validateHtmlDocument(html, doc => {
+			this.isValid = doc.find(selector).total() === 1;
+		});
 	}
 }
 
@@ -43,7 +45,7 @@ export function expectElementContent(path, selector, options) {
 	const min = isNaN(options.min) ? 0 : options.min;
 	const max = isNaN(options.max) ? Number.MAX_SAFE_INTEGER : options.max;
 
-	return function(url, preview) {
+	return function(url, html, preview) {
 		if (url !== path) return;
 
 		// get the text length
@@ -60,29 +62,33 @@ export function expectElementContent(path, selector, options) {
 
 // expect selectors in a certain order
 export function expectOrder(path, ...selectors) {
-	return function(url, preview) {
+	return function(url, html, preview) {
 		if (url !== path) return;
 
-		// make sure all elements are present
-		const sequence = _.map(selectors, selector => preview.find(selector).index());
+		validateHtmlDocument(html, doc => {
 
-		// make sure each match is in the sequential order
-		let hwm = -1;
-		for (const index of sequence) {
-			if (index === -1) {
-				this.isValid = false;
-				return;
+			// make sure all elements are present
+			const sequence = _.map(selectors, selector => doc.find(selector).index());
+
+			// make sure each match is in the sequential order
+			let hwm = -1;
+			for (const index of sequence) {
+				if (index === -1) {
+					this.isValid = false;
+					return;
+				}
+
+				if (index < hwm) {
+					this.isValid = false;
+					return;
+				}
+
+				hwm = index;
 			}
 
-			if (index < hwm) {
-				this.isValid = false;
-				return;
-			}
+			this.isValid = true;
 
-			hwm = index;
-		}
-
-		this.isValid = true;
+		});
 	}
 }
 

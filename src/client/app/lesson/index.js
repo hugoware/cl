@@ -377,7 +377,6 @@ function setActiveSlide(lesson, slide) {
 	// deactivate the 
 
 	// show the objective list if needed
-	console.log(slide);
 	if (slide.showObjectiveList === true || slide.showObjectiveList === false)
 		broadcast('toggle-objective-list', slide.showObjectiveList);
 

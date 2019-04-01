@@ -18,11 +18,9 @@ function validate(instance) {
 	instance.editor.hint.validate({ path: '/main.js', result });
 	
 	// update progress
-	$allowRunCode = false;
-	instance.progress.check({
+	$allowRunCode = instance.progress.check({
 		result,
 		allow: () => {
-			$allowRunCode = true;
 			instance.assistant.say({
 				message: `Looks good! Press the **Run Code** button and then click **OK** for each of the alert messages!`
 			});

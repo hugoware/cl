@@ -1,5 +1,6 @@
 import { _, $ } from '../../lib';
 import { broadcast } from '../../events';
+import $state from '../../state';
 
 export default class ProgressAPI {
 

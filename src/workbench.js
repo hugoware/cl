@@ -1,3 +1,4 @@
+global.document = { createElement: () => { } };
 import $config from './config';
 import $database from './storage/database';
 import $lessons from './storage/lessons';
@@ -6,6 +7,7 @@ import $lessons from './storage/lessons';
 
 // testing
 import { handleError } from './utils';
+import HtmlValidationHelper from './client/app/utils/html-validation-helper'
 // import { resolveError } from './utils';
 // import createProject, { CreateProjectData } from './actions/create-project';
 // import updateProject, { UpdateProjectData } from './actions/update-project';
@@ -19,6 +21,31 @@ import { handleError } from './utils';
 
 // handles running the test
 async function run() {
+
+	
+
+	const code = `<html>
+	<body>
+		<img />
+	</body>
+
+	<head>
+		<title>title</title>
+		<li src="/img" >item 1</li>
+		<li class="named" >li2</li>
+		<li class="named" >li2</li>
+		<li class="named" >li2</li>
+	</head>
+</html>`
+
+
+	HtmlValidationHelper.validate(code, html => {
+		
+		const match = html.find('li[src="/img"]')
+		console.log(match);
+		
+
+	});
 
 	try {
 		// const result = await $lessons.getLessons('hugo')

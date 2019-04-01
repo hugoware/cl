@@ -13,24 +13,6 @@ export default createTasks(module.exports, {
 // setup the main task
 task => {
 
-	task('Fix any validation errors', {
-
-		onCreateTask() {
-			this.validation = { };
-			this.isValid = false;
-		},
-
-		onContentChange(file) {
-			if (!this.validation) {
-				this.validation = { };
-			}
-
-			validateHtmlDocument(file.current, html => {
-				this.validation[file.path] = !html.hasErrors;
-				this.isValid = _.every(this.validation);
-			});
-		}
-	});
 
 	task('Create an `index.html` page', () => {
 
@@ -84,7 +66,7 @@ task => {
 
 			task('Place the `p` Element after the `h1` Element', {
 				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/index.html') return;
 					const header = preview.find('body > h1').index();
 					const paragraph = preview.find('body > p').index();
@@ -117,7 +99,7 @@ task => {
 			task('Set the `src` attribute to `/fox.png`', {
 				topic: 'HTML Attributes',
 				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-				onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/index.html') return;
 					this.isValid = preview.find('body > img[src="/fox.png"]').length === 1;
 				},
@@ -149,7 +131,7 @@ task => {
 			task('Set the `href` attribute to `/index.html`', {
 				topic: 'HTML Attributes',
 				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-				onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/index.html') return;
 					this.isValid = preview.find('body > a[href="/about.html"]').length === 1;
 				},
@@ -237,7 +219,7 @@ task => {
 			task('Set the `src` attribute to `/cat.png`', {
 				topic: 'HTML Attributes',
 				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-				onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/about.html') return;
 					this.isValid = preview.find('body > img[src="/cat.png"]').length === 1;
 				},
@@ -269,7 +251,7 @@ task => {
 			task('Set the `href` attribute to `/index.html`', {
 				topic: 'HTML Attributes',
 				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-				onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/about.html') return;
 					this.isValid = preview.find('body > a[href="/index.html"]').length === 1;
 				},
@@ -277,6 +259,28 @@ task => {
 
 		});
 
+	});
+
+	task('Fix all validation errors', {
+
+		onCreateTask() {
+			this.validation = { };
+			this.isValid = false;
+		},
+
+		onContentChange(file) {
+			if (!this.validation) {
+				this.validation = {
+					'/index.html': false,
+					'/about.html': false
+				};
+			}
+
+			validateHtmlDocument(file.current, doc => {
+				this.validation[file.path] = !doc.hasErrors;
+				this.isValid = _.every(this.validation);
+			});
+		}
 	});
 
 });

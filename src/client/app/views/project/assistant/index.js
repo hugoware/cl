@@ -13,7 +13,7 @@ import Question from './question';
 
 // minimum time per slide before allowing next
 // mostly to prevent double clicks
-const MINIMUM_MS_PER_SLIDE = $state.isLocal ? 0 : 1000;
+const MINIMUM_MS_PER_SLIDE = $state.isLocal ? 0 : 3000;
 
 export default class Assistant extends Component {
 
@@ -253,7 +253,9 @@ export default class Assistant extends Component {
 			return;
 
 		// save the timing
-		this.nextNavigate = now + MINIMUM_MS_PER_SLIDE;
+		const useFastNav = window.FAST_NAV === true;
+		const limit = useFastNav ? 0 : MINIMUM_MS_PER_SLIDE; 
+		this.nextNavigate = now + limit;
 
 		// go to the next slide
 		await $state.lesson.next();
@@ -379,7 +381,7 @@ export default class Assistant extends Component {
 			this.view.setContent(slide);
 
 		else {	
-			this.onSetMessage({ message: slide.content });
+			this.onSetMessage({ message: slide.content, delayMessage: slide.isFirst });
 
 			// apply emotions, if any - if not, this'll
 			// reset the emotion
@@ -403,9 +405,11 @@ export default class Assistant extends Component {
 		const { content, speak } = generateMessage(options.message);
 		this.view.setContent(content, true);
 
-		// speakinga  message
+		// speaking a message - slight delay on
+		// the first slide
 		if (!options.silent)
-			$speech.speak(speak);
+			if (options.delayMessage) setTimeout(() => $speech.speak(speak), 500);
+			else $speech.speak(speak);
 
 		// set the emotion, if any
 		if (options.emote || options.emotion)

@@ -21,15 +21,8 @@ const VIEWABLE_TYPES = [
 	'htm'
 ];
 
-function getPreviewAccess() {
-	// const frame = $('#preview iframe.output').contents();
-	// const body = frame.find('body');
-	// const head = frame.find('head');
-	// const doc = $(body).add(head);
-	// console.log(doc);
-	// return $('<div />');
-	// // return $(.find('body')[0].parentElement);
-	return $('#preview iframe.output').contents();
+function getPreviewAccess(instance) {
+	return $(instance.output.parentElement);
 }
 
 // create the preview mode
@@ -273,7 +266,7 @@ export default class BrowserMode extends Component {
 
 		// notify the action
 		if ($state.lesson)
-			$state.lesson.invoke('navigatePreviewArea', url, getPreviewAccess());
+			$state.lesson.invoke('navigatePreviewArea', url, getPreviewAccess(this));
 
 		// navigate
 		this.broadcast('preview-area-navigate', url)
@@ -364,7 +357,7 @@ export default class BrowserMode extends Component {
 		// notify this has access
 		setTimeout(() => {
 			if ($state.lesson)
-				$state.lesson.invoke('updatePreviewArea', this.url, getPreviewAccess());
+				$state.lesson.invoke('updatePreviewArea', this.url, view.file.current, getPreviewAccess(this));
 		}, 100);
 
 	}

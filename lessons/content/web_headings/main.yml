@@ -148,7 +148,7 @@
     content: |
       Although it doesn't seem like much of a change, it's recommended to use `p` [define html_element Elements] instead of a `br` [define html_element Element].
 
-      This'll all make much more sense when we introduce [define css] in later lessons!
+      This will make much more sense when we introduce [define css] in later lessons!
 
 - slide:
     mode: overlay

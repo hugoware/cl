@@ -20,11 +20,15 @@
 
 - slide:
     content: |
-      The purpose of this lesson is to ensure that you have mastered all of the skills taught in previous lessons.
+      The purpose of this project is to ensure that you have mastered all of the skills taught in previous lessons. There will **not** be any assistance or hints provided as you work.
 
-      **Keep in mind that it's entirely possible that you might get stuck!**
+      **Please keep in mind that it's entirely possible that you might get stuck!**
       
-      If that happens, go back and retry previous lessons until you're ready to try this project again. Sometimes it takes going over a topic a few times before you fully understand it!
+- slide:
+    content: |
+      If you find that you can't figure out how to finish this project, go back and retry previous lessons until you're ready to try again.
+
+      Learning something new takes practice and sometimes that means going over a topic a few times before you completely understand it!
 
 - slide:
     controller: waitForHover
@@ -34,15 +38,20 @@
     content: |
       The list of **Objectives** is found in the top right corner of the screen.
 
-      Move your mouse over the highlighted area to see what must be accomplished before the project is completed.
+      Move your cursor over the highlighted area to see what must be accomplished before the project is completed.
 
 - slide:
-    mode: popup
     highlight: '#header .task-list .heading'
     content: |
       There are many objectives that you will need to complete. Some objectives are not visible unless you scroll the list down to see them.
 
       Additionally, as you finish groups of objectives, they will be automatically collapsed into single items on the list.
+
+- slide:
+    content: |
+      Finally, some objectives have an icon at the far right side. Moving the cursor over this icon will show the related skill.
+
+      If you're stuck this will help identify which lessons you should go back and review.
 
 - slide:
     flags: +OPEN-MODE

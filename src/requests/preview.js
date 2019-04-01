@@ -25,6 +25,9 @@ export async function handle(request, response, next) {
 	if (/www/i.test(id))
 		id = parts.shift();
 
+	// remove versioning numbers
+	id = id.replace(/^[0-9]+\-/, '');
+
 	// if this doesn't appear to be a project at all
 	if (id.length !== 6)
 		return next();

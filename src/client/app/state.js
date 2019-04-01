@@ -184,7 +184,7 @@ const $state = {
 		const { version, project } = $state;
 		const { id } = project;
 		const { protocol, host } = window.location;
-		return `${protocol}//${version}.${id}.${host}`;
+		return `${protocol}//${version}-${id}.${host}`;
 	},
 
 	/** checks for a lesson permission

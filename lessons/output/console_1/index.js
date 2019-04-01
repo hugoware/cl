@@ -247,7 +247,7 @@ function onRunCodeAlert(context, message) {
 	this.progress.allow();
 	this.assistant.say({
 		emote: 'happy',
-		message: 'Great! You can see the numbers you typed in are displayed in the alert message!'
+		message: 'Great! You can see the numbers you typed are displayed in the alert message!'
 	});
 }
 
@@ -552,6 +552,7 @@ var _validation = require('./validation');
 var controller = exports.controller = true;
 
 var $isValid = void 0;
+var $endIndex = void 0;
 
 function validate(instance) {
 	var content = instance.editor.area.get({ path: '/main.js' });
@@ -576,6 +577,7 @@ function validate(instance) {
 
 function onActivateLesson() {
 	$isValid = false;
+	$endIndex = 0;
 }
 
 function onEnter() {
@@ -585,7 +587,7 @@ function onEnter() {
 
 	// adjust the file
 	var content = '\n\n\n' + this.file.content({ path: '/main.js' });
-	$state.endIndex = content.length - _lib._.trimStart(content).length - 1;
+	$endIndex = content.length - _lib._.trimStart(content).length - 1;
 
 	this.file.content({
 		path: '/main.js',
@@ -604,7 +606,7 @@ function onRunCodeAlert(context, message) {
 }
 
 function onInit() {
-	this.editor.area({ path: '/main.js', start: 0, end: $state.endIndex });
+	this.editor.area({ path: '/main.js', start: 0, end: $endIndex });
 }
 
 function onReady() {
@@ -823,6 +825,7 @@ var console1Lesson = function () {
         "mode": "popup",
         "content": "Alright! Let's jump into writing some code and see what happens!\n"
       }, {
+        "start": true,
         "controller": "highlightFileBrowser",
         "content": "On the left side of the screen is the [define file_browser]. This is a list of all files in your project.\n"
       }, {
@@ -1507,11 +1510,9 @@ function validate(instance) {
 	instance.editor.hint.validate({ path: '/main.js', result: result });
 
 	// update progress
-	$allowRunCode = false;
-	instance.progress.check({
+	$allowRunCode = instance.progress.check({
 		result: result,
 		allow: function allow() {
-			$allowRunCode = true;
 			instance.assistant.say({
 				message: 'Looks good! Press the **Run Code** button and then click **OK** for each of the alert messages!'
 			});

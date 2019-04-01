@@ -153,7 +153,7 @@
 - slide:
     mode: popup
     content: |
-      Lets give this a try using the `input` [define html_element Element].
+      Let's give this a try using the `input` [define html_element Element].
 
 - slide:
     controller: inputEntry

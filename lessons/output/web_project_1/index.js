@@ -484,7 +484,7 @@ var webProject1Lesson = function () {
 
 		// core lesson data
 		this.data = {
-			"name": "Web Project #1",
+			"name": "Progress Review #1",
 			"type": "web",
 			"description": "Creating a basic website all on your own!",
 			"isProject": true,
@@ -497,17 +497,20 @@ var webProject1Lesson = function () {
 			}, {
 				"content": "As you work, the **Objective** list will update to show what items have been finished and which ones are still left to be done.\n\n[image task-done.png frame]\n\nWhen you have completed all items on the **Objectives** list, you will have successfully finished this project!\n"
 			}, {
-				"content": "The purpose of this lesson is to ensure that you have mastered all of the skills taught in previous lessons.\n\n**Keep in mind that it's entirely possible that you might get stuck!**\n\nIf that happens, go back and retry previous lessons until you're ready to try this project again. Sometimes it takes going over a topic a few times before you fully understand it!\n"
+				"content": "The purpose of this project is to ensure that you have mastered all of the skills taught in previous lessons. There will **not** be any assistance or hints provided as you work.\n\n**Please keep in mind that it's entirely possible that you might get stuck!**\n"
+			}, {
+				"content": "If you find that you can't figure out how to finish this project, go back and retry previous lessons until you're ready to try again.\n\nLearning something new takes practice and sometimes that means going over a topic a few times before you completely understand it!\n"
 			}, {
 				"controller": "waitForHover",
 				"mode": "popup",
 				"showObjectiveList": true,
 				"highlight": "#header .task-list .heading",
-				"content": "The list of **Objectives** is found in the top right corner of the screen.\n\nMove your mouse over the highlighted area to see what must be accomplished before the project is completed.\n"
+				"content": "The list of **Objectives** is found in the top right corner of the screen.\n\nMove your cursor over the highlighted area to see what must be accomplished before the project is completed.\n"
 			}, {
-				"mode": "popup",
 				"highlight": "#header .task-list .heading",
 				"content": "There are many objectives that you will need to complete. Some objectives are not visible unless you scroll the list down to see them.\n\nAdditionally, as you finish groups of objectives, they will be automatically collapsed into single items on the list.\n"
+			}, {
+				"content": "Finally, some objectives have an icon at the far right side. Moving the cursor over this icon will show the related skill.\n\nIf you're stuck this will help identify which lessons you should go back and review.\n"
 			}, {
 				"flags": "+OPEN-MODE",
 				"controller": "list",
@@ -799,25 +802,6 @@ exports.default = (0, _taskList2.default)(module.exports, {
 // setup the main task
 function (task) {
 
-	task('Fix any validation errors', {
-		onCreateTask: function onCreateTask() {
-			this.validation = {};
-			this.isValid = false;
-		},
-		onContentChange: function onContentChange(file) {
-			var _this = this;
-
-			if (!this.validation) {
-				this.validation = {};
-			}
-
-			(0, _lib.validateHtmlDocument)(file.current, function (html) {
-				_this.validation[file.path] = !html.hasErrors;
-				_this.isValid = _lib._.every(_this.validation);
-			});
-		}
-	});
-
 	task('Create an `index.html` page', function () {
 
 		task('Use the **Create new file** button to add `index.html`', {
@@ -866,7 +850,7 @@ function (task) {
 
 			task('Place the `p` Element after the `h1` Element', {
 				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea: function onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/index.html') return;
 					var header = preview.find('body > h1').index();
 					var paragraph = preview.find('body > p').index();
@@ -898,7 +882,7 @@ function (task) {
 			task('Set the `src` attribute to `/fox.png`', {
 				topic: 'HTML Attributes',
 				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea: function onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/index.html') return;
 					this.isValid = preview.find('body > img[src="/fox.png"]').length === 1;
 				}
@@ -928,7 +912,7 @@ function (task) {
 			task('Set the `href` attribute to `/index.html`', {
 				topic: 'HTML Attributes',
 				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea: function onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/index.html') return;
 					this.isValid = preview.find('body > a[href="/about.html"]').length === 1;
 				}
@@ -1011,7 +995,7 @@ function (task) {
 			task('Set the `src` attribute to `/cat.png`', {
 				topic: 'HTML Attributes',
 				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea: function onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/about.html') return;
 					this.isValid = preview.find('body > img[src="/cat.png"]').length === 1;
 				}
@@ -1041,12 +1025,34 @@ function (task) {
 			task('Set the `href` attribute to `/index.html`', {
 				topic: 'HTML Attributes',
 				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-				onUpdatePreviewArea: function onUpdatePreviewArea(url, preview, html) {
+				onUpdatePreviewArea: function onUpdatePreviewArea(url, html, preview) {
 					if (url !== '/about.html') return;
 					this.isValid = preview.find('body > a[href="/index.html"]').length === 1;
 				}
 			});
 		});
+	});
+
+	task('Fix all validation errors', {
+		onCreateTask: function onCreateTask() {
+			this.validation = {};
+			this.isValid = false;
+		},
+		onContentChange: function onContentChange(file) {
+			var _this = this;
+
+			if (!this.validation) {
+				this.validation = {
+					'/index.html': false,
+					'/about.html': false
+				};
+			}
+
+			(0, _lib.validateHtmlDocument)(file.current, function (doc) {
+				_this.validation[file.path] = !doc.hasErrors;
+				_this.isValid = _lib._.every(_this.validation);
+			});
+		}
 	});
 });
 
@@ -1084,9 +1090,13 @@ function checkRemoveFile(path) {
 
 // helper functions
 function expectElement(path, selector) {
-	return function (url, preview) {
+	return function (url, html, preview) {
+		var _this = this;
+
 		if (url !== path) return;
-		this.isValid = preview.find(selector).length === 1;
+		(0, _lib.validateHtmlDocument)(html, function (doc) {
+			_this.isValid = doc.find(selector).total() === 1;
+		});
 	};
 }
 
@@ -1095,7 +1105,7 @@ function expectElementContent(path, selector, options) {
 	var min = isNaN(options.min) ? 0 : options.min;
 	var max = isNaN(options.max) ? Number.MAX_SAFE_INTEGER : options.max;
 
-	return function (url, preview) {
+	return function (url, html, preview) {
 		if (url !== path) return;
 
 		// get the text length
@@ -1114,52 +1124,57 @@ function expectOrder(path) {
 		selectors[_key - 1] = arguments[_key];
 	}
 
-	return function (url, preview) {
+	return function (url, html, preview) {
+		var _this2 = this;
+
 		if (url !== path) return;
 
-		// make sure all elements are present
-		var sequence = _lib._.map(selectors, function (selector) {
-			return preview.find(selector).index();
-		});
+		(0, _lib.validateHtmlDocument)(html, function (doc) {
 
-		// make sure each match is in the sequential order
-		var hwm = -1;
-		var _iteratorNormalCompletion = true;
-		var _didIteratorError = false;
-		var _iteratorError = undefined;
+			// make sure all elements are present
+			var sequence = _lib._.map(selectors, function (selector) {
+				return doc.find(selector).index();
+			});
 
-		try {
-			for (var _iterator = sequence[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-				var index = _step.value;
+			// make sure each match is in the sequential order
+			var hwm = -1;
+			var _iteratorNormalCompletion = true;
+			var _didIteratorError = false;
+			var _iteratorError = undefined;
 
-				if (index === -1) {
-					this.isValid = false;
-					return;
-				}
-
-				if (index < hwm) {
-					this.isValid = false;
-					return;
-				}
-
-				hwm = index;
-			}
-		} catch (err) {
-			_didIteratorError = true;
-			_iteratorError = err;
-		} finally {
 			try {
-				if (!_iteratorNormalCompletion && _iterator.return) {
-					_iterator.return();
+				for (var _iterator = sequence[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+					var index = _step.value;
+
+					if (index === -1) {
+						_this2.isValid = false;
+						return;
+					}
+
+					if (index < hwm) {
+						_this2.isValid = false;
+						return;
+					}
+
+					hwm = index;
 				}
+			} catch (err) {
+				_didIteratorError = true;
+				_iteratorError = err;
 			} finally {
-				if (_didIteratorError) {
-					throw _iteratorError;
+				try {
+					if (!_iteratorNormalCompletion && _iterator.return) {
+						_iterator.return();
+					}
+				} finally {
+					if (_didIteratorError) {
+						throw _iteratorError;
+					}
 				}
 			}
-		}
 
-		this.isValid = true;
+			_this2.isValid = true;
+		});
 	};
 }
 

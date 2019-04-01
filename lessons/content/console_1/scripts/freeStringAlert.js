@@ -5,6 +5,7 @@ import { validate_free_string_alert } from './validation';
 export const controller = true;
 
 let $isValid;
+let $endIndex;
 
 function validate(instance) {
 	const content = instance.editor.area.get({ path: '/main.js' });
@@ -30,6 +31,7 @@ function validate(instance) {
 
 export function onActivateLesson() {
 	$isValid = false;
+	$endIndex = 0;
 }
 
 export function onEnter() {
@@ -39,7 +41,7 @@ export function onEnter() {
 
 	// adjust the file
 	const content = '\n\n\n' + this.file.content({ path: '/main.js' });
-	$state.endIndex = (content.length - _.trimStart(content).length) - 1;
+	$endIndex = (content.length - _.trimStart(content).length) - 1;
 
 	this.file.content({
 		path: '/main.js',
@@ -59,7 +61,7 @@ export function onRunCodeAlert(context, message) {
 }
 
 export function onInit() {
-	this.editor.area({ path: '/main.js', start: 0, end: $state.endIndex });
+	this.editor.area({ path: '/main.js', start: 0, end: $endIndex });
 
 }
 

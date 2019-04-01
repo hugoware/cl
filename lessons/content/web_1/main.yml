@@ -21,7 +21,7 @@
 -
   slide:
     content: |
-      Generally speaking, web pages viewed in the browser are created using just three different core technologies. These are [define html], [define css], and [define javascript].
+      Generally speaking, web pages viewed in the browser are created using three different core technologies. These are [define html], [define css], and [define javascript].
 
       [image tech.png]
 
@@ -103,7 +103,7 @@
 
 - slide:
     content: |
-      The word between the opening and closing tags is the name of the [define html_element Element]. Each [define html_element] has a different role in the web browser.
+      The word between the opening and closing tags is the name of the [define html_element Element]. Each [define html_element] has a different purpose in the web browser.
       
       [snippet html_tag_example highlight:1,2]
 

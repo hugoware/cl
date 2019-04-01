@@ -6,7 +6,7 @@
   "scripts": {
     "prod": "npm run prod-database & npm run prod-server",
     "prod-server": "nodemon ./dist/index.js --watch ./dist/version --delay 1.5 ./config.yml",
-    "prod-database": "mongod --auth --port 31287 --dbpath /srv/data/codelab",
+    "prod-database": "mongod --auth --bind_ip 127.0.0.1 --port 31287 --noscripting --dbpath /srv/data/codelab",
     "dev": "npm run database & npm run dev-server & npm run watch",
     "dev-server": "nodemon ./dist/index.js --watch dist/ --ignore 'dist/workbench.js' --ignore 'dist/resources/' --ignore 'dist/views/' --delay 1.5 -- ./config.dev.yml",
     "dev-lessons": "./scripts/babel-node.sh -- ./scripts/compile-lesson.js",
@@ -19,6 +19,7 @@
     "compile-lesson": "./scripts/babel-node.sh -- ./lessons/compiler/index.js",
     "deploy": "./scripts/deploy.sh",
     "deploy-lessons": "./scripts/deploy-lessons.sh",
+    "deploy-all": "npm run deploy-lessons && npm run deploy",
     "marker": "electron ./lessons/marker/index.html",
     "create-lesson": "./scripts/new-lesson.sh",
     "test": "jest",

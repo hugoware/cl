@@ -79,7 +79,7 @@ export function onRunCodeAlert(context, message) {
 	this.progress.allow();
 	this.assistant.say({
 		emote: 'happy',
-		message: `Great! You can see the numbers you typed in are displayed in the alert message!`
+		message: `Great! You can see the numbers you typed are displayed in the alert message!`
 	});
 
 }

@@ -21,7 +21,7 @@ waitForValidation(module.exports, {
 	onValid() {
 		this.progress.allow();
 		this.assistant.say({
-			message: `Much better! Now each phrase is on a seprate line and inside of its own [define html_element].`
+			message: `Much better! Now each phrase is on a separate line and inside of its own [define html_element].`
 		});
 	},
 	
