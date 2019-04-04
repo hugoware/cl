@@ -104,6 +104,14 @@ export function resolveData(path) {
  * @returns {string} the resolved path
  */
 export function resolveProject(id, path = '', fromCache) {
+
+	// demo projects always resolve to the same spot
+	if (id === 'demo') {
+		path = resolveLesson('demo/files/', path);
+		path = sanitizePath(path);
+		return path;
+	}
+
   if (fromCache)
 		path = `.cache/${path}/`;
 			

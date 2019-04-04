@@ -7,14 +7,14 @@ export const controller = true;
 
 // when activating a new 
 export default createTasks(module.exports, {
-	title: 'Create a small website'
+	title: 'Create a product website for "Juice Fruit" smoothie shop!'
 }, 
 
 // setup the main task
 task => {
 
-
 	task('Create an `index.html` page', () => {
+
 
 		task('Use the **Create new file** button to add `index.html`', {
 			onCreateFile: tasks.checkNewFile('/index.html', true),
@@ -32,10 +32,30 @@ task => {
 			});
 
 
-			task('Enter at least 5 characters in the title', {
+			task('Enter the title "Juice Fruit Smoothies"', {
 				topic: 'Page Structure',
-				onUpdatePreviewArea: tasks.expectElementContent('/index.html', 'head > title', { min: 5 }),
+				onUpdatePreviewArea: tasks.expectElementContent('/index.html', 'head > title', { match: 'juice fruit smoothies' }),
 				onRemoveFile: tasks.checkRemoveFile('/index.html'),
+			});
+
+		});
+
+
+		task('Add the `/logo.png` image to `/index.html` ', () => {
+
+			task('Create an `img` Element', {
+				topic: 'HTML Attributes',
+				onUpdatePreviewArea: tasks.expectElement('/index.html', 'body > img'),
+				onRemoveFile: tasks.checkRemoveFile('/index.html'),
+			});
+
+			task('Set the `src` attribute to `/logo.png', {
+				topic: 'HTML Attributes',
+				onRemoveFile: tasks.checkRemoveFile('/index.html'),
+				onUpdatePreviewArea(url, html, preview) {
+					if (url !== '/index.html') return;
+					this.isValid = preview.find('body > img[src="/logo.png"]').length === 1;
+				},
 			});
 
 		});
@@ -48,7 +68,12 @@ task => {
 				onRemoveFile: tasks.checkRemoveFile('/index.html'),
 			});
 
-			task('Enter at least 10 characters in the heading', {
+			task('Place the `h1` Element after the `img` Element', {
+				topic: 'Headings & Paragraphs',
+				onUpdatePreviewArea: tasks.expectOrder('/index.html', 'body > img', 'body > h1'),
+			});
+
+			task('Enter a welcome message at least 10 characters long', {
 				topic: 'Headings & Paragraphs',
 				onUpdatePreviewArea: tasks.expectElementContent('/index.html', 'body > h1', { min: 10 }),
 				onRemoveFile: tasks.checkRemoveFile('/index.html'),
@@ -66,15 +91,10 @@ task => {
 
 			task('Place the `p` Element after the `h1` Element', {
 				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea(url, html, preview) {
-					if (url !== '/index.html') return;
-					const header = preview.find('body > h1').index();
-					const paragraph = preview.find('body > p').index();
-					return this.isValid = header > -1 && paragraph > -1 && header < paragraph;
-				}
+				onUpdatePreviewArea: tasks.expectOrder('/index.html', 'body > h1', 'body > p'),
 			});
 
-			task('Enter at least 15 characters in the paragraph', {
+			task('Enter a store description at least 15 characters long', {
 				topic: 'Headings & Paragraphs',
 				onUpdatePreviewArea: tasks.expectElementContent('/index.html', 'body > p', { min: 15 }),
 				onRemoveFile: tasks.checkRemoveFile('/index.html'),
@@ -82,184 +102,196 @@ task => {
 
 		});
 
-		task('Add the `fox.png` image to `index.html`', () => {
+		function createImageLink(options) {
 
-			task('Create an `img` Element', {
-				topic: 'HTML Attributes',
-				onUpdatePreviewArea: tasks.expectElement('/index.html', 'body > img'),
-				onRemoveFile: tasks.checkRemoveFile('/index.html'),
+			task('Add a link to `' + options.path + '`', () => {
+
+				task('Create an `a` Element', {
+					topic: 'HTML Attributes',
+					onUpdatePreviewArea: tasks.expectElement('/index.html', 'body > a'),
+					onRemoveFile: tasks.checkRemoveFile('/index.html'),
+				});
+
+				task('Place the link after the `p` Element', {
+					topic: 'HTML Attributes',
+					onUpdatePreviewArea: tasks.expectOrder('/index.html', 'body > p', 'body > a'),
+					onRemoveFile: tasks.checkRemoveFile('/index.html'),
+				});
+
+				task('Set the `href` attribute to `/index.html`', {
+					topic: 'HTML Attributes',
+					onRemoveFile: tasks.checkRemoveFile('/index.html'),
+					onUpdatePreviewArea(url, html, preview) {
+						if (url !== '/index.html') return;
+						this.isValid = preview.find('body > a[href="' + options.path + '"]').length === 1;
+					},
+				});
+
+				task('Use the `' + options.imagePath + '` image as content', () => {
+
+					task('Create an `img` Element inside of the link', {
+						topic: 'HTML Attributes',
+						onUpdatePreviewArea: tasks.expectElement('/index.html', 'body > a[href="' + options.path + '"] > img'),
+						onRemoveFile: tasks.checkRemoveFile('/index.html'),
+					});
+
+					task('Set the `src` attribute to `' + options.imagePath + '`', {
+						topic: 'HTML Attributes',
+						onRemoveFile: tasks.checkRemoveFile('/index.html'),
+						onUpdatePreviewArea(url, html, preview) {
+							if (url !== '/index.html') return;
+							this.isValid = preview.find('body > a[href="' + options.path + '"] > img[src="' + options.imagePath + '"]').length === 1;
+						},
+					});
+
+				});
+
 			});
 
-			task('Place the `img` Element between the `h1` and `p` Element', {
-				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea: tasks.expectOrder('/index.html', 'body > h1', 'body > img', 'body > p'),
-				onRemoveFile: tasks.checkRemoveFile('/index.html')
-			});
-
-			task('Set the `src` attribute to `/fox.png`', {
-				topic: 'HTML Attributes',
-				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-				onUpdatePreviewArea(url, html, preview) {
-					if (url !== '/index.html') return;
-					this.isValid = preview.find('body > img[src="/fox.png"]').length === 1;
-				},
-			});
-
-		});
+		}
 
 
-		task('Add a link to `/about.html`', () => {
+		createImageLink({ path: '/apple.html', imagePath: '/apple.png' });
+		createImageLink({ path: '/cherry.html', imagePath: '/cherry.png' });
+		createImageLink({ path: '/orange.html', imagePath: '/orange.png' });
+		createImageLink({ path: '/pineapple.html', imagePath: '/pineapple.png' });
 
-			task('Create an `a` Element', {
-				topic: 'HTML Attributes',
-				onUpdatePreviewArea: tasks.expectElement('/index.html', 'body > a'),
-				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-			});
-
-			task('Place the link after the `p` Element', {
-				topic: 'HTML Attributes',
-				onUpdatePreviewArea: tasks.expectOrder('/index.html', 'body > p', 'body > a'),
-				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-			});
-
-			task('Enter at least 5 characters in the link', {
-				topic: 'HTML Attributes',
-				onUpdatePreviewArea: tasks.expectElementContent('/index.html', 'body > a', { min: 5 }),
-				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-			});
-
-			task('Set the `href` attribute to `/index.html`', {
-				topic: 'HTML Attributes',
-				onRemoveFile: tasks.checkRemoveFile('/index.html'),
-				onUpdatePreviewArea(url, html, preview) {
-					if (url !== '/index.html') return;
-					this.isValid = preview.find('body > a[href="/about.html"]').length === 1;
-				},
-			});
-
-		});
 
 	});
 
-	task('Create an `about.html` page', () => {
 
-		task('Use the **Create new file** button to add `about.html`', {
-			onCreateFile: tasks.checkNewFile('/about.html', true),
-			onUploadFile: tasks.checkNewFile('/about.html', false),
-		});
+	// creates a task for a new product page
+	function createProductPage(options) {
 
-		task('Add a title to `about.html`', () => {
+		task('Create ' + (options.determiner || 'a') + ' `' + options.path + '` product page', () => {
 
-			task('Create a `title` Element', {
-				topic: 'Page Structure',
-				onUpdatePreviewArea: tasks.expectElement('/about.html', 'head > title'),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
+			task('Use the **Create new file** button to add `' + options.path + '`', {
+				onCreateFile: tasks.checkNewFile(options.path, true),
+				onUploadFile: tasks.checkNewFile(options.path, false),
 			});
 
-			task('Enter at least 5 characters in the title', {
-				topic: 'Page Structure',
-				onUpdatePreviewArea: tasks.expectElementContent('/about.html', 'head > title', { min: 5 }),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
+			task('Add a title to `' + options.path + '`', () => {
+
+				task('Create a `title` Element', {
+					topic: 'Page Structure',
+					onUpdatePreviewArea: tasks.expectElement(options.path, 'head > title'),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
+
+				task('Use the title "' + options.title + '"', {
+					topic: 'Page Structure',
+					onUpdatePreviewArea: tasks.expectElementContent(options.path, 'head > title', { match: options.title }),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
+
 			});
 
-		});
 
-		task('Add a heading to `about.html`', () => {
+			task('Add the `' + options.imagePath + '` image to `' + options.path + '` ', () => {
 
-			task('Create a `h1` Element', {
-				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea: tasks.expectElement('/about.html', 'body > h1'),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
+				task('Create an `img` Element', {
+					topic: 'HTML Attributes',
+					onUpdatePreviewArea: tasks.expectElement(options.path, 'body > img'),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
+
+				task('Set the `src` attribute to `' + options.imagePath + '`', {
+					topic: 'HTML Attributes',
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+					onUpdatePreviewArea(url, html, preview) {
+						if (url !== options.path) return;
+						this.isValid = preview.find('body > img[src="' + options.imagePath + '"]').length === 1;
+					},
+				});
+
 			});
 
-			task('Enter at least 10 characters in the heading', {
-				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea: tasks.expectElementContent('/about.html', 'body > h1', { min: 10 }),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
+
+			task('Add a paragraph to `' + options.path + '`', () => {
+
+				task('Create a `p` Element', {
+					topic: 'Headings & Paragraphs',
+					onUpdatePreviewArea: tasks.expectElement(options.path, 'body > p'),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
+
+				task('Place the `p` Element after the `img` Element', {
+					topic: 'Headings & Paragraphs',
+					onUpdatePreviewArea: tasks.expectOrder(options.path, 'body > img', 'body > p'),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
+
+				task('Describe the product with at least 15 characters', {
+					topic: 'Headings & Paragraphs',
+					onUpdatePreviewArea: tasks.expectElementContent(options.path, 'body > p', { min: 15 }),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
+
 			});
 
-		});
 
-		task('Add a paragraph to `about.html`', () => {
+			task('Add a return link to `/index.html`', () => {
 
-			task('Create a `p` Element', {
-				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea: tasks.expectElement('/about.html', 'body > p'),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-			});
+				task('Create an `a` Element', {
+					topic: 'HTML Attributes',
+					onUpdatePreviewArea: tasks.expectElement(options.path, 'body > a'),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
 
-			task('Place the `p` Element after the `h1` Element', {
-				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea: tasks.expectOrder('/about.html', 'body > h1', 'body > p'),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-			});
+				task('Place the link after the `p` Element', {
+					topic: 'HTML Attributes',
+					onUpdatePreviewArea: tasks.expectOrder(options.path, 'body > p', 'body > a'),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
 
-			task('Enter at least 15 characters in the paragraph', {
-				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea: tasks.expectElementContent('/about.html', 'body > p', { min: 15 }),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-			});
+				task('Enter at least 5 characters in the link', {
+					topic: 'HTML Attributes',
+					onUpdatePreviewArea: tasks.expectElementContent(options.path, 'body > a', { min: 5 }),
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+				});
 
-		});
+				task('Set the `href` attribute to `/index.html`', {
+					topic: 'HTML Attributes',
+					onRemoveFile: tasks.checkRemoveFile(options.path),
+					onUpdatePreviewArea(url, html, preview) {
+						if (url !== options.path) return;
+						this.isValid = preview.find('body > a[href="/index.html"]').length === 1;
+					},
+				});
 
-		task('Add the `/cat.png` image', () => {
-
-			task('Create an `img` Element', {
-				topic: 'HTML Attributes',
-				onUpdatePreviewArea: tasks.expectElement('/about.html', 'body > img'),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-			});
-
-			task('Place the `img` Element between the `h1` and `p` Elements', {
-				topic: 'Headings & Paragraphs',
-				onUpdatePreviewArea: tasks.expectOrder('/about.html', 'body > h1', 'body > img', 'body > p'),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-			});
-
-			task('Set the `src` attribute to `/cat.png`', {
-				topic: 'HTML Attributes',
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-				onUpdatePreviewArea(url, html, preview) {
-					if (url !== '/about.html') return;
-					this.isValid = preview.find('body > img[src="/cat.png"]').length === 1;
-				},
-			});
-
-		});
-
-
-		task('Add a link to `/index.html`', () => {
-
-			task('Create an `a` Element', {
-				topic: 'HTML Attributes',
-				onUpdatePreviewArea: tasks.expectElement('/about.html', 'body > a'),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-			});
-
-			task('Place the link after the `p` Element', {
-				topic: 'HTML Attributes',
-				onUpdatePreviewArea: tasks.expectOrder('/about.html', 'body > p', 'body > a'),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-			});
-
-			task('Enter at least 5 characters in the link', {
-				topic: 'HTML Attributes',
-				onUpdatePreviewArea: tasks.expectElementContent('/about.html', 'body > a', { min: 5 }),
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-			});
-
-			task('Set the `href` attribute to `/index.html`', {
-				topic: 'HTML Attributes',
-				onRemoveFile: tasks.checkRemoveFile('/about.html'),
-				onUpdatePreviewArea(url, html, preview) {
-					if (url !== '/about.html') return;
-					this.isValid = preview.find('body > a[href="/index.html"]').length === 1;
-				},
 			});
 
 		});
 
+	}
+
+
+	createProductPage({
+		title: 'Amazing Apple',
+		path: '/apple.html',
+		imagePath: '/apple.png',
+		determiner: 'an'
 	});
+	
+	createProductPage({
+		title: 'Cherry Crush',
+		path: '/cherry.html',
+		imagePath: '/cherry.png',
+	});
+
+	createProductPage({
+		title: 'Outrageous Orange',
+		path: '/orange.html',
+		imagePath: '/orange.png',
+		determiner: 'an'
+	});
+
+	createProductPage({
+		title: 'Pineapple Perfection',
+		path: '/pineapple.html',
+		imagePath: '/pineapple.png',
+	});
+
 
 	task('Fix all validation errors', {
 
@@ -272,7 +304,10 @@ task => {
 			if (!this.validation) {
 				this.validation = {
 					'/index.html': false,
-					'/about.html': false
+					'/apple.html': false,
+					'/cherry.html': false,
+					'/orange.html': false,
+					'/pineapple.html': false
 				};
 			}
 

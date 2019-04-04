@@ -35,7 +35,6 @@ export function validateType(ext, projectType, errors) {
 
 	// check types, improve this later
 	const valid = PROJECT_FILE_TYPES[projectType];
-	console.log('checking for', ext, projectType);
 	const err = !valid || !_.includes(valid, ext) ? 'invalid' : null;
 	return resolveError('type', err, errors);
 }

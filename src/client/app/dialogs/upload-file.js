@@ -231,7 +231,6 @@ function validateUpload(upload) {
 
 	// check if this is conflicted or not
 	const hasConflict = _.some(target.children, { name: file.name });
-	console.log('checking for', target, hasConflict);;
 	if (hasConflict) {
 		upload.hasWarning = true;
 		upload.addClass('warning');

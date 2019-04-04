@@ -31,11 +31,21 @@ export function checkRemoveFile(path) {
 
 
 // helper functions
-export function expectElement(path, selector) {
+export function expectElement(path, selector, options = { }) {
 	return function(url, html, preview) {
 		if (url !== path) return;
 		validateHtmlDocument(html, doc => {
-			this.isValid = doc.find(selector).total() === 1;
+
+			const count = doc.find(selector).total();
+			if (count === 0) {
+				this.isValid = false;
+			}
+			else if (!isNaN(options.limit)) {
+				this.isValid = count < options.limit;
+			}
+			else {
+				this.isValid = true;
+			}
 		});
 	}
 }
@@ -53,7 +63,13 @@ export function expectElementContent(path, selector, options) {
 		if (options.trim !== false)
 			text = _.trim(text);
 
-		// check the result
+		// checkng for a text match
+		if (options.match) {
+			this.isValid = _.toLower(text) === _.toLower(options.match);
+			return;
+		}
+
+		// checking for a length match
 		const length = text.length;
 		this.isValid = length >= min && length <= max;
 	}

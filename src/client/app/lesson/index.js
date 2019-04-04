@@ -285,7 +285,10 @@ function initialize(lesson) {
 	const prior = { };
 
 	// special lesson types
-	$(document.body).toggleClass('is-project-lesson', lesson.instance.data.isProject);
+	$(document.body).toggleClass(
+		'is-project-lesson',
+		lesson.instance.data.isProject === true
+	);
 
 	_.each(lesson.slides, (slide, index) => {
 		slide.id = _.uniqueId('slide:');

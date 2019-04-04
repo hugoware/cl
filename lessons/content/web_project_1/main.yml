@@ -62,6 +62,7 @@
       Good luck! I look forward to seeing what you create!
 
 - slide:
+    showObjectiveList: false
     content: |
       Great work! You've completed all of the objectives!
 

@@ -10,6 +10,8 @@ import $date from '../utils/date';
  * @param {object} progress information about the progress of the lesson
  */
 export default async function finishLesson(userId, id) {
+	if (id === 'demo') return;
+	
 	await $database.projects.update({ id }, {
 		$set: { 
 			done: true,

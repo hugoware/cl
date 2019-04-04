@@ -14,7 +14,7 @@ const $sorter = new Intl.Collator('en');
 export default async function getProjectStructure(id) {
 	const structure = { children: [ ] };
 	const path = $path.resolveProject(id);
-
+	
 	// check the root directory first since it's possible that
 	// no files have been written -- all other checks are based on
 	// what's read in the directory

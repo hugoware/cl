@@ -25,6 +25,8 @@ const isProd = !/localhost/gi.test(window.location.host);
 
 const $state = {
 
+	isDemoMode: /^\/demo/i.test(window.location.pathname),
+
 	// some helpers
 	isProd,
 	isLocal: !isProd,

@@ -1,7 +1,8 @@
-
+import _ from 'lodash';
 import log from '../log';
 import $database from '../storage/database';
 import createLesson from '../actions/create-lesson';
+import { getLessonById } from '../storage/lessons/index';
 
 /**
  * gets all project information
@@ -9,6 +10,17 @@ import createLesson from '../actions/create-lesson';
  * @returns {object} general project data
  */
 export default async function getProjectData(ownerId, id) {
+	
+	// check for a demo
+	if (id === 'demo') {
+		const data = getLessonById('demo');
+		return _.assign({ }, data, { 
+			id: 'demo',
+			lesson: 'demo',
+			type: 'web'
+		});
+	}
+	
 	return new Promise(async (resolve, reject) => {
 		const results = await $database.projects.find({ id })
 			.project({

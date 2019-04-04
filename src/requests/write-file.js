@@ -16,6 +16,7 @@ export async function handle(socket, session, data) {
 
 		// make sure they can access this project
 		const access = await getProjectAccess(projectId, user);
+		console.log('returned', access);
 		if (!access.write)
 			throw 'access_denied';
 

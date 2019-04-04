@@ -7,17 +7,20 @@
 
 	height: $header-height;
 	margin: 0 0 0 -200px;
-	cursor: pointer;
 	
 	@include animate('margin', 0.3s);
-
+	
 	// show returning to projects
-	.is-project &:hover,
-	.is-lesson &:hover {
-		margin: 0;
-
-		.logo {
-			opacity: 0;
+	@at-root .is-project-mode {
+		.is-project &:hover,
+		.is-lesson &:hover {
+			cursor: pointer;
+			margin: 0;
+			
+			.logo {
+				opacity: 0;
+				cursor: pointer;
+			}
 		}
 	}
 	
@@ -49,8 +52,6 @@
 		background-size: $logo-width $logo-height;
 
 		margin: (($header-height - $logo-height) / 2) 0 0 17px;
-
-		cursor: pointer;
 
 	}
 

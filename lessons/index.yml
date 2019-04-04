@@ -10,3 +10,6 @@ web:
 
 code:
   - console_1
+
+sys:
+  - demo

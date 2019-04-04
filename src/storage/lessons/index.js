@@ -44,8 +44,14 @@ function reload() {
 
 	// load each lesson type
 	_.each($sequence, (lessons, category) => {
-		const group = $lessons[category] = {};
+		let group = $lessons[category] = {};
 		_.each(lessons, lesson => {
+			
+			// special lesson
+			if (lesson === 'demo')
+				group = $lessons.sys = { };
+
+			// save the template
 			group[lesson] = new LessonTemplate(lesson);
 		});
 	});

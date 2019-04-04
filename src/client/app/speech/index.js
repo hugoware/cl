@@ -6,7 +6,7 @@ import * as streamed from './streamed';
 import * as local from './local';
 const useStream = false;
 const isLocal = /https?:\/{2}localhost/.test(window.location.href);
-const speech = isLocal || useStream ? local : streamed;
+const speech = useStream || !isLocal ? streamed : local;
 
 // stop text when the window closes
 listen('window-unload', () => {

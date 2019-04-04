@@ -10,7 +10,7 @@ export const priority = 0;
 export async function handle(request, response, next) {
 
 	// must start with a version 
-	if (!/^\d+\./.test(request.hostname))
+	if (!/^\d+\-/.test(request.hostname))
 		return next();
 	
 	// no need to do this
@@ -19,12 +19,16 @@ export async function handle(request, response, next) {
 
 	// determine if this is requesting a project
 	const parts = _.trim(request.hostname).split('.');
-	let version = parts.shift();
-	let id = parts.shift();
 
-	// if for some reason this has the www
-	if (/www/i.test(id))
-		id = parts.shift();
+	// start cleaning up each part
+	let segment = parts.shift();
+	if (/^www$/i.test(segment))
+		segment = parts.shift();
+
+	// extract values
+	segment = segment.split('-');
+	let version = segment.shift();
+	let id = segment.shift();
 
 	// check for reserved words
 	const root = $path.resolveProject(id);

@@ -87,12 +87,12 @@ class App extends Component {
 
 		// sub views
 		this.views = {
-			home: new HomeView(),
+			home: !$state.isDemoMode && new HomeView(),
 			project: new ProjectView()
 		};
 
 		// dialog windows
-		this.dialogs = {
+		this.dialogs = $state.isDemoMode ? { } : {
 			createProject: new CreateProjectDialog(),
 			createFile: new CreateFileDialog(),
 			createFolder: new CreateFolderDialog(),
@@ -124,9 +124,16 @@ class App extends Component {
 		doc.toggleClassMap({
 			'osx': isOSX,
 			'win': !isOSX,
-			'local': $state.isLocal
+			'local': $state.isLocal,
+			'is-project-mode': $state.isDemoMode,
+			'is-demo-mode': $state.isDemoMode
 		});
 
+		// set initial navigation
+		if ($state.isDemoMode) {
+			$nav.go(`project/demo`);
+			$nav.go = () => { };
+		}
 	}
 
 	// initialize the app
