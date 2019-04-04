@@ -149,4 +149,7 @@
   define: |
     A tab in the code editor that allows you to switch between open files.
 
-    
+- id: decoupled
+  name: Decoupled
+  define: |
+    Common phrase in programming meaning two things that aren't linked together tightly.

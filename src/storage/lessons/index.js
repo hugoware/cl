@@ -77,7 +77,7 @@ function evaluateLessonCategory(category, result, allowUnlock) {
 	// limit the categories
 	const lessons = _.filter(result.lessons, { type: category });
 	const allowed = _($sequence[category])
-		.filter(id => !_.find(lessons, { lesson: id }))
+		.filter(id => id !== 'demo' && !_.find(lessons, { lesson: id }))
 		.value();
 
 	// if all lessons are 'completed' then the next lesson

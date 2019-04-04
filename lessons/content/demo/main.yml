@@ -9,7 +9,9 @@
 
 - slide:
     content: |
-      This demo tutorial will give you a brief introduction to using [define html] to create web pages, however the primary purpose of this demo is to experience a CodeLab lesson from start to finish.
+      This demo tutorial will give you a brief introduction to using [define html] to create web pages.
+
+      **However, the primary purpose of this demo is to experience a CodeLab lesson from start to finish.**
 
 - slide:
     content: |

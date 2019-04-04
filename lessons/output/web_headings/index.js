@@ -370,7 +370,7 @@ var webHeadingsLesson = function () {
         "controller": "replaceLineBreak",
         "content": "Let's go back and replace the `br` [define html_element Element] by using two separate `p` [define html_element Elements].\n\n[snippet replace_linebreak]\n"
       }, {
-        "content": "Although it doesn't seem like much of a change, it's recommended to use `p` [define html_element Elements] instead of a `br` [define html_element Element].\n\nThis'll all make much more sense when we introduce [define css] in later lessons!\n"
+        "content": "Although it doesn't seem like much of a change, it's recommended to use `p` [define html_element Elements] instead of a `br` [define html_element Element].\n\nThis will make much more sense when we introduce [define css] in later lessons!\n"
       }, {
         "mode": "overlay",
         "content": "Great work! let's review what we've learned in this lesson!\n"
@@ -921,7 +921,7 @@ function _interopRequireDefault(obj) {
 	onValid: function onValid() {
 		this.progress.allow();
 		this.assistant.say({
-			message: 'Much better! Now each phrase is on a seprate line and inside of its own [define html_element].'
+			message: 'Much better! Now each phrase is on a separate line and inside of its own [define html_element].'
 		});
 	},
 	init: function init(controller) {

@@ -459,15 +459,25 @@ var webIntroCssLesson = function () {
       }, {
         "content": "Before [define css] was introduced styles, such as fonts and colors, were applied to a page using even more [define html_element s].\n\n[snippet old_way]\n\nThis might seem like a straightforward approach, however it quickly became very difficult for developers to manage.\n"
       }, {
-        "content": "For example, if you wanted to change the color you would simply update the [define html] attribute.\n\n[snippet old_way]\n\nThis might not seem like a lot for a single [define html_element], but if you had a website that had hundreds of instances of the same color you'd have to find and update each one.\n"
+        "content": "For example, if you wanted to change the color you would simply update the [define html] attribute.\n\n[snippet old_way highlight:15,11]\n\nThis might not seem like a lot for a single [define html_element], but if you had a website that had hundreds of instances of the same color you'd have to find and update each one.\n"
       }, {
-        "content": "Additionally, if you were to make a mistake you could potentially cause the page to display incorrectly.\n\n[snippet old_way]\n\nNeedless to say, the old way was very time-consuming and prone to errors.\n"
+        "content": "Additionally, if you were to make a mistake, you could potentially cause the page to display incorrectly.\n\n[snippet old_way_error highlight:26,1]\n\nNeedless to say, the old way was very time-consuming and prone to errors.\n"
       }, {
-        "content": "Fortunately, [define css] was created to eliminate this problem and make it easier to control the visual style of an entire web site using just one single file.\n"
+        "content": "Fortunately, [define css] was created to eliminate this problem!\n"
       }, {
-        "content": "You may remember from an earlier lesson that we used the `link` [define html_element Element] to attach a file named `style.css` to a web page. That file was an example of a [define css_stylesheet].\n\nAfter the [define css_stylesheet] was linked the appearance of the web page changed dramatically.\n"
+        "content": "One of the primary benefits of [define css] is that it is _\"[define decoupled l]\"_ from [define html], meaning [define css] code is a separate file from [define html] code.\n"
       }, {
-        "content": "Let's take a look at a simple example of [define css]. We'll start by breaking down what each part is responsible for.\n\n[snippet basic_example]\n"
+        "content": "You may remember from an earlier lesson that we used the `link` [define html_element Element] to attach a file named `style.css` to a web page. That file was an example of a [define css_stylesheet].\n\nAfter the [define css_stylesheet] was linked the appearance of the web page changed dramatically!\n"
+      }, {
+        "content": "The only change made to the [define html] page was to create a `link` [define html_element Element] that pointed to the separate [define css] file.\n\nThis updated the visual style of an entire web page without modifying anything else in the [define html] file.\n"
+      }, {
+        "content": "[define css] becomes increasingly useful when you have many web pages that should all have a similar style.\n\nNot only can you reuse the same [define css] file across many pages, any changes you make to that [define css] file are automatically applied to any [define html] pages that have it included using the `link` [define html_element Element].\n"
+      }, {
+        "content": "Let's take a look at a simple example of [define css] code.\n\n[snippet basic_example]\n"
+      }, {
+        "content": "You probably recognize some of the words used here. `h1` is an [define html_element] that you have used in previous pages. The phrase `color` and `red` implies that this will change the color of the [define html_element] to **red**.\n\n[snippet basic_example highlight:0,2|6,5|13,3]\n\nGenerally speaking, [define css] is as simple as that. The first part of the rule selects what [define html_element] should be changed, and then the following code decides what is done.\n"
+      }, {
+        "content": "Now that you have a general idea of how [define css] works, let's walk through each of the parts of this [define css] example.\n\n[snippet basic_example]\n"
       }, {
         "content": "A [define css] [define css_stylesheet] is made up of many individual style rules called [define css_declaration_block s]. You will normally find many of these indvidual blocks in a single [define css_stylesheet]\n\n[snippet basic_example highlight:0,19,line]\n"
       }, {
@@ -513,7 +523,7 @@ var webIntroCssLesson = function () {
         "controller": "firstBackgroundChange",
         "content": "Let's start by trying to change the background color to something else. There are many different color names that you can use with [define css], but for this example let's limit it to just a few choices.\n\nChange the background color to one of the following colors.\n\n[silent] `red`, `green`, `purple`, `magenta`, `gray`\n"
       }, {
-        "content": "Now try writing the entire [define css] [define css_declaration l], however this time we're going to use `h1` as the [define css_selector].\n\nDoing this will change the font color for all `h1` [define html_element Elements] on the page.\n"
+        "content": "Now try writing an entire [define css] [define css_declaration l], however this time we're going to use `h1` as the [define css_selector].\n\nDoing this will change the font color for all `h1` [define html_element Elements] on the page.\n"
       }, {
         "controller": "addH1Rule",
         "content": "Write a [define css_declaration_block] that selects all `h1` [define html_element Elements] and sets the `color` [define css_property l] to any of the following colors.\n\n[silent] `white`, `yellow`, `pink`, `aqua`, `silver`\n"
@@ -554,7 +564,7 @@ var webIntroCssLesson = function () {
       }, {
         "title": "What does **CSS** stand for?",
         "explain": "[define css] stands for Cascading Style Sheets which is a language used for describing the visual appearance of [define html] documents.\n",
-        "choices": ["Cascading Style Sheets", "Central Style System", "Cover Stenci and Slice", "Creative Syntax for Styles"]
+        "choices": ["Cascading Style Sheets", "Central Style System", "Cover, Stencil, and Slice", "Creative Syntax for Styles"]
       }, {
         "title": "What is the `highlighted` section of code called?",
         "content": "[snippet quiz_example highlight:0,2]\n",
@@ -584,6 +594,10 @@ var webIntroCssLesson = function () {
         },
         "old_way": {
           "content": "<font size=\"5\" color=\"red\">\n\t<b>\n\t\t<u>\n\t\t\tHello, Old Way!\n\t\t</u>\n\t</b>\n</font>",
+          "type": "html"
+        },
+        "old_way_error": {
+          "content": "<font size=\"5\" color=\"blue>\n\t<b>\n\t\t<u>\n\t\t\tHello, Old Way!\n\t\t</u>\n\t</b>\n</font>",
           "type": "html"
         },
         "quiz_example": {
@@ -634,6 +648,11 @@ var webIntroCssLesson = function () {
           "name": "HTML",
           "aka": "Hyper Text Markup Language",
           "define": "This is the full definition value"
+        },
+        "decoupled": {
+          "id": "decoupled",
+          "name": "Decoupled",
+          "define": "Common phrase in programming meaning two things that aren't linked together tightly.\n"
         },
         "css_selector": {
           "id": "css_selector",

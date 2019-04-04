@@ -7,7 +7,7 @@ import $path from '../path';
 import $fsx from 'fs-extra';
 
 export const event = 'request-speech';
-export const authenticate = true;
+// export const authenticate = true;
 
 const SERVER = 'eastus2';
 const FEMALE_VOICE = 'en-US, Jessa24kRUS';

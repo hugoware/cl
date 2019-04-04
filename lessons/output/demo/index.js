@@ -508,7 +508,7 @@ var demoLesson = function () {
         "title": "Using CodeLab",
         "content": "Welcome to the CodeLab Learning system demo!\n\nCodeLab uses self-paced, interactive tutorials that are a mix of explanations, coding exercises, and review questions.\n"
       }, {
-        "content": "This demo tutorial will give you a brief introduction to using [define html] to create web pages, however the primary purpose of this demo is to experience a CodeLab lesson from start to finish.\n"
+        "content": "This demo tutorial will give you a brief introduction to using [define html] to create web pages.\n\n**However, the primary purpose of this demo is to experience a CodeLab lesson from start to finish.**\n"
       }, {
         "content": "Lessons typically begin by introducing a new concept by examining code examples and highlighting relevant blocks.\n\n[snippet base_example]\n\nIn this case, we're looking at a code example of an [define html_element], the most basic building block when creating a webpage.\n"
       }, {

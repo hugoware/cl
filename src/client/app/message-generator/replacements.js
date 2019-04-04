@@ -1,4 +1,5 @@
 export default {
+	'CodeLab': 'Code Lab',
 	'`/`': 'forward slash',
 	'`\\`': 'back slash',
 	'`>`': 'less than',

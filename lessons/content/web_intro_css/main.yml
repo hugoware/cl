@@ -24,31 +24,61 @@
     content: |
       For example, if you wanted to change the color you would simply update the [define html] attribute.
 
-      [snippet old_way]
+      [snippet old_way highlight:15,11]
 
       This might not seem like a lot for a single [define html_element], but if you had a website that had hundreds of instances of the same color you'd have to find and update each one.
 
 - slide:
     content: |
-      Additionally, if you were to make a mistake you could potentially cause the page to display incorrectly.
+      Additionally, if you were to make a mistake, you could potentially cause the page to display incorrectly.
 
-      [snippet old_way]
+      [snippet old_way_error highlight:26,1]
 
       Needless to say, the old way was very time-consuming and prone to errors.
 
 - slide:
     content: |
-      Fortunately, [define css] was created to eliminate this problem and make it easier to control the visual style of an entire web site using just one single file.
+      Fortunately, [define css] was created to eliminate this problem!
+
+- slide:
+    content: |
+      One of the primary benefits of [define css] is that it is _"[define decoupled l]"_ from [define html], meaning [define css] code is a separate file from [define html] code.
 
 - slide:
     content: |
       You may remember from an earlier lesson that we used the `link` [define html_element Element] to attach a file named `style.css` to a web page. That file was an example of a [define css_stylesheet].
 
-      After the [define css_stylesheet] was linked the appearance of the web page changed dramatically.
+      After the [define css_stylesheet] was linked the appearance of the web page changed dramatically!
 
 - slide:
     content: |
-      Let's take a look at a simple example of [define css]. We'll start by breaking down what each part is responsible for.
+      The only change made to the [define html] page was to create a `link` [define html_element Element] that pointed to the separate [define css] file.
+      
+      This updated the visual style of an entire web page without modifying anything else in the [define html] file.
+
+- slide:
+    content: |
+      [define css] becomes increasingly useful when you have many web pages that should all have a similar style.
+
+      Not only can you reuse the same [define css] file across many pages, any changes you make to that [define css] file are automatically applied to any [define html] pages that have it included using the `link` [define html_element Element].
+
+- slide:
+    content: |
+      Let's take a look at a simple example of [define css] code.
+
+      [snippet basic_example]
+
+- slide:
+    content: |
+      You probably recognize some of the words used here. `h1` is an [define html_element] that you have used in previous pages. The phrase `color` and `red` implies that this will change the color of the [define html_element] to **red**.
+
+      [snippet basic_example highlight:0,2|6,5|13,3]
+
+      Generally speaking, [define css] is as simple as that. The first part of the rule selects what [define html_element] should be changed, and then the following code decides what is done.
+
+- slide:
+    content: |
+      Now that you have a general idea of how [define css] works, let's walk through each of the parts of this [define css] example.
 
       [snippet basic_example]
 
@@ -190,7 +220,7 @@
 
 - slide:
     content: |
-      Now try writing the entire [define css] [define css_declaration l], however this time we're going to use `h1` as the [define css_selector].
+      Now try writing an entire [define css] [define css_declaration l], however this time we're going to use `h1` as the [define css_selector].
 
       Doing this will change the font color for all `h1` [define html_element Elements] on the page.
 
@@ -284,7 +314,7 @@
     choices:
       - Cascading Style Sheets
       - Central Style System
-      - Cover Stenci and Slice
+      - Cover, Stencil, and Slice
       - Creative Syntax for Styles
 
 - question:

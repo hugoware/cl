@@ -372,7 +372,7 @@ var webAttributesLesson = function () {
         "content": "From time to time you may see an [define html_attribute] that has a *value* that's the same as its *name*. In many cases, this is another example of a [define boolean_attribute].\n\n[snippet boolean_attribute_expanded]\n\nWhile it's generally not required, sometimes developers will choose to write [define boolean_attribute s] like this.\n"
       }, {
         "mode": "popup",
-        "content": "Lets give this a try using the `input` [define html_element Element].\n"
+        "content": "Let's give this a try using the `input` [define html_element Element].\n"
       }, {
         "controller": "inputEntry",
         "content": "Start by adding an input element to the page.\n\n[snippet input_element_basic]      \n"
