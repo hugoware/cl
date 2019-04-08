@@ -7,9 +7,10 @@ export const authenticate = true;
 
 export async function handle(socket, session) {
 	const id = session.user;
+	const { isClassroom = false } = session;
 
 	try {
-		const result = await getHomeSummary(id);
+		const result = await getHomeSummary(id, isClassroom);
 		socket.ok(event, result);
 	}
 	catch (err) {

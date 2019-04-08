@@ -3,6 +3,7 @@ import $database from '../storage/database';
 import format from '../formatters';
 import $fsx from 'fs-extra';
 import $date from '../utils/date';
+import $audit from '../audit';
 import projectValidator from '../validators/project';
 import { resolveProject, resolveResource } from '../path';
 
@@ -73,6 +74,7 @@ export default async function createProject(data) {
 			await $fsx.copy(source, directory);
 
 			// ready to go
+			$audit.log('create-project', ownerId, { id, name, description, type });
 			return resolve({ success: true, id });
 		}
 		catch (err) {

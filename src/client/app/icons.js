@@ -115,7 +115,7 @@ const $icons = {
 	actionRemoveIcon,
 	actionMuteIcon,
 	actionSpeakIcon,
-	actionSpeakIcon,
+	// actionSpeakIcon,
 	actionSaveIcon,
 	actionActualSizeIcon,
 	actionFitSizeIcon,

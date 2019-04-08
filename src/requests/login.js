@@ -1,6 +1,7 @@
 
 import login from '../actions/login';
 import { errorMessage } from '../utils';
+import audit from '../audit';
 
 export const name = 'default login';
 export const route = '/login';
@@ -10,7 +11,7 @@ export async function handle(request, response) {
 
   // this is showing the login page
 	if (!/post/i.test(request.method))
-		return this.render('site/login');
+		return response.redirect('/');
 	
 	// this is a login attempt
 	try {
@@ -19,6 +20,9 @@ export async function handle(request, response) {
 
     // set the user identity
 		request.session.user = result.user;
+
+		// home login
+		audit.log('login', result.user, { isClassroom: false });
 		response.json({ success: true });
 	}
 	// determine the error result

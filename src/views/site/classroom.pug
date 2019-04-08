@@ -1,0 +1,32 @@
+extends _template
+
+block title
+	| Classroom Login
+
+block head
+	link(rel='stylesheet' type='text/css' href='/__codelab__/site/login.css')
+
+block content
+
+	#background
+		#app-login
+			#logo
+
+			form(action='/classroom' method='post' autocomplete='off')
+				.field
+					input#code(type='text' name='token')
+
+				if error
+					.error-message
+						#error= error
+
+				.action
+					button#login-button(type='submit') Login
+
+block scripts
+	script(type='text/javascript').
+		window.onload = function() {
+			const code = document.getElementById('code');
+			code.focus();
+			code.select();
+		};

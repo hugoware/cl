@@ -7,7 +7,7 @@ import $date from '../utils/date';
 /** Handles getting summary information for a user
  * @param {string} id the user ID to find
  */
-export default async function get(id) {
+export default async function get(id, isClassroom) {
 	return new Promise(async (resolve, reject) => {
 		try {
 			
@@ -78,9 +78,9 @@ export default async function get(id) {
 			const result = { user, projects };
 
 			// for lessons, capture data
-			const allowUnlock = true;
+			const allowUnlock = !!isClassroom;
 			const state = $lessons.getLessonState(id, lessons, allowUnlock);
-			_.assign(result, state);
+			_.assign(result, state, { isClassroom });
 
 			// give back the results
 			resolve(result);

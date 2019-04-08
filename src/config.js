@@ -51,6 +51,9 @@ class Config {
 	/** @returns {number} the password to connect to the database */
 	get databasePassword() { return this.data.database_password; }
 
+	/** @returns {string} the directory to save audit information */
+	get auditLog() { return this.data.audit_log; }
+
 	/** @returns {string} the directory the list of lessons is found */
 	get lessonManifest() { return this.data.lesson_manifest; }
 

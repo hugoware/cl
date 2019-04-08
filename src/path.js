@@ -22,6 +22,14 @@ export function resolveRoot(path) {
   return $path.resolve(path);
 }
 
+/** Resolves the path to the audit log
+ * @returns {string} the resolved path
+ */
+export function resolveLog() {
+	const path = $config.auditLog.replace('~', $config.root);
+  return $path.resolve(path);
+}
+
 /** Resolves a path to a node module for the project
  * @param {string} path the path to resolve
  * @returns {string} the resolved path
@@ -188,5 +196,6 @@ export default {
 	resolveLesson,
 	resolveAudio,
 	resolveData,
+	resolveLog,
 	sanitizePath,
 };

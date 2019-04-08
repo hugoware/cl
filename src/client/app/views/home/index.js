@@ -109,7 +109,10 @@ export default class HomeView extends View {
 			// update some info
 			this.ui.projectCount.text(this.projectCount);
 			this.ui.lessonCount.text(this.lessonCount);
-			this.toggleClass('has-pending-lessons', this.hasPendingLessons);
+			this.toggleClassMap({
+				'has-pending-lessons': this.hasPendingLessons,
+				'is-classroom': data.isClassroom
+			});
 
 			// set the user stats
 			const { first, avatar } = this.data.user;

@@ -29,6 +29,14 @@ export default class BackButton extends Component {
 
 	// return to the home view, if not already there
 	onLeaveProject = () => {
+
+		// in demo mode
+		if ($state.isDemoMode) {
+			window.location.href = '/';
+			return;
+		}
+		
+		
 		$nav.go('/');
 
 		// navigate to the home page

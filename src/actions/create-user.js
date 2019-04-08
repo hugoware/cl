@@ -55,9 +55,6 @@ export default async function createUser(data) {
 				publicAccessUntil
 			});
 
-			// syncs all lesson access
-			$lesson.syncLessons(id, data.progress);
-
 			// make sure this 
 			await $database.users.insertOne(data);
 			resolve({ success: true });

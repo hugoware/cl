@@ -12,6 +12,7 @@ lesson_directory: ~/lessons/output/
 audio_directory: ~/.audio/
 cache_directory: ~/.cache/
 data_directory: ~/.data/
+audit_log: ~/.data/logs/audit.txt
 
 azure_subscription_key: 5ec90588a27c47fba5bcec56b470c2a9
 
