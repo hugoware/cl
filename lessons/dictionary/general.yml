@@ -153,3 +153,8 @@
   name: Decoupled
   define: |
     Common phrase in programming meaning two things that aren't linked together tightly.
+
+- id: code_variable
+  name: Variable
+  define: |
+    A programming method of storing and accessing data 

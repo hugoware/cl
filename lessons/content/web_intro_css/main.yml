@@ -4,15 +4,16 @@
     content: |
       Welcome to your first lesson about how to use [define css].
 
-      [define css] is very different than the [define html] you have been learning so far.
+      [define css] stands for **Cascading Style Sheets**. It is used to apply visual styles, such as colors and fonts, to an [define html] page.
 
 - slide:
     content: |
-      [define css] stands for Cascading Style Sheets and is used to apply visual styles to an [define html] page.
+      [define css] code looks very different from the [define html] code you've been learning so far. Not only that, [define css] is used for a completely different purpose than [define html].
 
       In a sense, [define html] decides what a web page says, whereas [define css] decides what a web page looks like.
 
 - slide:
+    clearTitle: true
     content: |
       Before [define css] was introduced styles, such as fonts and colors, were applied to a page using even more [define html_element s].
 
@@ -30,19 +31,11 @@
 
 - slide:
     content: |
-      Additionally, if you were to make a mistake, you could potentially cause the page to display incorrectly.
+      Additionally, if you were to make a mistake, you could potentially cause the page to display incorrectly. Needless to say, the old way was very time-consuming and prone to errors.
 
       [snippet old_way_error highlight:26,1]
 
-      Needless to say, the old way was very time-consuming and prone to errors.
-
-- slide:
-    content: |
       Fortunately, [define css] was created to eliminate this problem!
-
-- slide:
-    content: |
-      One of the primary benefits of [define css] is that it is _"[define decoupled l]"_ from [define html], meaning [define css] code is a separate file from [define html] code.
 
 - slide:
     content: |
@@ -61,6 +54,12 @@
       [define css] becomes increasingly useful when you have many web pages that should all have a similar style.
 
       Not only can you reuse the same [define css] file across many pages, any changes you make to that [define css] file are automatically applied to any [define html] pages that have it included using the `link` [define html_element Element].
+
+- slide:
+    content: |
+      Keeping [define css] separate from [define html] is one of the primary benefits of using [define css] [define css_stylesheet Stylesheets].
+
+      You'll sometimes hear developers say that [define css] is _"[define decoupled l]"_ from [define html], which is another way of saying that [define css] code is separate from [define html] code.
 
 - slide:
     content: |

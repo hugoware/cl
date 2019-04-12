@@ -30,6 +30,7 @@ export default {
 	'`src`': 'source',
 	'`a`': 'anchor',
 	'`href`': 'h ref',
+	'`var`': 'varr',
 	'`\\\``': 'back tick',
 	'JavaScript': 'Java Script'
 };

@@ -1,6 +1,6 @@
-name: Title
-type: web
-description: Description
+name: Using Variables
+type: code
+description: An introduction to using variables in JavaScript
 
 lesson:
   - main

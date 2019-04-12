@@ -20,9 +20,9 @@ async function init() {
 
 	// watch for lesson changes
 	const path = $path.resolveRoot($config.lessonManifest);
-	console.log('watching', path);
-	watch(path, () => {
-		if (!_.endsWith(path, '/index.yml')) return;
+	console.log('[watching]', path);
+	watch(path, (event, fileName) => {
+		if (fileName !== 'index.yml') return;
 		console.log('[lessons] reloading lesson data');
 		reload();
 	});

@@ -167,6 +167,33 @@ export default class CodeValidator extends SyntaxValidator {
 		return this.symbol('`');
 	}
 
+	// check for a number match
+	number(...args) {
+		if (this.error) return this;
+
+		const options = this.captureOptions();
+		const validator = getValidator(args);
+		return this.next('number', /^-?((0x)?[0-9]+\.?[0-9]*|Infinity|NaN)/, match => {
+
+			// capture the value
+			const strs = _.map(args, _.toString);
+			const num = match === '-Infinity' ? -Infinity
+				: match === 'Infinity' ? Infinity
+				: match === '-NaN' ? -NaN
+				: match === 'NaN' ? NaN
+				: parseFloat(match);
+
+			// check each arg
+			if (_.some(args) && !_.includes(strs, match))
+				return `Expected number: ${oxfordize(strs, 'or')}`;
+				
+			// check for custom validation
+			if (validator)
+				return validator(match, num);
+
+		});
+	}
+
 	// checks for quotes
 	string(...args) {
 		const options = this.captureOptions();
@@ -219,9 +246,10 @@ SyntaxValidator.createNext(CodeValidator, 'keyword', { literal: true });
 SyntaxValidator.createNext(CodeValidator, 'text', { literal: true });
 
 SyntaxValidator.createNext(CodeValidator, 'boolean', { match: /^(true|false)/ });
-SyntaxValidator.createNext(CodeValidator, 'number', {
-	match: /^((0x)?[0-9]+\.?[0-9]*|Infinity|NaN)/
-});
+// SyntaxValidator.createNext(CodeValidator, 'number', {
+// 	// match: /^((0x)?[0-9]+\.?[0-9]*|Infinity|NaN)/
+// 	match: /^[0-9]+/
+// });
 
 SyntaxValidator.createNext(CodeValidator, 'startTemplateToken', {
 	literal: true,

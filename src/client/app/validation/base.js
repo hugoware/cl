@@ -126,6 +126,11 @@ export default class SyntaxValidator {
 		return this;
 	}
 
+	/** grabs a meta property value */
+	pull(prop, fallback) {
+		return _.get(this.meta, prop, fallback);
+	}
+
 	/** used to track the progress of validation */
 	progress(...args) {
 		if (this.error) return this;

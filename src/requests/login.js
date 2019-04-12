@@ -21,6 +21,13 @@ export async function handle(request, response) {
     // set the user identity
 		request.session.user = result.user;
 
+		// for admins, always use the classroom so
+		// lesson unlocks are visible
+		if (result.role === 'admin') {
+			request.session.isAdmin = true;
+			request.session.isClassroom = true;
+		}
+		
 		// home login
 		audit.log('login', result.user, { isClassroom: false });
 		response.json({ success: true });

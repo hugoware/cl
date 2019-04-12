@@ -10,6 +10,8 @@ web:
 
 code:
   - console_1
+  - code_variables_basics
+  - code_math_basics
 
 sys:
   - demo

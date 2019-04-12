@@ -183,10 +183,7 @@ export default class CodeRunner {
 	// special version
 	onConsoleRainbow = (...args) => {
 		this.writeOutput('rainbow', args, (content, index) => {
-			
-			// only do rainbows to strings
-			if (!$.isString(args[index]))
-				return content;
+			content = getValue(content);
 
 			// write the colors
 			let position = 0|(Math.random() * 10);
@@ -207,10 +204,7 @@ export default class CodeRunner {
 	// another special version
 	onConsoleShake = (...args) => {
 		this.writeOutput('shake', args, (content, index) => {
-			
-			// only do rainbows to strings
-			if (!$.isString(args[index]))
-				return content;
+			content = getValue(content);
 
 			// write the colors
 			const container = document.createElement('span');

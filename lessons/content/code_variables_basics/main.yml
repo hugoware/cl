@@ -1,50 +1,239 @@
--
-  slide:
+- slide:
     mode: overlay
-    title: Title
+    title: Using Variables
     content: |
-      content
+      In this lesson we're going to start learning about a concept found in programming languages called [define code_variable ls].
 
-# - question:
-#     count: 4   # optional question count
-#     title: Main title
-#     
-#     hint: Optional helpful hint
+- slide:
+    content: |
+      [define code_variable s] allow you to store information in the programs you create. You can also access the information stored in [define code_variable sl] and use it in a variety of ways.
 
-#     explain: |
-#       After the question is finished hint
+- slide:
+    content: |
+      [define code_variable s] can be a little difficult to understand at first, so let's walk through a scenario that might help it make sense.
 
-#     choices:
-#       - correct answer
-#       - wrong answer 1
-#       - wrong answer 2
-#       - wrong answer 3
+- slide:
+    content: |
+      [image unlabeled-boxes.png]
+      
+      A [define code_variable l] is like a box. You can put something inside of a box and it'll be stored inside.
 
-# - slide:
-#     flags: +OPEN_FILE
-#     emote: happy
-#     controller: name
-#     mode: popup
-#     content: |
-#       Way to go! You've finished this lesson!
-#       
-#       [snippet name highlight:0,5|20,5]
-#       
-#       [snippet html preview:50%]
-#       
-#       [image default.png]
-#       
-#       [image full.jpg frame]
-#       
-#       Inline replacement is done using ||does|duz||
-#       
-#       A normal [define html] is like this
-#       
-#       A lowercase [define html l] is like this
-#       
-#       A plural [define html p] is like this
-#       A plural [define html s] or like this
-#       
-#       Can be combined as [define html lp] [define html ls]
-#       
-#       
+      If you open up the box later, whatever you put inside the box will still be there.
+
+- slide:
+    content: |
+      [image labeled-boxes.png]
+      
+      However, having several boxes that all look the same is difficult to organize. That's why it's a good idea to label each box with a meaningful name.
+
+      The label might not represent *exactly* what's in a box, but it does give you a general idea of what might be inside.
+
+- slide:
+    content: |
+      [image open-boxes.png]
+      
+      Each [define code_variable l] you create in [define javascript] is given a name. This is much like a label on a box.
+
+      Having a good name will make it easier to understand what's inside of a [define code_variable l] while you write code.
+
+
+- slide:
+    content: |
+      [image changed-boxes.png]
+
+      Just like with a box, you can change what's been placed inside.
+
+      Keep in mind that it's best to make sure that whatever is inside of a box matches the label that is used.
+
+- slide:
+    content: |
+      [image weird-box.png]
+
+      Imagine how confusing it would be if you opened a box labeled _"fruit"_ only to have a cat sitting inside.
+
+      This is also true for [define code_variable ls] in [define javascript]. Having good names that represent what's inside of a [define code_variable l] will make understanding code much easier.
+
+- slide:
+    content: |
+      When you create a new [define code_variable l] in [define javascript] it's typically referred to as "declaring a variable".
+
+      That said, let's look at an example of declaring a [define code_variable l] in [define javascript]
+
+
+- slide:
+    content: |
+      At the start of this code is the [define javascript_keyword l] `let`. This identifies that the following code will be declaring a new variable.
+
+      [snippet declare_variable highlight:0,3]
+
+      [note] You might see the [define javascript_keyword ls] `const` or `var` in code.  Each of these [define javascript_keyword ls] have their own purposes, but for the sake of simplicity CodeLab lessons will always use the `let` [define javascript_keyword l].
+
+- slide:
+    content: |
+      Next is the [define code_variable l] name. As mentioned before, it's important that the name you use makes sense for the contents that go inside.
+
+      [snippet declare_variable highlight:4,6]
+      
+      In this example, the [define code_variable l] name is `animal` since we're expecting to hold the phrase *"dog"*.
+
+- slide:
+    content: |
+      After the [define code_variable l] name is an `=`. This marks where the "value" of the [define code_variable l] will begin.
+
+      [snippet declare_variable highlight:11,1]
+
+
+- slide:
+    content: |
+      The code to the right of the `=` is the "value". It's what is stored inside of the [define code_variable l]. In this case, it's the [define javascript_string] of characters *"dog"*.
+
+      [snippet declare_variable highlight:13,5]
+
+      If this were a box from the earlier example, the "value" is what is being placed inside of the box.
+      
+- slide:
+    content: |
+      Finally, there is a `;`. This ends the code statement.
+
+      [snippet declare_variable highlight:18,1]
+
+      You'll see the `;` used in many different places in [define javascript].
+
+- slide:
+    mode: popup
+    content: |
+      Now that we understand some of the basics for declaring variables, let's give it a try and see what happens.
+
+- slide:
+    start: true
+    waitForFile: /main.js
+    content: |
+      Open the file named `main.js` by [define double_click double-clicking] on the file in the [define file_browser].
+
+- slide:
+    controller: declareNumber
+    content: |
+      Follow along with the instructions to declare an number variable named `age`.
+
+      [snippet declare_number]
+
+- slide:
+    controller: declareString
+    content: |
+      Let's try that again, but this time create a [define javascript_string l] variable named `color`.
+
+      [snippet declare_string]
+
+- slide:
+    start: true
+    flags: +OPEN_FILE
+    mode: overlay
+    content: |
+      As mentioned earlier in the lesson, [define code_variable ls] are used to track data in a program. 
+
+      You're able to create new [define code_variable ls] and give them values, but you're also able to access [define code_variable ls] to get the data they hold.
+
+- slide:
+    content: |
+      If you think back to the box example, this would be similar to opening a box and checking what's inside.
+
+- slide:
+    content: |
+      In the previous lesson you used the `alert` [define javascript_function l] to display messages on the screen.
+
+      [snippet using_alert]
+
+- slide:
+    content: |
+      In this example, the `alert` [define javascript_function l] will use the [define javascript_string l] `"hello, world"` as the message to display on the screen.
+
+      [snippet using_alert highlight:6,15]
+
+      The `alert` [define javascript_function l] needs to know which message to display in order to work, but it's possible to use a [define code_variable l] instead.
+
+- slide:
+    content: |
+      In this case, the message is now being declared as a [define code_variable l] and then being given to the `alert` [define javascript_function l].
+
+      [snippet using_variable]
+
+      The outcome will be the same with the message `"hello, world"` being displayed in the `alert` message box.
+
+- slide:
+    mode: popup
+    controller: alertMessages
+    content: |
+      Let's try this out by creating an `alert` message with each of the variables you've already declared.
+
+      [snippet alert_messages]
+
+- slide:
+    controller: displayAlerts
+    content: |
+      Great! Now use the *Run Code* button to execute this code. You should see an `alert` message for each of the [define code_variable l] values.
+
+      Don't forget that you'll need to press *OK* on each `alert` message to continue executing the code.
+
+- slide:
+    content: |
+      The `alert` [define javascript_function l] will display the message box and show whatever is passed into it.
+
+- slide:
+    content: |
+      This means if you were to change the values of [define code_variable ls] `color` and `age`, the message displayed by the `alert` [define javascript_function l] would change.
+
+- slide:
+    controller: updateAlerts 
+    content: |
+      Let's try that again! Replace the values for `age` and `color` to something different.
+
+      When you're finished, press *Run Code* and confirm each of the `alert` messages show the new values.
+
+- slide:
+    start: true
+    content: |
+      There's still a lot to cover when it comes to using [define code_variable ls], but you've made some good progress so far. 
+
+      For now, let's review what you've learned in this lesson!
+
+- question:
+    mode: overlay
+    title: Variables are used to track information in a program?
+
+    choices:
+      - 'True'
+      - 'False'
+
+    explain: |
+      [define code_variable s] are used to keep track of data in a program. You can create new variables, change existing variables, or access variables to use the data they contain.
+
+- question:
+    title: What value would make the most sense in a [define code_variable l] called `||emailAddress|email address||`?
+
+    choices:
+      - '`"student@codelabschool.com"`'
+      - '`"purple"`'
+      - '`true`'
+      - '`7350`'
+
+    explain: |
+      Values assigned to a [define code_variable l] should represent the [define code_variable l] name used. This makes it easier to understand the contents of a [define code_variable l] while reading code.
+
+- question:
+    title: Which [define code_variable l] name would be best for the value `"bear"`?
+
+    choices:
+      - '`animal`'
+      - '`totalEmails`'
+      - '`currentMonth`'
+      - '`isChild`'
+
+    explain: |
+      Ideally, the name of a [define code_variable l] should represent what's inside. The [define code_variable l] name and value shouldn't match exactly, but instead help you identify what it might contain while reading code. 
+
+- slide:
+    mode: popup
+    content: |
+      Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to this file before moving on.
+
+      Great work, and I'll see you in the next lesson!

@@ -3,3 +3,13 @@
   name: JavaScript
   define: |
     Programming language
+
+- id: javascript_keyword
+  name: Keyword
+  define: |
+    A reserved word in JavaScript that has a purpose
+
+- id: javascript_function
+  name: Function
+  define: |
+    A block of executed code

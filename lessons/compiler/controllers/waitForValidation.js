@@ -84,7 +84,6 @@ export default function waitForValidation(obj, config) {
 		},
 
 		onInit() {
-			console.log('vv', config);
 			if ('area' in config)
 				this.editor.area({ path: config.file, start: config.area.start, end: config.area.end });
 
@@ -96,6 +95,14 @@ export default function waitForValidation(obj, config) {
 			}
 
 			validate(this);
+		},
+
+		onReset() {
+			validate(this);
+			
+			if (state.isValid) return;
+			this.progress.block();
+			this.assistant.revert();
 		},
 
 		onContentChange(file) {

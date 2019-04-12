@@ -136,7 +136,8 @@ export default class Question extends Component {
 			.slice(0, collect)
 			.shuffle()
 			.each((answer, index) => {
-
+				answer = _.toString(answer);
+				
 				// the correct answer
 				if (answer === correct)
 					this.correctIndex = index;

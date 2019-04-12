@@ -453,25 +453,24 @@ var webIntroCssLesson = function () {
       "lesson": [{
         "mode": "overlay",
         "title": "Introduction to CSS",
-        "content": "Welcome to your first lesson about how to use [define css].\n\n[define css] is very different than the [define html] you have been learning so far.\n"
+        "content": "Welcome to your first lesson about how to use [define css].\n\n[define css] stands for **Cascading Style Sheets**. It is used to apply visual styles, such as colors and fonts, to an [define html] page.\n"
       }, {
-        "content": "[define css] stands for Cascading Style Sheets and is used to apply visual styles to an [define html] page.\n\nIn a sense, [define html] decides what a web page says, whereas [define css] decides what a web page looks like.\n"
+        "content": "[define css] code looks very different from the [define html] code you've been learning so far. Not only that, [define css] is used for a completely different purpose than [define html].\n\nIn a sense, [define html] decides what a web page says, whereas [define css] decides what a web page looks like.\n"
       }, {
+        "clearTitle": true,
         "content": "Before [define css] was introduced styles, such as fonts and colors, were applied to a page using even more [define html_element s].\n\n[snippet old_way]\n\nThis might seem like a straightforward approach, however it quickly became very difficult for developers to manage.\n"
       }, {
         "content": "For example, if you wanted to change the color you would simply update the [define html] attribute.\n\n[snippet old_way highlight:15,11]\n\nThis might not seem like a lot for a single [define html_element], but if you had a website that had hundreds of instances of the same color you'd have to find and update each one.\n"
       }, {
-        "content": "Additionally, if you were to make a mistake, you could potentially cause the page to display incorrectly.\n\n[snippet old_way_error highlight:26,1]\n\nNeedless to say, the old way was very time-consuming and prone to errors.\n"
-      }, {
-        "content": "Fortunately, [define css] was created to eliminate this problem!\n"
-      }, {
-        "content": "One of the primary benefits of [define css] is that it is _\"[define decoupled l]\"_ from [define html], meaning [define css] code is a separate file from [define html] code.\n"
+        "content": "Additionally, if you were to make a mistake, you could potentially cause the page to display incorrectly. Needless to say, the old way was very time-consuming and prone to errors.\n\n[snippet old_way_error highlight:26,1]\n\nFortunately, [define css] was created to eliminate this problem!\n"
       }, {
         "content": "You may remember from an earlier lesson that we used the `link` [define html_element Element] to attach a file named `style.css` to a web page. That file was an example of a [define css_stylesheet].\n\nAfter the [define css_stylesheet] was linked the appearance of the web page changed dramatically!\n"
       }, {
         "content": "The only change made to the [define html] page was to create a `link` [define html_element Element] that pointed to the separate [define css] file.\n\nThis updated the visual style of an entire web page without modifying anything else in the [define html] file.\n"
       }, {
         "content": "[define css] becomes increasingly useful when you have many web pages that should all have a similar style.\n\nNot only can you reuse the same [define css] file across many pages, any changes you make to that [define css] file are automatically applied to any [define html] pages that have it included using the `link` [define html_element Element].\n"
+      }, {
+        "content": "Keeping [define css] separate from [define html] is one of the primary benefits of using [define css] [define css_stylesheet Stylesheets].\n\nYou'll sometimes hear developers say that [define css] is _\"[define decoupled l]\"_ from [define html], which is another way of saying that [define css] code is separate from [define html] code.\n"
       }, {
         "content": "Let's take a look at a simple example of [define css] code.\n\n[snippet basic_example]\n"
       }, {

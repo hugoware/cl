@@ -38,7 +38,12 @@ export default async function login(data = { }) {
 	// try and find the account
 	const results = await $database.users
 		.find({ email })
-		.project({ systemAccessUntil: 1, disabled: 1, id: 1 })
+		.project({
+			systemAccessUntil: 1,
+			disabled: 1,
+			type: 1,
+			id: 1
+		})
 		.toArray();
 
 	// make sure something was found
@@ -59,11 +64,11 @@ export default async function login(data = { }) {
 
 	// successful login, update the account
 	const now = $date.now();
-	const { id } = user;
+	const { id, type } = user;
 	await $database.users.update({ id }, {
 		$set: { lastLoginAt: now }
 	});
 
 	// give back the user ID
-	return { user: id };
+	return { user: id, role: type };
 }

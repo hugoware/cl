@@ -1,0 +1,2 @@
+alert(age);
+alert(color);

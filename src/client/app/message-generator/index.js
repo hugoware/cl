@@ -6,6 +6,7 @@ const converter = new Showdown.Converter();
 
 /** creates a spoken message and display message from text */
 export default function generateMessage(message) {
+	message = _.toString(message);
 
 	// create categories
 	let speak = [ ];
@@ -14,7 +15,7 @@ export default function generateMessage(message) {
 	// start reading each line
 	const lines = _.trim(message).split(/\n/g);
 	for (let line of lines) {
-		let hidden, delay, silent, snippet;
+		let hidden, delay, silent, snippet, note;
 		const props = [];
 
 		// replace inline dictionary works
@@ -121,6 +122,13 @@ export default function generateMessage(message) {
 				return '';
 			});
 
+			// special notes
+			commands = commands.replace(/note/, () => {
+				note = true;
+				silent = true;
+				return '';
+			});
+
 			// check for hidden lines of text
 			commands = commands.replace(/hidden/, () => {
 				hidden = true;
@@ -180,6 +188,11 @@ export default function generateMessage(message) {
 			let markup = _.trim(converter.makeHtml(line));
 			markup = populateVariables(markup);
 			markup = replacePronunciation(markup, { content: true });
+
+			// displaying a special note
+			if (note)
+				markup = `<div class="note" >${markup}</div>`;
+
 			content.push(markup);
 		}
 

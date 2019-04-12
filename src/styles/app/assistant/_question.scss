@@ -12,6 +12,15 @@
 
 		.answer {
 			background-color: rgba(#000, 0.2);
+			font-size: 18px;
+
+			code {
+				background: none;
+				box-shadow: none;
+				padding: 0;
+				color: #fff;
+				font-size: 19px;
+			}
 		}
 
 		em {
