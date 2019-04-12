@@ -49,7 +49,6 @@ async function compileFile(file) {
 		let source = compiler ? compiler.file : file;
 
 		// try clean up
-		console.log('rev');
 		message = message.replace(/\(\d+\:\d+\)[^$]*/g, '');
 
 		// // this was an error importing a module

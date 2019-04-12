@@ -23,7 +23,7 @@ waitForValidation(module.exports, {
 		declare_number(test);
 		test.lines(2);
 		declare_string(test);
-		tets.lines(2);
+		test.lines(2);
 
 		$color = test.pull('color');
 

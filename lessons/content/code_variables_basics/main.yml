@@ -85,7 +85,7 @@
 
 - slide:
     content: |
-      The code to the right of the `=` is the "value". It's what is stored inside of the [define code_variable l]. In this case, it's the [define javascript_string] of characters *"dog"*.
+      The code to the right of the `=` is the "value". It's what is stored inside of the [define code_variable l]. In this case, it's the [define javascript_string l] of characters *"dog"*.
 
       [snippet declare_variable highlight:13,5]
 
@@ -105,7 +105,6 @@
       Now that we understand some of the basics for declaring variables, let's give it a try and see what happens.
 
 - slide:
-    start: true
     waitForFile: /main.js
     content: |
       Open the file named `main.js` by [define double_click double-clicking] on the file in the [define file_browser].
@@ -125,8 +124,6 @@
       [snippet declare_string]
 
 - slide:
-    start: true
-    flags: +OPEN_FILE
     mode: overlay
     content: |
       As mentioned earlier in the lesson, [define code_variable ls] are used to track data in a program. 
@@ -190,7 +187,6 @@
       When you're finished, press *Run Code* and confirm each of the `alert` messages show the new values.
 
 - slide:
-    start: true
     content: |
       There's still a lot to cover when it comes to using [define code_variable ls], but you've made some good progress so far. 
 

@@ -15,14 +15,14 @@ import {
 
 waitForValidation(module.exports, {
 
-	cursor: 5,
+	cursor: 3,
 
 	file: '/main.js',
 
 	validation(test, code) {
 
 		test.lines(2);
-		declare_number(text);
+		declare_number(test);
 		test.lines(2);
 
 		$value = test.pull('num', 0);

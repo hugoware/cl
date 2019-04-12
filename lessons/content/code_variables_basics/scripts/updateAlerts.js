@@ -48,9 +48,6 @@ waitForValidation(module.exports, {
 
 	onEnter() {
 		$valid = false;
-
-		this.state.selectedColor = 'red';
-		this.state.selectedAge = 33;
 	},
 
 	extend: {

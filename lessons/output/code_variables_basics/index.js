@@ -298,14 +298,14 @@ var $value = void 0;
 
 (0, _waitForValidation2.default)(module.exports, {
 
-	cursor: 5,
+	cursor: 3,
 
 	file: '/main.js',
 
 	validation: function validation(test, code) {
 
 		test.lines(2);
-		(0, _validation.declare_number)(text);
+		(0, _validation.declare_number)(test);
 		test.lines(2);
 
 		$value = test.pull('num', 0);
@@ -355,7 +355,7 @@ var $color = void 0;
 		(0, _validation.declare_number)(test);
 		test.lines(2);
 		(0, _validation.declare_string)(test);
-		tets.lines(2);
+		test.lines(2);
 
 		$color = test.pull('color');
 	},
@@ -542,14 +542,13 @@ var codeVariablesBasicsLesson = function () {
       }, {
         "content": "After the [define code_variable l] name is an `=`. This marks where the \"value\" of the [define code_variable l] will begin.\n\n[snippet declare_variable highlight:11,1]\n"
       }, {
-        "content": "The code to the right of the `=` is the \"value\". It's what is stored inside of the [define code_variable l]. In this case, it's the [define javascript_string] of characters *\"dog\"*.\n\n[snippet declare_variable highlight:13,5]\n\nIf this were a box from the earlier example, the \"value\" is what is being placed inside of the box.\n"
+        "content": "The code to the right of the `=` is the \"value\". It's what is stored inside of the [define code_variable l]. In this case, it's the [define javascript_string l] of characters *\"dog\"*.\n\n[snippet declare_variable highlight:13,5]\n\nIf this were a box from the earlier example, the \"value\" is what is being placed inside of the box.\n"
       }, {
         "content": "Finally, there is a `;`. This ends the code statement.\n\n[snippet declare_variable highlight:18,1]\n\nYou'll see the `;` used in many different places in [define javascript].\n"
       }, {
         "mode": "popup",
         "content": "Now that we understand some of the basics for declaring variables, let's give it a try and see what happens.\n"
       }, {
-        "start": true,
         "waitForFile": "/main.js",
         "content": "Open the file named `main.js` by [define double_click double-clicking] on the file in the [define file_browser].\n"
       }, {
@@ -559,8 +558,6 @@ var codeVariablesBasicsLesson = function () {
         "controller": "declareString",
         "content": "Let's try that again, but this time create a [define javascript_string l] variable named `color`.\n\n[snippet declare_string]\n"
       }, {
-        "start": true,
-        "flags": "+OPEN_FILE",
         "mode": "overlay",
         "content": "As mentioned earlier in the lesson, [define code_variable ls] are used to track data in a program. \n\nYou're able to create new [define code_variable ls] and give them values, but you're also able to access [define code_variable ls] to get the data they hold.\n"
       }, {
@@ -586,7 +583,6 @@ var codeVariablesBasicsLesson = function () {
         "controller": "updateAlerts",
         "content": "Let's try that again! Replace the values for `age` and `color` to something different.\n\nWhen you're finished, press *Run Code* and confirm each of the `alert` messages show the new values.\n"
       }, {
-        "start": true,
         "content": "There's still a lot to cover when it comes to using [define code_variable ls], but you've made some good progress so far. \n\nFor now, let's review what you've learned in this lesson!\n"
       }, {
         "mode": "overlay",
@@ -983,9 +979,6 @@ var $age = void 0;
 	},
 	onEnter: function onEnter() {
 		$valid = false;
-
-		this.state.selectedColor = 'red';
-		this.state.selectedAge = 33;
 	},
 
 	extend: {
