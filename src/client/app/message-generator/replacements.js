@@ -38,4 +38,5 @@ export default [
 	'`href`', 'h ref',
 	'`var`', 'varr',
 	'`\\\``', 'back tick',
+	'`×`', 'times',
 ];

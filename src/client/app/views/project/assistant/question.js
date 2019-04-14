@@ -85,12 +85,15 @@ export default class Question extends Component {
 		this.hasAnswered = false;
 		
 		// set the initial view
-		this.removeClass('correct incorrect answered has-hint has-explanation show-hint');
-		this.addClass('waiting');
+		this.removeClass('correct incorrect answered has-hint has-explanation show-hint question-count-2 question-count-3 question-count-4 question-count-5 question-count-6 question-count-7');
+		this.addClass(`waiting question-count-${question.choices.length}`);
 
 		// check for a hint options
 		if ('hint' in question)
 			this.addClass('has-hint');
+		
+		// check for a hint options
+		this.toggleClass('is-inline', !!question.inline);
 
 		// get the choices
 		const { choices } = question;
@@ -100,7 +103,7 @@ export default class Question extends Component {
 
 		// create the answers to show
 		const total = _.size(choices);
-		const collect = _.isNumber(question.count) ? question.count : Math.min(total, DEFAULT_COUNT);
+		const collect = _.isNumber(question.count) ? question.count : choices.length; // Math.min(total, DEFAULT_COUNT);
 
 		// update additional information
 		const title = generateMessage(question.title);
@@ -136,6 +139,7 @@ export default class Question extends Component {
 			.slice(0, collect)
 			.shuffle()
 			.each((answer, index) => {
+				const isLast = (index + 1) === collect;
 				answer = _.toString(answer);
 				
 				// the correct answer
@@ -144,7 +148,7 @@ export default class Question extends Component {
 
 				// add the option
 				const choice = document.createElement('div');
-				choice.className = 'answer';
+				choice.className = `answer ${isLast ? 'is-last' : ''}`;
 				choice.setAttribute('answer-index', index);
 				choice.innerHTML = $converter.makeHtml(answer);
 				this.ui.choices.append(choice);

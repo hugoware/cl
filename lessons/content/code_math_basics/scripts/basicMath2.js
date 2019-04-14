@@ -25,7 +25,8 @@ waitForValidation(module.exports, {
 			._n
 			.lines(2)
 			.merge(validate_basic_2)
-			.lines(2);
+			.lines(2)
+			.eof();
 
 	},
 

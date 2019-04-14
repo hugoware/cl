@@ -1,4 +1,4 @@
-let rows = 5;
-let columns = 15;
-let cells = rows * columns;
-console.log(cells);
+let cookiesPerPerson = 3;
+let totalPeople = 12;
+let totalCookies =
+	cookiesPerPerson * totalPeople;

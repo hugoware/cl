@@ -136,7 +136,7 @@ export default function generateMessage(message) {
 			});
 
 			// check for a code snippet
-			commands = commands.replace(/snippet ?[a-z_]+/, match => {
+			commands = commands.replace(/snippet ?[a-z0-9_]+/, match => {
 				snippet = _.trim(match.substr(7));
 				return '';
 			});

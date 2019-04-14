@@ -9,6 +9,12 @@ export default function processDefinitions(state, manifest, definitions) {
 	const defs = _.assign({ }, manifest.defs);
 	delete manifest.defs;
 
+	// include required - this should be limited
+	// to used defs in required libraries
+	defs['double_click'] = true;
+	defs['file_browser'] = true;
+
+
 	// start by finding all definitions used
 	_.each(manifest.lesson, slide => {
 		const all = `${slide.content} ${slide.hint} ${slide.title} ${slide.explain}`;

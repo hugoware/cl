@@ -28,7 +28,8 @@ waitForValidation(module.exports, {
 			._n
 			.lines(2)
 			.merge(validate_basic_3)
-			.lines(2);
+			.lines(2)
+			.eof();
 
 	},
 
@@ -61,7 +62,7 @@ waitForValidation(module.exports, {
 
 			this.progress.allow();
 			this.assistant.say({
-				message: `That's it! Each \`console.log\` message is displaying the correct result for their expression!`,
+				message: `That's it! Each of these [define javascript_expression ls] are more complicated, but the results are still what you'd expect!`,
 				emote: 'happy'
 			});
 		}

@@ -29,7 +29,7 @@ var $isValid = void 0;
 
 	validation: function validation(test, code) {
 
-		test.lines(3).merge(_validation.validate_basic_1)._n.lines(3);
+		test.lines(3).merge(_validation.validate_basic_1)._n.lines(3).eof();
 	},
 	onValid: function onValid() {
 
@@ -63,7 +63,7 @@ var $isValid = void 0;
 
 });
 
-},{"./controllers/waitForValidation":6,"./lib":8,"./utils":11,"./validation":12}],2:[function(require,module,exports){
+},{"./controllers/waitForValidation":6,"./lib":8,"./utils":12,"./validation":13}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -95,7 +95,7 @@ var $isValid = void 0;
 
 	validation: function validation(test, code) {
 
-		test.lines(3).merge(_validation.validate_basic_1)._n.lines(2).merge(_validation.validate_basic_2).lines(2);
+		test.lines(3).merge(_validation.validate_basic_1)._n.lines(2).merge(_validation.validate_basic_2).lines(2).eof();
 	},
 	onValid: function onValid() {
 
@@ -129,7 +129,7 @@ var $isValid = void 0;
 
 });
 
-},{"./controllers/waitForValidation":6,"./lib":8,"./utils":11,"./validation":12}],3:[function(require,module,exports){
+},{"./controllers/waitForValidation":6,"./lib":8,"./utils":12,"./validation":13}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -160,7 +160,7 @@ var $isValid = void 0;
 
 	validation: function validation(test, code) {
 
-		test.lines(3).merge(_validation.validate_basic_1)._n.lines(2).merge(_validation.validate_basic_2)._n.lines(2).merge(_validation.validate_basic_3).lines(2);
+		test.lines(3).merge(_validation.validate_basic_1)._n.lines(2).merge(_validation.validate_basic_2)._n.lines(2).merge(_validation.validate_basic_3).lines(2).eof();
 	},
 	onValid: function onValid() {
 
@@ -186,7 +186,7 @@ var $isValid = void 0;
 
 			this.progress.allow();
 			this.assistant.say({
-				message: 'That\'s it! Each `console.log` message is displaying the correct result for their expression!',
+				message: 'That\'s it! Each of these [define javascript_expression ls] are more complicated, but the results are still what you\'d expect!',
 				emote: 'happy'
 			});
 		}
@@ -194,7 +194,7 @@ var $isValid = void 0;
 
 });
 
-},{"./controllers/waitForValidation":6,"./lib":8,"./utils":11,"./validation":12}],4:[function(require,module,exports){
+},{"./controllers/waitForValidation":6,"./lib":8,"./utils":12,"./validation":13}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -409,6 +409,7 @@ function waitForValidation(obj, config) {
 		},
 		onExit: function onExit() {
 			this.file.readOnly({ path: config.file });
+			this.editor.hint.enable();
 
 			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 				args[_key2] = arguments[_key2];
@@ -459,6 +460,10 @@ var basicMath2 = _interopRequireWildcard(_basicMath2);
 var _basicMath3 = require('./basicMath3');
 
 var basicMath3 = _interopRequireWildcard(_basicMath3);
+
+var _modifyVariables = require('./modifyVariables');
+
+var modifyVariables = _interopRequireWildcard(_modifyVariables);
 
 var _tryConsole = require('./tryConsole');
 
@@ -518,7 +523,7 @@ var codeMathBasicsLesson = function () {
         "title": "Basic Arithmetic",
         "content": "In this lesson we're going to start learning the capabilities of [define javascript JavaScript's] Arithmetic [define code_operator ls].\n"
       }, {
-        "content": "An [define code_operator l] is simply a symbol that performs an operation using other values.\n\n[snippet operator_example]\n\n[define javascript] has Arithmetic operations, such as adding numbers together, as well as Logical operations, such as checking true and false conditions.\n"
+        "content": "An [define code_operator l] is simply a symbol that does something using other values. This is called an _\"operation\"_.\n\n[snippet operator_example]\n\n[define javascript] has Arithmetic operations, such as adding numbers together, as well as Logical operations, such as checking `true` and `false` conditions.\n"
       }, {
         "content": "This example uses Arithmetic operations to add two numbers together. The operator in this example is the `+` sign.\n\n[snippet operator_example highlight:19,6]\n"
       }, {
@@ -544,12 +549,17 @@ var codeMathBasicsLesson = function () {
       }, {
         "content": "After performing each of these [define javascript_expression ls], the value is then placed in to the [define code_variable l] named `result`.\n\n[snippet math_expression highlight:4,6]\n\n**The final value for the [define code_variable l] `result` would be `7`!**\n"
       }, {
-        "start": true,
         "mode": "popup",
         "content": "Let's try performing a few math operations of our own.\n"
       }, {
         "waitForFile": "/main.js",
         "fileName": "main.js"
+      }, {
+        "highlight": "#preview",
+        "content": "In this lesson we're going to introduce a new way to write messages using the `console`\n\nUnlike the `alert` message box, this will show messages in the output area without needing to press the **OK** button.\n"
+      }, {
+        "controller": "tryConsole",
+        "content": "Press **Run Code** to see the `console.log` write a message to the [define codelab_code_output] area.\n"
       }, {
         "controller": "basicMath1",
         "content": "Let's try out some math operations. Follow along with the instructions to create some simple expressions.\n"
@@ -568,21 +578,18 @@ var codeMathBasicsLesson = function () {
       }, {
         "content": "The value for ||`example3`|example 3|| ends up being the number `1`. This might seem surprising, but it's the expected result.\n\n[snippet math_complex highlight:78,9]\n\nAs it turns out, [define javascript] will automatically use [define order_of_operations] when performing math.\n"
       }, {
-        "start": true,
         "content": "[define order_of_operations] is the sequence in which math expressions are evaluated. You might have heard your teacher mention this in school before as ||**PEMDAS**|pim daas||.\n\n[snippet math_complex highlight:82,5]\n\nWhen you follow the [define order_of_operations], multiplication should be done before addition. This will dramatically change the result of the [define javascript_expression l].\n    \n"
       }, {
         "content": "As a reminder, ||**PEMDAS**|pim daas|| states that math should be evaluated in the following order.\n\n**Parentheses, Exponentials, Multiply, Divide, Add**, then **Subtract**\n\nThis will be important when you create more complicated math expressions.\n"
       }, {
         "content": "We'll learn more about [define order_of_operations] in later lessons, but for now let's continue to work with basic Arithmetic operations.\n"
       }, {
-        "flags": "+OPEN_FILE",
         "mode": "popup",
         "content": "Let's try to write a few expressions that use several math operations.\n"
       }, {
         "controller": "basicMath3",
         "content": "Follow along with the instructions and write two more expressions that use multiple numbers and [define code_operator sl]. \n"
       }, {
-        "start": true,
         "mode": "overlay",
         "content": "You might remember from earlier in the lesson that [define javascript_expression ls] allow for [define code_variable ls] to be used along with [define code_operator ls].\n\n[snippet math_variable size:medium]\n"
       }, {
@@ -590,54 +597,48 @@ var codeMathBasicsLesson = function () {
       }, {
         "content": "The last of the [define code_variable ls] is an [define javascript_expression l] that multiplies the previous two [define code_variable ls] together.\n\n[snippet math_variable size:medium highlight:67,30]\n\nEven though there aren't any numbers typed in the expression for ||`totalCookies`|total cookies||, the result for that [define code_variable l] is `36`!\n"
       }, {
-        "start": true,
         "content": "Being able to use [define code_variable ls] inside of [define javascript_expression ls] is extremely powerful and will become increasingly useful as you learn more about [define javascript].\n\n[snippet math_variable size:medium]\n"
       }, {
         "mode": "popup",
         "content": "Let's try to use some [define code_variable ls] and [define javascript_expression ls] together.\n"
       }, {
         "controller": "usingVariables",
-        "content": "Try declaring some variables and then using `console.log` to display them in the [define codelab_code_output] area.\n\n[snippet variable_example]\n"
+        "content": "Try declaring some variables and then using `console||.| dot ||log` to display them in the [define codelab_code_output] area.\n\n[snippet variable_example size:xsmall]\n"
       }, {
-        "content": "So far we've always provided a value for each of the variables that are created\n"
+        "content": "Because [define code_variable ls] can be declared separately from where they are used, you're also able to change the value of a [define code_variable l]. When the code is executed the new values will be used instead!\n"
       }, {
-        "content": "most of the time though, variables are created based on user input or other data\n"
+        "content": "This is a very simple example, but as code becomes more complicated the ability to use [define code_variable ls] from different locations becomes critical for writing complex computer programs!\n"
       }, {
-        "content": "let's edit the function to ask for user input using `console.ask`\n"
+        "controller": "modifyVariables",
+        "content": "Try changing the values for both the `||cookiesPerPerson|cookies per person||` and `||totalPeople|total people||` to new numbers, then press **Run Code** to see the new total value.\n"
       }, {
-        "content": "run the code - should work\n"
-      }, {
-        "content": "let's also change the line that asks the cookiesPerPerson to ask for input\n"
-      }, {
-        "content": "run all of it\n"
-      }, {
-        "content": "We've learned a lot in this lesson! let's review\n"
+        "content": "We've learned a lot in this lesson so let's take a break and review what we've covered so far!\n"
       }, {
         "mode": "overlay",
+        "inline": true,
         "title": "What is the operator used to **multiply** numbers?",
-        "explain": "That's correct, the `*` will multiply\n",
+        "explain": "Multiplication is performed using the `*` character.\n\n**Fun fact**: The `×` sign is known as the multiplication symbol, but since it could be confused with a [define code_variable l] named `x`, it's considered better to use an `*`.\n",
         "choices": ["`*`", "`+`", "`-`", "`/`"]
       }, {
-        "mode": "overlay",
+        "inline": true,
         "title": "What is the operator used to **divide** numbers?",
-        "explain": "That's correct, the `/` will divide\n",
+        "explain": "Division is performed using the `/` character.\n\n**Fun fact**: Math can do some pretty wild things! Did you know that `5 ||/|divided by|| 0.25` and `5 ||*|times|| 4` are both equal to `20`?\n",
         "choices": ["`/`", "`*`", "`+`", "`-`"]
       }, {
-        "mode": "overlay",
-        "title": "What is order of operations",
-        "explain": "Order of operations is order math is done\n",
-        "choices": ["Math done in a specific order", "Special command used to convert numbers to strings", "A command that removes unused code from a program", "The name of a negative number when subtracting"]
+        "title": "What does **Order of Operations** mean?",
+        "explain": "The [define order_of_operations] is the rules that decide which math operations are performed first in an expression. You probably have heard this mentioned before in math class as **||PEMDAS|pim daas||**.\n",
+        "choices": ["The specific order that math expressions should be evaluated", "The command in JavaScript to convert numbers to strings", "A program that removes unused code from a file", "The scientific name for a negative number"]
       }, {
-        "mode": "overlay",
-        "title": "What the value of `result` after the math expression?",
-        "content": "[snippet]\n  let result = 2 + 4 - 2;\n",
-        "explain": "That's correct 2 + 4 is 6 then subtract 2 is 4 again\n",
+        "title": "What is the value of `result` after the math expression?",
+        "inline": true,
+        "content": "[snippet question_1]\n",
+        "explain": "Following the [define order_of_operations] means you must first perform **addition** and then **subtraction**. This means that `2 + 4` becomes `6`, and then `6 ||-|minus|| 2` results in `4` again!\n",
         "choices": ["`4`", "`2`", "`6`", "`8`"]
       }, {
-        "mode": "overlay",
-        "title": "What the value of `result` after the math expression?",
-        "content": "[snippet]\n  let result = 2 + 4 * 2;\n",
-        "explain": "Automatically does order of operations\n",
+        "title": "What is the value of `result` after the math expression?",
+        "inline": true,
+        "content": "[snippet question_2]        \n",
+        "explain": "Even though this [define javascript_expression l] is out of order, [define javascript] will follow the [define order_of_operations] and start by performing the **multiplication** step first. This means that `4 ||*|times|| 2` becomes `8`, and then `8 + 2` results in `10`!\n",
         "choices": ["`10`", "`8`", "`12`", "`16`"]
       }, {
         "mode": "popup",
@@ -664,8 +665,16 @@ var codeMathBasicsLesson = function () {
           "content": "let totalCookies = 5 + 10;\n\nif (totalCookies < 20) {\n\talert('not enough cookies!');\n}",
           "type": "javascript"
         },
+        "question_1": {
+          "content": "let result = 2 + 4 - 2;",
+          "type": "javascript"
+        },
+        "question_2": {
+          "content": "let result = 2 + 4 * 2;",
+          "type": "javascript"
+        },
         "variable_example": {
-          "content": "let rows = 5;\nlet columns = 15;\nlet cells = rows * columns;\nconsole.log(cells);",
+          "content": "let cookiesPerPerson = 3;\nlet totalPeople = 12;\nlet totalCookies =\n\tcookiesPerPerson * totalPeople;",
           "type": "javascript"
         }
       },
@@ -676,6 +685,26 @@ var codeMathBasicsLesson = function () {
           "name": "Code Output",
           "define": "The result of called code\n"
         },
+        "javascript_expression": {
+          "id": "javascript_expression",
+          "name": "Expression",
+          "define": "A sequence of numbers, string, variables, and operators that evaluate to a single value\n"
+        },
+        "code_variable": {
+          "id": "code_variable",
+          "name": "Variable",
+          "define": "A programming method of storing and accessing data \n"
+        },
+        "double_click": {
+          "id": "double_click",
+          "name": "Double Click",
+          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
+        },
+        "file_browser": {
+          "id": "file_browser",
+          "name": "File Browser",
+          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+        },
         "javascript": {
           "id": "javascript",
           "name": "JavaScript",
@@ -685,16 +714,6 @@ var codeMathBasicsLesson = function () {
           "id": "code_operator",
           "name": "Operator",
           "define": "Something in code that does a thing like add/sub\n"
-        },
-        "code_variable": {
-          "id": "code_variable",
-          "name": "Variable",
-          "define": "A programming method of storing and accessing data \n"
-        },
-        "javascript_expression": {
-          "id": "javascript_expression",
-          "name": "Expression",
-          "define": "A sequence of numbers, string, variables, and operators that evaluate to a single value\n"
         },
         "javascript_string": {
           "id": "javascript_string",
@@ -730,7 +749,7 @@ var codeMathBasicsLesson = function () {
 
     // setup each included entry
     var refs = {
-      basicMath1: basicMath1, basicMath2: basicMath2, basicMath3: basicMath3, tryConsole: tryConsole, usingVariables: usingVariables, validation: validation
+      basicMath1: basicMath1, basicMath2: basicMath2, basicMath3: basicMath3, modifyVariables: modifyVariables, tryConsole: tryConsole, usingVariables: usingVariables, validation: validation
     };
 
     // setup each reference
@@ -910,7 +929,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('code_math_basics', codeMathBasicsLesson);
 
-},{"./basicMath1":1,"./basicMath2":2,"./basicMath3":3,"./controllers/waitForFile":4,"./controllers/waitForTab":5,"./lib":8,"./tryConsole":9,"./usingVariables":10,"./validation":12}],8:[function(require,module,exports){
+},{"./basicMath1":1,"./basicMath2":2,"./basicMath3":3,"./controllers/waitForFile":4,"./controllers/waitForTab":5,"./lib":8,"./modifyVariables":9,"./tryConsole":10,"./usingVariables":11,"./validation":13}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -943,6 +962,79 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.controller = undefined;
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+var _waitForValidation = require('./controllers/waitForValidation');
+
+var _waitForValidation2 = _interopRequireDefault(_waitForValidation);
+
+var _validation = require('./validation');
+
+function _interopRequireDefault(obj) {
+	return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var controller = exports.controller = true;
+var $isValid = void 0;
+
+(0, _waitForValidation2.default)(module.exports, {
+
+	file: '/main.js',
+
+	validation: function validation(test, code) {
+
+		test.lines(3).merge(_validation.validate_basic_1)._n.lines(2).merge(_validation.validate_basic_2)._n.lines(2).merge(_validation.validate_basic_3)._n.lines(2);
+
+		(0, _validation.validate_variables)(test, this.state.cookies, this.state.people);
+		test.lines(2).eof();
+	},
+	onValid: function onValid() {
+
+		$isValid = true;
+
+		this.assistant.say({
+			message: 'That looks correct! Press **Run Code** and let\'s see the result!'
+		});
+	},
+	onInvalid: function onInvalid() {
+		$isValid = false;
+	},
+	onEnter: function onEnter() {
+		$isValid = false;
+	},
+
+	extend: {
+		onRunCode: function onRunCode() {
+			return true;
+		},
+		onRunCodeEnd: function onRunCodeEnd(runner) {
+			if (!$isValid) return;
+
+			var value = _lib._.toString(runner.output[9]);
+			var isSame = _lib._.toString(this.state.cookies * this.state.people) === value;
+			var message = isSame ? "Oh, that's funny! You changed the numbers but still ended up with the same total as before! In any case, changing [define code_variable ls] will normally cause [define javascript_expression ls] to end up with different results!" : 'Perfect! Changing the value of [define code_variable sl] earlier in the code caused the [define javascript_expression l] for `||totalCookies|total cookies||` to have a different result!';
+
+			this.screen.highlight.outputLine(9);
+			this.progress.allow();
+			this.assistant.say({
+				message: message,
+				emote: isSame ? 'surprise' : 'happy'
+			});
+		}
+	}
+
+});
+
+},{"./controllers/waitForValidation":6,"./lib":8,"./utils":12,"./validation":13}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 exports.onEnter = onEnter;
 exports.onRunCode = onRunCode;
 exports.onRunCodeEnd = onRunCodeEnd;
@@ -958,6 +1050,7 @@ function onRunCode() {
 }
 
 function onRunCodeEnd() {
+	this.screen.highlight.outputLine(1);
 	this.progress.allow();
 	this.assistant.say({
 		message: "That's pretty great! Now each time you use `console.log` a new message will be appended to the end of the [define codelab_code_output] area.",
@@ -973,7 +1066,7 @@ function onExit() {
 	});
 }
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1004,14 +1097,21 @@ var $isValid = void 0;
 
 	validation: function validation(test, code) {
 
-		test.lines(3).merge(_validation.validate_basic_1)._n.lines(2).merge(_validation.validate_basic_2)._n.lines(2).merge(_validation.validate_basic_3)._n.lines(2).merge(_validation.validate_variables).lines(2);
+		test.lines(3).merge(_validation.validate_basic_1)._n.lines(2).merge(_validation.validate_basic_2)._n.lines(2).merge(_validation.validate_basic_3)._n.lines(2);
+
+		(0, _validation.validate_variables)(test);
+		test.lines(2).eof();
+
+		// for the next test
+		this.state.cookies = test.pull('cookies');
+		this.state.people = test.pull('people');
 	},
 	onValid: function onValid() {
 
 		$isValid = true;
 
 		this.assistant.say({
-			message: 'Very good! Press **Run Code** and let\'s see what happens next!'
+			message: 'That looks correct! Press **Run Code** and let\'s see the result!'
 		});
 	},
 	onInvalid: function onInvalid() {
@@ -1028,9 +1128,10 @@ var $isValid = void 0;
 		onRunCodeEnd: function onRunCodeEnd() {
 			if (!$isValid) return;
 
+			this.screen.highlight.outputLine(9);
 			this.progress.allow();
 			this.assistant.say({
-				message: 'That\'s it! Each `console.log` message is displaying the correct result for their expression!',
+				message: 'Wonderful! The [define code_variable l] `||totalCookies|total cookies||` was declared using the result of the [define javascript_expression l] using two other [define code_variable ls].',
 				emote: 'happy'
 			});
 		}
@@ -1038,7 +1139,7 @@ var $isValid = void 0;
 
 });
 
-},{"./controllers/waitForValidation":6,"./lib":8,"./utils":11,"./validation":12}],11:[function(require,module,exports){
+},{"./controllers/waitForValidation":6,"./lib":8,"./utils":12,"./validation":13}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1185,12 +1286,38 @@ function editDistance(s1, s2) {
 	return costs[s2.length];
 }
 
-},{"./lib":8}],12:[function(require,module,exports){
+},{"./lib":8}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+
+var _slicedToArray = function () {
+	function sliceIterator(arr, i) {
+		var _arr = [];var _n = true;var _d = false;var _e = undefined;try {
+			for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+				_arr.push(_s.value);if (i && _arr.length === i) break;
+			}
+		} catch (err) {
+			_d = true;_e = err;
+		} finally {
+			try {
+				if (!_n && _i["return"]) _i["return"]();
+			} finally {
+				if (_d) throw _e;
+			}
+		}return _arr;
+	}return function (arr, i) {
+		if (Array.isArray(arr)) {
+			return arr;
+		} else if (Symbol.iterator in Object(arr)) {
+			return sliceIterator(arr, i);
+		} else {
+			throw new TypeError("Invalid attempt to destructure non-iterable instance");
+		}
+	};
+}();
 
 function twoSegmentExpression(test, limit) {
 	var allowed = ['+', '-', '/', '*'];
@@ -1253,8 +1380,9 @@ var validate_basic_3 = exports.validate_basic_3 = function validate_basic_3(test
 	threeSegmentExpression(test, 2);
 };
 
-var validate_variables = exports.validate_variables = function validate_variables(test) {
+var validate_variables = exports.validate_variables = function validate_variables(test, cookies, people) {
 	var expects = void 0;
+	var alt = void 0;
 
 	var limit_range = function limit_range(match, num) {
 		if (!match) return 'Enter a number from 1 to 100';
@@ -1262,9 +1390,31 @@ var validate_variables = exports.validate_variables = function validate_variable
 		if (num > 100) return 'Use a number less than 100';
 	};
 
-	test.declare('let')._s.id('rows')._s.symbol('=')._s.number(limit_range).symbol(';')._n.lines(2).declare('let')._s.id('columns')._s.symbol('=')._s.number(limit_range).symbol(';')._n.lines(2).declare('let')._s.id('cells')._s.symbol('=')._s.id('rows', 'columns', function (used) {
-		if (used === 'rows') expects = 'columns';else if (used === 'columns') expects = 'rows';
-	})._s.symbol('*')._s.id(expects).symbol(';')._n.lines(2).id('console').symbol('.').func('log').symbol('(').id('cells').symbol(')').symbol(';');
+	var check_cookies = function check_cookies(match, num) {
+		if (!isNaN(cookies) && num === cookies) return 'Use a different number than `' + cookies + '`';
+		test.append({ cookies: num });
+		return limit_range(match, num);
+	};
+
+	var check_people = function check_people(match, num) {
+		if (!isNaN(people) && num === people) return 'Use a different number than `' + people + '`';
+		test.append({ people: num });
+		return limit_range(match, num);
+	};
+
+	test.declare('let')._s.id('cookiesPerPerson', 'totalPeople', function (used) {
+		if (used === 'cookiesPerPerson') alt = 'totalPeople';
+		if (used === 'totalPeople') alt = 'cookiesPerPerson';
+	})._s.symbol('=')._s;
+
+	var _ref = alt === 'totalPeople' ? [check_cookies, check_people] : [check_people, check_cookies],
+	    _ref2 = _slicedToArray(_ref, 2),
+	    first_number = _ref2[0],
+	    second_number = _ref2[1];
+
+	test.number(first_number).symbol(';')._n.lines(2).declare('let')._s.id(alt)._s.symbol('=')._s.number(second_number).symbol(';')._n.lines(2).declare('let')._s.id('totalCookies')._s.symbol('=')._s.id('cookiesPerPerson', 'totalPeople', function (used) {
+		if (used === 'cookiesPerPerson') expects = 'totalPeople';else if (used === 'totalPeople') expects = 'cookiesPerPerson';
+	})._s.symbol('*')._s.id(expects).symbol(';')._n.lines(2).id('console').symbol('.').func('log').symbol('(').id('totalCookies').symbol(')').symbol(';');
 };
 
 },{}]},{},[7]);

@@ -118,6 +118,7 @@ export default function waitForValidation(obj, config) {
 
 		onExit(...args) {
 			this.file.readOnly({ path: config.file });
+			this.editor.hint.enable();
 
 			if (config.onExit)
 				config.onExit.apply(this, args);

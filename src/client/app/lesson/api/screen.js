@@ -40,6 +40,10 @@ export default class ScreenAPI {
 		this.marker.previewArea = (selector, options) =>
 			this.marker(`#preview ${selector || ''}`, options);
 
+		// highlights the code output area
+		this.highlight.outputLine = number =>
+			this.highlight(`#output .line.line-number-${number}`);
+
 	}
 
 	// sets marked points

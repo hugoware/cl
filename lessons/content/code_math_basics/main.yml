@@ -6,11 +6,11 @@
 
 - slide:
     content: |
-      An [define code_operator l] is simply a symbol that performs an operation using other values.
+      An [define code_operator l] is simply a symbol that does something using other values. This is called an _"operation"_.
 
       [snippet operator_example]
 
-      [define javascript] has Arithmetic operations, such as adding numbers together, as well as Logical operations, such as checking true and false conditions.
+      [define javascript] has Arithmetic operations, such as adding numbers together, as well as Logical operations, such as checking `true` and `false` conditions.
 
 - slide:
     content: |
@@ -94,7 +94,6 @@
       **The final value for the [define code_variable l] `result` would be `7`!**
     
 - slide:
-    start: true
     mode: popup
     content: |
       Let's try performing a few math operations of our own.
@@ -103,17 +102,17 @@
     waitForFile: /main.js
     fileName: main.js
     
-# - slide:
-#     highlight: '#preview'
-#     content: |
-#       In this lesson we're going to introduce a new way to write messages using the `console`
+- slide:
+    highlight: '#preview'
+    content: |
+      In this lesson we're going to introduce a new way to write messages using the `console`
     
-#       Unlike the `alert` message box, this will show messages in the output area without needing to press the **OK** button.
+      Unlike the `alert` message box, this will show messages in the output area without needing to press the **OK** button.
 
-# - slide:
-#     controller: tryConsole
-#     content: |
-#       Press **Run Code** to see the `console.log` write a message to the [define codelab_code_output] area.
+- slide:
+    controller: tryConsole
+    content: |
+      Press **Run Code** to see the `console.log` write a message to the [define codelab_code_output] area.
 
 - slide:
     controller: basicMath1
@@ -157,7 +156,6 @@
       As it turns out, [define javascript] will automatically use [define order_of_operations] when performing math.
 
 - slide:
-    start: true
     content: |
       [define order_of_operations] is the sequence in which math expressions are evaluated. You might have heard your teacher mention this in school before as ||**PEMDAS**|pim daas||.
 
@@ -178,7 +176,6 @@
       We'll learn more about [define order_of_operations] in later lessons, but for now let's continue to work with basic Arithmetic operations.
 
 - slide:
-    flags: +OPEN_FILE
     mode: popup
     content: |
       Let's try to write a few expressions that use several math operations.
@@ -189,7 +186,6 @@
       Follow along with the instructions and write two more expressions that use multiple numbers and [define code_operator sl]. 
 
 - slide:
-    start: true
     mode: overlay
     content: |
       You might remember from earlier in the lesson that [define javascript_expression ls] allow for [define code_variable ls] to be used along with [define code_operator ls].
@@ -211,7 +207,6 @@
       Even though there aren't any numbers typed in the expression for ||`totalCookies`|total cookies||, the result for that [define code_variable l] is `36`!
 
 - slide:
-    start: true
     content: |
       Being able to use [define code_variable ls] inside of [define javascript_expression ls] is extremely powerful and will become increasingly useful as you learn more about [define javascript].
 
@@ -225,44 +220,36 @@
 - slide:
     controller: usingVariables
     content: |
-      Try declaring some variables and then using `console.log` to display them in the [define codelab_code_output] area.
+      Try declaring some variables and then using `console||.| dot ||log` to display them in the [define codelab_code_output] area.
 
-      [snippet variable_example]
-
-- slide:
-    content: |
-      So far we've always provided a value for each of the variables that are created
+      [snippet variable_example size:xsmall]
 
 - slide:
     content: |
-      most of the time though, variables are created based on user input or other data
+      Because [define code_variable ls] can be declared separately from where they are used, you're also able to change the value of a [define code_variable l]. When the code is executed the new values will be used instead!
 
 - slide:
     content: |
-      let's edit the function to ask for user input using `console.ask`
+      This is a very simple example, but as code becomes more complicated the ability to use [define code_variable ls] from different locations becomes critical for writing complex computer programs!
+
+- slide:
+    controller: modifyVariables
+    content: |
+      Try changing the values for both the `||cookiesPerPerson|cookies per person||` and `||totalPeople|total people||` to new numbers, then press **Run Code** to see the new total value.
 
 - slide:
     content: |
-      run the code - should work
-
-- slide:
-    content: |
-      let's also change the line that asks the cookiesPerPerson to ask for input
-
-- slide:
-    content: |
-      run all of it
-
-- slide:
-    content: |
-      We've learned a lot in this lesson! let's review
+      We've learned a lot in this lesson so let's take a break and review what we've covered so far!
 
 - question:
     mode: overlay
+    inline: true
     title: What is the operator used to **multiply** numbers?
 
     explain: |
-      That's correct, the `*` will multiply
+      Multiplication is performed using the `*` character.
+
+      **Fun fact**: The `×` sign is known as the multiplication symbol, but since it could be confused with a [define code_variable l] named `x`, it's considered better to use an `*`.
 
     choices:
       - '`*`'
@@ -271,11 +258,13 @@
       - '`/`'
 
 - question:
-    mode: overlay
+    inline: true
     title: What is the operator used to **divide** numbers?
 
     explain: |
-      That's correct, the `/` will divide
+      Division is performed using the `/` character.
+
+      **Fun fact**: Math can do some pretty wild things! Did you know that `5 ||/|divided by|| 0.25` and `5 ||*|times|| 4` are both equal to `20`?
 
     choices:
       - '`/`'
@@ -284,28 +273,26 @@
       - '`-`'
 
 - question:
-    mode: overlay
-    title: What is order of operations
+    title: What does **Order of Operations** mean?
 
     explain: |
-      Order of operations is order math is done
+      The [define order_of_operations] is the rules that decide which math operations are performed first in an expression. You probably have heard this mentioned before in math class as **||PEMDAS|pim daas||**.
 
     choices:
-      - Math done in a specific order
-      - Special command used to convert numbers to strings
-      - A command that removes unused code from a program
-      - The name of a negative number when subtracting
+      - The specific order that math expressions should be evaluated
+      - The command in JavaScript to convert numbers to strings
+      - A program that removes unused code from a file
+      - The scientific name for a negative number
       
 - question:
-    mode: overlay
-    title: What the value of `result` after the math expression?
+    title: What is the value of `result` after the math expression?
+    inline: true
 
     content: |
-      [snippet]
-        let result = 2 + 4 - 2;
+      [snippet question_1]
 
     explain: |
-      That's correct 2 + 4 is 6 then subtract 2 is 4 again
+      Following the [define order_of_operations] means you must first perform **addition** and then **subtraction**. This means that `2 + 4` becomes `6`, and then `6 ||-|minus|| 2` results in `4` again!
 
     choices:
       - '`4`'
@@ -314,15 +301,14 @@
       - '`8`'
 
 - question:
-    mode: overlay
-    title: What the value of `result` after the math expression?
+    title: What is the value of `result` after the math expression?
+    inline: true
 
     content: |
-      [snippet]
-        let result = 2 + 4 * 2;
+      [snippet question_2]        
 
     explain: |
-      Automatically does order of operations
+      Even though this [define javascript_expression l] is out of order, [define javascript] will follow the [define order_of_operations] and start by performing the **multiplication** step first. This means that `4 ||*|times|| 2` becomes `8`, and then `8 + 2` results in `10`!
 
     choices:
       - '`10`'
@@ -338,53 +324,3 @@
       Great work, and I'll see you in the next lesson!
 
       
-
-      
-      
-
-
-      
-
-# - question:
-#     count: 4   # optional question count
-#     title: Main title
-#     
-#     hint: Optional helpful hint
-
-#     explain: |
-#       After the question is finished hint
-
-#     choices:
-#       - correct answer
-#       - wrong answer 1
-#       - wrong answer 2
-#       - wrong answer 3
-
-# - slide:
-#     flags: +OPEN_FILE
-#     emote: happy
-#     controller: name
-#     mode: popup
-#     content: |
-#       Way to go! You've finished this lesson!
-#       
-#       [snippet name highlight:0,5|20,5]
-#       
-#       [snippet html preview:50%]
-#       
-#       [image default.png]
-#       
-#       [image full.jpg frame]
-#       
-#       Inline replacement is done using ||does|duz||
-#       
-#       A normal [define html] is like this
-#       
-#       A lowercase [define html l] is like this
-#       
-#       A plural [define html p] is like this
-#       A plural [define html s] or like this
-#       
-#       Can be combined as [define html lp] [define html ls]
-#       
-#       

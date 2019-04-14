@@ -58,6 +58,35 @@
 			@include animate('background, box-shadow, transform', 0.2s);
 		}
 
+		&.is-inline .answer {
+			display: inline-block;
+			text-align: center;
+		}
+
+		&.is-inline .answer.is-last {
+			margin-right: 0 !important;
+		}
+
+		&.is-inline.question-count-2 .answer {
+			width: 42.2%;
+			margin-right: 5%;
+		}
+
+		&.is-inline.question-count-3 .answer {
+			width: 25%;
+			margin-right: 5%;
+		}
+
+		&.is-inline.question-count-4 .answer {
+			width: 16.5%;
+			margin-right: 5%;
+		}
+
+		&.is-inline.question-count-5 .answer {
+			width: 12.9%;
+			margin-right: 3%;
+		}
+
 		&.waiting {
 			.answer:hover {
 				background: rgba(#fff, 0.1);

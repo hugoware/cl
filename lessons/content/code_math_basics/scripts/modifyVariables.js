@@ -32,13 +32,8 @@ waitForValidation(module.exports, {
 			._n
 			.lines(2);
 
-		validate_variables(test);
-		test.lines(2)
-			.eof()
-
-		// for the next test
-		this.state.cookies = test.pull('cookies');
-		this.state.people = test.pull('people');
+		validate_variables(test, this.state.cookies, this.state.people);
+		test.lines(2).eof();
 
 	},
 
@@ -66,14 +61,20 @@ waitForValidation(module.exports, {
 			return true;
 		},
 
-		onRunCodeEnd() {
+		onRunCodeEnd(runner) {
 			if (!$isValid) return;
+
+			const value = _.toString(runner.output[9]);
+			const isSame = _.toString(this.state.cookies * this.state.people) === value;
+			const message = isSame
+				? "Oh, that's funny! You changed the numbers but still ended up with the same total as before! In any case, changing [define code_variable ls] will normally cause [define javascript_expression ls] to end up with different results!"
+				: `Perfect! Changing the value of [define code_variable sl] earlier in the code caused the [define javascript_expression l] for \`||totalCookies|total cookies||\` to have a different result!`;
 
 			this.screen.highlight.outputLine(9);
 			this.progress.allow();
 			this.assistant.say({
-				message: `Wonderful! The [define code_variable l] \`||totalCookies|total cookies||\` was declared using the result of the [define javascript_expression l] using two other [define code_variable ls].`,
-				emote: 'happy'
+				message: message,
+				emote: isSame ? 'surprise' : 'happy'
 			});
 		}
 

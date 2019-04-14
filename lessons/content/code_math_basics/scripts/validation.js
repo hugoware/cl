@@ -86,8 +86,9 @@ export const validate_basic_3 = test => {
 	threeSegmentExpression(test, 2);
 }
 
-export const validate_variables = test => {
+export const validate_variables = (test, cookies, people) => {
 	let expects;
+	let alt;
 
 	const limit_range = (match, num) => {
 		if (!match) return 'Enter a number from 1 to 100';
@@ -95,37 +96,58 @@ export const validate_variables = test => {
 		if (num > 100) return 'Use a number less than 100';
 	};
 
+	const check_cookies = (match, num) => {
+		if (!isNaN(cookies) && num === cookies) return `Use a different number than \`${cookies}\``;
+		test.append({ cookies: num });
+		return limit_range(match, num);
+	};
+
+	const check_people = (match, num) => {
+		if (!isNaN(people) && num === people) return `Use a different number than \`${people}\``;
+		test.append({ people: num });
+		return limit_range(match, num);
+	};
+
 	test.declare('let')
 		._s
-		.id('rows')
+		.id('cookiesPerPerson', 'totalPeople', used => {
+			if (used === 'cookiesPerPerson') alt = 'totalPeople';
+			if (used === 'totalPeople') alt = 'cookiesPerPerson';
+		})
 		._s
 		.symbol('=')
-		._s
-		.number(limit_range)
+		._s;
+
+	const [first_number, second_number] = alt === 'totalPeople'
+		? [ check_cookies, check_people]
+		: [ check_people, check_cookies];
+
+
+	test.number(first_number)
 		.symbol(';')
 		._n
 		.lines(2)
 
 		.declare('let')
 		._s
-		.id('columns')
+		.id(alt)
 		._s
 		.symbol('=')
 		._s
-		.number(limit_range)
+		.number(second_number)
 		.symbol(';')
 		._n
 		.lines(2)
 
 		.declare('let')
 		._s
-		.id('cells')
+		.id('totalCookies')
 		._s
 		.symbol('=')
 		._s
-		.id('rows', 'columns', used => {
-			if (used === 'rows') expects = 'columns';
-			else if (used === 'columns') expects = 'rows';
+		.id('cookiesPerPerson', 'totalPeople', used => {
+			if (used === 'cookiesPerPerson') expects = 'totalPeople';
+			else if (used === 'totalPeople') expects = 'cookiesPerPerson';
 		})
 		._s
 		.symbol('*')
@@ -139,7 +161,7 @@ export const validate_variables = test => {
 		.symbol('.')
 		.func('log')
 		.symbol('(')
-		.id('cells')
+		.id('totalCookies')
 		.symbol(')')
 		.symbol(';')
 
