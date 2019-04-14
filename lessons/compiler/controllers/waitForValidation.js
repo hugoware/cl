@@ -84,6 +84,9 @@ export default function waitForValidation(obj, config) {
 		},
 
 		onInit() {
+			if (!!config.disableHint || !!config.disableHints)
+				this.editor.hint.disable();
+
 			if ('area' in config)
 				this.editor.area({ path: config.file, start: config.area.start, end: config.area.end });
 

@@ -23,7 +23,14 @@ export default function configure(obj, config) {
 			this.screen.highlight.fileBrowserItem(config.file);
 
 			// get the actual name
-			const name = config.file.split('/').pop();
+			const name = config.fileName || config.file.split('/').pop();
+
+			// check for content
+			if (!config.content) {
+				this.assistant.say({
+					message: `Open the file named \`${name}\` by [define double_click double clicking] on it in the [define file_browser File Browser].`
+				});
+			}
 
 			this.delay(15000, () => {
 				this.assistant.say({

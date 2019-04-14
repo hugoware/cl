@@ -220,19 +220,30 @@ function populateVariables(str) {
 
 // handles special replacement words for unusual pronunciation
 function replacePronunciation(str, type) {
-	return str.replace(/\|{2}[^\|]+\|[^\|{2}]+\|{2}/g, match => {
-		const parts = match.substr(2, match.length - 4).split('|');
-		return type.content ? parts[0] : parts[1];
-	});
+	let limit = 50;
+	while(--limit > 0) {
+		let again = false;
+		str = str.replace(/\|{2}[^\|]+\|[^\|]+\|{2}/g, match => {
+			again = true;
+			const parts = match.substr(2, match.length - 4).split('|');
+			return type.content ? parts[0] : parts[1];
+		});
+
+		if (!again) {
+			return str;
+		}
+	}
 }
 
 // format speech to replace common replacements for
 // speech equivilents
 function fixSpeech(str) {
-	_.each(STANDARD_REPLACEMENTS, (replace, key) => {
+	for (let i = 0; i < STANDARD_REPLACEMENTS.length; i += 2) {
+		const key = STANDARD_REPLACEMENTS[i];
+		const replace = STANDARD_REPLACEMENTS[i+1];
 		str = str.split(key).join(replace);
-	});
-
+	}
+	
 	return str;
 }
 

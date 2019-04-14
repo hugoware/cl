@@ -15,5 +15,6 @@ else
   echo "{\"folders\":[{ \"path\": \"./lessons/dictionary\" },{ \"path\": \"./lessons/content/$1\" },{ \"path\": \"./lessons/compiler\" }]}" > lessons.sublime-project
 	rm lessons.sublime-workspace
 	sleep 0.5
-	subl lessons.sublime-project	
+	subl lessons.sublime-project
+	cd ./lessons/content/$1
 fi

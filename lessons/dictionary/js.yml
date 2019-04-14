@@ -13,3 +13,8 @@
   name: Function
   define: |
     A block of executed code
+
+- id: javascript_expression
+  name: Expression
+  define: |
+    A sequence of numbers, string, variables, and operators that evaluate to a single value

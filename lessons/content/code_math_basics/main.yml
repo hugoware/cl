@@ -1,9 +1,349 @@
--
-  slide:
+- slide:
     mode: overlay
-    title: Title
+    title: Basic Arithmetic
     content: |
-      content
+      In this lesson we're going to start learning the capabilities of [define javascript JavaScript's] Arithmetic [define code_operator ls].
+
+- slide:
+    content: |
+      An [define code_operator l] is simply a symbol that performs an operation using other values.
+
+      [snippet operator_example]
+
+      [define javascript] has Arithmetic operations, such as adding numbers together, as well as Logical operations, such as checking true and false conditions.
+
+- slide:
+    content: |
+      This example uses Arithmetic operations to add two numbers together. The operator in this example is the `+` sign.
+
+      [snippet operator_example highlight:19,6]
+
+- slide:
+    content: |
+      After that, Logical operations are used to compare if the [define code_variable l] ||`totalCookies`|total cookies|| is less than the number `20`.
+
+      [snippet operator_example highlight:32,17]
+
+      In this case, the [define code_operator l] being used is the `<` sign.
+
+
+- slide:
+    content: |
+      [define javascript] has other types of [define code_operator ls] that you will eventually use. In this lesson we're going to be focusing on math operations that you're already familiar with.
+
+- slide:
+    content: |
+      In [define javascript], you can use the `+` sign to perform addition.
+
+      [snippet math_basics highlight:0,16]
+
+- slide:
+    content: |
+      The ||`-`|minus|| sign is used for subtraction.
+
+      [snippet math_basics highlight:17,22]
+
+- slide:
+    content: |
+      Division is performed with the `/` character.
+
+      [snippet math_basics highlight:40,20]
+
+- slide:
+    content: |
+      And lastly, multiplication is done using the `*`.
+
+      [snippet math_basics highlight:61,21]
+
+- slide:
+    content: |
+      [define javascript] has many more math operations, but in this lesson we will be focusing on the basics.
+
+      [snippet math_basics]
+
+- slide:
+    content: |
+      Sequences of numbers like these are typically called [define javascript_expression s].
+
+      [snippet math_expression highlight:13,10]
+
+      An [define javascript_expression l] is a set of literals, such as [define javascript_string ls] and numbers, [define code_variable ls], and [define code_operator ls] that become a single value after they've been evaluated.
+
+- slide:
+    content: |
+      For example, this [define javascript_expression l] is made up of 5 parts.
+
+      [snippet math_expression highlight:13,1|15,1|17,2|20,1|22,1]
+
+      When the [define javascript_expression l] is evaluated, [define javascript] will take a value from each side of an [define code_operator l] and then perform the math required.
+
+- slide:
+    content: |
+      When this code is run, [define javascript] would take the numbers `5` and `10`, and then use the `+` sign to add them together. This ends up with the number `15`.
+
+      [snippet math_expression highlight:13,6|13,10]
+
+      After that, [define javascript] would take the number `15` and subtract the next value, which is the number `8`.
+
+- slide:
+    content: |
+      After performing each of these [define javascript_expression ls], the value is then placed in to the [define code_variable l] named `result`.
+
+      [snippet math_expression highlight:4,6]
+
+      **The final value for the [define code_variable l] `result` would be `7`!**
+    
+- slide:
+    start: true
+    mode: popup
+    content: |
+      Let's try performing a few math operations of our own.
+
+- slide:
+    waitForFile: /main.js
+    fileName: main.js
+    
+# - slide:
+#     highlight: '#preview'
+#     content: |
+#       In this lesson we're going to introduce a new way to write messages using the `console`
+    
+#       Unlike the `alert` message box, this will show messages in the output area without needing to press the **OK** button.
+
+# - slide:
+#     controller: tryConsole
+#     content: |
+#       Press **Run Code** to see the `console.log` write a message to the [define codelab_code_output] area.
+
+- slide:
+    controller: basicMath1
+    content: |
+      Let's try out some math operations. Follow along with the instructions to create some simple expressions.
+    
+- slide:
+    content: |
+      Let's try that again, but this time without any code hints. If you get stuck, use the **Show Hints** button to turn them back on.
+
+- slide:
+    controller: basicMath2
+    content: |
+      Write two more `console.log` messages using different math operations each time. Like with the previous examples, only use numbers from 1 to 9999.
+
+- slide:
+    mode: overlay
+    content: |
+      So far each of the examples we've worked on only use two numbers and a single math operator, however, [define javascript] is able to understand far more complex expressions.
+
+- slide:
+    content: |
+      In this example you can see that these [define javascript_expression ls] use even more numbers and [define code_operator ls].
+
+      [snippet math_complex]
+
+- slide:
+    content: |
+      The value of ||`example1`|example 1|| ends up being the number `5`. The longer expression for  ||`example2`|example 2|| evaluates to the number `13`.
+
+      [snippet math_complex highlight:15,9|41,20]
+
+      But the end result for ||`example3`|example 3|| is deceptively more complicated.
+
+- slide:
+    content: |
+      The value for ||`example3`|example 3|| ends up being the number `1`. This might seem surprising, but it's the expected result.
+
+      [snippet math_complex highlight:78,9]
+
+      As it turns out, [define javascript] will automatically use [define order_of_operations] when performing math.
+
+- slide:
+    start: true
+    content: |
+      [define order_of_operations] is the sequence in which math expressions are evaluated. You might have heard your teacher mention this in school before as ||**PEMDAS**|pim daas||.
+
+      [snippet math_complex highlight:82,5]
+
+      When you follow the [define order_of_operations], multiplication should be done before addition. This will dramatically change the result of the [define javascript_expression l].
+          
+- slide:
+    content: |
+      As a reminder, ||**PEMDAS**|pim daas|| states that math should be evaluated in the following order.
+
+      **Parentheses, Exponentials, Multiply, Divide, Add**, then **Subtract**
+
+      This will be important when you create more complicated math expressions.
+
+- slide:
+    content: |
+      We'll learn more about [define order_of_operations] in later lessons, but for now let's continue to work with basic Arithmetic operations.
+
+- slide:
+    flags: +OPEN_FILE
+    mode: popup
+    content: |
+      Let's try to write a few expressions that use several math operations.
+
+- slide:
+    controller: basicMath3
+    content: |
+      Follow along with the instructions and write two more expressions that use multiple numbers and [define code_operator sl]. 
+
+- slide:
+    start: true
+    mode: overlay
+    content: |
+      You might remember from earlier in the lesson that [define javascript_expression ls] allow for [define code_variable ls] to be used along with [define code_operator ls].
+
+      [snippet math_variable size:medium]
+
+- slide:
+    content: |
+      In this example, two [define code_variable ls] are declared each with a number of their own.
+
+      [snippet math_variable size:medium highlight:0,25|26,21]
+
+- slide:
+    content: |
+      The last of the [define code_variable ls] is an [define javascript_expression l] that multiplies the previous two [define code_variable ls] together.
+
+      [snippet math_variable size:medium highlight:67,30]
+
+      Even though there aren't any numbers typed in the expression for ||`totalCookies`|total cookies||, the result for that [define code_variable l] is `36`!
+
+- slide:
+    start: true
+    content: |
+      Being able to use [define code_variable ls] inside of [define javascript_expression ls] is extremely powerful and will become increasingly useful as you learn more about [define javascript].
+
+      [snippet math_variable size:medium]
+
+- slide:
+    mode: popup
+    content: |
+      Let's try to use some [define code_variable ls] and [define javascript_expression ls] together.
+
+- slide:
+    controller: usingVariables
+    content: |
+      Try declaring some variables and then using `console.log` to display them in the [define codelab_code_output] area.
+
+      [snippet variable_example]
+
+- slide:
+    content: |
+      So far we've always provided a value for each of the variables that are created
+
+- slide:
+    content: |
+      most of the time though, variables are created based on user input or other data
+
+- slide:
+    content: |
+      let's edit the function to ask for user input using `console.ask`
+
+- slide:
+    content: |
+      run the code - should work
+
+- slide:
+    content: |
+      let's also change the line that asks the cookiesPerPerson to ask for input
+
+- slide:
+    content: |
+      run all of it
+
+- slide:
+    content: |
+      We've learned a lot in this lesson! let's review
+
+- question:
+    mode: overlay
+    title: What is the operator used to **multiply** numbers?
+
+    explain: |
+      That's correct, the `*` will multiply
+
+    choices:
+      - '`*`'
+      - '`+`'
+      - '`-`'
+      - '`/`'
+
+- question:
+    mode: overlay
+    title: What is the operator used to **divide** numbers?
+
+    explain: |
+      That's correct, the `/` will divide
+
+    choices:
+      - '`/`'
+      - '`*`'
+      - '`+`'
+      - '`-`'
+
+- question:
+    mode: overlay
+    title: What is order of operations
+
+    explain: |
+      Order of operations is order math is done
+
+    choices:
+      - Math done in a specific order
+      - Special command used to convert numbers to strings
+      - A command that removes unused code from a program
+      - The name of a negative number when subtracting
+      
+- question:
+    mode: overlay
+    title: What the value of `result` after the math expression?
+
+    content: |
+      [snippet]
+        let result = 2 + 4 - 2;
+
+    explain: |
+      That's correct 2 + 4 is 6 then subtract 2 is 4 again
+
+    choices:
+      - '`4`'
+      - '`2`'
+      - '`6`'
+      - '`8`'
+
+- question:
+    mode: overlay
+    title: What the value of `result` after the math expression?
+
+    content: |
+      [snippet]
+        let result = 2 + 4 * 2;
+
+    explain: |
+      Automatically does order of operations
+
+    choices:
+      - '`10`'
+      - '`8`'
+      - '`12`'
+      - '`16`'
+      
+- slide:
+    mode: popup
+    content: |
+      Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.
+
+      Great work, and I'll see you in the next lesson!
+
+      
+
+      
+      
+
+
+      
 
 # - question:
 #     count: 4   # optional question count

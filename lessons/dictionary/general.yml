@@ -143,7 +143,6 @@
   define: |
     A program that is designed to make it easier to modify code files by including features such as syntax highlighting, auto-complete, and code validation.
 
-    
 - id: codelab_tab
   name: Editor Tab
   define: |
@@ -158,3 +157,13 @@
   name: Variable
   define: |
     A programming method of storing and accessing data 
+
+- id: code_operator
+  name: Operator
+  define: |
+    Something in code that does a thing like add/sub
+
+- id: order_of_operations
+  name: Order of Operations
+  define: |
+    The sequence that math is executed

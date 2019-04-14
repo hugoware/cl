@@ -76,7 +76,9 @@ class $LESSON_TYPE$Lesson {
 			slide.controller = _.uniqueId(`controller_`);
 			const controller = this.controllers[slide.controller] = { };
 			waitForFile(controller, {
-				file: slide.waitForFile
+				file: slide.waitForFile,
+				content: slide.content,
+				fileName: slide.fileName,
 			});
 		}
 

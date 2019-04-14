@@ -43,6 +43,7 @@ export function applySnippets(slide, lesson) {
 		const size = _.trim(element.getAttribute('size'));
 		const fontSize = size === 'small' ? -3
 			: size === 'xsmall' ? -5
+			: size === 'medium' ? -2
 			: null;
 
 		// convert to ranges
