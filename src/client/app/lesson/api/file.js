@@ -27,6 +27,7 @@ export default class FileAPI {
 		// changes the content for the file, if any
 		if (_.isString(content)) {
 			file.current = content;
+			if (replaceRestore) file.restore = content;
 			broadcast('set-editor-content', path, content, replaceRestore);
 		}
 

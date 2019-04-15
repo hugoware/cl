@@ -260,7 +260,14 @@ function configure(obj, config) {
 			this.screen.highlight.fileBrowserItem(config.file);
 
 			// get the actual name
-			var name = config.file.split('/').pop();
+			var name = config.fileName || config.file.split('/').pop();
+
+			// check for content
+			if (!config.content) {
+				this.assistant.say({
+					message: 'Open the file named `' + name + '` by [define double_click double clicking] on it in the [define file_browser File Browser].'
+				});
+			}
 
 			this.delay(15000, function () {
 				_this.assistant.say({
@@ -900,7 +907,9 @@ var web1Lesson = function () {
         slide.controller = _lib._.uniqueId('controller_');
         var controller = this.controllers[slide.controller] = {};
         (0, _waitForFile2.default)(controller, {
-          file: slide.waitForFile
+          file: slide.waitForFile,
+          content: slide.content,
+          fileName: slide.fileName
         });
       }
 

@@ -12,6 +12,7 @@ code:
   - console_1
   - code_variables_basics
   - code_math_basics
+  - code_if
 
 sys:
   - demo

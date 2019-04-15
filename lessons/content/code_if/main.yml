@@ -1,9 +1,255 @@
--
-  slide:
+- slide:
+    flags: +OPEN_FILE
     mode: overlay
-    title: Title
+    title: Using Logical Conditions
     content: |
-      content
+      In this lesson we're going to start learning to use logic in applications
+
+- slide:
+    content: |
+      so far all programs have run in a straight path
+
+      this won't be useful for long
+
+- slide:
+    content: |
+      if allows you to have some logic
+
+      [snippet if_example]
+
+- slide:
+    content: |
+      this will check the condition first
+
+      [snippet if_example]
+
+      like with previosu lesson, this is an expression
+
+- slide:
+    content: |
+      if the condition is true, js will run everything between braces
+
+      [snippet if_example]
+
+      this is called block of code
+
+- slide:
+    mode: popup
+    content: |
+      it's best to try this out and see how it works
+
+- slide:
+    waitForFile: /main.js
+    fileName: main.js
+
+- slide:
+    start: true
+    controller: ifStatement
+    content: |
+      start by creating the if statement
+
+      [snippet first_example size:small]
+
+- slide:
+    controller: ifStatementFlip
+    content: |
+      try to switch the variables so there's enough chairs and run it again
+
+- slide:
+    content: |
+      this time there wasn't a message because there was enough
+
+- slide:
+    mode: overlay
+    content: |
+      we need to have a message when the condition is false
+
+      can't just put it afterwards or it would run every time
+
+- slide:
+    content: |
+      fortunately, it's pretty easy to do using the `else`
+
+      [snippet else_example]
+      
+- slide:
+    content: |
+      when the conditions is true, the first block is run
+
+      [snippet else_example]
+      
+- slide:
+    content: |
+      when the condition is false, the second block is run
+
+      [snippet else_example]
+
+- slide:
+    mode: popup
+    content: |
+      let's try and edit the code to inclde the if statement
+
+- slide:
+    controller: ifElseStatement
+    content: |
+      follow instructions
+
+- slide:
+    controller: ifElseStatementFlip
+    content: |
+      like with before, try the inverse now
+    
+- slide:
+    mode: overlay
+    content: |
+      theres another one you can use called if else
+
+- slide:
+    content: |
+      allows you to do a condition after another condition
+
+      [snippet else_if_example]
+
+- slide:
+    content: |
+      useful for mulitple scenarios
+    
+- slide:
+    content: |
+      as before, the expression is evaluated
+
+- slide:
+    content: |
+      then tested against the first block
+
+- slide:
+    content: |
+      if that doesn't pass, the next expression is tested
+
+- slide:
+    content: |
+      if it passes, that block is executed
+
+- slide:
+    mode: popup
+    content: |
+      lets try again with an `else if` statement
+
+- slide:
+    controller: ifElseIfStatementPrepare
+    content: |
+      follow along with the instructions
+
+- slide:
+    controller: ifElseIfStatement
+    content: |
+      change the value to exactly match the original value
+
+- slide:
+    mode: overlay
+    content: |
+      conditions match the contents of variables
+
+- slide:
+    content: |
+      computer programs take input to make choices
+
+- slide:
+    content: |
+      lets introduce another command called `console.ask` to get user input
+
+- slide:
+    start: true
+    mode: popup
+    content: |
+      let's revise the code to ask for user input instead of having the variables typed
+
+- slide:
+    controller: usingAsk
+    content: |
+      follow along with instructions
+
+      totalStudents = console.ask('how many students?');
+      totalBooks = console.ask('how many books?');
+
+- slide:
+    controller: runCode
+    content: |
+      press run code and test all 3 scenarios
+
+      You will need to press run code more than once
+
+- slide:
+    start: true
+    content: |
+      Wow! We got a lot done in this lesson! Let's take some time and review what we've learned!
+
+- question:
+    mode: overlay
+    title: What statements are used for checking conditions in [define javascript]?
+
+    choices:
+      - '`if`, `else`, and `else if`'
+      - '`when`, `otherwise`, and `except`'
+      - '`sometimes`, `always`, and `never`'
+      - '`before`, `after`, and `later`'
+
+    explain: |
+      if/else/elseif
+
+- question:
+    title: What is a "block" of code?
+
+    choices:
+      - Between curly braces
+      - Code that will not have errors
+      - Special numbers in JavaScript that 
+      - Alt thing
+
+    explain: |
+      if/else/elseif
+
+- question:
+    title: What message would be printed at the end of this
+    content: |
+      [snippet question_1 size:small]
+
+    choices:
+      - The message `"first"` is printed in the output
+      - The message `"second"` is printed in the output
+      - Nothing, no messages will be displayed
+      - Nothing, this code has errors and will not run
+
+    explain: |
+      if/else/elseif
+        
+- question:
+    title: What message would be printed at the end of this
+    content: |
+      [snippet question_2 size:small]
+
+    choices:
+      - The message `"not match"` is printed in the output
+      - The message `"is apple"` is printed in the output
+      - The message `"is banana"` is printed in the output
+      - The message `"is orange"` is printed in the output
+
+    explain: |
+      if/else/elseif
+
+- slide:
+    mode: popup
+    content: |
+      Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.
+
+      Great work, and I'll see you in the next lesson!
+        
+      
+
+
+
+      
+
 
 # - question:
 #     count: 4   # optional question count

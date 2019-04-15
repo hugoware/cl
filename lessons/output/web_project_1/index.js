@@ -346,7 +346,14 @@ function configure(obj, config) {
 			this.screen.highlight.fileBrowserItem(config.file);
 
 			// get the actual name
-			var name = config.file.split('/').pop();
+			var name = config.fileName || config.file.split('/').pop();
+
+			// check for content
+			if (!config.content) {
+				this.assistant.say({
+					message: 'Open the file named `' + name + '` by [define double_click double clicking] on it in the [define file_browser File Browser].'
+				});
+			}
 
 			this.delay(15000, function () {
 				_this.assistant.say({
@@ -531,7 +538,18 @@ var webProject1Lesson = function () {
 				"type": "png",
 				"path": "task-list.png"
 			}],
-			"definitions": {}
+			"definitions": {
+				"double_click": {
+					"id": "double_click",
+					"name": "Double Click",
+					"define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
+				},
+				"file_browser": {
+					"id": "file_browser",
+					"name": "File Browser",
+					"define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+				}
+			}
 		};
 
 		// timing
@@ -585,7 +603,9 @@ var webProject1Lesson = function () {
 				slide.controller = _lib._.uniqueId('controller_');
 				var controller = this.controllers[slide.controller] = {};
 				(0, _waitForFile2.default)(controller, {
-					file: slide.waitForFile
+					file: slide.waitForFile,
+					content: slide.content,
+					fileName: slide.fileName
 				});
 			}
 

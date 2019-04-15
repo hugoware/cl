@@ -172,7 +172,14 @@ function configure(obj, config) {
 			this.screen.highlight.fileBrowserItem(config.file);
 
 			// get the actual name
-			var name = config.file.split('/').pop();
+			var name = config.fileName || config.file.split('/').pop();
+
+			// check for content
+			if (!config.content) {
+				this.assistant.say({
+					message: 'Open the file named `' + name + '` by [define double_click double clicking] on it in the [define file_browser File Browser].'
+				});
+			}
 
 			this.delay(15000, function () {
 				_this.assistant.say({
@@ -320,7 +327,8 @@ function waitForValidation(obj, config) {
 		onInit: function onInit() {
 			var _this = this;
 
-			console.log('vv', config);
+			if (!!config.disableHint || !!config.disableHints) this.editor.hint.disable();
+
 			if ('area' in config) this.editor.area({ path: config.file, start: config.area.start, end: config.area.end });
 
 			if ('cursor' in config) {
@@ -332,6 +340,13 @@ function waitForValidation(obj, config) {
 
 			validate(this);
 		},
+		onReset: function onReset() {
+			validate(this);
+
+			if (state.isValid) return;
+			this.progress.block();
+			this.assistant.revert();
+		},
 		onContentChange: function onContentChange(file) {
 			validate(this);
 
@@ -341,6 +356,7 @@ function waitForValidation(obj, config) {
 		},
 		onExit: function onExit() {
 			this.file.readOnly({ path: config.file });
+			this.editor.hint.enable();
 
 			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 				args[_key2] = arguments[_key2];
@@ -591,6 +607,16 @@ var demoLesson = function () {
           "aka": "Cascading Style Sheets",
           "define": "Special rules for styling\n"
         },
+        "double_click": {
+          "id": "double_click",
+          "name": "Double Click",
+          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
+        },
+        "file_browser": {
+          "id": "file_browser",
+          "name": "File Browser",
+          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+        },
         "html_element": {
           "id": "html_element",
           "name": "HTML Element",
@@ -606,16 +632,6 @@ var demoLesson = function () {
           "name": "Code Editor",
           "aka": "IDE",
           "define": "A program that is designed to make it easier to modify code files by including features such as syntax highlighting, auto-complete, and code validation.\n"
-        },
-        "file_browser": {
-          "id": "file_browser",
-          "name": "File Browser",
-          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
-        },
-        "double_click": {
-          "id": "double_click",
-          "name": "Double Click",
-          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
         },
         "preview_area": {
           "id": "preview_area",
@@ -686,7 +702,9 @@ var demoLesson = function () {
         slide.controller = _lib._.uniqueId('controller_');
         var controller = this.controllers[slide.controller] = {};
         (0, _waitForFile2.default)(controller, {
-          file: slide.waitForFile
+          file: slide.waitForFile,
+          content: slide.content,
+          fileName: slide.fileName
         });
       }
 

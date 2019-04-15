@@ -1,6 +1,6 @@
-name: Title
-type: web
-description: Description
+name: Using Logical Comparisons
+type: code
+description: An introduction to using logical flows in code 
 
 lesson:
   - main
