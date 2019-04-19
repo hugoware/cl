@@ -423,7 +423,7 @@ export default class Assistant extends Component {
 		this.ui.avatar.toggleClassMap({
 			happy: emotion === 'happy',
 			sad: emotion === 'sad',
-			surprised: emotion === 'surprised'
+			surprised: emotion === 'surprised' || emotion === 'surprise'
 		});
 	}
 

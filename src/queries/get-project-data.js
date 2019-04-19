@@ -42,9 +42,15 @@ export default async function getProjectData(ownerId, id) {
 		if (!project)
 			return reject('project_not_found');
 
+		// get the general data
+		const manifest = getLessonById(project.lesson);
+		const { isProject } = manifest;
+		// TODO: don't reset projects when opening
+
 		// we don't need to check if the lesson is active
 		// since we don't create database entries for
 		// placeholder lessons
+		// console.log(project);
 		
 		// if this is a normal project, or the lesson is
 		// all done, then just use it normally

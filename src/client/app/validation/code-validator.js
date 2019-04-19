@@ -237,6 +237,11 @@ export default class CodeValidator extends SyntaxValidator {
 		return this;
 	}
 
+	/** shortcut for a readability gap */
+	gap() {
+		return this._n.lines(1);
+	}
+
 }
 
 SyntaxValidator.createNext(CodeValidator, 'id', { name: 'identifier', literal: true });
@@ -269,6 +274,11 @@ SyntaxValidator.createNext(CodeValidator, 'loop', {
 SyntaxValidator.createNext(CodeValidator, 'declare', {
 	match: /^(var|let|const)/,
 	name: 'declared variable'
+});
+
+SyntaxValidator.createNext(CodeValidator, 'arg', {
+	literal: true,
+	name: 'argument'
 });
 
 SyntaxValidator.createNext(CodeValidator, 'assign', {

@@ -9,6 +9,7 @@ import LessonAPI from './api';
 
 import { load } from './loader';
 import { broadcast, listen, remove } from '../events';
+import { populateVariables } from '../message-generator';
 
 /** creates a default lesson */
 export default class Lesson {
@@ -125,7 +126,9 @@ export default class Lesson {
 
 	/** returns a snippet by ID */
 	getSnippet = type => {
-		return this.snippets[type];
+		const snippet = _.assign({ }, this.snippets[type]);
+		snippet.content = populateVariables(snippet.content);
+		return snippet;
 	}
 
 	/** returns a resource by path */

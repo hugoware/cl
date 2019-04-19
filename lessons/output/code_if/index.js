@@ -789,18 +789,29 @@ var codeIfLesson = function () {
       "type": "code",
       "description": "An introduction to using logical flows in code",
       "lesson": [{
-        "flags": "+OPEN_FILE",
         "mode": "overlay",
-        "title": "Using Logical Conditions",
-        "content": "In this lesson we're going to start learning to use logic in applications\n"
+        "title": "Using Conditional Statements",
+        "content": "In this lesson we're going to start learning how to use [define conditional_statement s] to create programs that execute differently depending on the input it receives.\n"
       }, {
-        "content": "so far all programs have run in a straight path\n\nthis won't be useful for long\n"
+        "content": "So far all of the programs we've written so far run from the start and then to the end every single time.\n\nObviously, this won't be useful for very long. We need a way to control the order that the code is run.\n"
       }, {
-        "content": "if allows you to have some logic\n\n[snippet if_example]\n"
+        "content": "[define conditional_statement s] control how code in a computer program is executed.\n\n[snippet if_example_simple_1]\n"
       }, {
-        "content": "this will check the condition first\n\n[snippet if_example]\n\nlike with previosu lesson, this is an expression\n"
+        "content": "You might remember from an earlier lesson that a series of [define javascript_literal sl], [define code_variable ls], and [define code_operator sl] is called an [define javascript_expression l]. \n\n[snippet if_example_simple_1 highlight:4,9]\n\nIn this example, the highlighted code is an [define javascript_expression l] that's inside of a [define conditional_statement l].\n"
       }, {
-        "content": "if the condition is true, js will run everything between braces\n\n[snippet if_example]\n\nthis is called block of code\n"
+        "content": "[define javascript_expression s] are evaluated and converted into a single value. In this case, it's pretty easy to see that `500` is greater than `100`, so the evaluated [define javascript_expression l] would be `true`\n\n[snippet if_example_simple_2 highlight:4,9]\n\nHowever, it's very uncommon to have [define conditional_statement ls] written like this. Most of the time the [define conditional_statement s] that you write will also include [define code_variable ls];\n"
+      }, {
+        "content": "This example is far more common than the one before. In this case, there are three separate [define code_variable ls] being used.\n\n[snippet if_example]\n"
+      }, {
+        "content": "The [define code_variable l] `today` would be the current date, so it would change each time the day changed.\n\n[snippet if_example highlight:4,5]\n"
+      }, {
+        "content": "The [define code_variable l] `birthday` would be based on the user's date of birth, so it would be unique depending on who was using the program.\n\n[snippet if_example highlight:14,8]\n"
+      }, {
+        "content": "Finally, the `name` [define code_variable l] is also determined by the person who is using the program, so the output would show a different name depending on the user.\n\n[snippet if_example highlight:60,4]\n"
+      }, {
+        "content": "If the condition were to be true, meaning that `today` is the same as `birthday`, then the [define conditional_statement l] would display the greeting message.\n\n[snippet if_example highlight:4,18]\n"
+      }, {
+        "content": "If the condition were to be true, meaning that `today` is the same as `birthday`, then the [define conditional_statement l] would display the greeting message.\n\n[snippet if_example]\n"
       }, {
         "mode": "popup",
         "content": "it's best to try this out and see how it works\n"
@@ -808,7 +819,6 @@ var codeIfLesson = function () {
         "waitForFile": "/main.js",
         "fileName": "main.js"
       }, {
-        "start": true,
         "controller": "ifStatement",
         "content": "start by creating the if statement\n\n[snippet first_example size:small]\n"
       }, {
@@ -866,7 +876,6 @@ var codeIfLesson = function () {
       }, {
         "content": "lets introduce another command called `console.ask` to get user input\n"
       }, {
-        "start": true,
         "mode": "popup",
         "content": "let's revise the code to ask for user input instead of having the variables typed\n"
       }, {
@@ -876,7 +885,6 @@ var codeIfLesson = function () {
         "controller": "runCode",
         "content": "press run code and test all 3 scenarios\n\nYou will need to press run code more than once\n"
       }, {
-        "start": true,
         "content": "Wow! We got a lot done in this lesson! Let's take some time and review what we've learned!\n"
       }, {
         "mode": "overlay",
@@ -915,7 +923,15 @@ var codeIfLesson = function () {
           "type": "javascript"
         },
         "if_example": {
-          "content": "if (today === birthday) {\n  console.log('happy birthday');\n}",
+          "content": "if (today === birthday) {\n  console.log('happy birthday,' + name);\n}",
+          "type": "javascript"
+        },
+        "if_example_simple_1": {
+          "content": "if (500 > 100) {\n\tconsole.log('as expected');\n}",
+          "type": "javascript"
+        },
+        "if_example_simple_2": {
+          "content": "if (  true   ) {\n\tconsole.log('as expected');\n}",
           "type": "javascript"
         },
         "question_1": {
@@ -952,6 +968,26 @@ var codeIfLesson = function () {
           "id": "file_browser",
           "name": "File Browser",
           "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+        },
+        "conditional_statement": {
+          "id": "conditional_statement",
+          "name": "Conditional Statement",
+          "define": "In programming this is for if/then/else\n"
+        },
+        "javascript_literal": {
+          "id": "javascript_literal",
+          "name": "Literal",
+          "define": "Literal values like strings, numbers, booleans\n"
+        },
+        "code_operator": {
+          "id": "code_operator",
+          "name": "Operator",
+          "define": "Something in code that does a thing like add/sub\n"
+        },
+        "javascript_expression": {
+          "id": "javascript_expression",
+          "name": "Expression",
+          "define": "A sequence of numbers, string, variables, and operators that evaluate to a single value\n"
         },
         "javascript": {
           "id": "javascript",

@@ -1,0 +1,399 @@
+- slide:
+    flags: +OPEN_FILE
+    mode: overlay
+    title: Introduction to Functions
+    content: |
+      In this lesson we're going to start learning about a very important feature in programming called [define javascript_function s].
+
+- slide:
+    content: |
+      Generally speaking, [define javascript_function s] are blocks of code that perform a task and can be used over and over.
+
+      In fact, you've been using [define javascript_function s] in the past few lessons!
+
+- slide:
+    content: |
+      Let's look at an example [define javascript_function] from one of the earlier lessons.
+
+      [snippet alertMessage]
+
+      This is the `alert` [define javascript_function].
+
+- slide:
+    content: |
+      You probably remember that when this code is run, a message box appears on the screen and displays the phrase **"hello, world!"**.
+
+      [snippet alertMessage]
+
+      You aren't sure how the message box is being displayed, but you do know that you can control the message that's shown.
+
+- slide:
+    content: |
+      This is actually one of the primary benefits of [define javascript_function s].
+
+      [snippet alertMessage]
+
+      With a [define javascript_function] you're able to run a complex block of code, control how it behaves by telling it instructions, and then reuse it over and over again without needing to know what's happening inside.
+
+- slide:
+    content: |
+      So far you've only been using existing [define javascript_function s] in the code that you've written. In this lesson we're going to learn how to write our own!
+
+      Let's take a look at what a [define javascript_function] looks like.
+
+- slide:
+    start: true
+    content: |
+      There a several ways to create [define javascript_function s] in [define javascript], but this is a good style to start with.
+
+      [snippet addFunction]
+
+      If you ||read|reed|| through the code it's pretty easy to see that this [define javascript_function] will add two values together and then use `console.log` to display it on the screen.
+
+- slide:
+    content: |
+      The [define javascript_function] starts with the `function` [define javascript_keyword].
+
+      [snippet addFunction highlight:0,8]
+
+      This will inform [define javascript] that the following code will be a new [define javascript_function].
+
+
+- slide:
+    content: |
+      After that is the **name** of the [define javascript_function]. This is the phrase you will use when you attempt to use the [define javascript_function] in your code.
+
+      [snippet addFunction highlight:9,3]
+
+      For example, this [define javascript_function] would be used by typing in the phrase `||add(5, 5)|add and then a pair of numbers||`.
+
+- slide:
+    content: |
+      the parens
+
+- slide:
+    content: |
+      the arguments - one, several, many, or none
+      the arguments are variables of their own
+
+- slide:
+    content: |
+      closing paren
+
+- slide:
+    content: |
+      the code block - start and end
+      everything is executed here
+
+- slide:
+    content: |
+      in this example, two numbers come in, and the total is added and printed
+
+- slide:
+    content: |
+      here's an example
+
+      add(10, 20);
+
+- slide:
+    content: |
+      the arguments you're providing are 10 and 20
+
+      add(10, 20);
+
+      when the code runs, it'll show the message 30
+
+- slide:
+    content: |
+      this is a simple example, but when you have a lot complex logic, this will save you from writing the same code over and over
+
+- slide:
+    mode: popup
+    content: |
+      let's start working on an example
+
+- slide:
+    waitForFile: /main.js
+    fileName: main.js
+
+- slide:
+    controller: createIfStatements
+    content: |
+      lets start by writing a series of conditions to print out animal sounds depending on the animal
+
+      follow along with the example
+
+- slide:
+    controller: declareAnimalVar
+    content: |
+      now declare a variable for one of the animals then we can test
+
+- slide:
+    content: |
+      Now, at this point, if we had another animal sound to check, we'd have to retype all of this code again. In fact, we would have to do this over and over again for every single animal.
+
+- slide:
+    content: |
+      Obviously, that would be very slow and time consuming and would be very difficult to manage
+
+- slide:
+    content: |
+      This is where functions are very useful. Let's convert this to a function and then see how much easier it is to use
+
+- slide:
+    controller: convertToFunction
+    content: |
+      Let's start by converting this to a function - follow along with the instructions
+
+- slide:
+    controller: addInvoke
+    content: |
+      Now let's use the function - add and then **Run Code**
+
+- slide:
+    content: |
+      The function was called, but the animal sound was the `FIRST ANIMAL`
+
+- slide:
+    content: |
+      This is because all of the conditions are tested using the `animal` variable
+
+- slide:
+    mode: overlay
+    content: |
+      this is where arguments are used - we give the function extra instructions
+
+- slide:
+    content: |
+      think about the add example - we need two number
+
+- slide:
+    content: |
+      a and b can be any set of number
+
+      the function doesn't really care what they are - it just needs the the minimum to work with
+
+- slide:
+    mode: popup
+    content: |
+      Let's change this function so it uses an argument
+
+- slide:
+    controller: removeInlineVar
+    content: |
+      First, let's remove the following line of code
+
+      [snippet variableToRemove]
+
+- slide:
+    controller: invokeFunctionNoArg
+    content: |
+      then insert `animal` as an argument inside the function def -- when done *press run code*
+
+- slide:
+    mode: overlay
+    content: |
+      The final piece of the puzzle is to tell the function the arg
+
+      [image arg-undefined.png]
+
+- slide:
+    content: |
+      the argument is passed through to the function
+
+      [image arg-cat.png]
+
+- slide:
+    content: |
+      the argument can be changed
+
+      [image arg-mouse.png]
+
+- slide:
+    content: |
+      the argument can also be wrong
+
+      [image arg-number.png]
+
+      checking args and types, but that'll be later
+
+- slide:
+    content: |
+      then the ifs do their work
+
+- slide:
+    mode: popup
+    content: |
+      Let's finish our function and add an argument
+
+- slide:
+    controller: invokeFunctionWithDog
+    content: |
+      Add an argument to call
+
+- slide:
+    content: |
+      A large advantage to functions is that they can be updated and changed
+
+- slide:
+    controller: changeDogSound
+    content: |
+      Let's change the sound the `dog` makes
+
+- slide:
+    controller: invokeFunctionWithBird
+    content: |
+      try again, add missing animal
+
+      just imagine how many if statemnets we'd have if we had to type them each time
+
+- slide:
+    controller: addBirdSound
+    content: |
+      Lets add some more animals
+
+- slide:
+    content: |
+      if we had repeated the if blocks from the beginning, we'd have to add it in all places
+
+
+- slide:
+    content: |
+      You've learned a lot about functions - let's review
+
+- question:
+    mode: overlay
+    title: What is the **DRY** Principle?
+
+    choices: 
+      - Don't Repeat Yourself
+      - Download Redirect Yields
+      - Don't Reheat Yogurt
+      - Direct Red to Yellow
+
+    explain: |
+      Don't repeat yourself, meaning if you can turn it into a funciton, you should
+
+
+- question:
+    title: Functions are a great way to avoid repeating code?
+
+    choices:
+      - 'True'
+      - 'False'
+
+    explain: |
+      You should avoid repeating code whenever possible - functions help
+
+- question:
+    title: What is the highlighted block of code?
+
+    content: |
+      function speak(message) {
+        ...
+      }
+
+    choices:
+      - An argument
+      - A code maker
+      - A binary reader
+      - An HTML Element
+
+    explain: |
+      It's an argument
+
+- question: 
+    title: what is the higlighted block of code?
+
+    content: |
+      function speak() { ... }
+
+    choices:
+      - The function name
+      - An argument
+      - A bytecode reversal
+      - The file terminator
+
+    explain: |
+      The function name
+
+- slide:
+    mode: popup
+    content: |
+      Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.
+
+      Great work, and I'll see you in the next lesson!
+
+# - slide:
+#     content: 
+
+
+# if is cat
+# console.log('meow')
+# 
+# if is dog
+# console.log('bark')
+# 
+# if is mouse
+# console.log('squeek')
+# 
+# if is bird
+# console.log('chirp')
+# 
+# if is snake
+# console.log('hiss')
+# 
+# else
+# console.log('not sure');
+
+      
+
+
+
+
+
+
+
+# - question:
+#     count: 4   # optional question count
+#     title: Main title
+#     
+#     hint: Optional helpful hint
+
+#     explain: |
+#       After the question is finished hint
+
+#     choices:
+#       - correct answer
+#       - wrong answer 1
+#       - wrong answer 2
+#       - wrong answer 3
+
+# - slide:
+#     flags: +OPEN_FILE
+#     emote: happy
+#     controller: name
+#     mode: popup
+#     content: |
+#       Way to go! You've finished this lesson!
+#       
+#       [snippet name highlight:0,5|20,5]
+#       
+#       [snippet html preview:50%]
+#       
+#       [image default.png]
+#       
+#       [image full.jpg frame]
+#       
+#       Inline replacement is done using ||does|duz||
+#       
+#       A normal [define html] is like this
+#       
+#       A lowercase [define html l] is like this
+#       
+#       A plural [define html p] is like this
+#       A plural [define html s] or like this
+#       
+#       Can be combined as [define html lp] [define html ls]
+#       
+#       

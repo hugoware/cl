@@ -1,3 +1,3 @@
 if (today === birthday) {
-  console.log('happy birthday');
+  console.log('happy birthday,' + name);
 }

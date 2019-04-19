@@ -13,6 +13,8 @@ code:
   - code_variables_basics
   - code_math_basics
   - code_if
+  - code_functions_basics
+  - code_project_1
 
 sys:
   - demo

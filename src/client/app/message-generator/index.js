@@ -136,7 +136,7 @@ export default function generateMessage(message) {
 			});
 
 			// check for a code snippet
-			commands = commands.replace(/snippet ?[a-z0-9_]+/, match => {
+			commands = commands.replace(/snippet ?[a-z0-9_]+/i, match => {
 				snippet = _.trim(match.substr(7));
 				return '';
 			});
@@ -211,7 +211,7 @@ export default function generateMessage(message) {
 }
 
 // populates values from state variables
-function populateVariables(str) {
+export function populateVariables(str) {
 	return str.replace(/\%{2}[a-z0-9\_]+\%{2}/gi, match => {
 		let key = match.substr(0, match.length - 2).substr(2);
 		return $state.lesson.instance.state[key];

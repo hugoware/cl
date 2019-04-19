@@ -18,3 +18,8 @@
   name: Expression
   define: |
     A sequence of numbers, string, variables, and operators that evaluate to a single value
+
+- id: javascript_literal
+  name: Literal
+  define: |
+    Literal values like strings, numbers, booleans

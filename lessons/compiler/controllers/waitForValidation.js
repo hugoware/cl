@@ -100,6 +100,21 @@ export default function waitForValidation(obj, config) {
 			validate(this);
 		},
 
+		onActivate(...args) {
+			if (config.onActivate)
+				return config.onActivate.apply(this, args);
+		},
+
+		onRunCode(...args) {
+			if (config.onRunCode)
+				return config.onRunCode.apply(this, args);
+		},
+
+		onRunCodeEnd(...args) {
+			if (config.onRunCodeEnd)
+				return config.onRunCodeEnd.apply(this, args);
+		},
+
 		onReset() {
 			validate(this);
 			

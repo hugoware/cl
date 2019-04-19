@@ -163,6 +163,12 @@
   define: |
     Something in code that does a thing like add/sub
 
+- id: conditional_statement
+  name: Conditional Statement
+  define: |
+    In programming this is for if/then/else
+
+
 - id: order_of_operations
   name: Order of Operations
   define: |

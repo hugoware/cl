@@ -1,4 +1,6 @@
 if [ $# -lt 1 ]; then
+
+	source ~/.code-lab-complete.bash
   
 	echo
 	echo

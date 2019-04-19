@@ -1,37 +1,73 @@
 - slide:
-    flags: +OPEN_FILE
     mode: overlay
-    title: Using Logical Conditions
+    title: Using Conditional Statements
     content: |
-      In this lesson we're going to start learning to use logic in applications
+      In this lesson we're going to start learning how to use [define conditional_statement s] to create programs that execute differently depending on the input it receives.
 
 - slide:
     content: |
-      so far all programs have run in a straight path
+      So far all of the programs we've written so far run from the start and then to the end every single time.
 
-      this won't be useful for long
+      Obviously, this won't be useful for very long. We need a way to control the order that the code is run.
 
 - slide:
     content: |
-      if allows you to have some logic
+      [define conditional_statement s] control how code in a computer program is executed.
+
+      [snippet if_example_simple_1]
+
+- slide:
+    content: |
+      You might remember from an earlier lesson that a series of [define javascript_literal sl], [define code_variable ls], and [define code_operator sl] is called an [define javascript_expression l]. 
+
+      [snippet if_example_simple_1 highlight:4,9]
+
+      In this example, the highlighted code is an [define javascript_expression l] that's inside of a [define conditional_statement l].
+
+
+- slide:
+    content: |
+      [define javascript_expression s] are evaluated and converted into a single value. In this case, it's pretty easy to see that `500` is greater than `100`, so the evaluated [define javascript_expression l] would be `true`
+
+      [snippet if_example_simple_2 highlight:4,9]
+
+      However, it's very uncommon to have [define conditional_statement ls] written like this. Most of the time the [define conditional_statement s] that you write will also include [define code_variable ls];
+
+- slide:
+    content: |
+      This example is far more common than the one before. In this case, there are three separate [define code_variable ls] being used.
 
       [snippet if_example]
 
 - slide:
     content: |
-      this will check the condition first
+      The [define code_variable l] `today` would be the current date, so it would change each time the day changed.
 
-      [snippet if_example]
-
-      like with previosu lesson, this is an expression
+      [snippet if_example highlight:4,5]
 
 - slide:
     content: |
-      if the condition is true, js will run everything between braces
+      The [define code_variable l] `birthday` would be based on the user's date of birth, so it would be unique depending on who was using the program.
+
+      [snippet if_example highlight:14,8]
+
+- slide:
+    content: |
+      Finally, the `name` [define code_variable l] is also determined by the person who is using the program, so the output would show a different name depending on the user.
+
+      [snippet if_example highlight:60,4]
+
+- slide:
+    content: |
+      If the condition were to be true, meaning that `today` is the same as `birthday`, then the [define conditional_statement l] would display the greeting message.
+
+      [snippet if_example highlight:4,18]
+
+- slide:
+    content: |
+      If the condition were to be true, meaning that `today` is the same as `birthday`, then the [define conditional_statement l] would display the greeting message.
 
       [snippet if_example]
-
-      this is called block of code
 
 - slide:
     mode: popup
@@ -43,7 +79,6 @@
     fileName: main.js
 
 - slide:
-    start: true
     controller: ifStatement
     content: |
       start by creating the if statement
@@ -159,7 +194,6 @@
       lets introduce another command called `console.ask` to get user input
 
 - slide:
-    start: true
     mode: popup
     content: |
       let's revise the code to ask for user input instead of having the variables typed
@@ -179,8 +213,8 @@
 
       You will need to press run code more than once
 
+
 - slide:
-    start: true
     content: |
       Wow! We got a lot done in this lesson! Let's take some time and review what we've learned!
 
