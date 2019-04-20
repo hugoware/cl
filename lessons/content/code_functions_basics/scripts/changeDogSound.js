@@ -61,21 +61,29 @@ waitForValidation(module.exports, {
 		$isValid = true;
 		
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: 'That looks correct! Press **Run Code** and check that the result has updated.'
 		});
 
 	},
 
 	onRunCode() {
+		this.screen.highlight.clear();
 		return true;
+	},
+
+	onExit() {
+		this.screen.highlight.clear();
 	},
 
 	onRunCodeEnd() {
 		if (!$isValid) return;
 
+		this.screen.highlight.outputLine(1);
+
 		this.progress.allow();
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: 'There we go! Now the message reads **"dog says woof"** instead of the old message!',
+			emote: 'happy'
 		});
 
 	}

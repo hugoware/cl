@@ -86,18 +86,23 @@ var $hasInsertedNewline = void 0;
 		$isValid = true;
 
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: 'That\'s correct! Now press **Run Code** to make sure that everything works as expected.'
 		});
 	},
 	onRunCode: function onRunCode() {
+		this.screen.highlight.clear();
 		return true;
+	},
+	onExit: function onExit() {
+		this.screen.highlight.clear();
 	},
 	onRunCodeEnd: function onRunCodeEnd() {
 		if (!$isValid) return;
 
 		this.progress.allow();
+		this.screen.highlight.outputLine(2);
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: 'Awesome! The new condition worked just like it should and displayed the message **"bird says tweet"**!'
 		});
 	}
 });
@@ -169,7 +174,7 @@ var $isValid = void 0;
 	onValid: function onValid() {
 		$isValid = true;
 		this.assistant.say({
-			message: 'Now press **Run Code** so we can see the result'
+			message: 'Good! Now that the [define javascript_function] has been added, use the **Run Code** button so we can see the result.'
 		});
 	},
 	onRunCode: function onRunCode() {
@@ -180,7 +185,7 @@ var $isValid = void 0;
 
 		var animalVariable = this.state.animalVariable;
 
-		var sound = {
+		this.state.animalSound = {
 			'dog': 'bark',
 			'cat': 'meow',
 			'mouse': 'squeak'
@@ -188,7 +193,7 @@ var $isValid = void 0;
 
 		this.progress.allow();
 		this.assistant.say({
-			message: 'That worked as expected, the sound was for - "' + sound + '" because var "' + animalVariable + '" '
+			message: 'It worked! The [define javascript_function] ran and printed the message like it did before!'
 		});
 	}
 });
@@ -259,18 +264,25 @@ var $isValid = void 0;
 		$isValid = true;
 
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: 'That looks correct! Press **Run Code** and check that the result has updated.'
 		});
 	},
 	onRunCode: function onRunCode() {
+		this.screen.highlight.clear();
 		return true;
+	},
+	onExit: function onExit() {
+		this.screen.highlight.clear();
 	},
 	onRunCodeEnd: function onRunCodeEnd() {
 		if (!$isValid) return;
 
+		this.screen.highlight.outputLine(1);
+
 		this.progress.allow();
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: 'There we go! Now the message reads **"dog says woof"** instead of the old message!',
+			emote: 'happy'
 		});
 	}
 });
@@ -634,7 +646,7 @@ var controller = exports.controller = true;
 		this.progress.allow();
 
 		this.assistant.say({
-			message: 'Whew! That was a lot to type in!'
+			message: 'Wow! That was a lot of `if` statements to type in!'
 		});
 	}
 });
@@ -693,7 +705,7 @@ var $isValid = void 0;
 		$isValid = true;
 
 		this.assistant.say({
-			message: 'great, press run code and try it out'
+			message: 'That looks good! Now press **Run Code** and let\'s see which message is displayed!'
 		});
 	},
 	onInvalid: function onInvalid() {
@@ -715,7 +727,7 @@ var $isValid = void 0;
 
 			this.progress.allow();
 			this.assistant.say({
-				message: 'Looks like it worked as expected'
+				message: 'Good job! That looks like the correct message for the `' + this.state.animalVariable + '`!'
 			});
 		}
 	}
@@ -842,7 +854,6 @@ var codeFunctionsBasicsLesson = function () {
       "type": "code",
       "description": "An introduction to using functions in code",
       "lesson": [{
-        "flags": "+OPEN_FILE",
         "mode": "overlay",
         "title": "Introduction to Functions",
         "content": "In this lesson we're going to start learning about a very important feature in programming called [define javascript_function s].\n"
@@ -857,123 +868,134 @@ var codeFunctionsBasicsLesson = function () {
       }, {
         "content": "So far you've only been using existing [define javascript_function s] in the code that you've written. In this lesson we're going to learn how to write our own!\n\nLet's take a look at what a [define javascript_function] looks like.\n"
       }, {
-        "start": true,
         "content": "There a several ways to create [define javascript_function s] in [define javascript], but this is a good style to start with.\n\n[snippet addFunction]\n\nIf you ||read|reed|| through the code it's pretty easy to see that this [define javascript_function] will add two values together and then use `console.log` to display it on the screen.\n"
       }, {
-        "content": "The [define javascript_function] starts with the `function` [define javascript_keyword].\n\n[snippet addFunction highlight:0,8]\n\nThis will inform [define javascript] that the following code will be a new [define javascript_function].\n"
+        "content": "To define a [define javascript_function] you must start with the `function` [define javascript_keyword].\n\n[snippet addFunction highlight:0,8]\n\nThis will inform [define javascript] that the following code will be a new [define javascript_function].\n"
       }, {
         "content": "After that is the **name** of the [define javascript_function]. This is the phrase you will use when you attempt to use the [define javascript_function] in your code.\n\n[snippet addFunction highlight:9,3]\n\nFor example, this [define javascript_function] would be used by typing in the phrase `||add(5, 5)|add and then a pair of numbers||`.\n"
       }, {
-        "content": "the parens\n"
+        "content": "Next, you must use an `(`. This marks the beginning of where [define javascript_argument s] can be added.\n\n[snippet addFunction highlight:12,1]\n"
       }, {
-        "content": "the arguments - one, several, many, or none\nthe arguments are variables of their own\n"
+        "content": "Between the parentheses are where you can define [define javascript_argument s] for your [define javascript_function].\n\n[snippet addFunction highlight:13,4]\n\n[define javascript_argument s] are extra instructions for a [define javascript_function] so it knows what to do. We'll discuss this in more detail later in the lesson.\n"
       }, {
-        "content": "closing paren\n"
+        "content": "After the [define javascript_argument s], if any have been defined, is the `)`.\n\n[snippet addFunction highlight:17,1]\n\nThis marks the end of the area for the [define javascript_function] [define javascript_argument s].\n"
       }, {
-        "content": "the code block - start and end\neverything is executed here\n"
+        "content": "Next, the [define javascript_function] needs an `{` and `}`. \n\n[snippet addFunction highlight:19,1|62,1]\n\nThese braces are placed around the code that you want to be run each time this [define javascript_function] is used.\n"
       }, {
-        "content": "in this example, two numbers come in, and the total is added and printed\n"
+        "content": "Now that we've covered the parts of a [define javascript_function], let's walk through each step of what happens with the code each time this [define javascript_function] is used.\n\n[snippet addFunction]\n"
       }, {
-        "content": "here's an example\n\nadd(10, 20);\n"
+        "content": "In this example, there are two values that are _\"passed into\"_ the [define javascript_function]. This basically means that the values for `||a|ae||` and `b` are given to the [define javascript_function] by the code that's using it.\n\n[snippet addFunction highlight:13,1|16,1]\n\n[define javascript_argument s] like these behave almost identically to [define code_variable s].\n"
       }, {
-        "content": "the arguments you're providing are 10 and 20\n\nadd(10, 20);\n\nwhen the code runs, it'll show the message 30\n"
+        "content": "Once inside of the [define javascript_function] code block, the two values are added together and _\"assigned\"_ to the [define code_variable] named `total`.\n\n[snippet addFunction highlight:22,18]\n\nIf `||a|ae||` were to be the number **10**, and `b` was the number **15**, then `total` would be the number **25**.\n"
       }, {
-        "content": "this is a simple example, but when you have a lot complex logic, this will save you from writing the same code over and over\n"
+        "content": "Finally, the `total` value is displayed in the [define codelab_code_output] area using the `console.log` [define javascript_function].\n\n[snippet addFunction highlight:42,19]\n"
+      }, {
+        "content": "This now means we have a [define javascript_function] that can be used over and over again by simply changing the [define javascript_argument s] that are \"passed in\".\n\n[snippet usingAddFunction]\n\nEach time the `add` [define javascript_function] is used, the two numbers are added together and then displayed on the screen!\n"
+      }, {
+        "content": "This is a simple example, but you'll quickly find how useful this can be as you create more complex computer programs.\n"
       }, {
         "mode": "popup",
-        "content": "let's start working on an example\n"
+        "content": "Let's start working on a simple example where a [define javascript_function] would be useful.\n"
       }, {
         "waitForFile": "/main.js",
         "fileName": "main.js"
       }, {
+        "content": "Let's start by writing a fairly complex list of `if` statements that check for an animal name and then displays the sound they make.\n"
+      }, {
         "controller": "createIfStatements",
-        "content": "lets start by writing a series of conditions to print out animal sounds depending on the animal\n\nfollow along with the example\n"
+        "content": "Follow along with the example and create all of the required conditions.\n"
       }, {
         "controller": "declareAnimalVar",
-        "content": "now declare a variable for one of the animals then we can test\n"
+        "content": "Now declare a [define code_variable] for one of the animals so we can test that the conditions behave as expected.\n"
       }, {
-        "content": "Now, at this point, if we had another animal sound to check, we'd have to retype all of this code again. In fact, we would have to do this over and over again for every single animal.\n"
+        "content": "Now, at this point, if we had to check another animal sound we'd have to retype all of this code again.\n"
       }, {
-        "content": "Obviously, that would be very slow and time consuming and would be very difficult to manage\n"
+        "content": "In fact, we would have to repeat this code every single time we needed to check an animal noise.\n"
       }, {
-        "content": "This is where functions are very useful. Let's convert this to a function and then see how much easier it is to use\n"
+        "content": "In programming, repeating code is a bad idea. In fact, there's a rule in programming called the **DRY Principle** which means **\"Don't Repeat Yourself\"**.\n\n**If you can avoid repeating code, then it's a good thing to do!**\n"
+      }, {
+        "content": "Obviously, retyping code over and over very slow and time consuming and would be very difficult to manage!\n\n**This is precisely where [define javascript_function s] are most useful!**\n"
       }, {
         "controller": "convertToFunction",
-        "content": "Let's start by converting this to a function - follow along with the instructions\n"
+        "content": "Let's try to change the code you've written so far into a [define javascript_function].\n\nFollow along with the instructions to convert this series of `if` statements into a new [define javascript_function].\n"
       }, {
         "controller": "addInvoke",
-        "content": "Now let's use the function - add and then **Run Code**\n"
+        "content": "Now, let's use the `checkAnimalSound` [define javascript_function] and then press **Run Code** to see the result!\n"
       }, {
-        "content": "The function was called, but the animal sound was the `FIRST ANIMAL`\n"
+        "content": "Now that we have a working [define javascript_function], let's start making it more useful.\n"
       }, {
-        "content": "This is because all of the conditions are tested using the `animal` variable\n"
+        "content": "Each of the `if` statements in this [define javascript_function] are checking the `animal` variable and then using it to decide which messsages to display.\n"
+      }, {
+        "content": "At the moment, this code declares the `animal` [define code_variable] and sets it to **\"%%selectedAnimal%%\"**, which makes it impossible for it match any of the other conditions.\n"
+      }, {
+        "content": "This is a great example of something that should be an [define javascript_argument] for this [define javascript_function].\n"
       }, {
         "mode": "overlay",
-        "content": "this is where arguments are used - we give the function extra instructions\n"
+        "content": "[define javascript_argument s] make [define javascript] [define javascript_function s] much more useful because they allow you to provide extra instructions that it can use to perform the work.\n"
       }, {
-        "content": "think about the add example - we need two number\n"
+        "content": "Let's look at the `add` function from earlier in the lesson.\n\n[snippet addFunction]\n"
       }, {
-        "content": "a and b can be any set of number\n\nthe function doesn't really care what they are - it just needs the the minimum to work with\n"
+        "content": "Both `a` and `b` are [define javascript_argument s].\n\n[snippet addFunction]\n\nIt doesn't matter what the values are since the purpose of the [define javascript_function] is to add _whatever_ two values are provided and add them together and then `log` them onto the screen.\n"
+      }, {
+        "content": "The values for `a` and `b` are \"passed in\", meaning they are provided when the [define javascript_function] is used.\n\n[snippet addFunction]\n"
+      }, {
+        "content": "Let's look at the `showAnimalSound` [define javascript_function] you're writing and see how [define javascript_argument s] flow.\n\n[image arg-cat.png]\n\nIn this example, if you were to use ||`showAnimalSound('cat')`|the function show animal sound with the argument cat|| then the `animal` argument would be equal to the value **\"cat\"**.\n"
+      }, {
+        "content": "Changing the value between the parentheses when using the [define javascript_function] will change the value of `animal` inside of the [define javascript_function].\n\n[image arg-mouse.png]\n\nIn this case, using **\"mouse\"** instead of **\"cat\"** would cause the `animal` [define javascript_argument] to be changed to **\"mouse\"** instead.\n"
+      }, {
+        "content": "In [define javascript], it's also possible to **not** tell the [define javascript_function] an [define javascript_argument].\n\n[image arg-undefined.png]\n\nIn [define javascript], not providing an [define javascript_argument] will make the value of animal be assigned a special value called `undefined`.\n"
+      }, {
+        "content": "Finally, [define javascript_function] isn't strict about the types of values that are passed into functions. For example, it's entirely valid to use a number when using this [define javascript_function]!\n\n[image arg-number.png]\n\nWe'll learn how to check the types of [define javascript_argument s] passed into [define javascript_function s] in later lessons.\n"
       }, {
         "mode": "popup",
-        "content": "Let's change this function so it uses an argument\n"
+        "content": "Let's change this [define javascript_function] so that it uses an [define javascript_argument].\n"
       }, {
         "controller": "removeInlineVar",
-        "content": "First, let's remove the following line of code\n\n[snippet variableToRemove]\n"
+        "content": "First, we need to remove the `animal` variable that's being declared inside of the [define javascript_function].\n\n[snippet variableToRemove]\n"
       }, {
         "controller": "invokeFunctionNoArg",
-        "content": "then insert `animal` as an argument inside the function def -- when done *press run code*\n"
-      }, {
-        "mode": "overlay",
-        "content": "The final piece of the puzzle is to tell the function the arg\n\n[image arg-undefined.png]\n"
-      }, {
-        "content": "the argument is passed through to the function\n\n[image arg-cat.png]\n"
-      }, {
-        "content": "the argument can be changed\n\n[image arg-mouse.png]\n"
-      }, {
-        "content": "the argument can also be wrong\n\n[image arg-number.png]\n\nchecking args and types, but that'll be later\n"
-      }, {
-        "content": "then the ifs do their work\n"
-      }, {
-        "mode": "popup",
-        "content": "Let's finish our function and add an argument\n"
+        "content": "Next, we need to use `animal` as an argument inside the [define javascript_function] definition.\n"
       }, {
         "controller": "invokeFunctionWithDog",
-        "content": "Add an argument to call\n"
+        "content": "Let's update the ||`showAnimalSound`|show animal sound|| [define javascript_function] to use an [define javascript_argument].\n"
       }, {
-        "content": "A large advantage to functions is that they can be updated and changed\n"
+        "content": "As mentioned earlier, one of the biggest advantages to using a [define javascript_function] is that you can avoid repeating code through your programs.\n"
+      }, {
+        "content": "If you didn't use a [define javascript_function], the series of `if` statements would be repeated over and over through the program each time you need to check an animal sound.\n"
+      }, {
+        "content": "This would be very difficult to maintain or even make changes to it.\n\nFortunately, by using a [define javascript_function], you only need to update the code in one single place.\n"
       }, {
         "controller": "changeDogSound",
-        "content": "Let's change the sound the `dog` makes\n"
+        "content": "Try updating the ||`showAnimalSound`|show animal sound|| [define javascript_function] os that a  `dog` makes the sound `woof` instead of the current sound.\n"
       }, {
         "controller": "invokeFunctionWithBird",
-        "content": "try again, add missing animal\n\njust imagine how many if statemnets we'd have if we had to type them each time\n"
+        "content": "Let's use the ||`showAnimalSound`|show animal sound|| [define javascript_function] again, but this time include an animal that doesn't exist yet.\n"
       }, {
         "controller": "addBirdSound",
-        "content": "Lets add some more animals\n"
+        "content": "Now, let's update the ||`showAnimalSound`|show animal sound|| to include another condition that tests if the [define code_variable] `animal` matches the [define javascript_string] **\"bird\"**.\n"
       }, {
-        "content": "if we had repeated the if blocks from the beginning, we'd have to add it in all places\n"
+        "content": "As you can see, [define javascript_function s] are a great way to create reusable code that's easy to update!\n"
       }, {
-        "content": "You've learned a lot about functions - let's review\n"
+        "content": "You've learned a lot about [define javascript_function s] in this lesson, so let's take a break and review what we've covered.\n"
       }, {
         "mode": "overlay",
         "title": "What is the **DRY** Principle?",
         "choices": ["Don't Repeat Yourself", "Download Redirect Yields", "Don't Reheat Yogurt", "Direct Red to Yellow"],
-        "explain": "Don't repeat yourself, meaning if you can turn it into a funciton, you should\n"
+        "explain": "The **DRY Principle** means, \"Don't repeat yourself\". Basically, instead of repeating the same code over and over, you should try to change it into a reuseable [define javascript_function].\n"
       }, {
         "title": "Functions are a great way to avoid repeating code?",
         "choices": ["True", "False"],
-        "explain": "You should avoid repeating code whenever possible - functions help\n"
+        "explain": "You should try your best to avoid repeating code when you write programs. [define javascript_function s] are a great way to create reusable blocks of code and simplify the programs you create.\n"
       }, {
         "title": "What is the highlighted block of code?",
-        "content": "function speak(message) {\n  ...\n}\n",
+        "content": "[snippet quizExample highlight:15,4]\n",
         "choices": ["An argument", "A code maker", "A binary reader", "An HTML Element"],
-        "explain": "It's an argument\n"
+        "explain": "The values between the parentheses in a [define javascript_function] declaration are the [define javascript_argument s]. You can define as you'd like, so long as you separate each one with a `,`.\n"
       }, {
         "title": "what is the higlighted block of code?",
-        "content": "function speak() { ... }\n",
+        "content": "[snippet quizExample highlight:9,5]\n",
         "choices": ["The function name", "An argument", "A bytecode reversal", "The file terminator"],
-        "explain": "The function name\n"
+        "explain": "After the `function` [define javascript_keyword] is the name of the [define javascript_function]. This is what you will type whenever you're using the [define javascript_function] in your code.\n"
       }, {
         "mode": "popup",
         "content": "Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.\n\nGreat work, and I'll see you in the next lesson!\n"
@@ -989,6 +1011,14 @@ var codeFunctionsBasicsLesson = function () {
         },
         "functionWithoutArg": {
           "content": "showAnimalSound();",
+          "type": "javascript"
+        },
+        "quizExample": {
+          "content": "function greet(name) {\n  console.log('hello,', name);\n}",
+          "type": "javascript"
+        },
+        "usingAddFunction": {
+          "content": "add(10, 5);\nadd(123, 456);\nadd(99, 77);\nadd(1, 0);",
           "type": "javascript"
         },
         "variableToRemove": {
@@ -1018,16 +1048,6 @@ var codeFunctionsBasicsLesson = function () {
         "path": "arg-undefined.png"
       }],
       "definitions": {
-        "double_click": {
-          "id": "double_click",
-          "name": "Double Click",
-          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
-        },
-        "file_browser": {
-          "id": "file_browser",
-          "name": "File Browser",
-          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
-        },
         "javascript_function": {
           "id": "javascript_function",
           "name": "Function",
@@ -1038,10 +1058,41 @@ var codeFunctionsBasicsLesson = function () {
           "name": "JavaScript",
           "define": "Programming language\n"
         },
+        "javascript_argument": {
+          "id": "javascript_argument",
+          "name": "Argument",
+          "define": "A parameter for functions\n"
+        },
+        "double_click": {
+          "id": "double_click",
+          "name": "Double Click",
+          "define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
+        },
+        "file_browser": {
+          "id": "file_browser",
+          "name": "File Browser",
+          "define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+        },
         "javascript_keyword": {
           "id": "javascript_keyword",
           "name": "Keyword",
           "define": "A reserved word in JavaScript that has a purpose\n"
+        },
+        "code_variable": {
+          "id": "code_variable",
+          "name": "Variable",
+          "define": "A programming method of storing and accessing data \n"
+        },
+        "codelab_code_output": {
+          "id": "codelab_code_output",
+          "name": "Code Output",
+          "define": "The result of called code\n"
+        },
+        "javascript_string": {
+          "id": "javascript_string",
+          "name": "String",
+          "plural": "Strings",
+          "define": "Series of characters\n"
         }
       }
     };
@@ -1312,18 +1363,23 @@ var $isValid = void 0;
 		$isValid = true;
 
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: 'That\'s correct! Press **Run Code** and let\'s see the result.'
 		});
 	},
+	onExit: function onExit() {
+		this.screen.highlight.clear();
+	},
 	onRunCode: function onRunCode() {
+		this.screen.highlight.clear();
 		return true;
 	},
 	onRunCodeEnd: function onRunCodeEnd() {
 		if (!$isValid) return;
+		this.screen.highlight.outputLine(1);
 
 		this.progress.allow();
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: 'Perfect! In this case, the function ||`showAnimalSound`|show animal sound|| is being used without an [define javascript argument], meaning `animal` has a value of `undefined`.\n\nThis means it won\'t match any of the `if` conditions and the message **"not sure"** is correct!'
 		});
 	}
 });
@@ -1398,18 +1454,23 @@ var $isValid = void 0;
 		$isValid = true;
 
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: 'Good! Now press **Run Code** and to see what message is shown!'
 		});
 	},
+	onExit: function onExit() {
+		this.screen.highlight.clear();
+	},
 	onRunCode: function onRunCode() {
+		this.screen.highlight.clear();
 		return true;
 	},
 	onRunCodeEnd: function onRunCodeEnd() {
 		if (!$isValid) return;
 
 		this.progress.allow();
+		this.screen.highlight.outputLine(2);
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: 'That\'s exactly what we should see. The [define javascript_argument] `animal` has the value **"bird"**, which doesn\'t match any of the conditions.'
 		});
 	}
 });
@@ -1480,18 +1541,23 @@ var $isValid = void 0;
 		$isValid = true;
 
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: 'Great! Now press **Run Code** to see the result.'
 		});
 	},
+	onExit: function onExit() {
+		this.screen.highlight.clear();
+	},
 	onRunCode: function onRunCode() {
+		this.screen.highlight.clear();
 		return true;
 	},
 	onRunCodeEnd: function onRunCodeEnd() {
 		if (!$isValid) return;
+		this.screen.highlight.outputLine(1);
 
 		this.progress.allow();
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: 'Fantastic! The [define javascript_argument] was passed from where the ||`showAnimalSound`|show animal sound|| [define javascript_function] was used and into the `animal` [define javascript_argument]!'
 		});
 	}
 });

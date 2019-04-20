@@ -61,21 +61,29 @@ waitForValidation(module.exports, {
 		$isValid = true;
 		
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: `That's correct! Press **Run Code** and let's see the result.`
 		});
 
 	},
 
+	onExit() {
+		this.screen.highlight.clear();
+	},
+
 	onRunCode() {
+		this.screen.highlight.clear();
 		return true;
 	},
 
 	onRunCodeEnd() {
 		if (!$isValid) return;
+		this.screen.highlight.outputLine(1);
 
 		this.progress.allow();
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: `Perfect! In this case, the function ||\`showAnimalSound\`|show animal sound|| is being used without an [define javascript argument], meaning \`animal\` has a value of \`undefined\`.
+
+This means it won't match any of the \`if\` conditions and the message **"not sure"** is correct!`
 		});
 
 	}

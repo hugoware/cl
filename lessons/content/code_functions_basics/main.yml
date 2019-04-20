@@ -1,5 +1,4 @@
 - slide:
-    flags: +OPEN_FILE
     mode: overlay
     title: Introduction to Functions
     content: |
@@ -42,7 +41,6 @@
       Let's take a look at what a [define javascript_function] looks like.
 
 - slide:
-    start: true
     content: |
       There a several ways to create [define javascript_function s] in [define javascript], but this is a good style to start with.
 
@@ -52,7 +50,7 @@
 
 - slide:
     content: |
-      The [define javascript_function] starts with the `function` [define javascript_keyword].
+      To define a [define javascript_function] you must start with the `function` [define javascript_keyword].
 
       [snippet addFunction highlight:0,8]
 
@@ -69,197 +67,261 @@
 
 - slide:
     content: |
-      the parens
+      Next, you must use an `(`. This marks the beginning of where [define javascript_argument s] can be added.
+
+      [snippet addFunction highlight:12,1]
 
 - slide:
     content: |
-      the arguments - one, several, many, or none
-      the arguments are variables of their own
+      Between the parentheses are where you can define [define javascript_argument s] for your [define javascript_function].
+
+      [snippet addFunction highlight:13,4]
+
+      [define javascript_argument s] are extra instructions for a [define javascript_function] so it knows what to do. We'll discuss this in more detail later in the lesson.
 
 - slide:
     content: |
-      closing paren
+      After the [define javascript_argument s], if any have been defined, is the `)`.
+
+      [snippet addFunction highlight:17,1]
+
+      This marks the end of the area for the [define javascript_function] [define javascript_argument s].
 
 - slide:
     content: |
-      the code block - start and end
-      everything is executed here
+      Next, the [define javascript_function] needs an `{` and `}`. 
+
+      [snippet addFunction highlight:19,1|62,1]
+
+      These braces are placed around the code that you want to be run each time this [define javascript_function] is used.
 
 - slide:
     content: |
-      in this example, two numbers come in, and the total is added and printed
+      Now that we've covered the parts of a [define javascript_function], let's walk through each step of what happens with the code each time this [define javascript_function] is used.
+
+      [snippet addFunction]
 
 - slide:
     content: |
-      here's an example
+      In this example, there are two values that are _"passed into"_ the [define javascript_function]. This basically means that the values for `||a|ae||` and `b` are given to the [define javascript_function] by the code that's using it.
 
-      add(10, 20);
+      [snippet addFunction highlight:13,1|16,1]
 
-- slide:
-    content: |
-      the arguments you're providing are 10 and 20
-
-      add(10, 20);
-
-      when the code runs, it'll show the message 30
+      [define javascript_argument s] like these behave almost identically to [define code_variable s].
 
 - slide:
     content: |
-      this is a simple example, but when you have a lot complex logic, this will save you from writing the same code over and over
+      Once inside of the [define javascript_function] code block, the two values are added together and _"assigned"_ to the [define code_variable] named `total`.
+
+      [snippet addFunction highlight:22,18]
+
+      If `||a|ae||` were to be the number **10**, and `b` was the number **15**, then `total` would be the number **25**.
+
+- slide:
+    content: |
+      Finally, the `total` value is displayed in the [define codelab_code_output] area using the `console.log` [define javascript_function].
+
+      [snippet addFunction highlight:42,19]
+
+- slide:
+    content: |
+      This now means we have a [define javascript_function] that can be used over and over again by simply changing the [define javascript_argument s] that are "passed in".
+
+      [snippet usingAddFunction]
+
+      Each time the `add` [define javascript_function] is used, the two numbers are added together and then displayed on the screen!
+
+- slide:
+    content: |
+      This is a simple example, but you'll quickly find how useful this can be as you create more complex computer programs.
 
 - slide:
     mode: popup
     content: |
-      let's start working on an example
+      Let's start working on a simple example where a [define javascript_function] would be useful.
 
 - slide:
     waitForFile: /main.js
     fileName: main.js
 
 - slide:
+    content: |
+      Let's start by writing a fairly complex list of `if` statements that check for an animal name and then displays the sound they make.
+
+- slide:
     controller: createIfStatements
     content: |
-      lets start by writing a series of conditions to print out animal sounds depending on the animal
-
-      follow along with the example
+      Follow along with the example and create all of the required conditions.
 
 - slide:
     controller: declareAnimalVar
     content: |
-      now declare a variable for one of the animals then we can test
+      Now declare a [define code_variable] for one of the animals so we can test that the conditions behave as expected.
 
 - slide:
     content: |
-      Now, at this point, if we had another animal sound to check, we'd have to retype all of this code again. In fact, we would have to do this over and over again for every single animal.
+      Now, at this point, if we had to check another animal sound we'd have to retype all of this code again.
 
 - slide:
     content: |
-      Obviously, that would be very slow and time consuming and would be very difficult to manage
+      In fact, we would have to repeat this code every single time we needed to check an animal noise.
 
 - slide:
     content: |
-      This is where functions are very useful. Let's convert this to a function and then see how much easier it is to use
+      In programming, repeating code is a bad idea. In fact, there's a rule in programming called the **DRY Principle** which means **"Don't Repeat Yourself"**.
+
+      **If you can avoid repeating code, then it's a good thing to do!**
+
+- slide:
+    content: |
+      Obviously, retyping code over and over very slow and time consuming and would be very difficult to manage!
+
+      **This is precisely where [define javascript_function s] are most useful!**
 
 - slide:
     controller: convertToFunction
     content: |
-      Let's start by converting this to a function - follow along with the instructions
+      Let's try to change the code you've written so far into a [define javascript_function].
+
+      Follow along with the instructions to convert this series of `if` statements into a new [define javascript_function].
 
 - slide:
     controller: addInvoke
     content: |
-      Now let's use the function - add and then **Run Code**
+      Now, let's use the `checkAnimalSound` [define javascript_function] and then press **Run Code** to see the result!
 
 - slide:
     content: |
-      The function was called, but the animal sound was the `FIRST ANIMAL`
+      Now that we have a working [define javascript_function], let's start making it more useful.
 
 - slide:
     content: |
-      This is because all of the conditions are tested using the `animal` variable
+      Each of the `if` statements in this [define javascript_function] are checking the `animal` variable and then using it to decide which messsages to display.
+
+- slide:
+    content: |
+      At the moment, this code declares the `animal` [define code_variable] and sets it to **"%%selectedAnimal%%"**, which makes it impossible for it match any of the other conditions.
+
+- slide:
+    content: |
+      This is a great example of something that should be an [define javascript_argument] for this [define javascript_function].
 
 - slide:
     mode: overlay
     content: |
-      this is where arguments are used - we give the function extra instructions
+      [define javascript_argument s] make [define javascript] [define javascript_function s] much more useful because they allow you to provide extra instructions that it can use to perform the work.
 
 - slide:
     content: |
-      think about the add example - we need two number
+      Let's look at the `add` function from earlier in the lesson.
+
+      [snippet addFunction]
 
 - slide:
     content: |
-      a and b can be any set of number
+      Both `a` and `b` are [define javascript_argument s].
 
-      the function doesn't really care what they are - it just needs the the minimum to work with
+      [snippet addFunction]
+
+      It doesn't matter what the values are since the purpose of the [define javascript_function] is to add _whatever_ two values are provided and add them together and then `log` them onto the screen.
+
+- slide:
+    content: |
+      The values for `a` and `b` are "passed in", meaning they are provided when the [define javascript_function] is used.
+
+      [snippet addFunction]
+
+
+- slide:
+    content: |
+      Let's look at the `showAnimalSound` [define javascript_function] you're writing and see how [define javascript_argument s] flow.
+
+      [image arg-cat.png]
+
+      In this example, if you were to use ||`showAnimalSound('cat')`|the function show animal sound with the argument cat|| then the `animal` argument would be equal to the value **"cat"**.
+
+- slide:
+    content: |
+      Changing the value between the parentheses when using the [define javascript_function] will change the value of `animal` inside of the [define javascript_function].
+
+      [image arg-mouse.png]
+
+      In this case, using **"mouse"** instead of **"cat"** would cause the `animal` [define javascript_argument] to be changed to **"mouse"** instead.
+
+- slide:
+    content: |
+      In [define javascript], it's also possible to **not** tell the [define javascript_function] an [define javascript_argument].
+
+      [image arg-undefined.png]
+
+      In [define javascript], not providing an [define javascript_argument] will make the value of animal be assigned a special value called `undefined`.
+
+- slide:
+    content: |
+      Finally, [define javascript_function] isn't strict about the types of values that are passed into functions. For example, it's entirely valid to use a number when using this [define javascript_function]!
+
+      [image arg-number.png]
+
+      We'll learn how to check the types of [define javascript_argument s] passed into [define javascript_function s] in later lessons.
 
 - slide:
     mode: popup
     content: |
-      Let's change this function so it uses an argument
+      Let's change this [define javascript_function] so that it uses an [define javascript_argument].
 
 - slide:
     controller: removeInlineVar
     content: |
-      First, let's remove the following line of code
+      First, we need to remove the `animal` variable that's being declared inside of the [define javascript_function].
 
       [snippet variableToRemove]
 
 - slide:
     controller: invokeFunctionNoArg
     content: |
-      then insert `animal` as an argument inside the function def -- when done *press run code*
-
-- slide:
-    mode: overlay
-    content: |
-      The final piece of the puzzle is to tell the function the arg
-
-      [image arg-undefined.png]
-
-- slide:
-    content: |
-      the argument is passed through to the function
-
-      [image arg-cat.png]
-
-- slide:
-    content: |
-      the argument can be changed
-
-      [image arg-mouse.png]
-
-- slide:
-    content: |
-      the argument can also be wrong
-
-      [image arg-number.png]
-
-      checking args and types, but that'll be later
-
-- slide:
-    content: |
-      then the ifs do their work
-
-- slide:
-    mode: popup
-    content: |
-      Let's finish our function and add an argument
+      Next, we need to use `animal` as an argument inside the [define javascript_function] definition.
 
 - slide:
     controller: invokeFunctionWithDog
     content: |
-      Add an argument to call
+      Let's update the ||`showAnimalSound`|show animal sound|| [define javascript_function] to use an [define javascript_argument].
 
 - slide:
     content: |
-      A large advantage to functions is that they can be updated and changed
+      As mentioned earlier, one of the biggest advantages to using a [define javascript_function] is that you can avoid repeating code through your programs.
+
+- slide:
+    content: |
+      If you didn't use a [define javascript_function], the series of `if` statements would be repeated over and over through the program each time you need to check an animal sound.
+
+- slide:
+    content: |
+      This would be very difficult to maintain or even make changes to it.
+
+      Fortunately, by using a [define javascript_function], you only need to update the code in one single place.
 
 - slide:
     controller: changeDogSound
     content: |
-      Let's change the sound the `dog` makes
+      Try updating the ||`showAnimalSound`|show animal sound|| [define javascript_function] os that a  `dog` makes the sound `woof` instead of the current sound.
 
 - slide:
     controller: invokeFunctionWithBird
     content: |
-      try again, add missing animal
-
-      just imagine how many if statemnets we'd have if we had to type them each time
+      Let's use the ||`showAnimalSound`|show animal sound|| [define javascript_function] again, but this time include an animal that doesn't exist yet.
 
 - slide:
     controller: addBirdSound
     content: |
-      Lets add some more animals
+      Now, let's update the ||`showAnimalSound`|show animal sound|| to include another condition that tests if the [define code_variable] `animal` matches the [define javascript_string] **"bird"**.
 
 - slide:
     content: |
-      if we had repeated the if blocks from the beginning, we'd have to add it in all places
-
+      As you can see, [define javascript_function s] are a great way to create reusable code that's easy to update!
 
 - slide:
     content: |
-      You've learned a lot about functions - let's review
+      You've learned a lot about [define javascript_function s] in this lesson, so let's take a break and review what we've covered.
 
 - question:
     mode: overlay
@@ -272,8 +334,7 @@
       - Direct Red to Yellow
 
     explain: |
-      Don't repeat yourself, meaning if you can turn it into a funciton, you should
-
+      The **DRY Principle** means, "Don't repeat yourself". Basically, instead of repeating the same code over and over, you should try to change it into a reuseable [define javascript_function].
 
 - question:
     title: Functions are a great way to avoid repeating code?
@@ -283,16 +344,14 @@
       - 'False'
 
     explain: |
-      You should avoid repeating code whenever possible - functions help
+      You should try your best to avoid repeating code when you write programs. [define javascript_function s] are a great way to create reusable blocks of code and simplify the programs you create.
 
 - question:
     title: What is the highlighted block of code?
 
     content: |
-      function speak(message) {
-        ...
-      }
-
+      [snippet quizExample highlight:15,4]
+      
     choices:
       - An argument
       - A code maker
@@ -300,13 +359,13 @@
       - An HTML Element
 
     explain: |
-      It's an argument
+      The values between the parentheses in a [define javascript_function] declaration are the [define javascript_argument s]. You can define as you'd like, so long as you separate each one with a `,`.
 
 - question: 
     title: what is the higlighted block of code?
 
     content: |
-      function speak() { ... }
+      [snippet quizExample highlight:9,5]
 
     choices:
       - The function name
@@ -315,7 +374,7 @@
       - The file terminator
 
     explain: |
-      The function name
+      After the `function` [define javascript_keyword] is the name of the [define javascript_function]. This is what you will type whenever you're using the [define javascript_function] in your code.
 
 - slide:
     mode: popup

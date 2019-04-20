@@ -65,12 +65,17 @@ waitForValidation(module.exports, {
 		$isValid = true;
 		
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: 'Good! Now press **Run Code** and to see what message is shown!'
 		});
 
 	},
 
+	onExit() {
+		this.screen.highlight.clear();
+	},
+
 	onRunCode() {
+		this.screen.highlight.clear();
 		return true;
 	},
 
@@ -78,8 +83,9 @@ waitForValidation(module.exports, {
 		if (!$isValid) return;
 
 		this.progress.allow();
+		this.screen.highlight.outputLine(2);
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: `That's exactly what we should see. The [define javascript_argument] \`animal\` has the value **"bird"**, which doesn't match any of the conditions.`
 		});
 
 	}

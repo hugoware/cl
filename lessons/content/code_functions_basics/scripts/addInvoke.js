@@ -63,7 +63,7 @@ waitForValidation(module.exports, {
 	onValid() {
 		$isValid = true;
 		this.assistant.say({
-			message: 'Now press **Run Code** so we can see the result'
+			message: 'Good! Now that the [define javascript_function] has been added, use the **Run Code** button so we can see the result.'
 		});
 	},
 
@@ -75,7 +75,7 @@ waitForValidation(module.exports, {
 		if (!$isValid) return;
 
 		const { animalVariable } = this.state;
-		const sound = {
+		this.state.animalSound = {
 			'dog': 'bark',
 			'cat': 'meow',
 			'mouse': 'squeak'
@@ -84,7 +84,7 @@ waitForValidation(module.exports, {
 
 		this.progress.allow();
 		this.assistant.say({
-			message: `That worked as expected, the sound was for - "${sound}" because var "${animalVariable}" `
+			message: `It worked! The [define javascript_function] ran and printed the message like it did before!`
 		});
 
 	}

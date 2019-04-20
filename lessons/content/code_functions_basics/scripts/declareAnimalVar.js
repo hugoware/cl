@@ -46,7 +46,7 @@ waitForValidation(module.exports, {
 		$isValid = true;
 
 		this.assistant.say({
-			message: `great, press run code and try it out`
+			message: `That looks good! Now press **Run Code** and let's see which message is displayed!`
 		});
 
 	},
@@ -73,7 +73,7 @@ waitForValidation(module.exports, {
 
 			this.progress.allow();
 			this.assistant.say({
-				message: `Looks like it worked as expected`,
+				message: `Good job! That looks like the correct message for the \`${this.state.animalVariable}\`!`,
 			});
 		}
 

@@ -39,7 +39,7 @@ waitForValidation(module.exports, {
 		this.progress.allow();
 
 		this.assistant.say({
-			message: `Whew! That was a lot to type in!`
+			message: `Wow! That was a lot of \`if\` statements to type in!`
 		});
 
 	}

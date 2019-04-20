@@ -61,21 +61,27 @@ waitForValidation(module.exports, {
 		$isValid = true;
 		
 		this.assistant.say({
-			message: 'try and run the code - see what happens'
+			message: 'Great! Now press **Run Code** to see the result.'
 		});
 
 	},
 
+	onExit() {
+		this.screen.highlight.clear();
+	},
+
 	onRunCode() {
+		this.screen.highlight.clear();
 		return true;
 	},
 
 	onRunCodeEnd() {
 		if (!$isValid) return;
+		this.screen.highlight.outputLine(1);
 
 		this.progress.allow();
 		this.assistant.say({
-			message: 'the message is not sure, because theres no argument provided'
+			message: 'Fantastic! The [define javascript_argument] was passed from where the ||`showAnimalSound`|show animal sound|| [define javascript_function] was used and into the `animal` [define javascript_argument]!'
 		});
 
 	}

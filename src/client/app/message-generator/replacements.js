@@ -5,6 +5,7 @@ export default [
 	'Arithmetic', 'a rithma tick',
 	'arithmetic', 'a rithma tick',
 	`console`, 'con soul',
+	'`,`', 'comma',
 	'`*`', 'asterisk',
 	'`+`', 'plus',
 	'`/`', 'forward slash',
