@@ -1,8 +1,9 @@
 
 #preview {
 	$preview-separator-width: 3px;
-
+	
 	.preview-wrapper {
+		overflow: hidden;
 		position: absolute;
 		top: 0;
 		left: $preview-separator-width;

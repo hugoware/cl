@@ -7,6 +7,7 @@ const MAX_NAME_LENGTH = 50;
 const PROJECT_FILE_TYPES = {
 	// web: ['html', 'pug', 'ts', 'js', 'css', 'scss'],
 	web: ['html', 'js', 'css'],
+	mobile: ['html', 'js', 'css'],
 	code: ['js']
 };
 

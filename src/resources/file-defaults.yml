@@ -1,4 +1,21 @@
+mobile:
+  html: |
+    <ons-page id="">
+      <ons-toolbar>
+        <div class="center">Title</div>
+      </ons-toolbar>
 
+      <ons-card>
+        <div class="title">
+          Hello, World!
+        </div>
+        <div class="content">
+          
+        </div>
+      </ons-card>
+    </ons-page>
+  js: |
+    // init
 
 code:
   js: |

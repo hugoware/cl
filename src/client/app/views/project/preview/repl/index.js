@@ -5,6 +5,8 @@ import $state from '../../../../state';
 import Component from '../../../../component';
 import $contentManager from '../../../../content-manager';
 import CodeRunner from '../../../../../viewer/code-runner';
+import ConsoleRunner from '../../../../../viewer/runners/console';
+
 import { requirePermission } from '../../prevent';
 
 // main content view
@@ -29,23 +31,18 @@ export default class ReplMode extends Component {
 			}
 		});
 
-		// the previewer instance
-		CodeRunner.create({
+		// create the runner
+		this.runner = CodeRunner.create(ConsoleRunner);
+		setTimeout(() => this.runner.init({
 			containerSelector: '#repl',
 			outputSelector: '#repl #output',
 			inputSelector: '#repl #input',
 			errorSelector: '#repl #error',
 			questionSelector: '#repl #question',
 			alertSelector: '#repl #alert',
-		}, instance => {
-			
-			// save the runner instance
-			this.runner = instance;
-
-			// setup a default error handler
-			this.runner.handleException = this.onHandleException;
-		});
-
+		}));
+		
+		this.runner.handleException = this.onHandleException;
 
 		// global events
 		this.listen('assistant-updated', this.onAssistantUpdated);
@@ -204,9 +201,27 @@ export default class ReplMode extends Component {
 			message: `Can't Use Run Code`
 		})) return;
 
+
+		// handle lesson execution
+		const options = {}
+
+		// check lesson options
+		if ($state.lesson) {
+			_.each(['Start', 'Step', 'Pause', 'End', 'Error', 'Alert', 'Ask'], command => {
+				if ($state.lesson.respondsTo(`runCode${command}`)) {
+					options[`on${command}`] = (...args) => {
+						const params = [`runCode${command}`, this.context].concat(args);
+						$state.lesson.invoke.apply($state.lesson, params);
+					};
+				}
+			});
+		}
+
+		// set the initial config
+		this.runner.configure(options);
+
 		// if there's not an active file
 		if (!file) {
-			this.runner.options = {};
 
 			// game/mobile behaviors
 			if ($state.isGameProject || $state.isMobileProject) {
@@ -233,49 +248,22 @@ export default class ReplMode extends Component {
 			// compile the code -- save any errors
 			// directly to the runner. When `.run` is called
 			// that error will be thrown right away
+			let ex;
 			await $contentManager.compile(path, {
-				onError: ex => this.runner.error = ex,
+				onError: error => ex = error,
 				silent: true
 			});
 
 			// get the code to execute
 			const code = await $contentManager.get(path);
-			const context = new ExecutionContext(code, this.runner);
-
-			// handle lesson execution
-			const options = { }
-
-			// check lesson options
-			if ($state.lesson) {
-				_.each([ 'Start', 'Step', 'Pause', 'End', 'Error', 'Alert', 'Ask' ], command => {
-					if ($state.lesson.respondsTo(`runCode${command}`)) {
-						options[`on${command}`] = (...args) => {
-							const params = [`runCode${command}`, context].concat(args);
-							$state.lesson.invoke.apply($state.lesson, params);
-						};
-					}
-				});
-			}
+			this.context = new ExecutionContext(code, this.runner);
 
 			// run the code
 			if (options.onStart)
-				options.onStart(context);
+				options.onStart(this.context);
 
 			// continue execution
-			this.runner.run(code, options);
-
-			// // handle the correct path
-			// if (validator) {
-
-			// 	// run with the validator
-			// 	validator({
-			// 		onSuccess: this.onCodeExecutionApproval,
-			// 		runner: this.runner,
-			// 		code
-			// 	});
-			// }
-			// // this is
-			// else this.runner.run(code);
+			this.runner.run(code, ex);
 
 		}, 100);
 

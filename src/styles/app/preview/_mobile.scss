@@ -1,0 +1,76 @@
+
+
+#mobile {
+	$mobile-width: 340px;
+	$mobile-height: 580px;
+	$pad-side: 10px;
+	$pad-top: 25px;
+	$pad-bottom: 50px;
+
+	$button-x: 50%;
+	$button-y: 17px;
+	$button-height: 20px;
+	$button-width: 80px;
+
+
+	.device {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		display: inline;
+		background: rgba(0,0,0,0.3);
+		padding: $pad-top $pad-side $pad-bottom $pad-side;
+		border-radius: 15px;
+		box-shadow: inset 0 0 0 1px rgba(#fff, 0.3), 0 4px 18px rgba(#000, 0.3);
+
+		&:after {
+			content: '';
+			display: block;
+			background: rgba(#000, 0.1);
+			position: absolute;
+			border-radius: 50px;
+			box-shadow: inset 0 0 0 1px rgba(#fff, 0.2);
+
+			bottom: $button-y;
+			left: $button-x;
+			margin-left: -($button-width / 2);
+			width: $button-width;
+			height: $button-height;
+		}
+	}
+
+	iframe.output {
+		width: $mobile-width;
+		height: $mobile-height;
+		border-radius: 4px;
+		background: rgba(#000, 0.3);
+		box-shadow: inset 0 0 0 1px rgba(#fff, 0.2);
+	}
+
+	&.landscape {
+		
+		iframe.output {
+			width: $mobile-height;
+			height: $mobile-width;
+		}
+
+		.device {
+			padding: $pad-side $pad-bottom $pad-side $pad-top;
+
+			&:after {
+				left: auto;
+				bottom: auto;
+				top: $button-x;
+				right: $button-y;
+				left: auto;
+				margin: -($button-width / 2) 0 0 0;
+				width: $button-height;
+				height: $button-width;
+			}
+		}
+
+
+	}
+
+}

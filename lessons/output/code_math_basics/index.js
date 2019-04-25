@@ -393,6 +393,27 @@ function waitForValidation(obj, config) {
 
 			validate(this);
 		},
+		onActivate: function onActivate() {
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			if (config.onActivate) return config.onActivate.apply(this, args);
+		},
+		onRunCode: function onRunCode() {
+			for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+				args[_key3] = arguments[_key3];
+			}
+
+			if (config.onRunCode) return config.onRunCode.apply(this, args);
+		},
+		onRunCodeEnd: function onRunCodeEnd() {
+			for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+				args[_key4] = arguments[_key4];
+			}
+
+			if (config.onRunCodeEnd) return config.onRunCodeEnd.apply(this, args);
+		},
 		onReset: function onReset() {
 			validate(this);
 
@@ -411,8 +432,8 @@ function waitForValidation(obj, config) {
 			this.file.readOnly({ path: config.file });
 			this.editor.hint.enable();
 
-			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-				args[_key2] = arguments[_key2];
+			for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+				args[_key5] = arguments[_key5];
 			}
 
 			if (config.onExit) config.onExit.apply(this, args);
@@ -597,7 +618,11 @@ var codeMathBasicsLesson = function () {
       }, {
         "content": "The last of the [define code_variable ls] is an [define javascript_expression l] that multiplies the previous two [define code_variable ls] together.\n\n[snippet math_variable size:medium highlight:67,30]\n\nEven though there aren't any numbers typed in the expression for ||`totalCookies`|total cookies||, the result for that [define code_variable l] is `36`!\n"
       }, {
-        "content": "Being able to use [define code_variable ls] inside of [define javascript_expression ls] is extremely powerful and will become increasingly useful as you learn more about [define javascript].\n\n[snippet math_variable size:medium]\n"
+        "content": "Of course, you aren't limited to only using [define code_variable ls] with other [define code_variable ls].\n\n[snippet math_average size:medium highlight:0,47]\n\nThis example asks for three separate numbers, then adds them all together into a [define code_variable l] named `totalBooks`.\n"
+      }, {
+        "content": "After that, `totalBooks` is divided by the **number** of students and assigned to a new [define code_variable l] named `average`.\n\n[snippet math_average size:medium highlight:49,33]\n\n[define javascript] knows to use whatever number has been assigned to `totalBooks` when evaluating the [define javascript_expression l].\n"
+      }, {
+        "content": "Being able to use [define code_variable ls] with [define javascript_expression ls] is extremely powerful and will become increasingly useful as you learn more about [define javascript].\n\n[snippet math_average size:medium]\n"
       }, {
         "mode": "popup",
         "content": "Let's try to use some [define code_variable ls] and [define javascript_expression ls] together.\n"
@@ -645,6 +670,10 @@ var codeMathBasicsLesson = function () {
         "content": "Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to these files before moving on.\n\nGreat work, and I'll see you in the next lesson!\n"
       }],
       "snippets": {
+        "math_average": {
+          "content": "let totalBooks = student1 + student2 + student3;\nlet averageBooks = totalBooks / 3;",
+          "type": "javascript"
+        },
         "math_basics": {
           "content": "let add = 5 + 5;\nlet subtract = 10 - 4;\nlet divide = 25 / 5;\nlet multiply = 6 * 2;",
           "type": "javascript"

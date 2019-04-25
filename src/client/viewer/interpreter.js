@@ -1,5 +1,6 @@
 
 import Interpreter from 'js-interpreter';
+import {trim} from './utils'
 
 export default class CodeInterpreter {
 
@@ -8,6 +9,7 @@ export default class CodeInterpreter {
 
 		// tracking events
 		this.events = {};
+		this.eventCode = 1;
 
 		// check that there's some code here
 		this.hasCode = (code || '').toString().replace(/\W+/g, '').length > 0;
@@ -15,13 +17,14 @@ export default class CodeInterpreter {
 		// create the code execution
 		this.interpreter = new Interpreter(code, (interpreter, scope) => {
 			this.scope = scope;
+			this.scopes = { };
 
 			// standard sync event handler
 			interpreter.createEventHandler = function (key) {
 				return interpreter.createNativeFunction(function () {
 					let args = [].slice.apply(arguments);
 					args = extractArgs(args);
-					instance.triggerEvent(key, args);
+					return instance.triggerEvent(key, args);
 				});
 			};
 
@@ -32,13 +35,78 @@ export default class CodeInterpreter {
 					instance.callback = args.pop();
 					args = extractArgs(args);
 					instance.pause();
-					instance.triggerEvent(key, args);
+					return instance.triggerEvent(key, args);
 				});
 			};
 
 			// initialize
 			handleInit(this, interpreter, scope);
 		});
+	}
+
+	registerAll(configs) {
+		for (const config of configs)
+			this.register(config);
+	}
+
+	/** registers a new object/action */
+	register(config) {
+		const { interpreter } = this;
+
+		// find the appropriate scope to attach to
+		let { scope } = this;
+		if (config.scope) {
+			scope = this.scopes[config.scope];
+			if (!scope) {
+				scope = interpreter.createObject(interpreter.OBJECT);
+				interpreter.setProperty(this.scope, config.scope, scope, Interpreter.NONENUMERABLE_DESCRIPTOR);
+				this.scopes[config.scope] = scope;
+			}
+		}
+
+		// just a value
+		if ('value' in config) {
+			// Maybe need to convert types
+			interpreter.setProperty(scope, config.name, config.value, Interpreter.NONENUMERABLE_DESCRIPTOR);
+		}
+		// executing an action
+		else if ('action' in config) {
+			const event = `event:${++this.eventCode}`;
+			const handler = config.async ? interpreter.createAsyncEventHandler(event) : interpreter.createEventHandler(event);
+			interpreter.setProperty(scope, config.name, handler, Interpreter.NONENUMERABLE_DESCRIPTOR);
+			this.on(event, config.action);
+		}
+		// not sure what this is
+		else {
+			console.log('unknown init', config);
+		}
+		
+
+
+	}
+
+	// converts an array of type
+	resolveTypes(...args) {
+		const resolved = [ ];
+		for (let i = 0; i < args.length; i++)
+			resolved.push(this.resolveType(args[i]));
+
+		return resolved;
+	}
+
+	// converts to usable types
+	resolveType(value) {
+		value = trim(value);
+
+		// check for special cases
+		if (/^true$/i.test(value))
+			value = true;
+		else if (/^false$/i.test(value))
+			value = false;
+		if (/^\-?\d+(\.\d?)?$/.test(value))
+			value = parseFloat(value);
+
+		return this.interpreter.createPrimitive(value);
 	}
 
 	// holds execution
@@ -48,7 +116,7 @@ export default class CodeInterpreter {
 	}
 	
 	// continues execution
-	resume() {
+	resume(...args) {
 		this.triggerEvent('resume');
 
 		const isPaused = !!this.paused;
@@ -57,10 +125,8 @@ export default class CodeInterpreter {
 
 		// check for a callback
 		if (this.callback) {
-			const args = [];
-			for (let i = 0, total = arguments.length; i < total; i++)
-				args.push(this.interpreter.createPrimitive(arguments[i]));
-			this.callback.apply(null, args);
+			const resolved = this.resolveTypes(...args);;
+			this.callback.apply(null, resolved);
 
 			// clear the callback
 			delete this.callback;
@@ -76,7 +142,8 @@ export default class CodeInterpreter {
 
 	triggerEvent(key, args) {
 		const handler = this.events[key];
-		if (handler) handler.apply(null, args);
+		if (handler)
+			return handler.apply(null, args);
 	}
 
 	// attaches an event handler
@@ -177,50 +244,70 @@ function flatten(context) {
 
 }
 
-// loads in standard core functions
-function initCore(instance, interpreter, scope) {
-	const delay = interpreter.createEventHandler('set-timeout');
-	interpreter.setProperty(scope, 'delay', delay, Interpreter.NONENUMERABLE_DESCRIPTOR);
-}
+// // loads in standard core functions
+// function initCore(instance, interpreter, scope) {
+// 	const delay = interpreter.createEventHandler('set-timeout');
+// 	interpreter.setProperty(scope, 'delay', delay, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// }
 
-// includes common console commands
-function initConsole(instance, interpreter, scope) {
-	const runnerConsole = interpreter.createObject(interpreter.OBJECT);
+// // includes common console commands
+// function initConsole(instance, interpreter, scope) {
 
-	// logging
-	const log = interpreter.createEventHandler('console-log');
-	const warn = interpreter.createEventHandler('console-warn');
-	const error = interpreter.createEventHandler('console-error');
-	const info = interpreter.createEventHandler('console-info');
-	const success = interpreter.createEventHandler('console-success');
-	const shake = interpreter.createEventHandler('console-shake');
-	const rainbow = interpreter.createEventHandler('console-rainbow');
-	const ask = interpreter.createAsyncEventHandler('console-ask');
-	const alert = interpreter.createAsyncEventHandler('alert');
-	const image = interpreter.createAsyncEventHandler('console-image');
+// 	// const runnerConsole = interpreter.createObject(interpreter.OBJECT);
+// 	// interpreter.setProperty(scope, 'console', runnerConsole, Interpreter.NONENUMERABLE_DESCRIPTOR);
 
-	// sync
-	interpreter.setProperty(scope, 'console', runnerConsole, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(scope, 'log', log, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'log', log, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'warn', warn, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'error', error, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'info', info, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'success', success, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'shake', shake, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'rainbow', rainbow, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// const runnerConsole = runner.createScope()
 
-	// async
-	interpreter.setProperty(scope, 'alert', alert, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'ask', ask, Interpreter.NONENUMERABLE_DESCRIPTOR);
-	interpreter.setProperty(runnerConsole, 'image', image, Interpreter.NONENUMERABLE_DESCRIPTOR);
-}
+// 	// const obj = interpreter.createObject()
 
 
-// creates a file system helper
-function initFileSystem(instance, interpreter, scope) {
-	// const fs = interpreter.createObject(Interpreter.OBJECT);
-}
+	
+
+// 	// interpreter.configure({
+
+// 	// 	refs: [
+// 	// 		{ scope: 'console', event: 'console-log' },
+// 	// 		{ scope: 'console', event: 'console-ask', async: true },
+// 	// 		{ event: 'alert', async: true }
+
+// 	// 	]
+
+// 	// });
+
+// 	// // logging
+// 	// const log = interpreter.createEventHandler('console-log');
+// 	// const warn = interpreter.createEventHandler('console-warn');
+// 	// const error = interpreter.createEventHandler('console-error');
+// 	// const info = interpreter.createEventHandler('console-info');
+// 	// const success = interpreter.createEventHandler('console-success');
+// 	// const shake = interpreter.createEventHandler('console-shake');
+// 	// const rainbow = interpreter.createEventHandler('console-rainbow');
+// 	// const ask = interpreter.createAsyncEventHandler('console-ask');
+// 	// const alert = interpreter.createAsyncEventHandler('alert');
+// 	// const image = interpreter.createAsyncEventHandler('console-image');
+
+// 	// // sync
+// 	// interpreter.setProperty(scope, 'console', runnerConsole, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(scope, 'log', log, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'log', log, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'warn', warn, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'error', error, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'info', info, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'success', success, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'shake', shake, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'rainbow', rainbow, Interpreter.NONENUMERABLE_DESCRIPTOR);
+
+// 	// // async
+// 	// interpreter.setProperty(scope, 'alert', alert, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'ask', ask, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// 	// interpreter.setProperty(runnerConsole, 'image', image, Interpreter.NONENUMERABLE_DESCRIPTOR);
+// }
+
+
+// // creates a file system helper
+// function initFileSystem(instance, interpreter, scope) {
+// 	// const fs = interpreter.createObject(Interpreter.OBJECT);
+// }
 
 
 
@@ -228,8 +315,8 @@ function initFileSystem(instance, interpreter, scope) {
 function handleInit(instance, interpreter, scope) {
 	instance.state = interpreter.createObject(interpreter.OBJECT);
 
-	initCore(instance, interpreter, scope);
-	initConsole(instance, interpreter, scope);
+	// initCore(instance, interpreter, scope);
+	// initConsole(instance, interpreter, scope);
 }
 
 // gets a timestamp

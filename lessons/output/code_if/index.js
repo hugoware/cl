@@ -197,6 +197,27 @@ function waitForValidation(obj, config) {
 
 			validate(this);
 		},
+		onActivate: function onActivate() {
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			if (config.onActivate) return config.onActivate.apply(this, args);
+		},
+		onRunCode: function onRunCode() {
+			for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+				args[_key3] = arguments[_key3];
+			}
+
+			if (config.onRunCode) return config.onRunCode.apply(this, args);
+		},
+		onRunCodeEnd: function onRunCodeEnd() {
+			for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+				args[_key4] = arguments[_key4];
+			}
+
+			if (config.onRunCodeEnd) return config.onRunCodeEnd.apply(this, args);
+		},
 		onReset: function onReset() {
 			validate(this);
 
@@ -215,8 +236,8 @@ function waitForValidation(obj, config) {
 			this.file.readOnly({ path: config.file });
 			this.editor.hint.enable();
 
-			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-				args[_key2] = arguments[_key2];
+			for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+				args[_key5] = arguments[_key5];
 			}
 
 			if (config.onExit) config.onExit.apply(this, args);

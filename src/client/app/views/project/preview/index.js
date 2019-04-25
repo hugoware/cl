@@ -4,17 +4,20 @@ import Component from '../../../component';
 
 // different preview modes
 import BrowserMode from './browser';
+import MobileMode from './mobile';
 import ReplMode from './repl';
 
 // instantiatable modes
 const MODES = {
 	browser: BrowserMode,
+	mobile: MobileMode,
 	repl: ReplMode
 };
 
 // preview display types
 const MODE_TYPES = { 
 	web: 'browser',
+	mobile: 'mobile',
 	code: 'repl',
 	default: 'error'
 };

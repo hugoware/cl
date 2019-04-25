@@ -13,19 +13,19 @@ export default class ExecutionContext {
 	}
 
 	get alerts() {
-		return this.runner.alerts;
+		return this.runner.handler.alerts;
 	}
 
 	get output() {
-		return this.runner.stdout;
+		return this.runner.handler.stdout;
 	}
 
 	get input() {
-		return this.runner.stdin;
+		return this.runner.handler.stdin;
 	}
 
 	get lines() {
-		return this.runner.totalLines;
+		return this.runner.handler.totalLines;
 	}
 
 }

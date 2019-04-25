@@ -36,6 +36,8 @@ import ProjectSettingsDialog from './dialogs/project-settings';
 import RemoveProjectDialog from './dialogs/remove-project';
 import ResetLessonDialog from './dialogs/reset-lesson';
 import $speech from './speech'
+import CodeRunner from '../viewer/code-runner'
+import TestRunner from '../viewer/runners/test'
 
 // configurations
 window.Promise = window.Promise || Bluebird;
@@ -52,6 +54,13 @@ window.__CODELAB_LIBS__ = {
 	HtmlValidator,
 	CssValidator,
 	HtmlValidationHelper,
+
+	// is this okay?
+	createTestRunner() {
+		const runner = CodeRunner.create(TestRunner);
+		runner.init();
+		return runner;
+	}
 };
 
 // the main app class

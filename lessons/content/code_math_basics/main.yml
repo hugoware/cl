@@ -208,9 +208,25 @@
 
 - slide:
     content: |
-      Being able to use [define code_variable ls] inside of [define javascript_expression ls] is extremely powerful and will become increasingly useful as you learn more about [define javascript].
+      Of course, you aren't limited to only using [define code_variable ls] with other [define code_variable ls].
 
-      [snippet math_variable size:medium]
+      [snippet math_average size:medium highlight:0,47]
+
+      This example asks for three separate numbers, then adds them all together into a [define code_variable l] named `totalBooks`.
+    
+- slide:
+    content: |
+      After that, `totalBooks` is divided by the **number** of students and assigned to a new [define code_variable l] named `average`.
+      
+      [snippet math_average size:medium highlight:49,33]
+
+      [define javascript] knows to use whatever number has been assigned to `totalBooks` when evaluating the [define javascript_expression l].
+
+- slide:
+    content: |
+      Being able to use [define code_variable ls] with [define javascript_expression ls] is extremely powerful and will become increasingly useful as you learn more about [define javascript].
+
+      [snippet math_average size:medium]
 
 - slide:
     mode: popup

@@ -1,50 +1,70 @@
--
-  slide:
+- slide:
     mode: overlay
-    title: Title
+    title: 'Progress Review #1'
     content: |
-      content
+      In this lesson we will be working on a project that reviews all of the skills that have been covered up to this point.
 
-# - question:
-#     count: 4   # optional question count
-#     title: Main title
-#     
-#     hint: Optional helpful hint
+- slide:
+    content: |
+      This lesson is a _"Project Lesson"_ meaning that you will be given a list of **Objectives** to complete. 
 
-#     explain: |
-#       After the question is finished hint
+      [image task-list.png frame]
 
-#     choices:
-#       - correct answer
-#       - wrong answer 1
-#       - wrong answer 2
-#       - wrong answer 3
+- slide:
+    content: |
+      As you work, the **Objective** list will update to show what items have been finished and which ones are still left to be done.
+      
+      [image task-done.png frame]
 
-# - slide:
-#     flags: +OPEN_FILE
-#     emote: happy
-#     controller: name
-#     mode: popup
-#     content: |
-#       Way to go! You've finished this lesson!
-#       
-#       [snippet name highlight:0,5|20,5]
-#       
-#       [snippet html preview:50%]
-#       
-#       [image default.png]
-#       
-#       [image full.jpg frame]
-#       
-#       Inline replacement is done using ||does|duz||
-#       
-#       A normal [define html] is like this
-#       
-#       A lowercase [define html l] is like this
-#       
-#       A plural [define html p] is like this
-#       A plural [define html s] or like this
-#       
-#       Can be combined as [define html lp] [define html ls]
-#       
-#       
+      When you have completed all items on the **Objectives** list, you will have successfully finished this project!
+
+- slide:
+    content: |
+      The purpose of this project is to ensure that you have mastered all of the skills taught in previous lessons. There will **not** be any assistance or hints provided as you work.
+
+      **Please keep in mind that it's entirely possible that you might get stuck!**
+      
+- slide:
+    content: |
+      If you find that you can't figure out how to finish this project, go back and retry previous lessons until you're ready to try again.
+
+      Learning something new takes practice and sometimes that means going over a topic a few times before you completely understand it!
+
+- slide:
+    controller: waitForHover
+    mode: popup
+    showObjectiveList: true
+    highlight: '#header .task-list .heading'
+    content: |
+      The list of **Objectives** is found in the top right corner of the screen.
+
+      Move your cursor over the highlighted area to see what must be accomplished before the project is completed.
+
+- slide:
+    highlight: '#header .task-list .heading'
+    content: |
+      There are many objectives that you will need to complete. Some objectives are not visible unless you scroll the list down to see them.
+
+      Additionally, as you finish groups of objectives, they will be automatically collapsed into single items on the list.
+
+- slide:
+    content: |
+      Finally, some objectives have an icon at the far right side. Moving the cursor over this icon will show the related skill.
+
+      If you're stuck this will help identify which lessons you should go back and review.
+
+- slide:
+    flags: +OPEN-MODE
+    controller: list
+    content: |
+      Alright, it's time to get started!
+
+      Good luck! I look forward to seeing what you create!
+
+- slide:
+    showObjectiveList: false
+    content: |
+      Great work! You've completed all of the objectives!
+
+      You're well on your way to becoming a great computer programmer!
+
