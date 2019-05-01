@@ -9,24 +9,24 @@
 		</div>
 		<div class="content">
 			<p>Time to make something great!</p>
-			<ons-list>
-				<ons-list-header>Documentation</ons-list-header>
-				<ons-list-item>
-					<a href="https://onsen.io/v2/guide/">
-						Getting Started
-					</a>
-				</ons-list-item>
-				<ons-list-item>
-					<a href="https://onsen.io/v2/api/js/">
-						Examples
-					</a>
-				</ons-list-item>
-				<ons-list-item>
-					<a href="https://onsen.io/theme-roller/?customize">
-						Themes
-					</a>
-				</ons-list-item>
-			</ons-list>
 		</div>
 	</ons-card>
+
+	<ons-list>
+		<ons-list-item>
+			<ons-button modifier="quiet" onclick="app.showGettingStarted()">
+				Getting Started
+			</ons-button>
+		</ons-list-item>
+		<ons-list-item>
+			<ons-button modifier="quiet" onclick="app.showExamples()">
+				Examples
+			</ons-button>
+		</ons-list-item>
+		<ons-list-item>
+			<ons-button modifier="quiet" onclick="app.showThemes()">
+				Themes
+			</ons-button>
+		</ons-list-item>
+	</ons-list>
 </ons-page>

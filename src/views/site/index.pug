@@ -4,13 +4,13 @@ block title
 	| CodeLab
 
 block head
-	link(rel='stylesheet', type='text/css', href='/__codelab__/site/index.css')
+	link(rel='stylesheet' type='text/css' href='/__codelab__/site/index.css')
 
 block content
 
 	#error(style='display: none;') 
 		strong Login error:
-		#reason Unable to log into website this is why
+		#reason Unable to log into CodeLab
 
 	#demo-overlay(style='display: none')
 
@@ -49,7 +49,7 @@ block content
 
 						.action
 							a.button(href='/demo' target='_demo') Try a Demo Lesson
-
+	.doc
 		.section.courses.container-fluid
 			.row.content
 				.col-md-5
@@ -119,6 +119,9 @@ block content
 					.description
 						h3 !{content.schedule_title}
 						p !{content.schedule_content}
+						
+						.action
+							a#schedule-link.button(href='/signup') Reserve a Space
 
 				.col-md-6
 					.time-slots
@@ -188,7 +191,7 @@ block content
 								.info !{content.phone_number}
 
 						.action
-							a.button(href='https://goo.gl/forms/OpoHsFSfQk4b4JAC2') Reserve a Space
+							a.button(href='/signup') Reserve a Space
 
 		
 		.section.faq.container-fluid
@@ -210,7 +213,7 @@ block content
 									.answer !{item.answer}
 
 
-		include _footer
+	include _footer
 
 block scripts
 	//- script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyALR3vJM7iMzRxUeVLHIZMWGgc8qB8FLb8')

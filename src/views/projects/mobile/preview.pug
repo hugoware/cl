@@ -1,0 +1,24 @@
+doctype
+html
+	head
+		link(rel='stylesheet' href='/__codelab__/mobile.css')
+
+	body
+		#codelab-splash-introduction.splash
+			#codelab-splash-footer
+				#codelab-splash-created-by Created by #[strong= user.first] using
+				#codelab-splash-logo(href="http://codelabschool.com" target='codelab')
+			#codelab-splash-wrapper
+				#codelab-splash-title= project.name
+				if project.description
+					#codelab-splash-description= project.description || 'No program description provided'
+
+		link(rel='stylesheet' href='https://unpkg.com/onsenui/css/onsenui.css')
+		link(rel='stylesheet' href='https://unpkg.com/onsenui/css/onsen-css-components.min.css')
+		script(src='https://unpkg.com/onsenui/js/onsenui.min.js')
+		
+		| !{code}
+
+		//- live reload access
+		//- if !production
+		//- 	script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')

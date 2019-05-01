@@ -16,6 +16,14 @@
 
 +template('preview-mobile')
 	#mobile.view
+		.actions
+			.switch-platform.ios iOS
+			.switch-platform.android Android
+			.mode.as-device(icon='device')
+			.mode.as-fullscreen(icon='desktop')
+			.orientation.as-landscape(icon='rotate')
+			.orientation.as-portrait(icon='rotate')
+
 		.device
 			iframe.output
 

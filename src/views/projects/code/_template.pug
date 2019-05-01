@@ -37,13 +37,13 @@ html
 			#avatar(avatar=user.avatar)
 			.title= project.name
 			.description= project.description || 'No program description provided'
-			.created-by Created By #[strong= user.first]
+			.created-by Created by #[strong= user.first]
 
 			block action
 
 		block content
 	
 		//- live reload access
-		if !production
-			script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
-			script(type='text/javascript' src='/__codelab__/code.js')
+		//- if !production
+		//- 	script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
+		script(type='text/javascript' src='/__codelab__/code.js')

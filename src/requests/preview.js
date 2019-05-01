@@ -9,6 +9,7 @@ export const priority = 1;
 // get the project handlers
 import previewWebProject from '../preview/web';
 import previewCodeProject from '../preview/code';
+import previewMobileProject from '../preview/mobile';
 
 // determines the correct home view
 export async function handle(request, response, next) {
@@ -39,6 +40,7 @@ export async function handle(request, response, next) {
 	// process the request
 	const handler = project.type === 'web' ? previewWebProject
 		: project.type === 'code' ? previewCodeProject
+		: project.type === 'mobile' ? previewMobileProject
 		: null;
 
 	// if there's not a handler, there's no reason
@@ -54,6 +56,7 @@ export async function handle(request, response, next) {
 	}
 	// failed to read the file
 	catch (err) {
+		console.log(err);
 		response.render('projects/missing');
 	}
 

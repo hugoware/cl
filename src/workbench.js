@@ -7,7 +7,8 @@ import $lessons from './storage/lessons';
 
 // testing
 import { handleError } from './utils';
-import HtmlValidationHelper from './client/app/utils/html-validation-helper'
+// import HtmlValidationHelper from './client/app/utils/html-validation-helper'
+import syncSubscription from './requests/sync-subscription'
 // import { resolveError } from './utils';
 // import createProject, { CreateProjectData } from './actions/create-project';
 // import updateProject, { UpdateProjectData } from './actions/update-project';
@@ -22,40 +23,41 @@ import HtmlValidationHelper from './client/app/utils/html-validation-helper'
 // handles running the test
 async function run() {
 
+	await syncSubscription('1mkVvpIRP5PP5z1QLd')
 	
 
-	const code = `<html>
-	<body>
-		<img />
-	</body>
+// 	const code = `<html>
+// 	<body>
+// 		<img />
+// 	</body>
 
-	<head>
-		<title>title</title>
-		<li src="/img" >item 1</li>
-		<li class="named" >li2</li>
-		<li class="named" >li2</li>
-		<li class="named" >li2</li>
-	</head>
-</html>`
+// 	<head>
+// 		<title>title</title>
+// 		<li src="/img" >item 1</li>
+// 		<li class="named" >li2</li>
+// 		<li class="named" >li2</li>
+// 		<li class="named" >li2</li>
+// 	</head>
+// </html>`
 
 
-	HtmlValidationHelper.validate(code, html => {
+// 	HtmlValidationHelper.validate(code, html => {
 		
-		const match = html.find('li[src="/img"]')
-		console.log(match);
+// 		const match = html.find('li[src="/img"]')
+// 		console.log(match);
 		
 
-	});
+// 	});
 
-	try {
-		// const result = await $lessons.getLessons('hugo')
-		// console.log(result);
-		// const result = await compileProject('mk1234', 'style.scss');
-		// console.log('finsie', result);
-	}
-	catch (err) {
-		console.log(err);
-	}
+// 	try {
+// 		// const result = await $lessons.getLessons('hugo')
+// 		// console.log(result);
+// 		// const result = await compileProject('mk1234', 'style.scss');
+// 		// console.log('finsie', result);
+// 	}
+// 	catch (err) {
+// 		console.log(err);
+// 	}
 
 
 	// await writeFile('mk1234', 'main/new.txt', 'this is content');

@@ -6,6 +6,7 @@ import $lessons from './storage/lessons';
 import $fileDefaults from './file-defaults';
 import $path from './path';
 import { resolveError } from './utils';
+import Schedule from './schedule'
 
 // initializes the app
 async function init() {
@@ -20,6 +21,9 @@ async function init() {
 		
 		// preload lesson content
 		await $lessons.init();
+
+		// prepare the schedule
+		await Schedule.init();
 		
 		// preload file content
 		await $fileDefaults.init();

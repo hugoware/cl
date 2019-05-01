@@ -7,6 +7,9 @@ ssl_key: ~/../ssl/key
 ssl_cert: ~/../ssl/cert
 ssl_ca: ~/../ssl/ca
 
+chargebee_api_key: test_H6s4r83e6wKuLHOq3GmDO7nSNeMMaCxc
+chargebee_api_target: codelab-test
+
 lesson_manifest: ~/lessons/
 lesson_directory: ~/lessons/output/
 audio_directory: ~/.audio/

@@ -1,3 +1,9 @@
+game:
+  js: ''
+  txt: ''
+  xml: ''
+  json: ''
+  
 mobile:
   html: |
     <ons-page id="">
@@ -14,10 +20,14 @@ mobile:
         </div>
       </ons-card>
     </ons-page>
-  js: |
-    // init
+  js: ''
+  json: ''
+  css: ''
+  txt: ''
+  xml: ''
 
 code:
+  json: ''
   js: |
     console.log('Hello, world!');
 
@@ -31,6 +41,8 @@ code:
     </data>
 
 web:
+  json: ''
+  
   js: |
     window.addEventListener('load', function() {
       console.log('Hello, world!');

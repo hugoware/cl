@@ -1,0 +1,83 @@
+extends _template
+include _header
+
+mixin timeslots
+	.time-slots
+		.step.first
+			.step-icon.icon-calendar
+			.about
+				h3 Choose a Day
+				p Pick the day of the week that you'd like to visit
+
+				#selected-day.dropdown
+					.selection Select a day
+					.items
+						for day in schedule
+							.item(data-label=day.day data-value=day.day.toLowerCase())
+								.block= day.day
+
+		.step
+			.step-icon.icon-clock
+			.about
+				h3 Choose a Time
+				p Find a open time that works best for your schedule
+
+				.dropdown.inactive
+					.selection Select a time
+
+				for day in schedule
+					.dropdown(id='selected-' + day.day.toLowerCase())
+						.selection Select a time
+						.items
+							for session in day.slots
+								.item(data-value=session.index data-label=session.time + ' ' + session.meridem class=session.status)
+									.block.status(class='status-' + session.status)
+										.detail #{session.time} #{session.meridem}
+										if session.status === 'limited'
+											.note Limited space
+
+										if session.status === 'full'
+											.note Session full
+
+		.step.last
+			.step-icon.icon-start
+			.about
+				h3 Get Started!
+				p Choose a seat and jump right into programming!
+
+				.button.inactive#enroll-now Enroll now!
+
+block title
+	| Schedule / CodeLab
+
+block head
+	link(rel='stylesheet' type='text/css' href='/__codelab__/site/index.css')
+
+block content
+	.main.content
+
+		+standard_header('Enroll Online', true)
+			| Sign up now for CodeLab weekly sessions
+
+	.doc
+		#enrollment
+			.section.container
+				.row
+					.col-md-6.order-review#order
+						h2 Things to know before enrolling
+						p.future-billing CodeLab sessions begin #[strong July 1st, 2019]. You will not be charged until that date.
+						p.important Enrollment for CodeLab is #[strong $#{content.monthly_cost}] which is #[strong billed once per month].
+						p Enrollment gives you access to one weekly tutoring session at CodeLab as well as the computer systems.
+						p If a student misses class, they may attempt to make up the lesson that same week or contact us to activate lesson access from home.
+						p You're also able to access CodeLab from home to review lessons or to work on own project ideas	
+						p By enrolling at CodeLab, you're agreeing to the #[a(href="/policies") CodeLab policies].
+
+					.col-md-6
+						+timeslots
+
+	include _footer
+
+block scripts
+	script(src='https://js.chargebee.com/v2/chargebee.js' data-cb-site='codelab-test')
+	script(type='text/javascript' src='/__codelab__/site.js')
+	

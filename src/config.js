@@ -30,6 +30,12 @@ class Config {
 	/** @return {string} the SSL certificate authority */
 	get sslCA() { return this.data.ssl_ca; }
 	
+	/** @returns {string} key for accessing chargebee */
+	get chargebeeApiKey() { return this.data.chargebee_api_key; }
+	
+	/** @returns {string} key for accessing which chargebee database */
+	get chargebeeApiTarget() { return this.data.chargebee_api_target; }
+
 	/** @returns {string} key for recording speech */
 	get azureSubscriptionKey() { return this.data.azure_subscription_key; }
 

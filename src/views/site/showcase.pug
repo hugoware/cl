@@ -28,10 +28,11 @@ block content
 		+standard_header('Student Showcase')
 			| Check out some of the creations made using CodeLab
 
+	.doc
 		.section.showcase.container-fluid
 			.row.content
 
 				for item in showcase
 					+showcase_item(item)
 
-		include _footer
+	include _footer

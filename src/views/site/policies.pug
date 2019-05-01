@@ -10,10 +10,11 @@ block head
 block content
 	.main.content
 
-		+standard_header('CodeLab Policies')
+		+standard_header('CodeLab Policies', true)
 			| Rules, Terms, and Conditions for CodeLab
 
-		.section.policies.container-fluid
+	.doc
+		.section.policies.container
 			for policy in content.policies
 				.row.content
 					.col-md-8.explanation

@@ -1,5 +1,5 @@
-mixin standard_header(section)
-	.header
+mixin standard_header(section, isPartial)
+	.header(class=(isPartial ? 'partial' : ''))
 		.container
 
 			.row.bar

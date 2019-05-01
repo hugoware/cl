@@ -40,6 +40,9 @@ import activityIcon from '../../icons/icon-activity.svg';
 import addFolderIcon from '../../icons/icon-add-folder.svg';
 import addFileIcon from '../../icons/icon-add-file.svg';
 import toggleDropdownIcon from '../../icons/icon-toggle-dropdown.svg';
+import rotateIcon from '../../icons/icon-rotate.svg';
+import desktopIcon from '../../icons/icon-desktop.svg';
+import deviceIcon from '../../icons/icon-device.svg';
 
 import actionEditIcon from '../../icons/action-edit.svg';
 import actionPublishIcon from '../../icons/action-publish.svg';
@@ -128,6 +131,9 @@ const $icons = {
 
 	typeEmailIcon,
 
+	desktopIcon,
+	deviceIcon,
+	rotateIcon,
 	addFolderIcon,
 	addFileIcon,
 	closeIcon,

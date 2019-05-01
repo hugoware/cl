@@ -1,0 +1,23 @@
+doctype
+html
+	head
+		link(rel='stylesheet' href='/__codelab__/mobile.css')
+
+	body
+		#codelab-splash-introduction.splash
+			#codelab-splash-footer
+				#codelab-splash-created-by Created by #[strong= user.first] using
+				#codelab-splash-logo(href="http://codelabschool.com" target='codelab')
+			#codelab-splash-wrapper
+				#codelab-splash-title= project.name
+				if project.description
+					#codelab-splash-description= project.description || 'No program description provided'
+
+		script(src='https://unpkg.com/phaser@3.16.2/dist/phaser.min.js')
+		script(src='https://unpkg.com/phaser@3.16.2/dist/phaser-arcade-physics.min.js')
+		
+		| !{code}
+
+		//- live reload access
+		//- if !production
+		//- 	script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')

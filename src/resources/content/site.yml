@@ -1,4 +1,4 @@
-monthly_cost: 200
+monthly_cost: 125
 phone_number: 972-861-0189
 
 header_introduction: |
@@ -44,7 +44,7 @@ faq_content: |
 plans:
   
   - title: At Home Plan
-    cost: 75
+    cost: 30
     css: remote
     summary: Home access to weekly CodeLab tutorials and a Virtual Coach
     features:
@@ -64,7 +64,7 @@ plans:
       #   detail: Discounts available
 
   - title: On-Site Plan
-    cost: 200
+    cost: 125
     css: standard
     summary: On-site access to CodeLab with provided computers and a Code Coach
     features:
