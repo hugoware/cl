@@ -1253,17 +1253,29 @@ html, body {
 		&.future-billing {
 			font-size: 20px;
 			background: lighten(#0f0, 40%);
-			display: none;
 		}
 	}
-	&.billing-starts-later .future-billing {
-		display: block;
-	}
+
 }
 
 
 #thankyou {
 	padding: 45px 0 0 0;
+
+	.back {
+		float: right;
+	}
+
+	.logo {
+		background: url(/__codelab__/site/images/logo-blue.png);
+		$scale: 0.33;
+		$width: 1040px * $scale;
+		$height: 228px * $scale;
+		width: $width;
+		height: $height;
+		background-size: $width $height;
+		margin: 20px 0 10px 0;
+	}
 	
 	.message {
 		background: #fff;
@@ -1292,6 +1304,10 @@ html, body {
 				padding: 0;
 			}
 		}
+	}
+
+	.actions {
+		text-align: center;
 	}
 
 }

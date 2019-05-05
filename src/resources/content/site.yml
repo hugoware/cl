@@ -41,6 +41,25 @@ faq_content: |
   Still have questions about **CodeLab**? Feel free to contact us with any remaining questions you have and we'll get back to you as soon as possible.
 
 
+preEnroll: CodeLab sessions begin **July 1st, 2019**. You will not be charged until that date.
+
+enrollment_notes:
+  - type: important
+    message: Enrollment for CodeLab **$125** which is **billed once per month**.
+  
+  - type: important
+    message: Each CodeLab session is one hour long, once per week, at the time you select.
+  
+  - message: |
+      Students may access CodeLab from home to work on their own projects, but not to complete tutorials.
+  
+  - message: |
+      If a student is unable to attend class online they can attempt to make it up later in the week, or perform their tutorials from home.
+  
+  - message: |
+      Enrolling at CodeLab means that you are agreeing to the [CodeLab Policies](/policies).
+
+
 plans:
   
   - title: At Home Plan

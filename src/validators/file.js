@@ -5,10 +5,10 @@ import { stringify, resolveError } from './utils';
 const MIN_NAME_LENGTH = 1;
 const MAX_NAME_LENGTH = 50;
 const PROJECT_FILE_TYPES = {
-	// web: ['html', 'pug', 'ts', 'js', 'css', 'scss'],
-	web: ['html', 'js', 'css'],
-	mobile: ['html', 'js', 'css'],
-	code: ['js']
+	web: ['html', 'js', 'css', 'json', 'xml', 'txt'],
+	mobile: ['html', 'js', 'css', 'json', 'xml', 'txt'],
+	code: ['js', 'json', 'txt', 'xml'],
+	game: ['js', 'json', 'txt', 'xml']
 };
 
 /** validates the provided name for a project
@@ -20,8 +20,8 @@ export function validateName(name, errors) {
 	name = stringify(name);
 	const err = name.length < MIN_NAME_LENGTH ? 'required'
 		: name.length > MAX_NAME_LENGTH ? 'too_long'
-			: /[^a-z0-9 \-_]+/i.test(name) ? 'invalid'
-				: null;
+		: /[^a-z0-9 \-_]+/i.test(name) ? 'invalid'
+		: null;
 
 	return resolveError('name', err, errors);
 }

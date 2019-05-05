@@ -92,6 +92,7 @@ export default class ReplMode extends Component {
 
 	// handles starting a new project
 	onActivateProject = async project => {
+		this.isActive = true;
 		this.reset();
 	}
 
@@ -144,6 +145,7 @@ export default class ReplMode extends Component {
 
 	// handles deactivating a project entirely
 	onDeactivateProject = () => {
+		this.isActive = false;
 		this.clear();
 	}
 
@@ -175,6 +177,8 @@ export default class ReplMode extends Component {
 
 	// handles running
 	onRunScripts = () => {
+		if (!this.isActive) return;
+		
 		this.runner.clear();
 		this.runner.projectUrl = $state.getProjectDomain();
 

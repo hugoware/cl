@@ -10,6 +10,7 @@ export const priority = 1;
 import previewWebProject from '../preview/web';
 import previewCodeProject from '../preview/code';
 import previewMobileProject from '../preview/mobile';
+import previewGameProject from '../preview/game';
 
 // determines the correct home view
 export async function handle(request, response, next) {
@@ -41,6 +42,7 @@ export async function handle(request, response, next) {
 	const handler = project.type === 'web' ? previewWebProject
 		: project.type === 'code' ? previewCodeProject
 		: project.type === 'mobile' ? previewMobileProject
+		: project.type === 'game' ? previewGameProject
 		: null;
 
 	// if there's not a handler, there's no reason

@@ -13,7 +13,7 @@ import Preview from './views/project/preview/index';
 import ManagedEditor from './editor/managed';
 
 const ROOT = { path: '/' };
-const CODE_FILES = ['html', 'js', 'ts', 'css', 'scss', 'txt', 'sql', 'pug', 'py', 'rb'];
+const CODE_FILES = ['html', 'js', 'css', 'txt', 'json'];
 const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 
 // speech options;

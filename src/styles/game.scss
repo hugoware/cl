@@ -1,0 +1,80 @@
+@mixin logo($scale) {
+	$logo-width: 365px * $scale;
+	$logo-height: 80px * $scale;
+	background: url(/__codelab__/app/header-logo.png);
+	background-size: $logo-width $logo-height;
+	width: $logo-width;
+	height: $logo-height;
+	display: inline-block;
+}
+
+#codelab-splash-introduction {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 999999999;
+
+	color: #fff;
+	text-align: center;
+	transition: all 0.7s;
+	transition-property: opacity transform;
+}
+
+.splash {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	pointer-events: none;
+}
+
+#codelab-splash-introduction.hide {
+	transform: translate(0, 100px);
+	opacity: 0;
+}
+
+#codelab-splash-wrapper {
+	position: absolute;
+	top: 33%;
+	// left: 50%;
+	// transform: translate(-50%, -50%);
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	width: 60%;
+	max-width: 500px;
+}
+
+#codelab-splash-footer {
+	position: absolute;
+	bottom: 15px;
+	text-align: center;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+}
+
+#codelab-splash-logo {
+	@include logo(0.33);
+	display: inline-block;
+}
+
+#codelab-splash-title {
+	font-size: 28px;
+	padding: 0 0 8px 0;
+	text-shadow: 0 0 35px rgba(#000, 0.5);
+}
+
+#codelab-splash-description {
+	font-size: 15px;
+
+	background: rgba(#000, 0.1);
+	display: inline-block;
+	border-radius: 100px;
+	margin-bottom: 10px;
+	padding: 5px 15px;
+}
+
+#codelab-splash-created-by {
+	padding: 0 0 10px 0;
+	font-size: 13px;
+}

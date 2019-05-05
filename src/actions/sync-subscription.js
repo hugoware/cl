@@ -16,16 +16,21 @@ export default function syncSubscription(subscriptionId) {
 
 		// if this is existing, then just update it
 		const existing = await $database.users
-			.find({ subscriptionId }, { _id: 1 }).limit(1)
+			.find({ subscriptionId }, { _id: 1, subscriptionId: 1, timeSlot: 1 }).limit(1)
 			.toArray();
 
 		// if this already exists, then the subscription is
 		// in the system and can be ignored
-		if (_.some(existing))
+		if (_.some(existing)) {
+			const record = existing[0];
+			const session = Schedule.current.getSession(record.timeSlot);
 			return resolve({
 				success: false,
-				status: 'already_registered'
+				status: 'already_registered',
+				subscriptionId: record.subscriptionId,
+				date: session.at
 			});
+		}
 		
 		// setup access
 		chargebee.configure({
@@ -75,20 +80,18 @@ export default function syncSubscription(subscriptionId) {
 
 				// update the schedule (so it doesn't have to reload)
 				const index = 0 | sessionId;
-				const date = Schedule.current.getDate(index);
+				const session = Schedule.current.getSession(index);
 				Schedule.current.reserveSlot(index);
-				
+
 				// console.log(result);
 				resolve({
 					success: true,
 					first,
 					last,
-					date,
+					subscriptionId,
+					date: session.at,
 				});
-				// var subscription = result.subscription;
-				// var customer = result.customer;
-				// var card = result.card;
-
+				
 
 			});
 

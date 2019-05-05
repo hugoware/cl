@@ -42,8 +42,8 @@ mixin timeslots
 		.step.last
 			.step-icon.icon-start
 			.about
-				h3 Get Started!
-				p Choose a seat and jump right into programming!
+				h3 Complete Enrollment
+				p Fill out the enrollment form to get signed up!
 
 				.button.inactive#enroll-now Enroll now!
 
@@ -65,12 +65,16 @@ block content
 				.row
 					.col-md-6.order-review#order
 						h2 Things to know before enrolling
-						p.future-billing CodeLab sessions begin #[strong July 1st, 2019]. You will not be charged until that date.
-						p.important Enrollment for CodeLab is #[strong $#{content.monthly_cost}] which is #[strong billed once per month].
-						p Enrollment gives you access to one weekly tutoring session at CodeLab as well as the computer systems.
-						p If a student misses class, they may attempt to make up the lesson that same week or contact us to activate lesson access from home.
-						p You're also able to access CodeLab from home to review lessons or to work on own project ideas	
-						p By enrolling at CodeLab, you're agreeing to the #[a(href="/policies") CodeLab policies].
+						if isPreEnroll
+							p.future-billing !{content.preEnroll}
+							
+						for item in content.enrollment_notes
+							p(class=item.type) !{item.message}
+						//- p.important Enrollment for CodeLab is #[strong $#{content.monthly_cost}] which is #[strong billed once per month].
+						//- p Enrollment gives you access to one weekly tutoring session at CodeLab as well as the computer systems.
+						//- p If a student misses class, they may attempt to make up the lesson that same week or contact us to activate lesson access from home.
+						//- p You're also able to access CodeLab from home to review lessons or to work on own project ideas	
+						//- p By enrolling at CodeLab, you're agreeing to the #[a(href="/policies") CodeLab policies].
 
 					.col-md-6
 						+timeslots
@@ -78,6 +82,6 @@ block content
 	include _footer
 
 block scripts
-	script(src='https://js.chargebee.com/v2/chargebee.js' data-cb-site='codelab-test')
+	script(src='https://js.chargebee.com/v2/chargebee.js' data-cb-site=billingTarget)
 	script(type='text/javascript' src='/__codelab__/site.js')
 	

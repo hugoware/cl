@@ -58,12 +58,16 @@ const getSiteContent = getContentLoader('site', doc => {
 		item.summary = toMarkdown(item.summary);
 		item.content = toMarkdown(item.content || '');
 	});
+	
+	_.each(doc.enrollment_notes, item => {
+		item.message = toMarkdown(_.trim(item.message)).replace(/^\<p\>|\<\/p\>$/g, '')
+	});
 
 	// apply remaining markdown
 	_.each(doc, (value, key) => {
 
 		// already managed
-		if (_.includes(['faq', 'plans', 'policies', 'features'], key)) return;
+		if (_.includes(['faq', 'enrollment_notes', 'plans', 'policies', 'features'], key)) return;
 
 		// update values
 		const html = toMarkdown(_.trim(value));

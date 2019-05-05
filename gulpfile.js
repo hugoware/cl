@@ -55,7 +55,7 @@ const $config = {
 	scripts: {
     client: [ 'site', 'app', 'browser', 'admin', 'repl' ],
     workers: [ 'pug', 'babel', 'scss', 'html' ],
-		viewers: [ 'code' ], //, 'mobile-install' ],
+		viewers: [ 'code', 'game' ], //, 'mobile-install' ],
 		server: {
 			watch: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**', ],
 			src: ['src/**/*.js', '!src/client', '!src/client/**', '!src/resources/**'],

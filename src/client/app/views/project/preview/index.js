@@ -5,13 +5,15 @@ import Component from '../../../component';
 // different preview modes
 import BrowserMode from './browser';
 import MobileMode from './mobile';
+import GameMode from './game';
 import ReplMode from './repl';
 
 // instantiatable modes
 const MODES = {
 	browser: BrowserMode,
 	mobile: MobileMode,
-	repl: ReplMode
+	repl: ReplMode,
+	game: GameMode,
 };
 
 // preview display types
@@ -19,7 +21,8 @@ const MODE_TYPES = {
 	web: 'browser',
 	mobile: 'mobile',
 	code: 'repl',
-	default: 'error'
+	game: 'game',
+	default: 'error',
 };
 
 export default class Preview extends Component {
@@ -74,6 +77,7 @@ export default class Preview extends Component {
 
 	// changes the display mode for the project
 	setMode = mode => {
+		console.log(mode);
 
 		// load a handler for the first time
 		const type = MODES[mode];

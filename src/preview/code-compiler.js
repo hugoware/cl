@@ -12,13 +12,14 @@ import BabelCompiler from '../compiler/babel'
 
 // common resources that require no processing
 const RESOURCES = [
-	'html', 'htm', 'css', 'txt', 'xml', 'json',
-	'png', 'jpg', 'jpeg', 'gif'
+	'txt', 'json', 'xml',
+	'png', 'jpg', 'jpeg', 'gif',
+	'mp3', 'wav'
 ];
 
 // return web content as required
-export default async function handleRequest(request, response, project) {
-	const { path } = request;
+export default async function compile(request, response, project, options) {
+	let { path } = request;
 	const { id } = project;
 	const source = $path.resolveProject(id);
 
@@ -29,55 +30,59 @@ export default async function handleRequest(request, response, project) {
 		return response.sendFile(resource);
 	}
 
+	// not there's not a path, then let's look for
+	// main.js as the default file
+	if (!path || path === '/')
+		path = options.defaultEntry || '/main.js';
+
 	// get the up to date project data
 	const projects = await $database.projects.find({ id: project.id })
-		.project({ name: 1, description: 1, modifiedAt: 1 })
+		.project({ name: 1, description: 1 })
 		.toArray();
 
 	// grab the user info
 	const results = await $database.users.find({ id: project.ownerId })
-		.project({ first: 1, anonymous: 1 })
+		.project({ first: 1, avatar: 1, anonymous: 1 })
 		.toArray();
 
 	// use the project
 	project = projects[0] || project;
-
-	// get the last modified time
-	let modifiedAt = project && project.modifiedAt;
-	if (isNaN(modifiedAt)) modifiedAt = 1;
 
 	// find the owner
 	let user = results[0] || getAnonymous();
 	if (user.anonymous) user = getAnonymous();
 
 	// there are no look ups, just use the project as is
-	const compiled = $path.resolveCache(`/projects/${id}/app`);
+	const alias = _.snakeCase(path);
+	const compiled = $path.resolveCache(`/projects/${id}/${alias}.js`);
 
 	// check if already cached
-	let isValid = await $fsx.exists(compiled);
-	if (!!isValid) {
-		const stats = await $fsx.stat(compiled);
-		isValid = modifiedAt <= stats.mtimeMs;
-	}
+	const exists = await $fsx.exists(compiled);
 
 	// if it's not compiled, then generate it now
-	isValid = false;
-	if (!isValid) {
-		await compileProject(source, '/app.js', compiled, modifiedAt);
+	if (!exists) {
+		const result = await compileProject(source, path, compiled, options);
+
+		// nothing could be compiled
+		if (!result.success) {
+			result.project = project;
+			result.user = user;
+			return response.render(options.missingView, result);
+		}
 	}
 
 	// now, render the result
 	const data = await $fsx.readFile(compiled);
 	const code = data.toString();
-	response.render('projects/mobile/preview', { code, project, user });
+	response.render(options.renderView, { code, project, user });
 }
 
 // compiles a project to be used in the code window
-async function compileProject(source, entry, compiled, timestamp) {
+async function compileProject(source, entry, compiled, options) {
 	return new Promise(async resolve => {
 
 		// gather up all files
-		const files = await find(source, ['.js', '.html', '.css']);
+		const files = await find(source, ['.js']);
 
 		// check if the entry file exists - if not
 		// then check if there's only one file in
@@ -88,39 +93,31 @@ async function compileProject(source, entry, compiled, timestamp) {
 			hasEntry = true;
 		}
 
-		// make sure there's a app.js
+		// make sure there's a main.js
 		if (!hasEntry)
 			return resolve({
 				noEntry: true,
 				noFiles: files.length <= 0,
-				isDefaultEntry: entry === '/app.js',
+				isDefaultEntry: entry === (options.defaultEntry || '/main.js'),
 				entry,
 				success: false,
 				files
 			});
 
 		// collect up each file content
-		const imports = { };
-		const markup = [ ];
-		const style = [ ];
-
-		// gather all files
+		const imports = {};
 		for (let i = 0, total = files.length; i < total; i++) {
 			const path = files[i];
 			const relative = $path.removeLeadingSlash(path);
 			const absolute = $path.resolve(source, relative);
 			const data = await $fsx.readFile(absolute);
-			const content = data.toString();
-
-			// save to the correct location
-			if (/\.js$/.test(path)) imports[path] = content;
-			else if (/\.css$/.test(path)) style.push(content);
-			else markup.push(content);
+			imports[path] = data.toString();
 		}
 
 		// compile
 		let result;
 		try {
+
 			const compiler = new BabelCompiler({
 				entry,
 				babel: Babel,
@@ -128,37 +125,17 @@ async function compileProject(source, entry, compiled, timestamp) {
 			});
 
 			result = compiler.compile();
+
 		}
 		// there was an error - save a compiled
 		// version that notifies there was a problem
 		catch (ex) {
-			result = `window.__CODELAB__.projectError();`;
+			result = options.onError(ex);
 		}
 
 		// write the result
-		const code = `
-	<script>
-		var app = window.APP = { };
-		ons.ready(function() {
-			setTimeout(function() { 
-				document.getElementById('codelab-splash-introduction').className += ' hide';
-				setTimeout(function() { 
-					${result}
-				}, 150);
-			}, 2000);
-		});
-	</script>
-
-	<style type="text/css" >
-		${style.join('\n')}
-	</style>
-
-	${markup.join('\n')}
-`;
-
 		await $fsx.ensureFile(compiled);
-		await $fsx.writeFile(compiled, code);
-		await $fsx.utimes(compiled, timestamp, timestamp);
+		await $fsx.writeFile(compiled, result);
 
 		resolve({ success: true });
 	});

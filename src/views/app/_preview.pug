@@ -27,6 +27,20 @@
 		.device
 			iframe.output
 
++template('preview-game')
+	#game.view
+		.actions
+			.file-path
+			.action.run-scripts.with-shortcut
+				.label Run Game
+				+shortcut('mod', 'Enter')
+
+		.viewport
+			iframe.game
+			
+		.console
+			.messages
+
 +template('preview-repl')
 	.console
 		.actions
@@ -34,6 +48,7 @@
 			.action.run-scripts.with-shortcut
 				.label Run Code
 				+shortcut('mod', 'Enter')
+
 		#repl.window
 			#alert
 				.header

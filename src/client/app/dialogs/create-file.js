@@ -6,6 +6,13 @@ import ErrorMessage from '../ui/error-message';
 import $state from '../state';
 import { requirePermission } from '../views/project/prevent';
 
+const ALLOWED_FILE_TYPES = {
+	game: ['js', 'txt', 'xml', 'json'],
+	code: ['js', 'txt', 'xml', 'json'],
+	web: ['html', 'css', 'js', 'txt', 'xml', 'json'],
+	mobile: ['html', 'css', 'js', 'txt', 'xml', 'json'],
+};
+
 export default class CreateFileDialog extends Dialog {
 
 	constructor() {
@@ -94,7 +101,7 @@ export default class CreateFileDialog extends Dialog {
 
 		// activate each allowed type
 		// TODO: this is project dependent
-		const allowed = ['html', 'css', 'scss', 'pug', 'js', 'ts', 'txt', 'xml'];
+		const allowed = ALLOWED_FILE_TYPES[project.type];
 		_.each(allowed, type => {
 			this.addClass(`allow-file-type-${type}`);
 		});

@@ -10,7 +10,7 @@ const COMPILE_TIMEOUT = 3000;
 
 // common resources that require no processing
 const RESOURCES = [
-	'html', 'htm', 'css', 'js', 'txt',
+	'html', 'htm', 'css', 'js', 'txt', 'xml', 'json',
 	'png', 'jpg', 'jpeg', 'gif'
 ];
 

@@ -16,7 +16,9 @@ import mdIcon from '../../icons/icon-md.svg';
 import pyIcon from '../../icons/icon-py.svg';
 import xmlIcon from '../../icons/icon-xml.svg';
 import csIcon from '../../icons/icon-cs.svg';
+import mp3Icon from '../../icons/icon-cs.svg';
 import javaIcon from '../../icons/icon-java.svg';
+import jsonIcon from '../../icons/icon-java.svg';
 import sqlIcon from '../../icons/icon-sql.svg';
 import bmpIcon from '../../icons/icon-bmp.svg';
 import pngIcon from '../../icons/icon-png.svg';
@@ -151,7 +153,9 @@ const $icons = {
 	pyIcon,
 	xmlIcon,
 	csIcon,
+	mp3Icon,
 	javaIcon,
+	jsonIcon,
 	sqlIcon,
 	bmpIcon,
 	svgIcon,

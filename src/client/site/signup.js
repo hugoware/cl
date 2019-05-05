@@ -108,7 +108,6 @@ function checkForFutureBilling() {
 	const isFuture = startAt > now;
 	if (!isFuture) return;
 
-	document.getElementById('order').className += ' billing-starts-later';
 	$startAt = startAt;
 }
 

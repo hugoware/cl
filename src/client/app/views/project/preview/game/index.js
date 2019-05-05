@@ -1,6 +1,6 @@
 /// <reference path="../../../../types/index.js" />
 
-import { _, $, HtmlTagValidator } from '../../../../lib';
+// import { _, $, HtmlTagValidator } from '../../../../lib';
 // import View from './view';
 import $state from '../../../../state';
 import $contentManager from '../../../../content-manager';
@@ -10,165 +10,186 @@ import $errorManager from '../../../../error-manager';
 
 
 // create the preview mode
-export default class MobileMode extends Component {
+export default class GameMode extends Component {
 
 	constructor(preview) {
 		super({
-			template: 'preview-mobile',
+			template: 'preview-game',
 
 			ui: {
-				output: '.device iframe.output',
-				switchToIOS: '.actions .ios',
-				switchToAndroid: '.actions .android',
-				toLandscape: '.actions .as-landscape',
-				toPortrait: '.actions .as-portrait',
-				asDevice: '.actions .as-device',
-				asFullScreen: '.actions .as-fullscreen',
+				runCode: '.run-scripts',
+				viewport: '.viewport',
+				output: '.game',
+				console: '.console .messages'
 			}
 		});
 
 		// save the preview instance
 		this.preview = preview;
+		this.listen('window-resize', this.onResize);
 
-		/** the current views cached for the browser
-		 * @type {Object<string, View>} */
-		this.views = { };
+		// handle executing code
+		Mousetrap.bind('mod+enter', this.onRunCode);
 
-		this.ui.switchToAndroid.on('click', () => this.setPlatform('android'));
-		this.ui.switchToIOS.on('click', () => this.setPlatform('ios'));
-		this.ui.toLandscape.on('click', this.toLandscape);
-		this.ui.toPortrait.on('click', this.toPortrait);
-		this.ui.asDevice.on('click', this.toDeviceView);
-		this.ui.asFullScreen.on('click', this.toFullScreenView);
+		// // log messages
+		// this.consoleMessages = [ ];
+
+		// game system messages
+		window.__matchViewportSize__ = this.setViewportSize;
+		window.__logGameMessage__ = this.onLogMessage;
+		window.__clearGameMessages__ = this.onClearMessages;
+
+		this.ui.runCode.on('click', this.onRunCode);
 	}
 
-	toPortrait = () => {
-		this.removeClass('as-landscape');
-		this.addClass('as-portrait');
-	}
-	
-	toLandscape = () => {
-		this.removeClass('as-portrait');
-		this.addClass('as-landscape');
+	// saves the viewport size to use
+	setViewportSize = (width, height) => {
+		this.targetWidth = width;
+		this.targetHeight = height;
+		this.syncViewport();
 	}
 
-	toDeviceView = () => {
-		this.removeClass('as-fullscreen');
-		this.addClass('as-device');
+	// handles syncing the viewport with the size
+	syncViewport = () => {
+		// let width = this.targetWidth;
+		// let height = this.targetHeight;
+		
+		// // calculate the new size
+		// const size = this.ui.viewport.getBoundingClientRect();
+
+		// const vWidth = size.right - size.left;
+		// const vHeight = (size.bottom - size.top) - 100; // reserved space for console
+		// const scale = Math.max(vWidth / width, vHeight / height);
+		
+		// width = Math.min(width, width * scale);
+		// height = Math.min(height, height * scale);
+
+		// console.log(this.targetWidth, width, this.targetHeight, height, scale);
+
+		// this.ui.output.width(width);
+		// this.ui.output.height(height);
 	}
 
-	toFullScreenView = () => {
-		this.removeClass('as-device');
-		this.addClass('as-fullscreen');
-	}
+	// onLogMessage = (...args) => {
+	// 	this.consoleMessages.push(args.join(' '));
+	// 	if (this.consoleMessages.length > 200)
+	// 		this.consoleMessages.shift();
+		
+	// 	// update the log
+	// 	const messages = this.consoleMessages.join('\n');
+	// 	this.ui.console.text(messages);
+	// }
 
-	setPlatform = platform => {
-		if (platform === this.platform) return;
-		this.platform = platform;
-		this.removeClass('as-android as-ios');
-		this.addClass(`as-${platform}`);
-		this.render();
+	// onClearMessages = () => {
+	// 	this.consoleMessages.length = 0;
+	// 	this.onLogMessage('');
+	// }
+
+	onResize = () => {
+		this.syncViewport();
 	}
 
 	// handle activation
 	onActivateProject = () => {
-		this.removeClass('as-landscape as-fullscreen as-android');
-		this.addClass('as-portrait as-device as-ios');
-		this.platform = 'ios';
+		this.isActive = true;
 		this.render();
 	}
 
-	// exiting the project
 	onDeactivateProject = () => {
-
+		this.isActive = false;
+		this.writeContent('');	
 	}
 
 	// switched files
 	onActivateFile = file => {
-
-		// only preview HTML files
-		if (!/.html?$/.test(file.path) || (this.activeFile && this.activeFile.path === file.path))
-			return;
-
-		// set the active file
 		this.activeFile = file;
-		this.render();
+	}
+
+	onCloseFile = () => {
+
 	}
 
 	onCompileFile = () => {
-		clearTimeout(this.pending);
-		this.pending = setTimeout(this.render, 1000);
+		// clearTimeout(this.pending);
+		// this.pending = setTimeout(this.render, 1000);
+	}
+
+	// activates the code
+	onRunCode = () => {
+		if (!this.isActive) return;
+		// this.consoleMessages = [ ];
+		// this.onLogMessage('Starting game...');
+		this.writeContent('');
+		setTimeout(this.render, 100);
 	}
 
 	render = async () => {
-
-		const { platform = 'ios' } = this;
-
-		// gather all HTML files
-		const html = _($state.files)
-			.filter(item => /\.html?$/.test(item.path))
-			.map(item => 'current' in item ? item.current : item.content)
-			.join('\n\n');
 
 		// compile the javascript file
 		// compile the code -- save any errors
 		// directly to the runner. When `.run` is called
 		// that error will be thrown right away
 		let ex;
-		await $contentManager.compile('/app.js', {
+		await $contentManager.compile('/main.js', {
 			onError: error => ex = error,
 			silent: true
 		});
 
 		// get the code to execute
-		const code = await $contentManager.get('/app.js');
+		const code = await $contentManager.get('/main.js');
+		const domain = $state.getProjectDomain();
 
 		const markup = `<!DOCTYPE html>
 			<html>
 			<head>
-				<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
-				<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
-				<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+				<base href="${domain}" />
+				<link rel="stylesheet" href="/__codelab__/game.css">
+				<script src="/__codelab__/game.js" ></script>
+				<script src="https://unpkg.com/phaser@3.16.2/dist/phaser.min.js" ></script>
+				<script src="https://unpkg.com/phaser@3.16.2/dist/phaser-arcade-physics.min.js"></script>
 			</head>
 			<body>
-			
-				<script>
-					var app = window.APP = { };
-					ons.platform.select('${platform}');
-					ons.ready(function() {
-						${code}
-					});
-				</script>
+				<style type="text/css" >
+					#game-container {
+						position: fixed;
+						top: 0;
+						left: 0;
+						right: 0;
+						bottom: 0;
+					}
+					
+					#game-view {
+						width: 100%;
+						height: 100%;
+					}
 
-				${html}
+					#game-view canvas {
+						position: relative;
+						left: 50%;
+						top: 0;
+						transform: translate(-50%, 0);
+					}
+				</style>
+
+				<div id="game-container" >
+					<div id="game-view" ></div>
+				</div>
+
+				<script>
+					document.domain = window.location.hostname;
+					(function() { 
+						window.activateGame = function() {
+							${code}
+						};
+					})();
+
+					window.addEventListener('load', launchGame);
+				</script>
 			</body>
 			</html>`;
 
-		// this.context.document.innerHtml = markup;
-		// console.log('ml', markup);
-
 		this.writeContent(markup);
-		
 	}
-
-	// /** changes the browser view URL 
-	//  * @param {string} value the new url to use
-	// */
-	// set url(value) {
-	// 	this.ui.url.val(value);
-	// }
-
-	// /** gets the current address bar url
-	//  * @returns {string} the current url
-	//  */
-	// get url() {
-	// 	return this.ui.url.val();
-	// }
-
-	// /** changes the browser view title */
-	// set title(value) {
-	// 	this.ui.title.text(value);
-	// }
 
 	/** access to the output window
 	 * @type {HTMLElement} the preview DOM element
@@ -187,224 +208,6 @@ export default class MobileMode extends Component {
 		return this.context.__CODELAB__;
 	}
 
-	// /** checks if a view is visible
-	//  * @returns {boolean} */
-	// get hasActiveView() {
-	// 	return !!this.activeFile;
-	// }
-
-	// /** returns the active file
-	//  * @returns {ProjectItem}
-	//  */
-	// get activeFile() {
-	// 	return this.view && this.view.file;
-	// }
-
-	// // tries to navigate to a new location
-	// onUrlChanged = () => {
-	// 	const { url } = this;
-	// 	this.navigate(url);
-	// }
-
-	// // handles starting a new project
-	// onActivateProject = async project => {
-	// 	this.views = { };
-	// }
-
-	// // automatically refresh scripts when mousing over
-	// onAutoExecuteScripts = () => {
-	// 	if (!this.hasRunScripts)
-	// 		this.runScripts();
-	// }
-
-	// // kicks off page scripts
-	// onRunPageScripts = () => {
-	// 	this.runScripts();
-	// }
-
-	// // check for renames to update the URL bar
-	// onRenameItem = item => {
-	// 	if (this.url === item.previous.path)
-	// 		this.url = item.path;
-	// }
-
-	// // checks if a view should refresh because
-	// // a file was deleted
-	// onDeleteItems = paths => {
-	// 	if (!this.hasActiveView) return;
-	// 	const { view } = this;
-	// 	const { file } = view;
-
-	// 	// check if the view was deleted
-	// 	for (const path of paths) {
-	// 		if (path === file.path)
-	// 			return this.clear();
-	// 	}
-
-	// 	// check if a dependency might have been removed
-	// 	for (const path of paths) {
-	// 		if (view.isDependency(path))
-	// 			return this.recompile();
-	// 	}
-
-	// }
-
-	// // handles incoming preview messages
-	// onPreviewMessage = (err, args = { }) => {
-	// 	if (!this.hasActiveView) return;
-
-	// 	// handling a script error
-	// 	if (err === 'error' && this.activeFile) {
-	// 		args = _.assign({ }, args);
-	// 		args.path = this.activeFile.path;
-	// 		this.setPageError(args);
-	// 	}
-
-	// 	// handle general navigation
-	// 	else if (args.navigate)
-	// 		this.navigate(args.navigate);
-
-	// 	// else if ('console.log' === name)
-	// 	// else if ('console.log' === name)
-	// 	// else if ('console.log' === name)
-
-	// 	else {
-	// 		// console.log('preview message', err, args);
-	// 	}
-	// }
-
-	// // handles deactivating a project entirely
-	// onDeactivateProject = () => {
-	// 	this.views = { };
-	// 	this.clear();
-	// }
-
-	// // handles closing a file from preview
-	// onCloseFile = file => {
-	// 	if (!this.hasActiveView) return;
-	// 	if (this.activeFile.path === file.path)
-	// 		this.clear();
-	// }
-
-	// // sets the default view content
-	// onActivateFile = async (file, viewOnly) => {
-	// 	const { path } = file;
-
-	// 	// show the previewer
-	// 	this.ui.viewer.hide();
-	// 	this.ui.output.show();
-		
-	// 	// determine if activating the file should replace
-	// 	// the view that's in the preview or not
-	// 	const ext = getExtension(path, { removeLeadingDot: true });
-	// 	if (!_.includes(VIEWABLE_TYPES, ext))
-	// 		return;
-
-	// 	// update the url
-	// 	this.url = path;
-
-	// 	// find the view to use
-	// 	const view = this.views[path] = this.views[path] || new View(file);
-	// 	await view.refresh(path, { forceRefresh: true });
-
-	// 	// if just showing the view only
-	// 	if (!viewOnly) {
-	// 		this.clearPageError();
-	// 		this.view = view;
-	// 	}
-
-	// 	// display the view
-	// 	this.render(view, true);
-	// }
-
-	// // handles replacing the content of the view if 
-	// // dependencies require it
-	// onCompileFile = async file => {
-	// 	if (!this.view) return null;
-
-	// 	// refresh the view
-	// 	await this.view.refresh(file);
-	// 	this.render(this.view);
-	// }
-
-	// // resetting the view
-	// onReset = () => {
-	// 	this.reset();
-	// }
-	
-	// /** handles completely resetting the preview window */
-	// reset() {
-	// 	this.ui.viewer.hide();
-	// 	this.ui.output.show();
-
-	// 	if (!!this.output) {
-	// 		this.output.innerHTML = '';
-	// 		this.output.outerHTML = this.output.outerHTML;
-	// 		this.output.innerHTML = NO_PREVIEW_LOADED;
-	// 	}
-	// }
-
-	// // navigates to a new url
-	// navigate = url => {
-
-	// 	// check for canceling
-	// 	if ($state.lesson && $state.lesson.respondsTo('beforePreviewAreaNavigate')) {
-	// 		if ($state.lesson.invoke('beforePreviewAreaNavigate', url) === false)
-	// 			return;
-	// 	}
-
-	// 	// notify the action
-	// 	if ($state.lesson)
-	// 		$state.lesson.invoke('navigatePreviewArea', url, getPreviewAccess(this));
-
-	// 	// navigate
-	// 	this.broadcast('preview-area-navigate', url)
-		
-	// 	// this should be for another file in the project
-	// 	url = _.trim(url).split('?')[0];
-	// 	const file = $state.findItemByPath(url);
-
-	// 	// there's not a file - do a 404 page
-	// 	if (!file) {
-	// 		this.output.innerHTML = 'page not found: 404';
-	// 		this.url = url;
-
-	// 		console.log('TODO: needs a message or a 404');
-	// 	}
-	// 	// check the type of file
-	// 	else if ('content' in file) {
-	// 		this.url = file.path;
-	// 		this.onActivateFile(file, true);
-	// 	}
-		
-	// 		// a url based file
-	// 	else {
-	// 		const url = $state.getProjectDomain() + file.path;
-	// 		this.url = file.path;
-	// 		this.ui.viewer.attr('src', url);
-	// 		this.ui.viewer.show();
-	// 		this.ui.output.hide();
-	// 	}
-		
-	// }
-
-	// /** includes a new page error
-	//  * @param {ProjectError} error the error to assign
-	//  */
-	// setPageError = error => {
-	// 	if (!this.hasActiveView) return;
-	// 	error.file = this.activeFile.path;
-	// 	this.activeError = `script:${this.activeFile.path}`; 
-	// 	$errorManager.add(this.activeError, error);
-	// }
-
-	// /** handles removing errors on the page, if any */
-	// clearPageError = () => {
-	// 	if (!this.activeError) return;
-	// 	$errorManager.remove(this.activeError);
-	// 	delete this.activeError;
-	// }
-
 	/** replaces the page content with new HTML
 	 * @param {string} html the content to write
 	 */
@@ -418,79 +221,9 @@ export default class MobileMode extends Component {
 		const doc = this.context.document;
 		doc.open();
 		doc.write(html);
-		setTimeout(() => { doc.close(); }, 10);
+		setTimeout(() => {
+			doc.close();
+		}, 10);
 	}
-
-	// /** displays the most current template result 
-	//  * @param {boolean} shouldRunScripts should the render also eval scripts
-	// */
-	// render = (view, shouldRunScripts) => {
-
-	// 	// clear any scripting errors
-	// 	this.clearPageError();
-		
-	// 	// generate the file again
-	// 	const html = view.getHTML();
-		
-	// 	// extra steps are to make sure that the
-	// 	// document body is also cleared of all event
-	// 	// listeners
-	// 	this.reset();
-	// 	this.writeContent(html);
-		
-	// 	// populate the title, if possible
-	// 	const title = view.title || 'Untitled Page';
-	// 	this.title = title;
-	// 	this.url = view.file.path;
-
-	// 	// since we're resetting the page, clear any
-	// 	// scripting flags
-	// 	this.hasRunScripts = false;
-	// 	if (shouldRunScripts)
-	// 		this.runScripts();
-
-	// 	// notify this has access
-	// 	setTimeout(() => {
-	// 		if ($state.lesson)
-	// 			$state.lesson.invoke('updatePreviewArea', this.url, view.file.current, getPreviewAccess(this));
-	// 	}, 100);
-
-	// }
-
-	// // removes the current view
-	// clear = () => {
-	// 	this.clearPageError();
-	// 	this.reset();
-	// 	this.writeContent(NO_PREVIEW_LOADED);
-	// 	this.title = '';
-	// 	this.url = '';
-	// 	delete this.view;
-	// }
-
-	// // force a recompile of this view
-	// recompile = async () => {
-	// 	if (!this.hasActiveView) return;
-
-	// 	// force a compiled refresh
-	// 	const { file } = this.view;
-	// 	await this.view.refresh(file, true);
-	// 	this.render(this.view);
-	// }
-
-	// // execute scripts
-	// runScripts = () => {
-
-	// 	// TODO: figure out why this is null when creating
-	// 	if (!this.bridge) return;
-
-	// 	// if the scripts have already run once then
-	// 	// refresh the content before executing
-	// 	if (this.hasRunScripts)
-	// 		this.render(this.view);
-
-	// 	// execute the scripts
-	// 	this.hasRunScripts = true;
-	// 	this.bridge.evalScripts();
-	// }
 
 }

@@ -63,7 +63,7 @@
 
 .create-new-file {
 	
-	$file-types: (css coffee html js md pug py rb scss ts txt xml);
+	$file-types: (css coffee html js md pug py rb scss ts txt xml json);
 	@each $type in $file-types {
 		
 		// manage base visibility

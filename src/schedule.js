@@ -17,10 +17,13 @@ export default class Schedule {
 		
 		// create the empty schedule
 		this.slots = [];
+		this.sessions = [];
 		for (let day = 0; day < 7; day++)
 			for (let hour = 0; hour < 24; hour++)
-				for (let interval = 0; interval < 4; interval += 1)
+				for (let interval = 0; interval < 4; interval += 1) {
 					this.slots.push(0);
+					this.sessions.push(createDate(day, hour, interval));
+				}
 	}
 
 	/** loads the schedule from the database */
@@ -82,6 +85,10 @@ export default class Schedule {
 	// helper to translate days to schedule indexes
 	getIndex(day, time) {
 		return timeToIndex(day, time);
+	}
+
+	getSession(index) {
+		return this.sessions[index];
 	}
 
 	// checks if a timeslot has room or not
@@ -206,6 +213,35 @@ function timeToIndex(day, time) {
 	return start + (hour * 4) + interval;
 }
 
+
+function createDate(day, hour, interval) {
+	
+	// get the named day
+	day = day === 0 ? 'Sunday'
+		: day === 1 ? 'Monday'
+		: day === 2 ? 'Tuesday'
+		: day === 3 ? 'Wednesday'
+		: day === 4 ? 'Thursday'
+		: day === 5 ? 'Friday'
+		: day === 6 ? 'Saturday'
+		: null;
+
+	// create the time block
+	const meridem = hour >= 12 ? 'PM' : 'AM';
+	if (hour > 12) hour -= 12;
+	if (hour === 0) hour = 12;
+
+	// get the interval
+	const minute = interval === 3 ? '45'
+		: interval === 2 ? '30'
+		: interval === 1 ? '15'
+		: '00';
+
+	const time = `${hour}:${minute} ${meridem}`;
+	const at = `${day} @ ${time}`;
+
+	return { day, hour, minute, meridem, time, at }
+}
 
 // // gets the ID for an index
 // function idToIndex(id) {
