@@ -7,6 +7,9 @@ ssl_key: ~/../ssl/key
 ssl_cert: ~/../ssl/cert
 ssl_ca: ~/../ssl/ca
 
+clicksend_username: hugoware
+clicksend_api_key: 2672F340-46B7-5226-69A1-90C6D77B4E07
+
 chargebee_api_key: test_H6s4r83e6wKuLHOq3GmDO7nSNeMMaCxc
 chargebee_api_target: codelab-test
 

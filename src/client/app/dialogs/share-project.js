@@ -1,6 +1,6 @@
 
 import { _ } from '../lib';
-
+import $state from '../state';
 import Component from '../component';
 import Dialog from './';
 import ErrorMessage from '../ui/error-message';
@@ -19,6 +19,7 @@ export default class ShareProjectDialog extends Dialog {
 				error: '.error',
 				selectAll: '.select-all',
 				list: '.list',
+				description: '.description',
 
 				unsentView: '.view.unsent',
 				sentView: '.view.sent'
@@ -46,14 +47,6 @@ export default class ShareProjectDialog extends Dialog {
 			return { name, type, value };
 		});
 
-		// this.people = [
-		// 	{ id: '1', name: 'Dad', type: 'mobile' },
-		// 	{ id: '2', name: 'Mom', type: 'mobile' },
-		// 	{ id: '3', name: 'Mom', type: 'email' },
-		// 	{ id: '4', name: 'Grandma', type: 'mobile' },
-		// 	{ id: '5', name: 'Grandpa', type: 'email' },
-		// ];
-
 		// alphabetical order
 		this.people.sort((a, b) => {
 			return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
@@ -77,31 +70,47 @@ export default class ShareProjectDialog extends Dialog {
 
 	// set the sent view
 	onConfirm = async () => {
-		this.busy = true;
 
-		const selected = _(this.people)
+		// get each of the selected people
+		const names = _(this.people)
 			.filter('selected')
 			.map('name')
 			.value();
-
+	
+		// get the message to send
+		const message = _.trim(this.ui.description.val());
+		
 		// must select something
-		if (!_.some(selected))
+		if (!(_.some(names) && _.some(message)))
 			return;
 
 		// send the request
+		this.busy = true;
 		try {
-			const result = await api.request('share-project', selected);
+			const result = await api.request('share-project', {
+				id: $state.project.id,
+				message,
+				names
+			});
+
+			// handle errors
+			if (!_.get(result, 'success')) {
+				this.busy = false;
+				this.errorMessage.apply(result);
+			}
+
+			// this worked
+			setTimeout(() => {
+				this.busy = false;
+				this.setView(this.ui.sentView);
+			}, 500);
 		}
 		// failed to send
 		catch(ex) {
-
+			this.busy = false;
+			this.errorMessage.apply(ex);
 		}
-
-		// console.log(this.people);
-		// setTimeout(() => {
-		// 	this.busy = false;
-		// 	this.setView(this.ui.sentView);
-		// }, 500);
+		
 	}
 
 	// after sending, closes the dialog

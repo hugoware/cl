@@ -35,6 +35,12 @@ class Config {
 	
 	/** @returns {string} key for accessing which chargebee database */
 	get chargebeeApiTarget() { return this.data.chargebee_api_target; }
+	
+	/** @returns {string} key for accessing clicksend */
+	get clicksendApiKey() { return this.data.clicksend_api_key; }
+	
+	/** @returns {string} username for accessing clicksend */
+	get clicksendUsername() { return this.data.clicksend_username; }
 
 	/** @returns {string} key for recording speech */
 	get azureSubscriptionKey() { return this.data.azure_subscription_key; }

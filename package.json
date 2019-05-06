@@ -84,6 +84,7 @@
     "google-auth-library": "^1.6.1",
     "gulp-util": "^3.0.8",
     "howler": "^2.0.15",
+    "html-entities": "^1.2.1",
     "html-tag-validator": "hugoware/htmlTagValidator#master",
     "htmlhint": "^0.11.0",
     "jquery": "^3.3.1",
