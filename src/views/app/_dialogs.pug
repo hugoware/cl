@@ -9,39 +9,42 @@
 		.title Create New Project
 		.form
 			label
-				span Project Name
-				.ui-text-input.full
-					input.name
-			
-			label
-				span Description #[span.optional Optional]
-				.ui-text-input.full.multiline
-					textarea.description
+				span Project Type
 
-			ul.project-types
-				li.project-type.project-type-web(data-type='web')
-					.icon(icon='projectWeb')
-					.detail
-						.label Website
-						.description Create a website using HTML, CSS, and JavaScript
+				ul.project-types
+					li.project-type.project-type-web(data-type='web')
+						.icon(icon='projectWeb')
+						.detail
+							.label Website
+							.description Create a website using HTML, CSS, and JavaScript
+					
+					li.project-type.project-type-code.alt(data-type='code')
+						.icon(icon='projectCode')
+						.detail
+							.label Code Console
+							.description Create a simple console program using JavaScript
+
+					li.project-type.project-type-game(data-type='game')
+						.icon(icon='projectGame')
+						.detail
+							.label Game
+							.description Create 2D and 3D games using JavaScript
+
+					li.project-type.project-type-mobile.alt(data-type='mobile')
+						.icon(icon='projectMobile')
+						.detail
+							.label Mobile App
+							.description Create a mobile application using JavaScript
+
+				label
+					span Project Name
+					.ui-text-input.full
+						input.name
 				
-				li.project-type.project-type-code.alt(data-type='code')
-					.icon(icon='projectCode')
-					.detail
-						.label Code Console
-						.description Create a simple console program using JavaScript
-
-				li.project-type.project-type-game(data-type='game')
-					.icon(icon='projectGame')
-					.detail
-						.label Game
-						.description Create 2D and 3D games using JavaScript
-
-				li.project-type.project-type-mobile.alt(data-type='mobile')
-					.icon(icon='projectMobile')
-					.detail
-						.label Mobile App
-						.description Create a mobile application using JavaScript
+				label
+					span Description #[span.optional Optional]
+					.ui-text-input.full.multiline
+						textarea.description
 
 			.error
 

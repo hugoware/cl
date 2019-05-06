@@ -1,8 +1,22 @@
+import _ from 'lodash';
 import $ from 'jquery';
+
+let $records;
 
 export default function setup() {
 	const root = $('#manage-user');
 	const list = root.find('.results');
+
+	root.on('click', '.manage-contacts', async event => {
+		const record = getRecord(event);
+		const id = record.attr('user-id');
+		const data = _.find($records, { id });
+
+		// update the dialog
+		$('[contact-list]').val(JSON.stringify(data.contacts || { }, null, 2));
+		$('[contact-id]').val(data.id);
+		$.dialog('manage-contacts');
+	});
 
 	// manage the access
 	root.on('click', '.toggle-account-access', async event => {
@@ -70,6 +84,7 @@ export default function setup() {
 			list.empty();
 
 			// create the records
+			$records = [ ];
 			const { results } = result;
 			if (results.length === 0) {
 				list.append('<div class="no-results" >No results found</div>');
@@ -79,6 +94,7 @@ export default function setup() {
 
 				// create each record
 				for (const item of results) {
+					$records.push(item);
 					const record = createRecord(item);
 					list.append(record);
 				}
@@ -113,6 +129,7 @@ function createRecord(item) {
 		<div class="email size-3" ></div>
 		<div class="actions size-3" >
 			<button class="create-auth-code" >Auth Code</button>
+			<button class="manage-contacts" >Manage Contacts</button>
 			<button class="toggle-account-access" >
 				<span class="is-enabled" >Disable</span>
 				<span class="is-disabled" >Enable</span>

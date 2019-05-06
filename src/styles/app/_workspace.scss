@@ -168,6 +168,14 @@ $workspace-action-top: $workspace-action-bar-height * ((1 - $workspace-action-it
 		}
 	}
 
+	.media-viewer {
+		padding: 0 30px;
+
+		audio {
+			outline: none;
+		}
+	}
+
 }	
 
 .is-project-lesson #workspace .actions .action.reset {

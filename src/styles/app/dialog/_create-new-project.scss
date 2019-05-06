@@ -23,7 +23,11 @@
 
 	.project-types {
 		@include clearfix;
-		padding: 20px 0 0 0;
+		margin: 10px 0;
+		padding: 8px;
+		border: 1px solid #bbb;
+		border-radius: 10px;
+
 
 		.project-type {
 			position: relative;

@@ -1,6 +1,42 @@
 @import '../_reset.scss';
 @import '_fonts.scss';
 
+.dialog {
+	position: absolute;
+	padding: 30px;
+	background: #fff;
+	box-shadow: 0 0 2px 20px #ccc;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: none;
+
+	.close {
+		$size: 20px;
+		width: $size;
+		height: $size;
+		background: #f00;
+		border-radius: 100px;
+		position: absolute;
+		top: $size * -0.5;
+		right: $size * -0.5;
+		&:before {
+			content: '×';
+			color: #fff;
+			width: $size;
+			height: $size;
+			text-align: center;
+			position: absolute;
+		}
+
+	}
+
+	textarea {
+		width: 100%;
+		height: 100px;
+	}
+}
+
 body {
 	font-family: $default-font;
 }

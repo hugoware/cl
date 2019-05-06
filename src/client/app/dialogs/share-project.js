@@ -4,6 +4,7 @@ import { _ } from '../lib';
 import Component from '../component';
 import Dialog from './';
 import ErrorMessage from '../ui/error-message';
+import api from '../api'
 
 const MESSAGE_SELECT_ALL = 'Select All';
 const MESSAGE_CLEAR = 'Clear Selection';
@@ -39,13 +40,19 @@ export default class ShareProjectDialog extends Dialog {
 		this.ui.selectAll.text(MESSAGE_SELECT_ALL);
 		this.setView(this.ui.unsentView);
 
-		this.people = [
-			{ id: '1', name: 'Dad', type: 'mobile' },
-			{ id: '2', name: 'Mom', type: 'mobile' },
-			{ id: '3', name: 'Mom', type: 'email' },
-			{ id: '4', name: 'Grandma', type: 'mobile' },
-			{ id: '5', name: 'Grandpa', type: 'email' },
-		];
+		// add each contact
+		this.people = _.map($state.contacts, (value, name) => {
+			const type = /@/.test(value) ? 'email' : 'mobile';
+			return { name, type, value };
+		});
+
+		// this.people = [
+		// 	{ id: '1', name: 'Dad', type: 'mobile' },
+		// 	{ id: '2', name: 'Mom', type: 'mobile' },
+		// 	{ id: '3', name: 'Mom', type: 'email' },
+		// 	{ id: '4', name: 'Grandma', type: 'mobile' },
+		// 	{ id: '5', name: 'Grandpa', type: 'email' },
+		// ];
 
 		// alphabetical order
 		this.people.sort((a, b) => {
@@ -69,12 +76,32 @@ export default class ShareProjectDialog extends Dialog {
 
 
 	// set the sent view
-	onConfirm = () => {
+	onConfirm = async () => {
 		this.busy = true;
-		setTimeout(() => {
-			this.busy = false;
-			this.setView(this.ui.sentView);
-		}, 500);
+
+		const selected = _(this.people)
+			.filter('selected')
+			.map('name')
+			.value();
+
+		// must select something
+		if (!_.some(selected))
+			return;
+
+		// send the request
+		try {
+			const result = await api.request('share-project', selected);
+		}
+		// failed to send
+		catch(ex) {
+
+		}
+
+		// console.log(this.people);
+		// setTimeout(() => {
+		// 	this.busy = false;
+		// 	this.setView(this.ui.sentView);
+		// }, 500);
 	}
 
 	// after sending, closes the dialog

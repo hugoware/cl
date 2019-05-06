@@ -6,6 +6,7 @@ import $state from '../../../state';
 // workspaces
 import CodeEditorWorkspace from './workspaces/code';
 import ImageViewerWorkspace from './workspaces/image';
+import MediaViewerWorkspace from './workspaces/media';
 import NotSupportedWorkspace from './workspaces/not-supported';
 
 export default class Workspace extends Component {
@@ -28,6 +29,7 @@ export default class Workspace extends Component {
 		this.workspaces = { 
 			code: new CodeEditorWorkspace(),
 			image: new ImageViewerWorkspace(),
+			media: new MediaViewerWorkspace(),
 			'not-supported': new NotSupportedWorkspace()
 		};
 
@@ -62,6 +64,7 @@ export default class Workspace extends Component {
 
 	// activates the correct workspace
 	onActivateFile = file => {
+		console.log('acti');
 		const type = file.type || 'not-supported';
 		this.setWorkspace(type);
 	}

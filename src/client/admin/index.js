@@ -3,11 +3,22 @@ import _ from 'lodash';
 import $ from 'jquery';
 import manageUser from './manage-user';
 import createUser from './create-user';
+import manageContacts from './manage-contacts';
 
 // common items
 $.fn.field = function(key) {
 	const val = $(this).find(`[field-${key}]`).val();
 	return _.trim(val);
+};
+
+// show a dialog window
+$.dialog = id => {
+	$.dialog.hide();
+	$(`#${id}`).show();
+};
+
+$.dialog.hide = () => {
+	$('.dialog').hide();
 };
 
 // handles sending asyng requests
@@ -52,8 +63,12 @@ $(() => {
 		modules.removeClass('active');
 		mod.addClass('active');
 	});
+
+	// toggle different modules
+	root.on('click', '.dialog .close', $.dialog.hide);
 	
 	// initialize
 	manageUser();
 	createUser();
+	manageContacts();
 });

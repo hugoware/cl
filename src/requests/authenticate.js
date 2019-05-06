@@ -12,7 +12,8 @@ const USER_DATA = {
 	last: 1,
 	type: 1,
 	avatar: 1,
-	domain: 1
+	domain: 1,
+	contacts: 1
 };
 
 // handle the user connecting

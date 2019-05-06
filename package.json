@@ -70,6 +70,7 @@
     "cash-dom": "^2.3.5",
     "chargebee": "^2.5.0",
     "cheerio": "^1.0.0-rc.2",
+    "clicksend": "^5.0.37",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "dexie": "^2.0.4",

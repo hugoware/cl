@@ -35,6 +35,7 @@ export default async function findUser(phrase) {
 				email: 1,
 				lastLoginAt: 1,
 				disabled: 1,
+				contacts: 1,
 			})
 			.toArray();
 

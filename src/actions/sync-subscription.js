@@ -75,7 +75,12 @@ export default function syncSubscription(subscriptionId) {
 
 					// locale?
 					domain: 'codelab-irving',
-					type: 'student'
+					type: 'student',
+
+					// default contact info
+					contacts: {
+						'Parent': result.customer.email
+					}
 				});
 
 				// update the schedule (so it doesn't have to reload)
@@ -91,7 +96,6 @@ export default function syncSubscription(subscriptionId) {
 					subscriptionId,
 					date: session.at,
 				});
-				
 
 			});
 

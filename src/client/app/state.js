@@ -15,6 +15,7 @@ import ManagedEditor from './editor/managed';
 const ROOT = { path: '/' };
 const CODE_FILES = ['html', 'js', 'css', 'txt', 'json'];
 const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
+const MEDIA_FILES = ['mp3', 'mp4', 'mpeg'];
 
 // speech options;
 const SPEECH_ENABLEMENT_CONFIG = 'speech-enablement';
@@ -66,6 +67,24 @@ const $state = {
 	 * @type {Object<string, string>}
 	 */
 	content: { },
+
+	// not sure what it will affect to fix this
+	getUser() {
+		let user = $state.user;
+		if ('user' in user) user = user.user;
+		return user;
+	},
+
+	// checks if any contacts exist
+	get hasContacts() {
+		return _.some($state.contacts);
+	},
+
+	// gets all contacts
+	get contacts() {
+		const user = $state.getUser();
+		return (user && user.contacts) || [ ];
+	},
 
 	/** checks if the application is in free mode, meaning not managed by a lesson */
 	get freeMode() {
@@ -777,6 +796,7 @@ async function syncProject(children = [ ], parent, relativeTo) {
 			item.type = item.isFolder ? 'folder'
 				: _.includes(CODE_FILES, ext) ? 'code'
 				: _.includes(IMAGE_FILES, ext) ? 'image'
+				: _.includes(MEDIA_FILES, ext) ? 'media'
 				: 'not-supported';
 	
 			// check if this is a content file 
