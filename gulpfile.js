@@ -53,7 +53,7 @@ const $config = {
 	},
 
 	scripts: {
-    client: [ 'site', 'app', 'browser', 'admin', 'repl' ],
+    client: [ 'site', 'app', 'browser', 'admin', 'repl', 'kiosk' ],
     workers: [ 'pug', 'babel', 'scss', 'html' ],
 		viewers: [ 'code', 'game' ], //, 'mobile-install' ],
 		server: {

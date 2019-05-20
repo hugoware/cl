@@ -1,0 +1,24 @@
+extends _template
+
+block title
+	| Kiosk Login
+
+block head
+	link(rel='stylesheet' type='text/css' href='/__codelab__/site/login.css')
+
+block content
+
+	#kiosk
+		#app-login
+			#logo
+
+		.login-success
+			.detail Hello #[span.name Hugo], your code is...
+			.auth-code 876
+
+		.error
+			p Unable to log into the website --
+			pre This is the explain
+
+block scripts
+	script(type='text/javascript' src='/__codelab__/kiosk.js')

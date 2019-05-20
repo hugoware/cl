@@ -31,8 +31,8 @@ export default class GameMode extends Component {
 		// handle executing code
 		Mousetrap.bind('mod+enter', this.onRunCode);
 
-		// // log messages
-		// this.consoleMessages = [ ];
+		// log messages
+		this.consoleMessages = [ ];
 
 		// game system messages
 		window.__matchViewportSize__ = this.setViewportSize;
@@ -43,47 +43,35 @@ export default class GameMode extends Component {
 	}
 
 	// saves the viewport size to use
-	setViewportSize = (width, height) => {
-		this.targetWidth = width;
-		this.targetHeight = height;
+	setViewportSize = () => {
 		this.syncViewport();
 	}
 
 	// handles syncing the viewport with the size
 	syncViewport = () => {
-		// let width = this.targetWidth;
-		// let height = this.targetHeight;
-		
-		// // calculate the new size
-		// const size = this.ui.viewport.getBoundingClientRect();
+		const target = Component.bind(this.context.document.body).find('canvas');
+		const area = this.ui.viewport[0].getBoundingClientRect();
+		const size = target[0].getBoundingClientRect();
+		const height = (area.bottom - area.top) - (size.bottom - size.top);
 
-		// const vWidth = size.right - size.left;
-		// const vHeight = (size.bottom - size.top) - 100; // reserved space for console
-		// const scale = Math.max(vWidth / width, vHeight / height);
-		
-		// width = Math.min(width, width * scale);
-		// height = Math.min(height, height * scale);
-
-		// console.log(this.targetWidth, width, this.targetHeight, height, scale);
-
-		// this.ui.output.width(width);
-		// this.ui.output.height(height);
+		this.ui.console.height(height);
+		this.ui.console[0].scrollTop = Number.MAX_SAFE_INTEGER;
 	}
 
-	// onLogMessage = (...args) => {
-	// 	this.consoleMessages.push(args.join(' '));
-	// 	if (this.consoleMessages.length > 200)
-	// 		this.consoleMessages.shift();
+	onLogMessage = (...args) => {
+		this.consoleMessages.push(args.join(' '));
+		if (this.consoleMessages.length > 200)
+			this.consoleMessages.shift();
 		
-	// 	// update the log
-	// 	const messages = this.consoleMessages.join('\n');
-	// 	this.ui.console.text(messages);
-	// }
+		// update the log
+		const messages = this.consoleMessages.join('\n');
+		this.ui.console.text(messages);
+	}
 
-	// onClearMessages = () => {
-	// 	this.consoleMessages.length = 0;
-	// 	this.onLogMessage('');
-	// }
+	onClearMessages = () => {
+		this.consoleMessages.length = 0;
+		this.onLogMessage('');
+	}
 
 	onResize = () => {
 		this.syncViewport();
@@ -212,6 +200,10 @@ export default class GameMode extends Component {
 	 * @param {string} html the content to write
 	 */
 	writeContent = html => {
+		this.onClearMessages();
+
+		// replace the frame entirely to make sure nothing
+		// is accidentially loaded twice
 		const frame = Component.select('<iframe class="output" />');
 		this.ui.output.replaceWith(frame);
 		this.ui.output = frame;

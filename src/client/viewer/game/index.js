@@ -5,9 +5,10 @@ window.launchGame = () => {
 	Phaser.Game = function(options) {
 
 		// default options
-		options.type = Phaser.AUTO;
-		options.mode = Phaser.Scale.FIT;
-		options.parent = 'game-view';
+		const scaleTarget = options.scale || options;
+		scaleTarget.type = Phaser.AUTO;
+		scaleTarget.mode = Phaser.Scale.FIT;
+		scaleTarget.parent = 'game-view';
 
 		// style the background as needed
 		if (window.standAlone) {
@@ -19,6 +20,10 @@ window.launchGame = () => {
 			// hide the splash
 			if (options.hideIntro) target.parentNode.removeChild(target);
 			else setTimeout(() => target.className += ' hide', 3000);
+		}
+		else {
+			if (console.clear)
+				console.clear();
 		}
 
 		// finish the contructor
@@ -38,20 +43,27 @@ window.launchGame = () => {
 	// make sure to keep the prototype
 	Phaser.Game.prototype = _PhaserGame.prototype;
 
-	// // capture console messages
-	// const _log = console.log;
-	// console.log = (...args) => {
-	// 	if (window.top && window.top.__logGameMessage__)
-	// 		window.top.__logGameMessage__(...args);
+	// capture console messages
+	const _log = console.log;
+	console.log = (...args) => {
 
-	// 	// write normally too
-	// 	_log.apply(console, args);
-	// };
+		// test for ignored messages
+		let ignore = false;
+		try { ignore = /https?:\/\/phaser\.io/i.test(args[0]); }
+		catch(ex) { }
+
+		// post the message
+		if (!ignore && window.top && window.top.__logGameMessage__)
+			window.top.__logGameMessage__(...args);
+
+		// write normally too
+		_log.apply(console, args);
+	};
 	
-	// console.clear = (...args) => {
-	// 	if (window.top && window.top.__clearGameMessages__)
-	// 		window.top.__clearGameMessages__(...args);
-	// };
+	console.clear = (...args) => {
+		if (window.top && window.top.__clearGameMessages__)
+			window.top.__clearGameMessages__(...args);
+	};
 
 	// activate the game for use
 	window.activateGame();

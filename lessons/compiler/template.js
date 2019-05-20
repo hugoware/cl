@@ -1,6 +1,7 @@
 import { _ } from './lib';
 import waitForFile from './controllers/waitForFile';
 import waitForTab from './controllers/waitForTab';
+import waitForObjectivesList from './controllers/waitForObjectivesList';
 
 // import controllers
 $IMPORTS$
@@ -88,6 +89,12 @@ class $LESSON_TYPE$Lesson {
 			waitForTab(controller, {
 				file: slide.waitForTab
 			});
+		}
+
+		if (slide.waitForObjectivesList) {
+			slide.controller = _.uniqueId(`controller_`);
+			const controller = this.controllers[slide.controller] = { };
+			waitForObjectivesList(controller, { });
 		}
 
 		if (slide.onActivate) {

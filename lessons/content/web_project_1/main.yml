@@ -31,8 +31,8 @@
       Learning something new takes practice and sometimes that means going over a topic a few times before you completely understand it!
 
 - slide:
-    controller: waitForHover
     mode: popup
+    waitForObjectivesList: true
     showObjectiveList: true
     highlight: '#header .task-list .heading'
     content: |

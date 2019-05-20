@@ -1,6 +1,6 @@
 
 import Interpreter from 'js-interpreter';
-import {trim} from './utils'
+import { trim } from './utils';
 
 export default class CodeInterpreter {
 
@@ -222,9 +222,10 @@ export default class CodeInterpreter {
 
 // converts a vm object to a usable JavaScript object
 function flatten(context) {
+	console.log('returning', context);
 
 	// just basic data
-	if ('data' in context)
+	if ('data' in context && context.data !== undefined)
 		return context.data;
 
 	// complex object -- possibly an array or object

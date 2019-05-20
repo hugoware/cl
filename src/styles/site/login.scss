@@ -4,6 +4,7 @@
 
 $theme-color: #118CF8;
 
+#kiosk,
 #background {
 	background: url(/__codelab__/site/images/login-background.jpg);
 	background-position: 50% 50%;
@@ -27,6 +28,54 @@ body {
 	&.loading {
 		opacity: 0.4;
 	}
+}
+
+.kiosk {
+	.zEWidget-launcher {
+		display: none !important;
+	}
+}
+
+#kiosk {
+
+	.login-success {
+		display: none;
+		z-index: 999;
+		width: 400px;
+		position: absolute;
+		top: 40%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		text-align: center;
+		box-shadow: 0 4px 28px rgba(#000, 0.5);
+		border-radius: 10px;
+		background: darken(#1C8DF2, 15%);
+		border: 15px solid lighten(#1C8DF2, 15%);
+		color: #fff;
+		text-shadow: 0 1px 2px #000;
+
+		.detail {
+			font-size: 19px;
+			padding: 25px 0;
+		}
+
+		.name {
+			font-weight: bold;
+		}
+
+		.auth-code {
+			font-family: monospace;
+			font-size: 116px;
+			padding: 25px 0;
+			background: rgba(#000, 0.2);
+		}
+		
+	}
+
+}
+
+.success #kiosk .login-success {
+	display: block;
 }
 
 #app-login {

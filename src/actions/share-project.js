@@ -6,9 +6,7 @@ import * as $clicksend from 'clicksend';
 
 const $entities = new AllHtmlEntities();
 
-const SMS_MESSAGE = `Hey There!
-
-%%NAME%% wanted to tell you about a %%PROJECT_TYPE%% that they've been working on!
+const SMS_MESSAGE = `%%NAME%% wanted to tell you about a %%PROJECT_TYPE%% that they have been working on!
 
 "%%MESSAGE%%" ~ from: %%NAME%%
 
@@ -21,7 +19,7 @@ CodeLab`;
 
 const EMAIL_MESSAGE = `<div style="font-size: 15px; color: #000;" >
 	<div style="font-size: 18px;">Hey There!</div>
-	<p><strong>%%NAME%%</strong> wanted to tell you about a <strong>%%PROJECT_TYPE%%</strong> they've been working on!</p>
+	<p><strong>%%NAME%%</strong> wanted to tell you about a <strong>%%PROJECT_TYPE%%</strong> they have been working on!</p>
 	<div style="background: #0C90F5; color: #fff; padding: 15px;" >
 		<div style="padding: 0 0 10px 0" >%%MESSAGE%%</div>
 		<div style="font-style: italic" ><strong>From: %%NAME%%</strong></div>

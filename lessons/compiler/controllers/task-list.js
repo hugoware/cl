@@ -15,6 +15,11 @@ class Task {
 			this.onCreateTask.apply(this);
 	}
 
+	// perform validation
+	validateTasks() {
+		this.project.validateTasks();
+	}
+
 	// get the current state
 	get isValid() {
 		return this.tasks
@@ -46,6 +51,17 @@ class TaskList {
 
 	}
 
+	// performs a blanket validation
+	validateTasks() {
+		this.instance.invoke('onValidateTasks', this);
+	}
+
+	// updates the error state
+	setError(ex) {
+		this.ex = ex;
+		this.update(true);
+	}
+
 	taskSound(all) {
 
 		// don't play sounds too fast
@@ -73,7 +89,8 @@ class TaskList {
 			const data = {
 				total: this.total,
 				complete: this.completed,
-				state: this.state
+				state: this.state,
+				ex: this.ex,
 			};
 
 			const increased = this.completed > starting;
@@ -157,10 +174,15 @@ export default function createTasks(obj, options, builder) {
 
 			// setup the new project
 			project = new TaskList(options);
+			this.taskList = project;
 			project.instance = this;
 			project.broadcast = this.events.broadcast;
 			project.progress = this.progress;
 			project.sound = this.sound;
+			project.event = this.event;
+
+			// renewed state
+			project.broadcast('task-list-created', options);
 
 			// handle setting up the work tree
 			const stack = [ project.root ];
@@ -200,17 +222,17 @@ export default function createTasks(obj, options, builder) {
 		// execute an action against all tasks
 		invoke(action, ...args) {
 
-			// handle other actions
-			for (const task of project.tasks) {
-				if (action in task) {
+			const sources = [ options.events ].concat(project.tasks);
+			_.each(sources, (item, index) => {
+				if (action in item) {
 					try  {
-						task[action].apply(task, args);
+						item[action].apply(index === 0 ? this.taskList : item, args);
 					}
 					catch (ex) {
-						task.isValid = false;
+						item.isValid = false;
 					}
 				}
-			}
+			});
 		},
 
 		respondsTo() {

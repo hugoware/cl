@@ -9,6 +9,7 @@ import $database from '../storage/database';
 import { find } from '../storage/file-system/index';
 import * as Babel from '../resources/public/babel.min';
 import BabelCompiler from '../compiler/babel'
+import generateManifest from '../compiler/manifest';
 
 // common resources that require no processing
 const RESOURCES = [
@@ -19,6 +20,12 @@ const RESOURCES = [
 // return web content as required
 export default async function handleRequest(request, response, project) {
 	const { path } = request;
+
+	// check for manifest information
+	if (/^\/manifest\.json/i.test(path))
+		return generateManifest(request, response, project);
+
+	// check for the resource
 	const { id } = project;
 	const source = $path.resolveProject(id);
 

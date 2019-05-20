@@ -1,5 +1,5 @@
 
-.task-list-container {
+#header .task-list-container {
 	right: 10px;
 	position: absolute;
 	z-index: $layer-task-list;
@@ -8,14 +8,13 @@
 	// height: $header-height;
 	height: auto;
 	overflow: hidden;
+	max-width: 500px;
 
 	color: #fff;
 	background-color: rgba(#000, 0.15);
 	.entry {
 		position: relative;
 	}
-
-	
 
 	.topic {
 		display: none;
@@ -69,6 +68,50 @@
 		}
 	}
 
+	.instructions {
+		display: none;
+		white-space: normal;
+		padding: 15px 25px;
+	}
+
+	.error {
+		display: none;
+		position: relative;
+		background: rgba(#f00, 0.4);
+		padding: 12px 0;
+		margin: 0 0 10px 0;
+		@include clearfix;
+
+		.icon {
+			position: absolute;
+			padding: 0 0 0 10px;
+			svg {
+				@include uniform_size(26px);
+			}
+		}
+
+		.details {
+			padding: 0 10px 0 50px;
+		}
+
+		.base {
+			font-size: 13.5px;
+			font-weight: 500;
+			padding: 0 10px 10px 0px;
+		}
+
+		.ex {
+			font-family: $code-font;
+			background: rgba(#000, 0.2);
+			padding: 10px 12px;
+			font-size: 14.5px;
+		}
+	}
+
+	&.has-goal:hover .instructions {
+		display: block;
+	}
+
 	.has-topic .topic {
 		display: block;
 	}
@@ -86,7 +129,7 @@
 	}
 
 	> .list {
-		display: none !important;
+		display: none;
 		overflow-y: auto;
 	}
 
@@ -96,11 +139,15 @@
 		> .list {
 			clear: both;
 			padding: 0 0 10px 0;
-			display: block !important;
+			display: block;
 			max-height: 660px;
 		}
 
 		border-radius: 0 0 5px 5px;
+
+		&.has-error .error {
+			display: block;
+		}
 	}
 
 	code {
@@ -281,6 +328,59 @@
 
 	}
 
+	#task-list-high-water-mark {
+		height: 1px;
+		// background: #f00;
+	}
+
+	.goal {
+		
+		h1 {
+			font-size: 20px;
+			padding: 0 0 10px 0;
+		}
+
+		h2 {
+			font-size: 18px;
+			padding: 0 0 10px 0;
+		}
+
+		h3 {
+			font-size: 16px;
+			padding: 0 0 10px 0;
+			font-weight: bold;
+		}
+
+		p {
+			font-size: 14px;
+			line-height: 1.6em;
+			padding: 0 0 20px 0;
+		}
+
+		table {
+			width: 100%;
+			border: 1px solid #555;
+
+			th, td {
+				padding: 4px;
+			}
+			
+			tr:nth-child(even) {
+				background: rgba(#fff, 0.1);
+			}
+			
+			th {
+				font-size: 13px;
+				background: rgba(#fff, 0.2);
+				text-align: left;
+			}
+
+			td {
+				font-size: 14px;
+			}
+		}
+		
+	}
 	
 
 }

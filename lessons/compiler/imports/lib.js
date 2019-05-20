@@ -7,6 +7,7 @@ export const HtmlValidator = lib.HtmlValidator;
 export const CssValidator = lib.CssValidator;
 export const createTestRunner = lib.createTestRunner;
 export const validateHtmlDocument = lib.HtmlValidationHelper.validate;
+export const runTests = lib.runTests;
 
 
 $.preview = function() {
@@ -20,5 +21,6 @@ export default {
 	HtmlValidator,
 	CssValidator,
 	createTestRunner,
+	runTests,
 	validateHtmlDocument,
 };

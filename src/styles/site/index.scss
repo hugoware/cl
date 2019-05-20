@@ -302,6 +302,10 @@ html, body {
 
 .section {
 
+	&.light {
+		background: #fff;
+	}
+
   .description {
     position: relative;
     left: 50%;
@@ -474,8 +478,9 @@ html, body {
   }
 
   .details {
-    padding: 60px 30px;
-    background: rgba(#344A5D, 0.8);
+		padding: 60px 30px;
+		background: #344B5D;
+    // background: rgba(#344A5D, 0.8);
   }
 }
 
@@ -516,12 +521,13 @@ html, body {
 
 .location {
 
-  padding: 0;
+	padding: 20px 0;
+	background: darken(#EDEDED, 10%);
   position: relative;
 
   #map {
-    top: 0;
-    bottom: 0;
+    top: 10px;
+    bottom: 10px;
     left: 0;
     right: 0;
     position: absolute;
@@ -548,7 +554,7 @@ html, body {
 
   .action {
     padding: 40px 0 0 0;
-  }
+	}
 
   ul {
     list-style: none;
@@ -574,7 +580,14 @@ html, body {
         color: #555;
         padding-left: 40px;
         color: #000;
-      }
+			}
+			
+			.address {
+				font-size: 20px;
+				font-weight: bold;
+				line-height: 1.4em;
+				height: auto;
+			}
       
       .icon {
         font-size: 24px;
@@ -879,6 +892,57 @@ html, body {
 
 // }
 
+.starting-soon {
+	background: #fff;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+	$starting-background-color: #9A5FB3;
+
+	.starting-soon-background {
+		background: url(/__codelab__/site/images/soon-background.jpg) $starting-background-color;
+		background-position: 50% 50%;
+		background-size: 200px 200px;
+	}
+
+	.start-icon {
+		display: inline-block;
+		padding-right: 20px;
+		img {
+			height: 50px;
+		}
+	}
+
+	.button{
+		background: darken($starting-background-color, 15%);
+		
+		&:hover {
+			background: darken($starting-background-color, 25%);
+		}
+	}
+
+	.content {
+		padding-top: 30px;
+		padding-bottom: 30px;
+		color: #fff;
+		text-shadow: 0 1px 3px rgba(#000, 0.6);
+	}
+	.info, .action {
+		text-align: center;
+	}
+
+	.info {
+		font-size: 22px;
+		line-height: 50px;
+		height: 50px;
+		display: inline-block;
+	}
+
+	.starting {
+		font-weight: bold;
+	}
+}
+
 .time-slots {
 
 	.step {
@@ -890,16 +954,20 @@ html, body {
 		clear: both;
 	}
 
-	h3 {
+	.step-title {
 		margin: 0;
 		font-size: 22px;
 		font-weight: 600;
 	}
 
-	p {
+	.step-action {
 		opacity: 0.6;
 		font-size: 15px;
 		font-style: italic;
+
+		&.signup {
+			padding-bottom: 15px;
+		}
 	}
 
 	.step-icon {
@@ -910,7 +978,7 @@ html, body {
 		background-position: 50% 50%;
 		background-repeat: no-repeat;
 		position: absolute;
-		margin: 5px 0 0 0;
+		margin: 10px 0 0 0;
 	}
 
 	.icon-clock { background-image: url(/__codelab__/site/images/icon-clock.png); }
@@ -922,7 +990,7 @@ html, body {
 .pricing-table {
 	$standard-plan-color: #3AB99D;
   box-shadow: inset 0 0 0 2px $standard-plan-color;
-  margin-top: 30px 0 0 0;
+  margin-top: 0 0 0 0;
 
   .price {
     background: $standard-plan-color;

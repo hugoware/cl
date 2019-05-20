@@ -3,6 +3,8 @@ const REGISTER_MODULE = `
 
 ___CODELAB___register("%PATH%", function (module, exports, require) {
 	%CODE%
+
+	// %%INJECT%%
 });
 
 `;

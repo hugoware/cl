@@ -99,7 +99,7 @@ function checkForFutureBilling() {
 	// create the start date -- for now July 1
 	const start = new Date();
 	start.setMonth(6);
-	start.setDate(1);
+	start.setDate(15);
 	start.setFullYear(2019);
 
 	// check timestamps

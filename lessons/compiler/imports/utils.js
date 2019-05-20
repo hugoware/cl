@@ -1,6 +1,34 @@
 import { _ } from './lib';
 
 
+const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const TOTAL_CHARACTERS = CHARACTERS.length;
+export function randomString(length = 8, prefix) {
+	let result = '';
+	for (let i = 0; i < length; i++) {
+	  result += CHARACTERS.charAt(Math.floor(Math.random() * TOTAL_CHARACTERS));
+	}
+	return (prefix || '') + result;
+}
+
+export function randomNumber(...args) {
+	let min;
+	let max;
+
+	if (args.length === 1) {
+		min = 0;
+		max = args[0];
+	}
+	else { 
+		min = args[0];
+		max = args[1];
+	}
+
+	min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // finds a trimmed code boundary
 export function findBoundary(code, options) {
 	let index;

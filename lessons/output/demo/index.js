@@ -340,6 +340,27 @@ function waitForValidation(obj, config) {
 
 			validate(this);
 		},
+		onActivate: function onActivate() {
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			if (config.onActivate) return config.onActivate.apply(this, args);
+		},
+		onRunCode: function onRunCode() {
+			for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+				args[_key3] = arguments[_key3];
+			}
+
+			if (config.onRunCode) return config.onRunCode.apply(this, args);
+		},
+		onRunCodeEnd: function onRunCodeEnd() {
+			for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+				args[_key4] = arguments[_key4];
+			}
+
+			if (config.onRunCodeEnd) return config.onRunCodeEnd.apply(this, args);
+		},
 		onReset: function onReset() {
 			validate(this);
 
@@ -358,8 +379,8 @@ function waitForValidation(obj, config) {
 			this.file.readOnly({ path: config.file });
 			this.editor.hint.enable();
 
-			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-				args[_key2] = arguments[_key2];
+			for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+				args[_key5] = arguments[_key5];
 			}
 
 			if (config.onExit) config.onExit.apply(this, args);
@@ -526,7 +547,7 @@ var demoLesson = function () {
       }, {
         "content": "This demo tutorial will give you a brief introduction to using [define html] to create web pages.\n\n**However, the primary purpose of this demo is to experience a CodeLab lesson from start to finish.**\n"
       }, {
-        "content": "Lessons typically begin by introducing a new concept by examining code examples and highlighting relevant blocks.\n\n[snippet base_example]\n\nIn this case, we're looking at a code example of an [define html_element], the most basic building block when creating a webpage.\n"
+        "content": "Lessons typically begin by introducing a new concept by examining code examples and highlighting relevant parts.\n\n[snippet base_example]\n\nIn this case, we're looking at a code example of an [define html_element], the most basic building block when creating a webpage.\n"
       }, {
         "content": "[define html] code is written using [define html_element s]. Many websites have hundreds, or even thousands, of individual [define html_element Elements]\n\n[snippet base_example highlight:0,4|17,5]\n\nMany [define html_element Elements] are made up of a starting and ending [define html_tag tag] which are used to mark where an [define html_element] begins and ends.\n"
       }, {
@@ -574,7 +595,7 @@ var demoLesson = function () {
         "content": "Students have **access to their completed lessons from home** so they can continue to work on programming even when they aren't in class.\n\nAdditionally, students can create their own projects and websites and then **share them with friends and family**! \n"
       }, {
         "emote": "happy",
-        "content": "If you have any questions about CodeLab, or if you're interested in reserving a space, use either of the links below to get started!\n\n[silent] <a class=\"assistant-button\" target=\"__ask_question\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSeYOBUeymVmQXG654BhiQF7_97_3Okn7vxrSNozqkXy23cZjg/viewform\" >Ask a Question</a> <a class=\"assistant-button\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSe7lZoyLEOu2EQZ0P1_vWJHh017SmCbPHsvmdP5OCEPm9fHcQ/viewform\" target=\"__reserve_space\" >Reserve a Space</a>\n"
+        "content": "If you have any questions about CodeLab, or if you're interested in reserving a space, use either of the links below to get started!\n\n[silent] <a class=\"assistant-button\" target=\"__ask_question\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSeYOBUeymVmQXG654BhiQF7_97_3Okn7vxrSNozqkXy23cZjg/viewform\" >Ask a Question</a> <a class=\"assistant-button\" href=\"/signup\" target=\"__reserve_space\" >Reserve a Space</a>\n"
       }, {
         "mode": "popup",
         "content": "I hope you enjoyed trying out CodeLab! You're free to continue experimenting with these files to see what kind of neat things you can make!\n\n**Create! Learn! And have fun writing code!**\n"
@@ -864,6 +885,7 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var createTestRunner = exports.createTestRunner = lib.createTestRunner;
 var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
 
 $.preview = function () {
@@ -875,6 +897,7 @@ exports.default = {
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
 	CssValidator: CssValidator,
+	createTestRunner: createTestRunner,
 	validateHtmlDocument: validateHtmlDocument
 };
 

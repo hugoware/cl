@@ -15,7 +15,9 @@
   $half-assistant-size: $assistant-size / 2;
   .wrapper.tutorials {
 
-    margin-top: $half-assistant-size;
+		background: #fff;
+
+    padding-top: $half-assistant-size;
     .details { padding-top: $half-assistant-size; }
 
     .screenshot {
@@ -62,11 +64,25 @@
 		padding-right: 25px;
 	}
 
+	.sessions {
+		padding-top: 88px;
+	}
+
 }
 
 @media(max-width: 991px) {
 	@include breakpoint(#f70, '992px');
 	@include video_size(670px);
+
+	.starting-soon {
+		.start-icon {
+			display: block;
+			padding-right: 0px;
+			img {
+				height: 90px;
+			}
+		}
+	}
 
 	#enrollment .order-review {
 		padding: 0 20px 40px 20px;
@@ -240,6 +256,15 @@
 @media(max-width: 700px) {
 	@include breakpoint(#ff0, '700px');
 	@include video_size(560px);
+
+	.starting-soon .info {
+		height: auto;
+		line-height: 1.4em;
+		padding : 10px 0 15px 0;
+		// .starting {
+		// 	display: block;
+		// }
+	}
 
 	#enrollment .order-review {
 		padding: 0 20px 40px 20px;

@@ -10,7 +10,11 @@ export default class TestRunner {
 		return this.runner.interpreter;
 	}
 
-	init = () => { }
+	init = () => {
+		this.stdout = [];
+		this.stdin = [];
+		this.alerts = [];
+	}
 
 	// prepare to run
 	register = interpreter => {
@@ -61,6 +65,10 @@ export default class TestRunner {
 
 		]);
 
+		// include tests, if needed
+		if (this.runner.tests)
+			interpreter.registerAll(this.runner.tests);
+
 	}
 
 	onLoad = () => { }
@@ -68,8 +76,12 @@ export default class TestRunner {
 	onResume = () => { }
 	onPause = () => { }
 	onEnd = () => { }
-	onError = () => { }
 	onFail = () => { }
+
+	onError = (...args) => {
+		if (this.options.onError)
+			return this.options.onError(...args);
+	}
 
 	onReset = () => {
 		this.stdout = [ ];

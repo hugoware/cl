@@ -40,10 +40,18 @@ var Task = function () {
 		if (this.onCreateTask) this.onCreateTask.apply(this);
 	}
 
-	// get the current state
+	// perform validation
 
 
 	_createClass(Task, [{
+		key: 'validateTasks',
+		value: function validateTasks() {
+			this.project.validateTasks();
+		}
+
+		// get the current state
+
+	}, {
 		key: 'isValid',
 		get: function get() {
 			return this.tasks ? _lib._.every(this.tasks, 'isValid')
@@ -78,7 +86,24 @@ var TaskList = function () {
 		this.total = 0;
 	}
 
+	// performs a blanket validation
+
+
 	_createClass(TaskList, [{
+		key: 'validateTasks',
+		value: function validateTasks() {
+			this.instance.invoke('onValidateTasks', this);
+		}
+
+		// updates the error state
+
+	}, {
+		key: 'setError',
+		value: function setError(ex) {
+			this.ex = ex;
+			this.update(true);
+		}
+	}, {
 		key: 'taskSound',
 		value: function taskSound(all) {
 
@@ -112,7 +137,8 @@ var TaskList = function () {
 				var data = {
 					total: this.total,
 					complete: this.completed,
-					state: this.state
+					state: this.state,
+					ex: this.ex
 				};
 
 				var increased = this.completed > starting;
@@ -218,10 +244,15 @@ function createTasks(obj, options, builder) {
 
 			// setup the new project
 			project = new TaskList(options);
+			this.taskList = project;
 			project.instance = this;
 			project.broadcast = this.events.broadcast;
 			project.progress = this.progress;
 			project.sound = this.sound;
+			project.event = this.event;
+
+			// renewed state
+			project.broadcast('task-list-created', options);
 
 			// handle setting up the work tree
 			var stack = [project.root];
@@ -259,41 +290,22 @@ function createTasks(obj, options, builder) {
 
 		// execute an action against all tasks
 		invoke: function invoke(action) {
+			var _this2 = this;
+
 			for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 				args[_key - 1] = arguments[_key];
 			}
 
-			// handle other actions
-			var _iteratorNormalCompletion2 = true;
-			var _didIteratorError2 = false;
-			var _iteratorError2 = undefined;
-
-			try {
-				for (var _iterator2 = project.tasks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-					var task = _step2.value;
-
-					if (action in task) {
-						try {
-							task[action].apply(task, args);
-						} catch (ex) {
-							task.isValid = false;
-						}
+			var sources = [options.events].concat(project.tasks);
+			_lib._.each(sources, function (item, index) {
+				if (action in item) {
+					try {
+						item[action].apply(index === 0 ? _this2.taskList : item, args);
+					} catch (ex) {
+						item.isValid = false;
 					}
 				}
-			} catch (err) {
-				_didIteratorError2 = true;
-				_iteratorError2 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion2 && _iterator2.return) {
-						_iterator2.return();
-					}
-				} finally {
-					if (_didIteratorError2) {
-						throw _iteratorError2;
-					}
-				}
-			}
+			});
 		},
 		respondsTo: function respondsTo() {
 			return true;
@@ -315,7 +327,7 @@ function createTasks(obj, options, builder) {
 	});
 }
 
-},{"../lib":5}],2:[function(require,module,exports){
+},{"../lib":7}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -367,7 +379,39 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":5}],3:[function(require,module,exports){
+},{"../lib":7}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			var waiting = this.events.listen('expand-objectives-list', function () {
+				_this.progress.next();
+				_this.events.clear();
+			});
+		},
+		onExit: function onExit() {
+			this.events.clear();
+		}
+	});
+}
+
+},{"../lib":7}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -415,7 +459,10 @@ function configure(obj, config) {
 	if (obj.init) obj.init(obj);
 }
 
-},{"../lib":5}],4:[function(require,module,exports){
+},{"../lib":7}],5:[function(require,module,exports){
+"use strict";
+
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -441,9 +488,21 @@ var _waitForTab = require('./controllers/waitForTab');
 
 var _waitForTab2 = _interopRequireDefault(_waitForTab);
 
+var _waitForObjectivesList = require('./controllers/waitForObjectivesList');
+
+var _waitForObjectivesList2 = _interopRequireDefault(_waitForObjectivesList);
+
+var _executionTests = require('./executionTests');
+
+var executionTests = _interopRequireWildcard(_executionTests);
+
 var _list = require('./list');
 
 var list = _interopRequireWildcard(_list);
+
+var _validationTests = require('./validationTests');
+
+var validationTests = _interopRequireWildcard(_validationTests);
 
 function _interopRequireWildcard(obj) {
 	if (obj && obj.__esModule) {
@@ -487,29 +546,8 @@ var codeProject1Lesson = function () {
 			"type": "code",
 			"description": "Creating a math gradebook on your own!",
 			"lesson": [{
-				"mode": "overlay",
-				"title": "Progress Review #1",
-				"content": "In this lesson we will be working on a project that reviews all of the skills that have been covered up to this point.\n"
-			}, {
-				"content": "This lesson is a _\"Project Lesson\"_ meaning that you will be given a list of **Objectives** to complete. \n\n[image task-list.png frame]\n"
-			}, {
-				"content": "As you work, the **Objective** list will update to show what items have been finished and which ones are still left to be done.\n\n[image task-done.png frame]\n\nWhen you have completed all items on the **Objectives** list, you will have successfully finished this project!\n"
-			}, {
-				"content": "The purpose of this project is to ensure that you have mastered all of the skills taught in previous lessons. There will **not** be any assistance or hints provided as you work.\n\n**Please keep in mind that it's entirely possible that you might get stuck!**\n"
-			}, {
-				"content": "If you find that you can't figure out how to finish this project, go back and retry previous lessons until you're ready to try again.\n\nLearning something new takes practice and sometimes that means going over a topic a few times before you completely understand it!\n"
-			}, {
-				"controller": "waitForHover",
 				"mode": "popup",
 				"showObjectiveList": true,
-				"highlight": "#header .task-list .heading",
-				"content": "The list of **Objectives** is found in the top right corner of the screen.\n\nMove your cursor over the highlighted area to see what must be accomplished before the project is completed.\n"
-			}, {
-				"highlight": "#header .task-list .heading",
-				"content": "There are many objectives that you will need to complete. Some objectives are not visible unless you scroll the list down to see them.\n\nAdditionally, as you finish groups of objectives, they will be automatically collapsed into single items on the list.\n"
-			}, {
-				"content": "Finally, some objectives have an icon at the far right side. Moving the cursor over this icon will show the related skill.\n\nIf you're stuck this will help identify which lessons you should go back and review.\n"
-			}, {
 				"flags": "+OPEN-MODE",
 				"controller": "list",
 				"content": "Alright, it's time to get started!\n\nGood luck! I look forward to seeing what you create!\n"
@@ -553,7 +591,7 @@ var codeProject1Lesson = function () {
 
 		// setup each included entry
 		var refs = {
-			list: list
+			executionTests: executionTests, list: list, validationTests: validationTests
 		};
 
 		// setup each reference
@@ -596,6 +634,12 @@ var codeProject1Lesson = function () {
 				(0, _waitForTab2.default)(_controller, {
 					file: slide.waitForTab
 				});
+			}
+
+			if (slide.waitForObjectivesList) {
+				slide.controller = _lib._.uniqueId('controller_');
+				var _controller2 = this.controllers[slide.controller] = {};
+				(0, _waitForObjectivesList2.default)(_controller2, {});
 			}
 
 			if (slide.onActivate) {
@@ -733,7 +777,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('code_project_1', codeProject1Lesson);
 
-},{"./controllers/waitForFile":2,"./controllers/waitForTab":3,"./lib":5,"./list":6}],5:[function(require,module,exports){
+},{"./controllers/waitForFile":2,"./controllers/waitForObjectivesList":3,"./controllers/waitForTab":4,"./executionTests":5,"./lib":7,"./list":8,"./validationTests":10}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -748,6 +792,7 @@ var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
 var createTestRunner = exports.createTestRunner = lib.createTestRunner;
 var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+var runTests = exports.runTests = lib.runTests;
 
 $.preview = function () {
 	return $('#preview .output').contents();
@@ -759,16 +804,16 @@ exports.default = {
 	HtmlValidator: HtmlValidator,
 	CssValidator: CssValidator,
 	createTestRunner: createTestRunner,
+	runTests: runTests,
 	validateHtmlDocument: validateHtmlDocument
 };
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.controller = undefined;
 
 var _lib = require('./lib');
 
@@ -776,82 +821,339 @@ var _taskList = require('./controllers/task-list');
 
 var _taskList2 = _interopRequireDefault(_taskList);
 
+var _validationTests = require('./validationTests');
+
+var _validationTests2 = _interopRequireDefault(_validationTests);
+
 function _interopRequireDefault(obj) {
 	return obj && obj.__esModule ? obj : { default: obj };
 }
 
-// import * as tasks from './tasks';
+// when activating a new 
+exports.default = (0, _taskList2.default)(module.exports, {
+	title: 'Create a product website for "Juice Fruit" smoothie shop!',
 
-var controller = exports.controller = true;
+	goal: '\n# HEading 1\n## HEading 2\n### HEading 3\n\nCreate a program that asks for a student name and 5 grades. After doing that, get the average of the grades and then use if/then conditions to print A > 90 B > 80\n\n### Grading Table\n\n| Score                       | Grade |\n|=============================|=======|\n| `score` equal to 90       | A+    |\n| `score` greater than 90   | A     |\n| `score` greater than 80   | B     |\n| `score` greater than 70   | C     |\n| `score` less than 70      | F     |\n\n\t',
 
-var flags = {};
+	events: {
 
-var runner = (0, _lib.createTestRunner)();
-runner.reset();
+		// perform 
+		onContentChange: function onContentChange(file) {
+			var _this = this;
 
-runner.configure({
+			delete this.ex;
 
-	onConsoleAsk: function onConsoleAsk(message) {
+			// only checking for main.js
+			if (file.path !== '/main.js') return;
 
-		if (/student/i.test(message)) {
-			return 'fred';
+			// check the content
+			(0, _validationTests2.default)(file, function (err, result) {
+				_this.state = result;
+
+				console.log(result);
+				if (!err && !result.hasException) _this.validateTasks();
+
+				// set the error
+				else _this.setError(err || result.ex || result.exception || result.error || result.err);
+			});
 		}
-
-		var isScore = /score/i.test(message);
-
-		if (isScore && !flags.asking_for_student_score_1) {
-			flags.asking_for_student_score_1 = true;
-			return 100;
-		} else if (isScore && !flags.asking_for_student_score_2) {
-			flags.asking_for_student_score_2 = true;
-			return 80;
-		} else if (isScore && !flags.asking_for_student_score_3) {
-			flags.asking_for_student_score_3 = true;
-			return 60;
-		} else if (isScore && !flags.asking_for_student_score_4) {
-			flags.asking_for_student_score_4 = true;
-			return 40;
-		} else if (isScore && !flags.asking_for_student_score_5) {
-			flags.asking_for_student_score_5 = true;
-			return 20;
-		}
-	},
-
-	onConsoleAlert: function onConsoleAlert(message) {
-		console.log('did alert');
-	},
-
-	onConsoleLog: function onConsoleLog(message) {
-		console.log('did log');
 	}
 
+},
+
+// setup the main task
+function (task) {
+
+	for (var i = 0; i < 30; i++) {
+
+		task('Print Student Information', function () {
+
+			task("Use `console.log` to print the student\'s name", {
+				onValidateTasks: function onValidateTasks() {
+					this.isValid = this.project.state.didPrintStudentName;
+				}
+			});
+
+			task("Use `console.log` to print the student's average", {
+				onValidateTasks: function onValidateTasks() {
+					this.isValid = this.project.state.didPrintAverage;
+				}
+			});
+		});
+
+		task("Use `calculateGrade` function with the student's average", {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didCallCalculateGrade;
+			}
+		});
+	}
 });
 
-var code = '\n\tvar name = console.ask(\'what is student name?\');\n\tvar score1 = console.ask(\'what is score 1?\');\n\tvar score2 = console.ask(\'what is score 2?\');\n\tvar score3 = console.ask(\'what is score 3?\');\n\tvar total = score1 + score2 + score3;\n\tvar avg = total / 3;\n\tconsole.log(total);\n\tconsole.log(avg);\n';
-runner.run(code);
+},{"./controllers/task-list":1,"./lib":7,"./validationTests":10}],9:[function(require,module,exports){
+'use strict';
 
-console.log(runner);
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.randomString = randomString;
+exports.randomNumber = randomNumber;
+exports.findBoundary = findBoundary;
+exports.simplify = simplify;
+exports.stringRange = stringRange;
+exports.oxfordize = oxfordize;
+exports.pluralize = pluralize;
+exports.similarity = similarity;
 
-// // when activating a new 
-// export default createTasks(module.exports, {
-// 	title: 'Create a product website for "Juice Fruit" smoothie shop!',
+var _lib = require('./lib');
 
-// 	goal: `Create a program that asks for a student name and 5 grades. After doing that, get the average of the grades and then use if/then conditions to print A > 90 B > 80`
-// }, {
+var CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+var TOTAL_CHARACTERS = CHARACTERS.length;
+function randomString() {
+	var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 8;
+	var prefix = arguments[1];
 
-// 	// tests the code
-// 	onContentChanged(code) {
+	var result = '';
+	for (var i = 0; i < length; i++) {
+		result += CHARACTERS.charAt(Math.floor(Math.random() * TOTAL_CHARACTERS));
+	}
+	return (prefix || '') + result;
+}
 
+function randomNumber() {
+	var min = void 0;
+	var max = void 0;
 
-// 	}
+	if (arguments.length === 1) {
+		min = 0;
+		max = arguments.length <= 0 ? undefined : arguments[0];
+	} else {
+		min = arguments.length <= 0 ? undefined : arguments[0];
+		max = arguments.length <= 1 ? undefined : arguments[1];
+	}
 
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-// }
+// finds a trimmed code boundary
+function findBoundary(code, options) {
+	var index = void 0;
 
-// // setup the main task
-// task => {
+	// literal match
+	if (_lib._.isString(options.expression)) index = code.indexOf(options.expression);
 
+	// regular expression
+	else if (_lib._.isRegExp(options.expression)) {
+			var match = options.expression.exec(code);
+			index = match ? match.index : -1;
+		}
+		// just a number
+		else if (_lib._.isNumber(options.index)) {
+				index = options.index;
+			}
 
-// });
+	// trim at the first newline
+	var trim = 0;
+	if (!!options.trimToLine) {
 
-},{"./controllers/task-list":1,"./lib":5}]},{},[4]);
+		while (true) {
+			var char = code.charAt(index - ++trim);
+
+			// whitespace, we can continue
+			if (char === ' ' || char === '\t') continue;
+
+			// if it's a newline, apply it
+			if (char !== '\n') trim = 0;
+
+			break;
+		}
+	}
+
+	// // check for trimming
+	// if (options.trim !== false) {
+	// 	const range = _.trimEnd(code.substr(0, index));
+	// 	index = range.length;
+	// }
+
+	if (isNaN(index)) console.warn('find boundary: NaN');
+
+	// return the final value
+	return Math.max(-1, index - trim);
+}
+
+// creates a text/numeric only representation for a strin
+function simplify(str) {
+	return (str || '').toString().replace(/[^a-z0-9]/gi, '').toLowerCase();
+}
+
+// checks for range messages
+function stringRange(value, min, max, asSingular, asPlural) {
+	var num = !value ? 0 : _lib._.isNumber(value.length) ? value.length : value;
+
+	if (num < min) {
+		var diff = min - num;
+		return 'Expected ' + diff + ' more ' + (diff > 1 ? asPlural : asSingular);
+	} else if (num > max) {
+		var _diff = num - max;
+		return 'Expected ' + _diff + ' fewer ' + (_diff > 1 ? asPlural : asSingular);
+	}
+}
+
+// performs the oxford comma
+function oxfordize(items, conjunction) {
+	var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+	var total = items.length;
+	if (!options.asLiteral) items = _lib._.map(items, function (item) {
+		return "`" + item.replace("`", '\\`') + "`";
+	});
+
+	// determine the best
+	if (total === 1) return items.join('');else if (total == 2) return items.join(' ' + conjunction + ' ');
+
+	// return the result
+	else {
+			var last = items.pop();
+			return items.join(', ') + ', ' + conjunction + ' ' + last;
+		}
+}
+
+// pluralizes a word
+function pluralize(value, single, plural, none) {
+	plural = plural || single + 's';
+	none = none || plural;
+
+	if (value === null || value === undefined) value = 0;
+	if (!isNaN(value.length)) value = value.length;
+	value = Math.abs(value);
+
+	return value === 0 ? none : value === 1 ? single : plural;
+}
+
+// checks for string similarity
+function similarity(s1, s2) {
+	var longer = s1;
+	var shorter = s2;
+	if (s1.length < s2.length) {
+		longer = s2;
+		shorter = s1;
+	}
+	var longerLength = longer.length;
+	if (longerLength == 0) {
+		return 1.0;
+	}
+	return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+
+function editDistance(s1, s2) {
+	s1 = s1.toLowerCase();
+	s2 = s2.toLowerCase();
+
+	var costs = new Array();
+	for (var i = 0; i <= s1.length; i++) {
+		var lastValue = i;
+		for (var j = 0; j <= s2.length; j++) {
+			if (i == 0) costs[j] = j;else {
+				if (j > 0) {
+					var newValue = costs[j - 1];
+					if (s1.charAt(i - 1) != s2.charAt(j - 1)) newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+					costs[j - 1] = lastValue;
+					lastValue = newValue;
+				}
+			}
+		}
+		if (i > 0) costs[s2.length] = lastValue;
+	}
+	return costs[s2.length];
+}
+
+},{"./lib":7}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = execute;
+
+var _lib = require('./lib');
+
+var _utils = require('./utils');
+
+function execute(file, callback) {
+
+	// setup the return result
+	var result = {};
+	result.studentName = (0, _utils.randomString)(10);
+
+	result.scoreRequests = 0;
+	result.scoreValues = [(0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75)];
+
+	result.scoreAverage = (result.scoreValues[0] + result.scoreValues[1] + result.scoreValues[2] + result.scoreValues[3] + result.scoreValues[4]) / 5;
+
+	(0, _lib.runTests)({
+		file: file,
+
+		// setup the run state
+		onInit: function onInit(runner) {
+
+			runner.inject += '\n\nshowAverage("' + result.studentName + '");\n\n';
+		},
+		onError: function onError(runner, ex) {
+			callback(ex, {});
+		},
+		onDone: function onDone(runner) {
+
+			callback(null, result);
+		},
+
+		tests: [function (runner) {
+			result.didExec = true;
+		}],
+
+		// setup the configuration
+		config: {
+
+			onError: function onError(ex) {
+				result.hasException = true;
+				result.exception = ex;
+			},
+
+			// watching for questions
+			onConsoleAsk: function onConsoleAsk(message) {
+
+				// asked for a name
+				if (/student/i.test(message)) {
+					result.didAskForName = true;
+					return 'fred';
+				}
+
+				// check that they asked for a score
+				var isScore = /score/i.test(message);
+				if (isScore) {
+					var score = scoreValues[result.scoreRequests];
+					result.scoreRequests++;
+					return score;
+				}
+			},
+
+			// handle alerts
+			onConsoleAlert: function onConsoleAlert(message) {},
+
+			// check for printing results
+			onConsoleLog: function onConsoleLog(message) {
+
+				// score must match
+				if (result.scoreAverage === message || (0 | message) === (0 | result.scoreAverage)) result.didPrintScore = true;
+
+				if (/^(a\+?|b|c|d|f)$/i.test(message)) result.didPrintGrade === true;
+
+				if (message === result.studentName) result.didPrintStudentName = true;
+			}
+
+		}
+
+	});
+}
+
+},{"./lib":7,"./utils":9}]},{},[6]);

@@ -2,6 +2,7 @@
 import $fsx from 'fs-extra';
 import $path from 'path';
 import $yaml from 'js-yaml';
+import $chargebee from 'chargebee';
 
 /**
  * @property {string} root The root of the application directory
@@ -15,6 +16,12 @@ class Config {
 	async init(path) {
 		const content = await $fsx.readFile(path);
 		this.data = $yaml.load(content.toString());
+
+		// other configs
+		$chargebee.configure({
+			site: this.chargebeeApiTarget,
+			api_key: this.chargebeeApiKey
+		});
 
 		// save a few extra values
 		this.root = $path.resolve('./');

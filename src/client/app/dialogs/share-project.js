@@ -38,6 +38,8 @@ export default class ShareProjectDialog extends Dialog {
 	}
 
 	onActivate = data => {
+		this.project = data;
+
 		this.ui.selectAll.text(MESSAGE_SELECT_ALL);
 		this.setView(this.ui.unsentView);
 
@@ -64,6 +66,7 @@ export default class ShareProjectDialog extends Dialog {
 
 	// clear the dialog
 	onDeactivate = () => {
+		delete this.project;
 		delete this.people;
 	}
 
@@ -87,8 +90,9 @@ export default class ShareProjectDialog extends Dialog {
 		// send the request
 		this.busy = true;
 		try {
+			const id = this.project ? this.project.id : $state.project.id;
 			const result = await api.request('share-project', {
-				id: $state.project.id,
+				id,
 				message,
 				names
 			});

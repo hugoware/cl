@@ -80,30 +80,29 @@ $actions-height: 50px;
 		position: relative;
 	}
 	
-	// .console {
-	// 	z-index: 1;
-	// 	position: absolute;
-	// 	bottom: 0;
-	// 	white-space: pre;
-	// 	font-family: $code-font;
-	// 	overflow: auto;
-	// 	top: 0;
-	// 	left: 0;
-	// 	right: 0;
-	// 	background: $console-background-color;
+	.console {
+		z-index: 100;
+		position: absolute;
+		bottom: 0;
+		// top: 0;
+		left: 0;
+		right: 0;
+		
+		.messages {
+			width: 100%;
+			white-space: pre;
+			font-family: $code-font;
+			overflow: auto;
+			background: $console-background-color;
+			position: absolute;
+			bottom: 0;
+			padding: 0 12px 8px 12px;
+			color: darken(#fff, 35%);
 
-	// 	.messages {
-	// 		position: absolute;
-	// 		bottom: 0;
-	// 		padding: 0 12px 8px 12px;
-	// 		white-space: pre;
-	// 		font-family: $code-font;
-	// 		color: darken(#fff, 35%);
+			line-height: 1.4em;
+			font-size: 14px;
 
-	// 		line-height: 1.4em;
-	// 		font-size: 14px;
-
-	// 	}
-	// }
+		}
+	}
 
 }

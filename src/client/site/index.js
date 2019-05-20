@@ -9,9 +9,11 @@ const isAppLogin = /__login__/.test(window.location.href);
 
 	// generic cancel function
 	function cancelEvent(event) {
-		if (event.stopPropagation) event.stopPropagation();
-		if (event.stopImmediatePropagation) event.stopImmediatePropagation();
-		event.cancelBubble = true;
+		if (event) {
+			if (event.stopPropagation) event.stopPropagation();
+			if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+			event.cancelBubble = true;
+		}
 		return false;
 	}
 
@@ -62,6 +64,7 @@ const isAppLogin = /__login__/.test(window.location.href);
 		}
 
 		// setup handlers
+		window.playDemo = showDemo;
 		link.onclick = showDemo;
 		view.onclick = hideDemo;
 	}
@@ -69,12 +72,19 @@ const isAppLogin = /__login__/.test(window.location.href);
 	// prepare the map view
 	function initMap() {
 		const target = document.getElementById('map');
-		new google.maps.Map(target, {
+		const map = new google.maps.Map(target, {
 			disableDefaultUI: true,
-			center: { lat: 32.9746463,lng: -96.9895557 },
+			center: { lat: 32.963793, lng: -96.990561 },
 			// gestureHandling: 'greedy',
 			scrollwheel: false,
-			zoom: 15
+			zoom: 17
+		});
+
+		new google.maps.Marker({
+			map,
+			position: {
+				lat: 32.963658, lng: -96.993903
+			}
 		});
 	}
 
@@ -164,5 +174,6 @@ const isAppLogin = /__login__/.test(window.location.href);
 	window.addEventListener('load', initTyped);
 	window.addEventListener('load', initVideo);
 	window.addEventListener('load', initSignup);
+	// window.addEventListener('load', initMap);
 
 })();

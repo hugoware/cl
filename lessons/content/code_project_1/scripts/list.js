@@ -1,105 +1,93 @@
 
-import { _, createTestRunner } from './lib';
+import { _ } from './lib';
 import createTasks from './controllers/task-list';
-// import * as tasks from './tasks';
+import validationTest from './validationTests';
 
-export const controller = true;
+// when activating a new 
+export default createTasks(module.exports, {
+	title: 'Create a product website for "Juice Fruit" smoothie shop!',
 
+	goal: `
+# HEading 1
+## HEading 2
+### HEading 3
 
-const flags = { };
+Create a program that asks for a student name and 5 grades. After doing that, get the average of the grades and then use if/then conditions to print A > 90 B > 80
 
-const runner = createTestRunner();
-runner.reset();
+### Grading Table
 
-runner.configure({
+| Score                       | Grade |
+|=============================|=======|
+| \`score\` equal to 90       | A+    |
+| \`score\` greater than 90   | A     |
+| \`score\` greater than 80   | B     |
+| \`score\` greater than 70   | C     |
+| \`score\` less than 70      | F     |
 
-	onConsoleAsk: message => {
+	`,
 
+	events: {
 
-		if (/student/i.test(message)) {
-			return 'fred';
+		// perform 
+		onContentChange(file) {
+			delete this.ex;
+
+			// only checking for main.js
+			if (file.path !== '/main.js') return;
+
+			// check the content
+			validationTest(file, (err, result) => {
+				this.state = result;
+
+				console.log(result);
+				if (!err && !result.hasException)
+					this.validateTasks();
+
+				// set the error
+				else this.setError(err || result.ex || result.exception || result.error || result.err);
+			});
 		}
 
-		
-		const isScore = /score/i.test(message);
-
-		if (isScore && !flags.asking_for_student_score_1) {
-			flags.asking_for_student_score_1 = true;
-			return 100;
-		}
-
-		else if (isScore && !flags.asking_for_student_score_2) {
-			flags.asking_for_student_score_2 = true;
-			return 80;
-		}
-
-		else if (isScore && !flags.asking_for_student_score_3) {
-			flags.asking_for_student_score_3 = true;
-			return 60;
-		}
-
-		else if (isScore && !flags.asking_for_student_score_4) {
-			flags.asking_for_student_score_4 = true;
-			return 40;
-		}
-
-		else if (isScore && !flags.asking_for_student_score_5) {
-			flags.asking_for_student_score_5 = true;
-			return 20;
-		}
-
-	},
-
-	onConsoleAlert: message => {
-		console.log('did alert');
-	},
-
-	onConsoleLog: message => {
-		console.log('did log')
 	}
 
+},
 
-})
+// setup the main task
+task => {
 
-const code = `
-	var name = console.ask('what is student name?');
-	var score1 = console.ask('what is score 1?');
-	var score2 = console.ask('what is score 2?');
-	var score3 = console.ask('what is score 3?');
-	var total = score1 + score2 + score3;
-	var avg = total / 3;
-	console.log(total);
-	console.log(avg);
-`;
-runner.run(code);
+	for (let i = 0; i < 30; i++) {
 
-console.log(runner);
+	task('Print Student Information', () => {
 
+		task("Use `console.log` to print the student\'s name", {
+			onValidateTasks() {
+				this.isValid = this.project.state.didPrintStudentName;
+			}
+		});
 
-// // when activating a new 
-// export default createTasks(module.exports, {
-// 	title: 'Create a product website for "Juice Fruit" smoothie shop!',
+		task("Use `console.log` to print the student's average", {
 
-// 	goal: `Create a program that asks for a student name and 5 grades. After doing that, get the average of the grades and then use if/then conditions to print A > 90 B > 80`
-// }, {
+			onValidateTasks() {
+				this.isValid = this.project.state.didPrintAverage;
+			}
 
-// 	// tests the code
-// 	onContentChanged(code) {
+		});
 
+	});
 
+	task("Use `calculateGrade` function with the student's average", {
 
+		onValidateTasks() {
+			this.isValid = this.project.state.didCallCalculateGrade;
+		}
 
-// 	}
+	});
 
-
-// }
-
-// // setup the main task
-// task => {
+	}
 
 
 
 
 
 	
-// });
+});

@@ -315,7 +315,7 @@ function createTasks(obj, options, builder) {
 	});
 }
 
-},{"../lib":5}],2:[function(require,module,exports){
+},{"../lib":6}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -367,7 +367,32 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":5}],3:[function(require,module,exports){
+},{"../lib":6}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.onEnter = onEnter;
+exports.onExit = onExit;
+var controller = exports.controller = true;
+
+function onEnter() {
+	var _this = this;
+
+	this.progress.block();
+
+	var waiting = this.events.listen('expand-objectives-list', function () {
+		_this.progress.next();
+		_this.events.clear();
+	});
+}
+
+function onExit() {
+	this.events.clear();
+}
+
+},{}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -415,7 +440,7 @@ function configure(obj, config) {
 	if (obj.init) obj.init(obj);
 }
 
-},{"../lib":5}],4:[function(require,module,exports){
+},{"../lib":6}],5:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -441,6 +466,10 @@ var _waitForTab = require('./controllers/waitForTab');
 
 var _waitForTab2 = _interopRequireDefault(_waitForTab);
 
+var _waitForObjectivesList = require('./controllers/waitForObjectivesList');
+
+var _waitForObjectivesList2 = _interopRequireDefault(_waitForObjectivesList);
+
 var _list = require('./list');
 
 var list = _interopRequireWildcard(_list);
@@ -448,10 +477,6 @@ var list = _interopRequireWildcard(_list);
 var _tasks = require('./tasks');
 
 var tasks = _interopRequireWildcard(_tasks);
-
-var _waitForHover = require('./waitForHover');
-
-var waitForHover = _interopRequireWildcard(_waitForHover);
 
 function _interopRequireWildcard(obj) {
 	if (obj && obj.__esModule) {
@@ -508,8 +533,8 @@ var webProject1Lesson = function () {
 			}, {
 				"content": "If you find that you can't figure out how to finish this project, go back and retry previous lessons until you're ready to try again.\n\nLearning something new takes practice and sometimes that means going over a topic a few times before you completely understand it!\n"
 			}, {
-				"controller": "waitForHover",
 				"mode": "popup",
+				"waitForObjectivesList": true,
 				"showObjectiveList": true,
 				"highlight": "#header .task-list .heading",
 				"content": "The list of **Objectives** is found in the top right corner of the screen.\n\nMove your cursor over the highlighted area to see what must be accomplished before the project is completed.\n"
@@ -572,7 +597,7 @@ var webProject1Lesson = function () {
 
 		// setup each included entry
 		var refs = {
-			list: list, tasks: tasks, waitForHover: waitForHover
+			list: list, tasks: tasks
 		};
 
 		// setup each reference
@@ -615,6 +640,12 @@ var webProject1Lesson = function () {
 				(0, _waitForTab2.default)(_controller, {
 					file: slide.waitForTab
 				});
+			}
+
+			if (slide.waitForObjectivesList) {
+				slide.controller = _lib._.uniqueId('controller_');
+				var _controller2 = this.controllers[slide.controller] = {};
+				(0, _waitForObjectivesList2.default)(_controller2, {});
 			}
 
 			if (slide.onActivate) {
@@ -752,7 +783,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_project_1', webProject1Lesson);
 
-},{"./controllers/waitForFile":2,"./controllers/waitForTab":3,"./lib":5,"./list":6,"./tasks":7,"./waitForHover":8}],5:[function(require,module,exports){
+},{"./controllers/waitForFile":2,"./controllers/waitForObjectivesList":3,"./controllers/waitForTab":4,"./lib":6,"./list":7,"./tasks":8}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -765,6 +796,7 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var createTestRunner = exports.createTestRunner = lib.createTestRunner;
 var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
 
 $.preview = function () {
@@ -776,10 +808,11 @@ exports.default = {
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
 	CssValidator: CssValidator,
+	createTestRunner: createTestRunner,
 	validateHtmlDocument: validateHtmlDocument
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1103,7 +1136,7 @@ function (task) {
 	});
 });
 
-},{"./controllers/task-list":1,"./lib":5,"./tasks":7}],7:[function(require,module,exports){
+},{"./controllers/task-list":1,"./lib":6,"./tasks":8}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1241,29 +1274,4 @@ function expectOrder(path) {
 	};
 }
 
-},{"./lib":5}],8:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.onEnter = onEnter;
-exports.onExit = onExit;
-var controller = exports.controller = true;
-
-function onEnter() {
-	var _this = this;
-
-	this.progress.block();
-
-	var waiting = this.events.listen('expand-objectives-list', function () {
-		_this.progress.next();
-		_this.events.clear();
-	});
-}
-
-function onExit() {
-	this.events.clear();
-}
-
-},{}]},{},[4]);
+},{"./lib":6}]},{},[5]);

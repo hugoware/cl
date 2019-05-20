@@ -98,6 +98,9 @@ export default class CodeRunner {
 		(window.top || window).dispatchEvent(event);
 	}
 
+	// grabs a data propery
+	get = prop => this.interpreter.get(prop)
+
 	// resets the entire view
 	reset = () => {
 		this.handler.onReset();

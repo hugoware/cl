@@ -1,7 +1,6 @@
 import _ from 'lodash';
-import chargebee from 'chargebee';
 
-import $config from '../config';
+import $chargebee from 'chargebee';
 import $database from '../storage/database';
 
 import Schedule from '../schedule'
@@ -32,14 +31,8 @@ export default function syncSubscription(subscriptionId) {
 			});
 		}
 		
-		// setup access
-		chargebee.configure({
-			site: $config.chargebeeApiTarget,
-			api_key: $config.chargebeeApiKey
-		});
-
 		// check if this is a real subscription
-		chargebee.subscription.retrieve(subscriptionId)
+		$chargebee.subscription.retrieve(subscriptionId)
 			.request(async (error, result) => {
 
 				// failed for another reason

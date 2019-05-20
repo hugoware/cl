@@ -30,9 +30,11 @@ block content
 						| &nbsp;
 					.details !{content.header_introduction}
 					.actions
-						a.button.how-it-works(href='#about') How It Works
-						a.button.try-demo(href='#demo') Watch a Video
+						a.button.how-it-works(href='#demo' onclick="playDemo()") Watch a Video
+						a.button.try-demo(href='/demo' target='_demo') Try a Lesson Online
 						a.button.view-schedule(href='#schedule') Schedule &amp; Pricing
+
+		+starting_soon
 
 		a.jump(name='about')
 
@@ -49,8 +51,8 @@ block content
 
 						.action
 							a.button(href='/demo' target='_demo') Try a Demo Lesson
-	.doc
-		.section.courses.container-fluid
+		
+		.section.courses.container-fluid.light
 			.row.content
 				.col-md-5
 					.description
@@ -113,56 +115,35 @@ block content
 
 		a.jump(name='schedule')
 
-		.section.schedule.container-fluid
+		.section.schedule.container-fluid.light
 			.row.content
 				.col-md-6
-					.description
-						h3 !{content.schedule_title}
-						p !{content.schedule_content}
-						
-						.action
-							a#schedule-link.button(href='/signup') Reserve a Space
+					+reserve_space
 
 				.col-md-6
-					.time-slots
-						.step.first
-							.step-icon.icon-calendar
-							.about
-								h3 Choose a Day
-								p Pick the day of the week that you'd like to visit
+					+pricing_table
 
-						.step
-							.step-icon.icon-clock
-							.about
-								h3 Choose a Time
-								p Find a open time that works best for your schedule
+				//- .col-md-12
+				//- 	.container-fluid
+				//- 		.row
+				//- 			.col-sm-6
 
-						.step.last
-							.step-icon.icon-start
-							.about
-								h3 Get Started!
-								p Choose a seat and jump right into programming!
+							//- for plan in content.plans
+							//- 	.col-sm-6
+							//- 		.pricing-table(class=plan.css + '-plan')
+							//- 			.price
+							//- 				.title= plan.title
+							//- 				.cost $!{plan.cost}
+							//- 				.term /mo
 
-				.sessions.col-md-12
-					.container-fluid
-						.row
-							for plan in content.plans
-								.col-sm-6
-									.pricing-table(class=plan.css + '-plan')
-										.price
-											.title= plan.title
-											.cost $!{plan.cost}
-											.term /mo
+							//- 			.summary= plan.summary
 
-										.summary= plan.summary
+							//- 			.features
+							//- 				for item in plan.features
+							//- 					.item
+							//- 						.icon(class=item.icon+'-icon')
+							//- 						.detail !{item.detail}
 
-										.features
-											for item in plan.features
-												.item
-													.icon(class=item.icon+'-icon')
-													.detail !{item.detail}
-
-						.footnote For additional information, #[a(href='/policies') view the CodeLab policies]
 
 									
 
@@ -180,11 +161,13 @@ block content
 						ul
 							li.where
 								.icon.map-icon
-								.info TBD 
-								//- Coppell, Texas
+								.info.address
+									.street 275 Denton Tap Road
+									.suite Suite 106
+									.csz Coppell, TX 75019
 							li.email
 								.icon.email-icon
-								.info 
+								.info
 									a(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2') hello@codelabschool.com
 							li.phone
 								.icon.phone-icon
@@ -194,7 +177,7 @@ block content
 							a.button(href='/signup') Reserve a Space
 
 		
-		.section.faq.container-fluid
+		.section.faq.container-fluid.light
 			.row.content
 				.col-md-6
 					.description
@@ -212,9 +195,83 @@ block content
 									.title !{item.question}
 									.answer !{item.answer}
 
-
+	+starting_soon
 	include _footer
 
 block scripts
 	//- script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyALR3vJM7iMzRxUeVLHIZMWGgc8qB8FLb8')
+	//- script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBwfXCRmEHqkM1d_E7GYPOd-a290gnQxrM')
 	script(type='text/javascript' src='/__codelab__/site.js')
+
+
+mixin pricing_table
+	.sessions
+		.pricing-table
+			.price
+				.title Enrollment Fee
+				.cost $125
+				.term /mo
+
+			.summary On-site access to CodeLab with provided computers and a Code Coach
+
+			.features
+				.item
+					.icon.clock-icon
+					.detail One 60 minute session per week
+
+				.item
+					.icon.coach-icon
+					.detail On-site Code Coach
+
+				.item
+					.icon.tools-icon
+					.detail Use all CodeLab features from home
+
+				.item
+					.icon.share-icon
+					.detail Share creations online
+
+		.footnote For additional information, #[a(href='/policies') view the CodeLab policies]
+
+
+mixin time_slots
+	.time-slots
+		.step.first
+			.step-icon.icon-calendar
+			.about
+				.step-title Choose a Day
+				.step-action Pick the day of the week that you'd like to visit
+
+		.step
+			.step-icon.icon-clock
+			.about
+				.step-title Choose a Time
+				.step-action Find a open time that works best for your schedule
+
+		.step.last
+			.step-icon.icon-start
+			.about
+				.step-title Get Started!
+				.step-action Choose a seat and jump right into programming!
+
+mixin reserve_space
+	.description
+		h3 !{content.schedule_title}
+		p !{content.schedule_content}
+
+		+time_slots
+		
+		.action
+			a#schedule-link.button(href='/signup') Reserve a Space
+
+mixin starting_soon
+	.section.starting-soon.container-fluid
+		.starting-soon-background
+			.row.content
+				.col-md-8
+					.start-icon
+						img(src='/__codelab__/site/images/icon-calendar.png')
+					.info Classes begin #[span.starting July 1st] in #[span.starting Coppell, Texas!]
+
+				.col-md-4.action
+					a.button(href='/signup') Reserve a Space

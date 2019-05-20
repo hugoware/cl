@@ -15,7 +15,7 @@
 
 - slide:
     content: |
-      Lessons typically begin by introducing a new concept by examining code examples and highlighting relevant blocks.
+      Lessons typically begin by introducing a new concept by examining code examples and highlighting relevant parts.
 
       [snippet base_example]
 
@@ -127,7 +127,7 @@
     content: |
       If you have any questions about CodeLab, or if you're interested in reserving a space, use either of the links below to get started!
 
-      [silent] <a class="assistant-button" target="__ask_question" href="https://docs.google.com/forms/d/e/1FAIpQLSeYOBUeymVmQXG654BhiQF7_97_3Okn7vxrSNozqkXy23cZjg/viewform" >Ask a Question</a> <a class="assistant-button" href="https://docs.google.com/forms/d/e/1FAIpQLSe7lZoyLEOu2EQZ0P1_vWJHh017SmCbPHsvmdP5OCEPm9fHcQ/viewform" target="__reserve_space" >Reserve a Space</a>
+      [silent] <a class="assistant-button" target="__ask_question" href="https://docs.google.com/forms/d/e/1FAIpQLSeYOBUeymVmQXG654BhiQF7_97_3Okn7vxrSNozqkXy23cZjg/viewform" >Ask a Question</a> <a class="assistant-button" href="/signup" target="__reserve_space" >Reserve a Space</a>
 
 - slide:
     mode: popup
