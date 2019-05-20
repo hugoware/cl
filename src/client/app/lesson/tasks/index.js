@@ -82,7 +82,7 @@ export default class TaskList extends Component {
 
 		// update the error, if any
 		if (tasks.ex)
-			this.ui.error.text(tasks.ex.toString());
+			this.ui.error.text(tasks.ex.message || tasks.ex.toString());
 
 		// create the new list
 		if (!this.tasks) {
