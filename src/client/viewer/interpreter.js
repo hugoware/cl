@@ -78,7 +78,7 @@ export default class CodeInterpreter {
 		}
 		// not sure what this is
 		else {
-			console.log('unknown init', config);
+			// console.log('unknown init', config);
 		}
 		
 
@@ -177,7 +177,9 @@ export default class CodeInterpreter {
 
 	// executes the code until set to wait
 	run() {
-		const limit = ts(2000);
+		let limit = ts(2000);
+		if (window.REPL_TIMEOUT === false)
+			limit = ts(999999999);
 
 		// checks for an error flag and throws an exception - this
 		// could be caused by parser errors
@@ -222,7 +224,6 @@ export default class CodeInterpreter {
 
 // converts a vm object to a usable JavaScript object
 function flatten(context) {
-	console.log('returning', context);
 
 	// just basic data
 	if ('data' in context && context.data !== undefined)

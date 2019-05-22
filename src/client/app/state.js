@@ -709,7 +709,7 @@ const $state = {
 
 		// notify
 		if ($state.lesson)
-			$state.lesson.invoke('removeItems', paths);
+			$state.lesson.invoke('removeItems', items);
 
 		// share that files have been removed so the
 		// UI can update

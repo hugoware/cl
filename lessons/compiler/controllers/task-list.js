@@ -18,6 +18,7 @@ class Task {
 	// perform validation
 	validateTasks() {
 		this.project.validateTasks();
+		setTimeout(this.project.update);
 	}
 
 	// get the current state
@@ -224,6 +225,8 @@ export default function createTasks(obj, options, builder) {
 
 			const sources = [ options.events ].concat(project.tasks);
 			_.each(sources, (item, index) => {
+				if (!item) return;
+
 				if (action in item) {
 					try  {
 						item[action].apply(index === 0 ? this.taskList : item, args);

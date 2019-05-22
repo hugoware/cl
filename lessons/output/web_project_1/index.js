@@ -40,10 +40,18 @@ var Task = function () {
 		if (this.onCreateTask) this.onCreateTask.apply(this);
 	}
 
-	// get the current state
+	// perform validation
 
 
 	_createClass(Task, [{
+		key: 'validateTasks',
+		value: function validateTasks() {
+			this.project.validateTasks();
+		}
+
+		// get the current state
+
+	}, {
 		key: 'isValid',
 		get: function get() {
 			return this.tasks ? _lib._.every(this.tasks, 'isValid')
@@ -78,7 +86,24 @@ var TaskList = function () {
 		this.total = 0;
 	}
 
+	// performs a blanket validation
+
+
 	_createClass(TaskList, [{
+		key: 'validateTasks',
+		value: function validateTasks() {
+			this.instance.invoke('onValidateTasks', this);
+		}
+
+		// updates the error state
+
+	}, {
+		key: 'setError',
+		value: function setError(ex) {
+			this.ex = ex;
+			this.update(true);
+		}
+	}, {
 		key: 'taskSound',
 		value: function taskSound(all) {
 
@@ -112,7 +137,8 @@ var TaskList = function () {
 				var data = {
 					total: this.total,
 					complete: this.completed,
-					state: this.state
+					state: this.state,
+					ex: this.ex
 				};
 
 				var increased = this.completed > starting;
@@ -218,10 +244,15 @@ function createTasks(obj, options, builder) {
 
 			// setup the new project
 			project = new TaskList(options);
+			this.taskList = project;
 			project.instance = this;
 			project.broadcast = this.events.broadcast;
 			project.progress = this.progress;
 			project.sound = this.sound;
+			project.event = this.event;
+
+			// renewed state
+			project.broadcast('task-list-created', options);
 
 			// handle setting up the work tree
 			var stack = [project.root];
@@ -259,41 +290,24 @@ function createTasks(obj, options, builder) {
 
 		// execute an action against all tasks
 		invoke: function invoke(action) {
+			var _this2 = this;
+
 			for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 				args[_key - 1] = arguments[_key];
 			}
 
-			// handle other actions
-			var _iteratorNormalCompletion2 = true;
-			var _didIteratorError2 = false;
-			var _iteratorError2 = undefined;
+			var sources = [options.events].concat(project.tasks);
+			_lib._.each(sources, function (item, index) {
+				if (!item) return;
 
-			try {
-				for (var _iterator2 = project.tasks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-					var task = _step2.value;
-
-					if (action in task) {
-						try {
-							task[action].apply(task, args);
-						} catch (ex) {
-							task.isValid = false;
-						}
+				if (action in item) {
+					try {
+						item[action].apply(index === 0 ? _this2.taskList : item, args);
+					} catch (ex) {
+						item.isValid = false;
 					}
 				}
-			} catch (err) {
-				_didIteratorError2 = true;
-				_iteratorError2 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion2 && _iterator2.return) {
-						_iterator2.return();
-					}
-				} finally {
-					if (_didIteratorError2) {
-						throw _iteratorError2;
-					}
-				}
-			}
+			});
 		},
 		respondsTo: function respondsTo() {
 			return true;
@@ -373,26 +387,33 @@ function configure(obj, config) {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.onEnter = onEnter;
-exports.onExit = onExit;
-var controller = exports.controller = true;
+exports.default = configure;
 
-function onEnter() {
-	var _this = this;
+var _lib = require('../lib');
 
-	this.progress.block();
+function configure(obj, config) {
 
-	var waiting = this.events.listen('expand-objectives-list', function () {
-		_this.progress.next();
-		_this.events.clear();
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			var waiting = this.events.listen('expand-objectives-list', function () {
+				_this.progress.next();
+				_this.events.clear();
+			});
+		},
+		onExit: function onExit() {
+			this.events.clear();
+		}
 	});
 }
 
-function onExit() {
-	this.events.clear();
-}
-
-},{}],4:[function(require,module,exports){
+},{"../lib":6}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -798,6 +819,7 @@ var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
 var createTestRunner = exports.createTestRunner = lib.createTestRunner;
 var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+var runTests = exports.runTests = lib.runTests;
 
 $.preview = function () {
 	return $('#preview .output').contents();
@@ -809,6 +831,7 @@ exports.default = {
 	HtmlValidator: HtmlValidator,
 	CssValidator: CssValidator,
 	createTestRunner: createTestRunner,
+	runTests: runTests,
 	validateHtmlDocument: validateHtmlDocument
 };
 

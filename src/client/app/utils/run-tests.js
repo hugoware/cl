@@ -57,11 +57,11 @@ async function performTests(options) {
 
 	// setup the configuration
 	// const setup = _.assign({}, config);
-	runner.tests = [];
+	runner.tests = [ ];
 	_.each(tests, test => {
 		const func = _.uniqueId('___TEST___');
 		runner.tests.push({ name: func, action: () => test.call(runner, runner) });
-		runner.code += `\n\ntry { ${func}(); } catch (ex) { }\n\n`;
+		runner.inject += `\n\ntry { ${func}(); } catch (ex) { }\n\n`;
 	});
 
 	// setup the config

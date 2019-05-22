@@ -50,6 +50,7 @@ export default class TaskList extends Component {
 
 	onDeactivateProject = () => {
 		this.removeClass('active');
+		delete this.tasks;
 	}
 
 	// handled when created for the first time

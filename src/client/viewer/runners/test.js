@@ -10,6 +10,10 @@ export default class TestRunner {
 		return this.runner.interpreter;
 	}
 
+	get state() {
+		return this.runner.get(this.key);
+	}
+
 	init = () => {
 		this.stdout = [];
 		this.stdin = [];
@@ -19,6 +23,9 @@ export default class TestRunner {
 	// prepare to run
 	register = interpreter => {
 		interpreter.registerAll([
+			
+			{ name: `${this.runner.key}`,
+				action: this.onSyncState },
 
 			{ name: 'log',
 				scope: 'console',
@@ -80,7 +87,7 @@ export default class TestRunner {
 
 	onError = (...args) => {
 		if (this.options.onError)
-			return this.options.onError(...args);
+			return this.options.onError.call(this.runner, ...args);
 	}
 
 	onReset = () => {
@@ -90,46 +97,51 @@ export default class TestRunner {
 		this.alerts = [ ];
 	}
 
+	onSyncState = (...args) => {
+		if (this.options.onSyncState)
+			return this.options.onSyncState.call(this.runner, ...args);
+	}
+
 	onConsoleLog = (...args) => {
 		this.stdout.push(args);
 		if (this.options.onConsoleLog)
-			return this.options.onConsoleLog(...args);
+			return this.options.onConsoleLog.call(this.runner, ...args);
 	}
 
 	onConsoleWarn = (...args) => {
 		this.stdout.push(args);
 		if (this.options.onConsoleWarn)
-			return this.options.onConsoleWarn(...args);
+			return this.options.onConsoleWarn.call(this.runner, ...args);
 	}
 
 	onConsoleInfo = (...args) => {
 		this.stdout.push(args);
 		if (this.options.onConsoleInfo)
-			return this.options.onConsoleInfo(...args);
+			return this.options.onConsoleInfo.call(this.runner, ...args);
 	}
 
 	onConsoleError = (...args) => {
 		this.stderr.push(args);
 		if (this.options.onConsoleError)
-			return this.options.onConsoleError(...args);
+			return this.options.onConsoleError.call(this.runner, ...args);
 	}
 
 	onConsoleSuccess = (...args) => {
 		this.stdout.push(args);
 		if (this.options.onConsoleSuccess)
-			return this.options.onConsoleSuccess(...args);
+			return this.options.onConsoleSuccess.call(this.runner, ...args);
 	}
 
 	onConsoleShake = (...args) => {
 		this.stdout.push(args);
 		if (this.options.onConsoleShake)
-			return this.options.onConsoleShake(...args);
+			return this.options.onConsoleShake.call(this.runner, ...args);
 	}
 
 	onConsoleRainbow = (...args) => {
 		this.stdout.push(args);
 		if (this.options.onConsoleRainbow)
-			return this.options.onConsoleRainbow(...args);
+			return this.options.onConsoleRainbow.call(this.runner, ...args);
 	}
 
 	onConsoleAsk = (...args) => {
@@ -149,18 +161,18 @@ export default class TestRunner {
 	onConsoleImage = (...args) => {
 		this.stdout.push(args);
 		if (this.options.onConsoleImage)
-			return this.options.onConsoleImage(...args);
+			return this.options.onConsoleImage.call(this.runner, ...args);
 	}
 
 	onConsoleClear = (...args) => {
 		if (this.options.onConsoleClear)
-			return this.options.onConsoleClear(...args);
+			return this.options.onConsoleClear.call(this.runner, ...args);
 	}
 
 	onAlert = (...args) => {
 		this.alerts.push(args);
 		if (this.options.onAlert)
-			return this.options.onAlert(...args);
+			return this.options.onAlert.call(this.runner, ...args);
 	}
 
 	// setup options

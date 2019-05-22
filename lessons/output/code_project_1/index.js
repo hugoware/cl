@@ -47,6 +47,7 @@ var Task = function () {
 		key: 'validateTasks',
 		value: function validateTasks() {
 			this.project.validateTasks();
+			setTimeout(this.project.update);
 		}
 
 		// get the current state
@@ -298,6 +299,8 @@ function createTasks(obj, options, builder) {
 
 			var sources = [options.events].concat(project.tasks);
 			_lib._.each(sources, function (item, index) {
+				if (!item) return;
+
 				if (action in item) {
 					try {
 						item[action].apply(index === 0 ? _this2.taskList : item, args);
@@ -546,6 +549,29 @@ var codeProject1Lesson = function () {
 			"type": "code",
 			"description": "Creating a math gradebook on your own!",
 			"lesson": [{
+				"mode": "overlay",
+				"title": "Progress Review #1",
+				"content": "In this lesson we will be working on a project that reviews all of the skills that have been covered up to this point.\n"
+			}, {
+				"content": "This lesson is a _\"Project Lesson\"_ meaning that you will be given a goal to accomplish. How you get it done is up to you.\n\n[image task-list.png frame]\n\nYou will be provided a list of **Objectives** that will be used to check if your code behaves the way that it should.\n"
+			}, {
+				"content": "As you work, the **Objective** list will update to show what items have been finished and which ones are still left to be done.\n\n[image task-done.png frame]\n\nWhen you have completed all items on the **Objectives** list, you will have successfully finished this project!\n"
+			}, {
+				"content": "The purpose of this project is to ensure that you have mastered all of the skills taught in previous lessons. There will **not** be any assistance or hints provided as you work.\n\n**Please keep in mind that it's entirely possible that you might get stuck!**\n"
+			}, {
+				"content": "If you find that you can't figure out how to finish this project, go back and retry previous lessons until you're ready to try again.\n\nLearning something new takes practice and sometimes that means going over a topic a few times before you completely understand it!\n"
+			}, {
+				"mode": "popup",
+				"waitForObjectivesList": true,
+				"showObjectiveList": true,
+				"highlight": "#header .task-list .heading",
+				"content": "The list of **Objectives** is found in the top right corner of the screen.\n\nMove your cursor over the highlighted area to see what must be accomplished before the project is completed.\n"
+			}, {
+				"highlight": "#header .task-list .heading",
+				"content": "There are many objectives that you will need to complete. Some objectives are not visible unless you scroll the list down to see them.\n\nAdditionally, as you finish groups of objectives, they will be automatically collapsed into single items on the list.\n"
+			}, {
+				"content": "Finally, some objectives have an icon at the far right side. Moving the cursor over this icon will show the related skill.\n\nIf you're stuck this will help identify which lessons you should go back and review.\n"
+			}, {
 				"mode": "popup",
 				"showObjectiveList": true,
 				"flags": "+OPEN-MODE",
@@ -556,7 +582,17 @@ var codeProject1Lesson = function () {
 				"content": "Great work! You've completed all of the objectives!\n\nYou're well on your way to becoming a great computer programmer!\n"
 			}],
 			"snippets": {},
-			"resources": [],
+			"resources": [{
+				"width": 1300,
+				"height": 600,
+				"type": "png",
+				"path": "task-done.png"
+			}, {
+				"width": 1300,
+				"height": 600,
+				"type": "png",
+				"path": "task-list.png"
+			}],
 			"definitions": {
 				"double_click": {
 					"id": "double_click",
@@ -833,7 +869,7 @@ function _interopRequireDefault(obj) {
 exports.default = (0, _taskList2.default)(module.exports, {
 	title: 'Create a product website for "Juice Fruit" smoothie shop!',
 
-	goal: '\n# HEading 1\n## HEading 2\n### HEading 3\n\nCreate a program that asks for a student name and 5 grades. After doing that, get the average of the grades and then use if/then conditions to print A > 90 B > 80\n\n### Grading Table\n\n| Score                       | Grade |\n|=============================|=======|\n| `score` equal to 90       | A+    |\n| `score` greater than 90   | A     |\n| `score` greater than 80   | B     |\n| `score` greater than 70   | C     |\n| `score` less than 70      | F     |\n\n\t',
+	goal: 'Create a function called `showGrade` that accepts a `score` argument and then prints a grade using the following table.\n\t\nNext, use `console.ask` to get the **student\'s name** and **five individual scores**. Calculate the **student\'s average score** using each of the scores provided.\n\n### Grading Table\n\n| Score                       | Grade |\n|=============================|=======|\n| `score` equal to 100      | A+    |\n| `score` greater than 90   | A     |\n| `score` greater than 80   | B     |\n| `score` greater than 70   | C     |\n| `score` less than 70      | F     |\n\nFinally, use `console.log` to print the **student\'s name**, the **average**, and then call `showGrade` to display the **student\'s grade**.\n\n\t',
 
 	events: {
 
@@ -850,7 +886,6 @@ exports.default = (0, _taskList2.default)(module.exports, {
 			(0, _validationTests2.default)(file, function (err, result) {
 				_this.state = result;
 
-				console.log(result);
 				if (!err && !result.hasException) _this.validateTasks();
 
 				// set the error
@@ -864,29 +899,121 @@ exports.default = (0, _taskList2.default)(module.exports, {
 // setup the main task
 function (task) {
 
-	for (var i = 0; i < 30; i++) {
+	task('Create a `showGrade` function', function () {
 
-		task('Print Student Information', function () {
-
-			task("Use `console.log` to print the student\'s name", {
-				onValidateTasks: function onValidateTasks() {
-					this.isValid = this.project.state.didPrintStudentName;
-				}
-			});
-
-			task("Use `console.log` to print the student's average", {
-				onValidateTasks: function onValidateTasks() {
-					this.isValid = this.project.state.didPrintAverage;
-				}
-			});
-		});
-
-		task("Use `calculateGrade` function with the student's average", {
+		task('Declare a function `showGrade`', {
+			topic: 'Functions',
 			onValidateTasks: function onValidateTasks() {
-				this.isValid = this.project.state.didCallCalculateGrade;
+				this.isValid = this.project.state.hasShowGradeFunction;
 			}
 		});
-	}
+
+		task('Accept a single argument named `score`', {
+			topic: 'Functions',
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.showGradeArgumentCount === 1;
+			}
+		});
+
+		task('Use `console.log` to show results for `score`', function () {
+
+			task('Log `A++` if `score` equal to `100', {
+				topic: 'Logical Conditions',
+				onValidateTasks: function onValidateTasks() {
+					this.isValid = this.project.state.didDisplayGradeAPlusPlus;
+				}
+			});
+
+			task('Log `A` if `score` greater than or equal to `90', {
+				topic: 'Logical Conditions',
+				onValidateTasks: function onValidateTasks() {
+					this.isValid = this.project.state.didDisplayGradeA;
+				}
+			});
+
+			task('Log `B` if `score` greater than or equal to `80', {
+				topic: 'Logical Conditions',
+				onValidateTasks: function onValidateTasks() {
+					this.isValid = this.project.state.didDisplayGradeB;
+				}
+			});
+
+			task('Log `C` if `score` greater than or equal to `70', {
+				topic: 'Logical Conditions',
+				onValidateTasks: function onValidateTasks() {
+					this.isValid = this.project.state.didDisplayGradeC;
+				}
+			});
+
+			task('Log `F` if `score` for all other values', {
+				topic: 'Logical Conditions',
+				onValidateTasks: function onValidateTasks() {
+					this.isValid = this.project.state.didDisplayGradeF;
+				}
+			});
+		});
+	});
+
+	task('Collect Student Information', function () {
+
+		task('Use `console.ask` to ask for the "student name"', {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didAskForName;
+			}
+		});
+
+		task('Use `console.ask` to ask for "score 1"', {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didAskForScore1;
+			}
+		});
+
+		task('Use `console.ask` to ask for "score 2"', {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didAskForScore2;
+			}
+		});
+
+		task('Use `console.ask` to ask for "score 3"', {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didAskForScore3;
+			}
+		});
+
+		task('Use `console.ask` to ask for "score 4"', {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didAskForScore4;
+			}
+		});
+
+		task('Use `console.ask` to ask for "score 5"', {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didAskForScore5;
+			}
+		});
+	});
+
+	task('Print Student Information', function () {
+
+		task("Use `console.log` to print the student\'s name", {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didPrintStudentName;
+			}
+		});
+
+		task("Use `console.log` to print the student's average", {
+			onValidateTasks: function onValidateTasks() {
+				this.isValid = this.project.state.didPrintAverage;
+			}
+		});
+	});
+
+	task("Use `showGrade` function with the student's average", {
+		topic: 'Functions',
+		onValidateTasks: function onValidateTasks() {
+			this.isValid = this.project.state.didPrintGrade;
+		}
+	});
 });
 
 },{"./controllers/task-list":1,"./lib":7,"./validationTests":10}],9:[function(require,module,exports){
@@ -1083,13 +1210,16 @@ var _utils = require('./utils');
 function execute(file, callback) {
 
 	// setup the return result
-	var result = {};
-	result.studentName = (0, _utils.randomString)(10);
+	var result = {
+		scoreRequests: 0
+	};
 
-	result.scoreRequests = 0;
-	result.scoreValues = [(0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75)];
+	var state = {};
 
-	result.scoreAverage = (result.scoreValues[0] + result.scoreValues[1] + result.scoreValues[2] + result.scoreValues[3] + result.scoreValues[4]) / 5;
+	var studentName = (0, _utils.randomString)(10);
+	var scoreValues = [(0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75)];
+
+	var scoreAverage = (scoreValues[0] + scoreValues[1] + scoreValues[2] + scoreValues[3] + scoreValues[4]) / 5;
 
 	(0, _lib.runTests)({
 		file: file,
@@ -1097,19 +1227,25 @@ function execute(file, callback) {
 		// setup the run state
 		onInit: function onInit(runner) {
 
-			runner.inject += '\n\nshowAverage("' + result.studentName + '");\n\n';
+			runner.inject += '\n\n\t\t\t\t// required before testing functions\n\t\t\t\tvar hasFunction = !/null|undefined/i.test(typeof showGrade);\n\t\t\t\t' + runner.key + '({ hasShowGradeFunction: hasFunction });\n\n\t\t\t\tif (hasFunction) {\n\t\t\t\t\t' + runner.key + '({ showGradeArgumentCount: showGrade.length });\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'A++\' });\n\t\t\t\t\tshowGrade(100);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'A\' });\n\t\t\t\t\tshowGrade(90);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'B\' });\n\t\t\t\t\tshowGrade(80);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'C\' });\n\t\t\t\t\tshowGrade(70);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'F\' });\n\t\t\t\t\tshowGrade(69);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: false });\n\t\t\t\t}\n\n\t\t\t';
 		},
 		onError: function onError(runner, ex) {
 			callback(ex, {});
 		},
 		onDone: function onDone(runner) {
-
+			result.hasShowGradeFunction = state.hasShowGradeFunction;
+			result.showGradeFunction = state.showGradeFunction;
+			result.showGradeArgumentCount = state.showGradeArgumentCount;
 			callback(null, result);
 		},
 
-		tests: [function (runner) {
-			result.didExec = true;
-		}],
+		tests: [
+
+			// // make sure there's a function 
+			// function(runner) {
+			// }
+
+		],
 
 		// setup the configuration
 		config: {
@@ -1119,21 +1255,25 @@ function execute(file, callback) {
 				result.exception = ex;
 			},
 
+			// update state info
+			onSyncState: function onSyncState(update) {
+				_lib._.assign(state, update);
+			},
+
 			// watching for questions
 			onConsoleAsk: function onConsoleAsk(message) {
 
-				// asked for a name
-				if (/student/i.test(message)) {
+				// looking for a name
+				if (/name/i.test(message)) {
 					result.didAskForName = true;
-					return 'fred';
+					return studentName;
 				}
 
-				// check that they asked for a score
-				var isScore = /score/i.test(message);
-				if (isScore) {
-					var score = scoreValues[result.scoreRequests];
-					result.scoreRequests++;
-					return score;
+				// looking for a score
+				if (/score/.test(message)) {
+					var num = 0 | message.replace(/[^0-9]/g, '');
+					result['didAskForScore' + num] = true;
+					return scoreValues[num - 1];
 				}
 			},
 
@@ -1143,12 +1283,20 @@ function execute(file, callback) {
 			// check for printing results
 			onConsoleLog: function onConsoleLog(message) {
 
+				// check if printing grades
+				if (state.isExpectingGrade) {
+
+					if (state.isExpectingGrade === 'A++') result.didDisplayGradeAPlusPlus = message === 'A++';else if (state.isExpectingGrade === 'A') result.didDisplayGradeA = message === 'A';else if (state.isExpectingGrade === 'B') result.didDisplayGradeB = message === 'B';else if (state.isExpectingGrade === 'C') result.didDisplayGradeC = message === 'C';else if (state.isExpectingGrade === 'F') result.didDisplayGradeF = message === 'F';
+
+					return;
+				}
+
 				// score must match
-				if (result.scoreAverage === message || (0 | message) === (0 | result.scoreAverage)) result.didPrintScore = true;
+				if (scoreAverage === message || (0 | message) === (0 | scoreAverage)) result.didPrintAverage = true;
 
-				if (/^(a\+?|b|c|d|f)$/i.test(message)) result.didPrintGrade === true;
+				if (/^(A\+?|B|C|F)$/.test(message)) result.didPrintGrade = true;
 
-				if (message === result.studentName) result.didPrintStudentName = true;
+				if (message === studentName) result.didPrintStudentName = true;
 			}
 
 		}
