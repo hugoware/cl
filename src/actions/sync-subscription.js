@@ -3,8 +3,8 @@ import _ from 'lodash';
 import $chargebee from 'chargebee';
 import $database from '../storage/database';
 
-import Schedule from '../schedule'
-import audit from '../audit'
+import Schedule from '../schedule';
+import audit from '../audit';
 
 export default function syncSubscription(subscriptionId) {
 	return new Promise(async (resolve, reject) => {

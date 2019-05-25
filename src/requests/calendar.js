@@ -1,16 +1,13 @@
 
-import login from '../actions/login';
 import { errorMessage } from '../utils';
-import audit from '../audit';
-import {kioskLogin} from '../actions/kiosk-login'
 
 const KIOSK_KEY = 'codelab-kiosk';
 const KIOSK_VALUE = 'alpha-bravo-kiosk';
 
 // 853e952c-bbb0-4bf0-889b-eecbeb9a352e=c82cde05-c071-4505-b0a9-083976f6abd7;
 
-export const name = 'kiosk login';
-export const route = '/kiosk';
+export const name = 'calendar';
+export const route = '/calendar';
 export const acceptData = true;
 
 export async function handle(request, response, next) {
@@ -21,24 +18,34 @@ export async function handle(request, response, next) {
 
   // this is showing the login page
 	if (!/post/i.test(request.method))
-		return response.render('site/kiosk');
+		return response.render('site/calendar');
 	
 	// this seems to be a login attempt
 	try {
 
-		// try the login
 		const result = await kioskLogin(request.body);
-		if (result.success) 
-			audit.log('kiosk-login-success', result.userId, result);
-		else
-			audit.log('kiosk-login-failed', 'unknown', result);
-
-		// finish the login
 		response.json(result);
+
+		// const data = request.body || { };
+		// const result = await login(data);
+
+    // // set the user identity
+		// request.session.user = result.user;
+
+		// // for admins, always use the classroom so
+		// // lesson unlocks are visible
+		// if (result.role === 'admin') {
+		// 	request.session.isAdmin = true;
+		// 	request.session.isClassroom = true;
+		// }
+		
+		// // home login
+		// audit.log('login', result.user, { isClassroom: false });
+		// response.json({ success: true });
 	}
 	// determine the error result
 	catch (err) {
-		audit.log('kiosk-login-failed', 'unknown', err);
+		console.log(err);
 		err = errorMessage(err, {
 			// authentication_error: 'Unable to authenticate the account selected',
 			// database_error: 'Internal server error',

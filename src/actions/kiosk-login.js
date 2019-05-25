@@ -3,6 +3,7 @@ import _ from 'lodash';
 import $database from '../storage/database';
 import $chargebee from 'chargebee';
 import $config from '../config';
+import $log from '../log';
 import * as $clicksend from 'clicksend';
 import createAuthCode from './create-auth-code'
 
@@ -66,7 +67,7 @@ export function kioskLogin(data) {
 
 					// generate the code for use
 					const authCode = await createAuthCode({ id: user.id });
-					resolve({ success: true, authCode });
+					resolve({ success: true, authCode, userId: user.id });
 				});
 
 		}
@@ -80,7 +81,6 @@ export function kioskLogin(data) {
 }
 
 function notifyExpiredAccount(account) {
-	return;
 	const api = new $clicksend.TransactionalEmailApi($config.clicksendUsername, $config.clicksendApiKey);
 
 	// sending to
@@ -112,5 +112,5 @@ function notifyExpiredAccount(account) {
 
 	api.emailSendPost(email)
 		.then(_.noop)
-		.catch(ex => logError('email', ex));
+		.catch(ex => $log.bind(`kiosk-login.js`, ex));
 }

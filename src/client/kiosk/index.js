@@ -1,8 +1,11 @@
 
 import $ from 'jquery';
+const TIMEOUT = 7000;
 
 $(() => {
-	$(document.body).addClass('kiosk');
+	let $pending;
+	const root = $(document.body);
+	root.addClass('kiosk');
 	
 	// actively doing something
 	let $busy;
@@ -17,18 +20,19 @@ $(() => {
 		$input.push(event.key);
 
 		// cancel the input entirely
-		setTimeout(clearInput, 2000);
+		resetView();
+		setTimeout(clearInput, 1000);
 	});
+
+	function resetView() {
+		clearTimeout($pending);
+		root.removeClass('error success busy');
+		$busy = false;
+	}
 
 	// removes existing input
 	function clearInput() {
 		$input.length = 0;
-	}
-
-	// failed to work
-	function resetView() {
-		$busy = false;
-		$(document.body).removeClass('busy success error');
 	}
 
 	// handles an input value
@@ -36,7 +40,7 @@ $(() => {
 		if ($busy) return;
 		resetView();
 
-		$(document.body).addClass('busy');
+		root.addClass('busy');
 		$busy = true;
 		
 		// get the code to send
@@ -49,14 +53,18 @@ $(() => {
 			displayResult(result);
 		}
 		catch (ex) {
-			showError(ex.toString())
+			showError(ex)
+		}
+		finally {
+			$busy = false;
 		}
 	}
 
 	// display an error message
-	function setError(message) {
-		$('.error').text(message);
-		$(document.body).addClass('error');
+	function showError(ex) {
+		root.addClass('error');
+		$pending = setTimeout(resetView, TIMEOUT);
+		console.error('Login failed:', ex);
 	}
 
 	// show the final result
@@ -64,14 +72,15 @@ $(() => {
 
 		// failed to log in
 		if (!result.success)
-			return setError(result.error);
+			return showError(result);
 
 		// it worked, show the result
+		resetView();
 		$('.auth-code').text(result.authCode.code);
-		$(document.body).addClass('success');
+		root.addClass('success');
 
 		// remove all classes
-		setTimeout(resetView, 5000);
+		$pending = setTimeout(resetView, TIMEOUT);
 	}
 
 });
