@@ -1,6 +1,6 @@
-name: Title
-type: web
-description: Description
+name: Using Arrays
+type: code
+description: Understanding how to use arrays to track collections of data
 
 lesson:
   - main

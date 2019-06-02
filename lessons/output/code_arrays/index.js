@@ -29,7 +29,14 @@ function configure(obj, config) {
 			this.screen.highlight.fileBrowserItem(config.file);
 
 			// get the actual name
-			var name = config.file.split('/').pop();
+			var name = config.fileName || config.file.split('/').pop();
+
+			// check for content
+			if (!config.content) {
+				this.assistant.say({
+					message: 'Open the file named `' + name + '` by [define double_click double clicking] on it in the [define file_browser File Browser].'
+				});
+			}
 
 			this.delay(15000, function () {
 				_this.assistant.say({
@@ -43,7 +50,87 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":3}],2:[function(require,module,exports){
+},{"../lib":5}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			var waiting = this.events.listen('expand-objectives-list', function () {
+				_this.progress.next();
+				_this.events.clear();
+			});
+		},
+		onExit: function onExit() {
+			this.events.clear();
+		}
+	});
+}
+
+},{"../lib":5}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onChangeTab: function onChangeTab(file) {
+
+			if (file.path === config.file) {
+				this.progress.next();
+				return true;
+			}
+		},
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			this.file.readOnly({ path: config.file });
+			this.screen.highlight.tab(config.file);
+
+			// get the actual name
+			var name = config.file.split('/').pop();
+
+			this.delay(15000, function () {
+				_this.assistant.say({
+					message: '\n\t\t\t\t\t\tSwitch to the `' + name + '` file by clicking on the highlighted [define codelab_tab tab] in the [define codelab_editor]'
+				});
+			});
+		},
+		onExit: function onExit() {
+			this.screen.highlight.clear();
+		}
+	}, config.extend);
+
+	// initialization
+	if (obj.init) obj.init(obj);
+}
+
+},{"../lib":5}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -61,6 +148,14 @@ var _lib = require('./lib');
 var _waitForFile = require('./controllers/waitForFile');
 
 var _waitForFile2 = _interopRequireDefault(_waitForFile);
+
+var _waitForTab = require('./controllers/waitForTab');
+
+var _waitForTab2 = _interopRequireDefault(_waitForTab);
+
+var _waitForObjectivesList = require('./controllers/waitForObjectivesList');
+
+var _waitForObjectivesList2 = _interopRequireDefault(_waitForObjectivesList);
 
 function _interopRequireDefault(obj) {
 	return obj && obj.__esModule ? obj : { default: obj };
@@ -91,17 +186,30 @@ var codeArraysLesson = function () {
 
 		// core lesson data
 		this.data = {
-			"name": "Title",
-			"type": "web",
-			"description": "Description",
+			"name": "Using Arrays",
+			"type": "code",
+			"description": "Understanding how to use arrays to track collections of data",
 			"lesson": [{
 				"mode": "overlay",
-				"title": "Title",
-				"content": "content\n"
+				"title": "Using Arrays",
+				"content": "Arrays allow you to keep track of many items\n"
+			}, {
+				"content": "Arrays are used to keep track of multiple items\n"
 			}],
 			"snippets": {},
 			"resources": [],
-			"definitions": {}
+			"definitions": {
+				"double_click": {
+					"id": "double_click",
+					"name": "Double Click",
+					"define": "Pressing the mouse, or track pad, twice quickly. For touch screens, it's tapping the screen twice quickly."
+				},
+				"file_browser": {
+					"id": "file_browser",
+					"name": "File Browser",
+					"define": "The list of all files for a CodeLab project. The File Browser is located on the left side of the code editor"
+				}
+			}
 		};
 
 		// timing
@@ -127,7 +235,12 @@ var codeArraysLesson = function () {
 
 		// setup each reference
 		_lib._.each(refs, function (ref, key) {
-			if (ref.controller) _this.controllers[key] = ref;
+			if (ref.controller) {
+				_this.controllers[key] = ref;
+
+				// handle resets
+				if (ref.onActivateLesson) ref.onActivateLesson.call(_this);
+			}
 		});
 
 		// debugging
@@ -148,8 +261,28 @@ var codeArraysLesson = function () {
 				slide.controller = _lib._.uniqueId('controller_');
 				var controller = this.controllers[slide.controller] = {};
 				(0, _waitForFile2.default)(controller, {
-					file: slide.waitForFile
+					file: slide.waitForFile,
+					content: slide.content,
+					fileName: slide.fileName
 				});
+			}
+
+			if (slide.waitForTab) {
+				slide.controller = _lib._.uniqueId('controller_');
+				var _controller = this.controllers[slide.controller] = {};
+				(0, _waitForTab2.default)(_controller, {
+					file: slide.waitForTab
+				});
+			}
+
+			if (slide.waitForObjectivesList) {
+				slide.controller = _lib._.uniqueId('controller_');
+				var _controller2 = this.controllers[slide.controller] = {};
+				(0, _waitForObjectivesList2.default)(_controller2, {});
+			}
+
+			if (slide.onActivate) {
+				slide.onActivate.call(this, slide);
 			}
 		}
 
@@ -163,15 +296,21 @@ var codeArraysLesson = function () {
 	}, {
 		key: 'invoke',
 		value: function invoke(action) {
-			if (!this.respondsTo(action)) return null;
-			action = toActionName(action);
+			var _controller$invoke;
+
 			var controller = this.controller;
+
+			if (!controller) return;
+
+			action = toActionName(action);
+
+			// check the action
 
 			for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 				args[_key - 1] = arguments[_key];
 			}
 
-			return controller[action].apply(this, args);
+			if (controller.invoke) return (_controller$invoke = controller.invoke).call.apply(_controller$invoke, [this, action].concat(args));else if (controller[action]) return controller[action].apply(this, args);
 		}
 
 		// checks if there's an action for this event
@@ -179,10 +318,19 @@ var codeArraysLesson = function () {
 	}, {
 		key: 'respondsTo',
 		value: function respondsTo(action) {
-			action = toActionName(action);
 			var controller = this.controller;
 
-			return !!controller && controller[action];
+			if (!controller) return false;
+
+			action = toActionName(action);
+
+			// tasks lists will handle this themselves
+			// it's safe to return true here since there
+			// are no gate keepers
+			if (controller.respondsTo) return controller.respondsTo(action);
+
+			// perform normally
+			return !!controller[action];
 		}
 
 		// resets any required information between slides
@@ -268,8 +416,8 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('code_arrays', codeArraysLesson);
 
-},{"./controllers/waitForFile":1,"./lib":3}],3:[function(require,module,exports){
-"use strict";
+},{"./controllers/waitForFile":1,"./controllers/waitForObjectivesList":2,"./controllers/waitForTab":3,"./lib":5}],5:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -281,12 +429,22 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var createTestRunner = exports.createTestRunner = lib.createTestRunner;
+var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+var runTests = exports.runTests = lib.runTests;
+
+$.preview = function () {
+	return $('#preview .output').contents();
+};
 
 exports.default = {
 	_: _, $: $,
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
-	CssValidator: CssValidator
+	CssValidator: CssValidator,
+	createTestRunner: createTestRunner,
+	runTests: runTests,
+	validateHtmlDocument: validateHtmlDocument
 };
 
-},{}]},{},[2]);
+},{}]},{},[4]);

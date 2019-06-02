@@ -14,11 +14,11 @@ export default function execute(file, callback) {
 	
 	const studentName = randomString(10);
 	const scoreValues = [ 
-		randomNumber(25, 75),
-		randomNumber(25, 75),
-		randomNumber(25, 75),
-		randomNumber(25, 75),
-		randomNumber(25, 75)
+		randomNumber(25, 100),
+		randomNumber(25, 100),
+		randomNumber(25, 100),
+		randomNumber(25, 100),
+		randomNumber(25, 100)
 	];
 
 	const scoreAverage = (
@@ -28,12 +28,19 @@ export default function execute(file, callback) {
 		scoreValues[3] +
 		scoreValues[4]) / 5;
 
+	const expectedGrade = scoreAverage >= 100 ? 'A++'
+		: scoreAverage >= 90 ? 'A'
+		: scoreAverage >= 80 ? 'B'
+		: scoreAverage >= 70 ? 'C'
+		: 'F';
+
 
 	runTests({
 		file,
 
 		// setup the run state
 		onInit(runner) {
+			const showGradeKey = randomString(10, '__showGrade__');
 
 			runner.inject += `
 
@@ -44,20 +51,42 @@ export default function execute(file, callback) {
 				if (hasFunction) {
 					${runner.key}({ showGradeArgumentCount: showGrade.length });
 
+					// replace the function
+					var ${showGradeKey} = showGrade;
+					showGrade = function(arg1) {
+						${runner.key}({ showGradeArg1: arg1 });
+						${showGradeKey}.apply(null, arguments);
+					}
+
 					${runner.key}({ isExpectingGrade: 'A++' });
+					${runner.key}({ showGradePassedArg1: 100 });
 					showGrade(100);
+					${runner.key}({ showGradePassedArg1: 101 });
+					showGrade(101);
 
 					${runner.key}({ isExpectingGrade: 'A' });
+					${runner.key}({ showGradePassedArg1: 90 });
 					showGrade(90);
+					${runner.key}({ showGradePassedArg1: 91 });
+					showGrade(91);
 
 					${runner.key}({ isExpectingGrade: 'B' });
+					${runner.key}({ showGradePassedArg1: 80 });
 					showGrade(80);
+					${runner.key}({ showGradePassedArg1: 81 });
+					showGrade(81);
 
 					${runner.key}({ isExpectingGrade: 'C' });
+					${runner.key}({ showGradePassedArg1: 70 });
 					showGrade(70);
+					${runner.key}({ showGradePassedArg1: 71 });
+					showGrade(71);
 
 					${runner.key}({ isExpectingGrade: 'F' });
+					${runner.key}({ showGradePassedArg1: 69 });
 					showGrade(69);
+					${runner.key}({ showGradePassedArg1: -100 });
+					showGrade(-100);
 
 					${runner.key}({ isExpectingGrade: false });
 				}
@@ -124,29 +153,29 @@ export default function execute(file, callback) {
 
 				// check if printing grades
 				if (state.isExpectingGrade) {
+					const propToCheck = state.isExpectingGrade === 'A++' ? 'didDisplayGradeAPlusPlus'
+						: state.isExpectingGrade === 'A' ? 'didDisplayGradeA'
+						: state.isExpectingGrade === 'B' ? 'didDisplayGradeB'
+						: state.isExpectingGrade === 'C' ? 'didDisplayGradeC'
+						: state.isExpectingGrade === 'F' ? 'didDisplayGradeF'
+						: null;
 
-					if (state.isExpectingGrade === 'A++')
-						result.didDisplayGradeAPlusPlus = message === 'A++';
-					else if (state.isExpectingGrade === 'A')
-						result.didDisplayGradeA = message === 'A';
-					else if (state.isExpectingGrade === 'B')
-						result.didDisplayGradeB = message === 'B';
-					else if (state.isExpectingGrade === 'C')
-						result.didDisplayGradeC = message === 'C';
-					else if (state.isExpectingGrade === 'F')
-						result.didDisplayGradeF = message === 'F';
+					// checking props
+					if (propToCheck && (!(propToCheck in result) || result[propToCheck] === true)) {
+						result[propToCheck] = message === state.isExpectingGrade
+							&& state.showGradePassedArg1 === state.showGradeArg1;
+					}
 
-					return;
 				}
-
-
 
 				// score must match
 				if (scoreAverage === message || (0|message) === (0|scoreAverage))
 					result.didPrintAverage = true;
 
-				if (/^(A\+?|B|C|F)$/.test(message))
+				// did use the correct one
+				if (message === expectedGrade) {
 					result.didPrintGrade = true;
+				}
 
 				if (message === studentName)
 					result.didPrintStudentName = true;

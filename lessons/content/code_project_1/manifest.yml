@@ -1,6 +1,6 @@
 name: 'Code Project #1'
 type: code
-description: Creating a math gradebook on your own!
+description: Creating a student grade calculator on your own!
 
 lesson:
   - main

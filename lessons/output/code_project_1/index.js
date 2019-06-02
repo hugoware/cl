@@ -547,7 +547,7 @@ var codeProject1Lesson = function () {
 		this.data = {
 			"name": "Code Project #1",
 			"type": "code",
-			"description": "Creating a math gradebook on your own!",
+			"description": "Creating a student grade calculator on your own!",
 			"lesson": [{
 				"mode": "overlay",
 				"title": "Progress Review #1",
@@ -867,9 +867,9 @@ function _interopRequireDefault(obj) {
 
 // when activating a new 
 exports.default = (0, _taskList2.default)(module.exports, {
-	title: 'Create a product website for "Juice Fruit" smoothie shop!',
+	title: 'Create a Student Grade Calculator',
 
-	goal: 'Create a function called `showGrade` that accepts a `score` argument and then prints a grade using the following table.\n\t\nNext, use `console.ask` to get the **student\'s name** and **five individual scores**. Calculate the **student\'s average score** using each of the scores provided.\n\n### Grading Table\n\n| Score                       | Grade |\n|=============================|=======|\n| `score` equal to 100      | A+    |\n| `score` greater than 90   | A     |\n| `score` greater than 80   | B     |\n| `score` greater than 70   | C     |\n| `score` less than 70      | F     |\n\nFinally, use `console.log` to print the **student\'s name**, the **average**, and then call `showGrade` to display the **student\'s grade**.\n\n\t',
+	goal: 'Use `console.ask` to get the **student\'s name** and **five individual scores**. Calculate the **student\'s average score** using each of the scores provided.\n\nNext, use `console.log` to print the **student\'s name**, the **average**, and then call `showGrade` to display the **student\'s grade**.\n\nFinally, create a function called `showGrade` that accepts a `score` argument and then prints a grade using the following table.\n\n### Grading Table\n\n| Score                       \t\t\t\t\t\t| Grade |\n|=========================================|=======|\n| `score` greater than or equal to 100  | A+    |\n| `score` greater than or equal to 90   | A     |\n| `score` greater than or equal to 80   | B     |\n| `score` greater than or equal to 70   | C     |\n| `score` less than 70\t\t\t\t\t\t\t\t  | F     |\n\n',
 
 	events: {
 
@@ -917,7 +917,7 @@ function (task) {
 
 		task('Use `console.log` to show results for `score`', function () {
 
-			task('Log `A++` if `score` equal to `100', {
+			task('Log `A++` if `score` greater than or equal to `100', {
 				topic: 'Logical Conditions',
 				onValidateTasks: function onValidateTasks() {
 					this.isValid = this.project.state.didDisplayGradeAPlusPlus;
@@ -1217,17 +1217,20 @@ function execute(file, callback) {
 	var state = {};
 
 	var studentName = (0, _utils.randomString)(10);
-	var scoreValues = [(0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75), (0, _utils.randomNumber)(25, 75)];
+	var scoreValues = [(0, _utils.randomNumber)(25, 100), (0, _utils.randomNumber)(25, 100), (0, _utils.randomNumber)(25, 100), (0, _utils.randomNumber)(25, 100), (0, _utils.randomNumber)(25, 100)];
 
 	var scoreAverage = (scoreValues[0] + scoreValues[1] + scoreValues[2] + scoreValues[3] + scoreValues[4]) / 5;
+
+	var expectedGrade = scoreAverage >= 100 ? 'A++' : scoreAverage >= 90 ? 'A' : scoreAverage >= 80 ? 'B' : scoreAverage >= 70 ? 'C' : 'F';
 
 	(0, _lib.runTests)({
 		file: file,
 
 		// setup the run state
 		onInit: function onInit(runner) {
+			var showGradeKey = (0, _utils.randomString)(10, '__showGrade__');
 
-			runner.inject += '\n\n\t\t\t\t// required before testing functions\n\t\t\t\tvar hasFunction = !/null|undefined/i.test(typeof showGrade);\n\t\t\t\t' + runner.key + '({ hasShowGradeFunction: hasFunction });\n\n\t\t\t\tif (hasFunction) {\n\t\t\t\t\t' + runner.key + '({ showGradeArgumentCount: showGrade.length });\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'A++\' });\n\t\t\t\t\tshowGrade(100);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'A\' });\n\t\t\t\t\tshowGrade(90);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'B\' });\n\t\t\t\t\tshowGrade(80);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'C\' });\n\t\t\t\t\tshowGrade(70);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'F\' });\n\t\t\t\t\tshowGrade(69);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: false });\n\t\t\t\t}\n\n\t\t\t';
+			runner.inject += '\n\n\t\t\t\t// required before testing functions\n\t\t\t\tvar hasFunction = !/null|undefined/i.test(typeof showGrade);\n\t\t\t\t' + runner.key + '({ hasShowGradeFunction: hasFunction });\n\n\t\t\t\tif (hasFunction) {\n\t\t\t\t\t' + runner.key + '({ showGradeArgumentCount: showGrade.length });\n\n\t\t\t\t\t// replace the function\n\t\t\t\t\tvar ' + showGradeKey + ' = showGrade;\n\t\t\t\t\tshowGrade = function(arg1) {\n\t\t\t\t\t\t' + runner.key + '({ showGradeArg1: arg1 });\n\t\t\t\t\t\t' + showGradeKey + '.apply(null, arguments);\n\t\t\t\t\t}\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'A++\' });\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 100 });\n\t\t\t\t\tshowGrade(100);\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 101 });\n\t\t\t\t\tshowGrade(101);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'A\' });\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 90 });\n\t\t\t\t\tshowGrade(90);\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 91 });\n\t\t\t\t\tshowGrade(91);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'B\' });\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 80 });\n\t\t\t\t\tshowGrade(80);\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 81 });\n\t\t\t\t\tshowGrade(81);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'C\' });\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 70 });\n\t\t\t\t\tshowGrade(70);\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 71 });\n\t\t\t\t\tshowGrade(71);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: \'F\' });\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: 69 });\n\t\t\t\t\tshowGrade(69);\n\t\t\t\t\t' + runner.key + '({ showGradePassedArg1: -100 });\n\t\t\t\t\tshowGrade(-100);\n\n\t\t\t\t\t' + runner.key + '({ isExpectingGrade: false });\n\t\t\t\t}\n\n\t\t\t';
 		},
 		onError: function onError(runner, ex) {
 			callback(ex, {});
@@ -1285,16 +1288,21 @@ function execute(file, callback) {
 
 				// check if printing grades
 				if (state.isExpectingGrade) {
+					var propToCheck = state.isExpectingGrade === 'A++' ? 'didDisplayGradeAPlusPlus' : state.isExpectingGrade === 'A' ? 'didDisplayGradeA' : state.isExpectingGrade === 'B' ? 'didDisplayGradeB' : state.isExpectingGrade === 'C' ? 'didDisplayGradeC' : state.isExpectingGrade === 'F' ? 'didDisplayGradeF' : null;
 
-					if (state.isExpectingGrade === 'A++') result.didDisplayGradeAPlusPlus = message === 'A++';else if (state.isExpectingGrade === 'A') result.didDisplayGradeA = message === 'A';else if (state.isExpectingGrade === 'B') result.didDisplayGradeB = message === 'B';else if (state.isExpectingGrade === 'C') result.didDisplayGradeC = message === 'C';else if (state.isExpectingGrade === 'F') result.didDisplayGradeF = message === 'F';
-
-					return;
+					// checking props
+					if (propToCheck && (!(propToCheck in result) || result[propToCheck] === true)) {
+						result[propToCheck] = message === state.isExpectingGrade && state.showGradePassedArg1 === state.showGradeArg1;
+					}
 				}
 
 				// score must match
 				if (scoreAverage === message || (0 | message) === (0 | scoreAverage)) result.didPrintAverage = true;
 
-				if (/^(A\+?|B|C|F)$/.test(message)) result.didPrintGrade = true;
+				// did use the correct one
+				if (message === expectedGrade) {
+					result.didPrintGrade = true;
+				}
 
 				if (message === studentName) result.didPrintStudentName = true;
 			}

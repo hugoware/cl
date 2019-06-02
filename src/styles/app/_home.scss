@@ -642,6 +642,25 @@ $project-item-accent-gap: 3px;
 
 	.details {
 		padding: $project-item-padding;
+
+		.name, .description {
+			code {
+				font-family: $code-font;
+				background: #eee;
+				border-radius: 4px;
+			}
+		}
+		
+		.description code {
+			margin: 0 1px;
+			padding: 2px 3px;
+			box-shadow: inset 0 0 0 1px rgba(#000, 0.15);
+		}
+		
+		.name code {
+			margin: 0 2px;
+			padding: 4px 7px;
+		}
 	}
 
 	.actions {

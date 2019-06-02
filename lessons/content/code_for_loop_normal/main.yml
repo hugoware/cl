@@ -3,7 +3,81 @@
     mode: overlay
     title: Title
     content: |
-      content
+      Loops are very important in programming
+
+- slide:
+    content: |
+      Loops can repeat blocks of code
+
+- slide:
+    content: |
+      There are multiple types of loops, in this lesson we'll be learning about the `for` loop
+
+- slide:
+    content: |
+      For `loops` a generally used to repeat a task for a set number of times, though people have gotten creative with how they work
+
+- slide:
+    content: |
+      Practical example -- counting apples
+
+- slide:
+    content: |
+      Practical example -- counting apples based on color
+
+- slide:
+    content: |
+      Lets look at an example of the code
+
+- slide:
+    content: |
+      first the the `for` keyword
+
+- slide:
+    content: |
+      next is a parens -- this will contain all of the information required for the loop to work
+
+- slide:
+    content: |
+      the first part of the instructions is the declarations
+
+      create new vars, or assign new ones, this part of code runs once at the beginning of the loop
+
+- slide:
+    content: |
+      next is the conditional block -- this is the code that tests if the loop has finished and will run once per loop
+
+      most of the time, with for loops, this will be checking the number declared in the declaration block
+
+- slide:
+    content: |
+      finally is the increment block -- this will run each time the loop is executed
+
+      This is frequenly to used to move the counter forward
+
+- slide:
+    content: |
+      close all of the instructions with some parens
+
+- slide:
+    content: |
+      Next is the block of code to run - it is surrounded by curly braces
+
+- slide:
+    content: |
+      Everything inside of the block is executed
+
+- slide:
+    mode: popup
+    content: |
+      Let's try a few loops
+
+- slide:
+    content: |
+      Open the file
+
+
+
 
 # - question:
 #     count: 4   # optional question count

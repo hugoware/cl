@@ -5,25 +5,25 @@ import validationTest from './validationTests';
 
 // when activating a new 
 export default createTasks(module.exports, {
-	title: 'Create a product website for "Juice Fruit" smoothie shop!',
+	title: 'Create a Student Grade Calculator',
 
-	goal: `Create a function called \`showGrade\` that accepts a \`score\` argument and then prints a grade using the following table.
-	
-Next, use \`console.ask\` to get the **student's name** and **five individual scores**. Calculate the **student's average score** using each of the scores provided.
+	goal: `Use \`console.ask\` to get the **student's name** and **five individual scores**. Calculate the **student's average score** using each of the scores provided.
+
+Next, use \`console.log\` to print the **student's name**, the **average**, and then call \`showGrade\` to display the **student's grade**.
+
+Finally, create a function called \`showGrade\` that accepts a \`score\` argument and then prints a grade using the following table.
 
 ### Grading Table
 
-| Score                       | Grade |
-|=============================|=======|
-| \`score\` equal to 100      | A+    |
-| \`score\` greater than 90   | A     |
-| \`score\` greater than 80   | B     |
-| \`score\` greater than 70   | C     |
-| \`score\` less than 70      | F     |
+| Score                       						| Grade |
+|=========================================|=======|
+| \`score\` greater than or equal to 100  | A+    |
+| \`score\` greater than or equal to 90   | A     |
+| \`score\` greater than or equal to 80   | B     |
+| \`score\` greater than or equal to 70   | C     |
+| \`score\` less than 70								  | F     |
 
-Finally, use \`console.log\` to print the **student's name**, the **average**, and then call \`showGrade\` to display the **student's grade**.
-
-	`,
+`,
 
 	events: {
 
@@ -71,7 +71,7 @@ task => {
 
 		task('Use `console.log` to show results for `score`', () => {
 
-			task('Log `A++` if `score` equal to `100', {
+			task('Log `A++` if `score` greater than or equal to `100', {
 				topic: 'Logical Conditions',
 				onValidateTasks() {
 					this.isValid = this.project.state.didDisplayGradeAPlusPlus;

@@ -4,6 +4,8 @@ export default class TestRunner {
 
 	constructor(runner) {
 		this.runner = runner;
+		this.key = `__test__${+new Date}`;
+		this.runner.key = this.key;
 	}
 
 	get interpreter() {
@@ -24,7 +26,7 @@ export default class TestRunner {
 	register = interpreter => {
 		interpreter.registerAll([
 			
-			{ name: `${this.runner.key}`,
+			{ name: `${this.key}`,
 				action: this.onSyncState },
 
 			{ name: 'log',

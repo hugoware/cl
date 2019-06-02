@@ -4,13 +4,13 @@ import $database from './storage/database';
 // reserved duration for a timeslot
 const DURATION = 5;
 const THRESHOLD = 0.8;
-const SEAT_LIMIT = 15;
 
 /** handles tracking CodeLab schedules */
 export default class Schedule {
 
 	/** @type {Schedule} */
 	static current = { };
+	static seatLimit = 15;
 
 	// creates a new schedule
 	constructor() {
@@ -55,28 +55,28 @@ export default class Schedule {
 			date: 2,
 			start: { hour: 15, interval: 2 },
 			end: { hour: 19, interval: 2 },
-			seats: SEAT_LIMIT,
+			seats: Schedule.seatLimit,
 		});
 
 		const thursday = this.getSchedule({
 			date: 4,
 			start: { hour: 15, interval: 2 },
 			end: { hour: 19, interval: 2 },
-			seats: SEAT_LIMIT,
+			seats: Schedule.seatLimit,
 		});
 
 		const saturday = this.getSchedule({
 			date: 6,
 			start: { hour: 13, interval: 2 },
 			end: { hour: 17, interval: 2 },
-			seats: SEAT_LIMIT,
+			seats: Schedule.seatLimit,
 		});
 
 		const sunday = this.getSchedule({
 			date: 0,
 			start: { hour: 13, interval: 2 },
 			end: { hour: 17, interval: 2 },
-			seats: SEAT_LIMIT,
+			seats: Schedule.seatLimit,
 		});
 
 		return [ tuesday, thursday, saturday, sunday ];
@@ -95,7 +95,7 @@ export default class Schedule {
 	checkTimeSlot(index) {
 		const slot = this.slots[index];
 		if (!_.isNumber(slot)) return false;
-		return slot < SEAT_LIMIT;
+		return slot < Schedule.seatLimit;
 	}
 
 	// fills a slot without needing to reload
@@ -168,7 +168,18 @@ export default class Schedule {
 			// if (i % 9 === 0) status = 'full';
 			
 			// save the timing slots
-			slots.push({ time, meridem, remaining, status, index: i });
+			slots.push({
+				css: { 
+					empty: reserved === 0 ? 'empty' : '',
+					status: `status-${status}`,
+					capacity: `capacity-${(0 | ((1 - capacity) * 10))}`
+				},
+				time,
+				meridem,
+				remaining,
+				status,
+				index: i
+			});
 		}
 
 		return { day, slots };

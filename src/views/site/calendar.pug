@@ -1,0 +1,25 @@
+
+
+doctype html
+html(lang='en')
+	head
+		meta(charset='UTF-8')
+		meta(name='viewport' content='width=device-width, initial-scale=1.0')
+		title Calendar
+		link(rel='stylesheet' type='text/css' href='/__codelab__/site/calendar.css')
+
+	body
+
+		for day in schedule
+			ul
+				li.title= day.day
+				for slot in day.slots
+					li.slot(class=[slot.css.empty, slot.css.status, slot.css.capacity ].join(' '))
+						.time #[span.hour= slot.time] #[span.meridem= slot.meridem]
+						.space #{seats - slot.remaining} seats
+
+		if !production
+			script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
+
+
+

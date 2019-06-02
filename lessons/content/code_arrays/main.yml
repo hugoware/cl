@@ -1,9 +1,13 @@
 -
   slide:
     mode: overlay
-    title: Title
+    title: Using Arrays
     content: |
-      content
+      Arrays allow you to keep track of many items
+
+- slide:
+    content: |
+      Arrays are used to keep track of multiple items
 
 # - question:
 #     count: 4   # optional question count

@@ -77,7 +77,6 @@ export default class Preview extends Component {
 
 	// changes the display mode for the project
 	setMode = mode => {
-		console.log(mode);
 
 		// load a handler for the first time
 		const type = MODES[mode];

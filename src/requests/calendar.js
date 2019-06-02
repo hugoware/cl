@@ -1,47 +1,22 @@
 
 import { errorMessage } from '../utils';
+import getCalendar from '../queries/get-calendar'
 
-const KIOSK_KEY = 'codelab-kiosk';
-const KIOSK_VALUE = 'alpha-bravo-kiosk';
-
+// const KIOSK_KEY = 'codelab-kiosk';
+// const KIOSK_VALUE = 'alpha-bravo-kiosk';
 // 853e952c-bbb0-4bf0-889b-eecbeb9a352e=c82cde05-c071-4505-b0a9-083976f6abd7;
 
 export const name = 'calendar';
 export const route = '/calendar';
-export const acceptData = true;
+export const authenticate = true;
+export const permissions = 'admin';
 
 export async function handle(request, response, next) {
-
-	// not configured as the kiosk
-	if (request.cookies[KIOSK_KEY] !== KIOSK_VALUE)
-		return next();
-
-  // this is showing the login page
-	if (!/post/i.test(request.method))
-		return response.render('site/calendar');
 	
 	// this seems to be a login attempt
 	try {
-
-		const result = await kioskLogin(request.body);
-		response.json(result);
-
-		// const data = request.body || { };
-		// const result = await login(data);
-
-    // // set the user identity
-		// request.session.user = result.user;
-
-		// // for admins, always use the classroom so
-		// // lesson unlocks are visible
-		// if (result.role === 'admin') {
-		// 	request.session.isAdmin = true;
-		// 	request.session.isClassroom = true;
-		// }
-		
-		// // home login
-		// audit.log('login', result.user, { isClassroom: false });
-		// response.json({ success: true });
+		const calendar = await getCalendar();
+		response.render('site/calendar', calendar);
 	}
 	// determine the error result
 	catch (err) {
@@ -57,7 +32,8 @@ export async function handle(request, response, next) {
 		});
 
 		// give back the error
-		response.json({ error: err });
+		response.send(err);
+		// response.json({ error: err });
 	}
 
 }
