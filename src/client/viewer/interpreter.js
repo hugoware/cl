@@ -2,6 +2,53 @@
 import Interpreter from 'js-interpreter';
 import { trim } from './utils';
 
+// extra pollyfills to fix issues
+const POLLYFILLS = [
+
+	// sorting by default is broken - this
+	// replaces their approach with simple quick-sort
+	`
+	Object.defineProperty(Array.prototype, 'sort', { value: function(compare) {
+		var arr = this;
+		var len = arr.length;
+		for (var i = len-1; i>=0; i--){
+			for(var j = 1; j<=i; j++){
+				
+				var a = arr[j-1];
+				var b = arr[j];
+				var shift;
+				
+				if (compare) {
+					var result = compare(a, b);
+					shift = result === true || result > 0;
+				}
+				else {
+					shift = a > b;
+				}
+				
+				if (shift){
+					arr[j-1] = b;
+					arr[j] = a;
+				}
+			}
+		}
+
+		return arr;
+	}});`
+
+
+];
+
+
+// add/replace polyfills
+for (let i = 0; i < POLLYFILLS.length; i++) {
+	const lines = POLLYFILLS[i].split('\n');
+	const flattened = [ ];
+	for (const line of lines)
+		flattened.push(trim(line));
+	POLLYFILLS[i] = flattened.join('');
+}
+
 export default class CodeInterpreter {
 
 	constructor(code) {
@@ -14,7 +61,6 @@ export default class CodeInterpreter {
 		// check that there's some code here
 		this.hasCode = (code || '').toString().replace(/\W+/g, '').length > 0;
 
-		// create the code execution
 		this.interpreter = new Interpreter(code, (interpreter, scope) => {
 			this.scope = scope;
 			this.scopes = { };
@@ -38,6 +84,9 @@ export default class CodeInterpreter {
 					return instance.triggerEvent(key, args);
 				});
 			};
+
+			for (const fill of POLLYFILLS)
+				interpreter.polyfills_.push(fill);
 
 			// initialize
 			handleInit(this, interpreter, scope);
