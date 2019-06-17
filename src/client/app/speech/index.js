@@ -4,7 +4,7 @@ import { listen } from '../events';
 // load the correct library
 import * as streamed from './streamed';
 import * as local from './local';
-const useStream = false;
+const useStream = true;
 const isLocal = /https?:\/{2}localhost/.test(window.location.href);
 const speech = useStream || !isLocal ? streamed : local;
 

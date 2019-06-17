@@ -1,0 +1,346 @@
+- slide:
+    mode: overlay
+    title: Using Arrays
+    content: |
+      In this lesson we're going to start learning about [define code_array s].
+
+      [define code_array s] can be described as a way to collect many pieces of information into a single variable.
+
+- slide:
+    content: |
+      [define code_array s] can be used for many things, but one of the most common uses is to create lists, or collections, of data.
+
+- slide:
+    content: |
+      For example, if you were to write down a list of the types of **pets** people have, it might look something like this.
+
+      [snippet text_list_base]
+
+      This list would contain several individual types of **pets**. You could then give this list to someone else and all of the information would stay together.
+
+- slide:
+    content: |
+      If you were to think of another type of pet, you could easily add it to the end of the list.
+
+      [snippet text_list_add highlight:18,6]
+
+      [define code_array s] allow you to add, remove, sort, and many other functions that are useful to manage a list of data.
+
+- slide:
+    content: |
+      Creating an [define code_array l] in [define javascript] is pretty easy to do.
+
+      [snippet code_list]
+
+      This example contains the same data as the previous **pet** list, but written using [define javascript].
+
+- slide:
+    content: |
+      To start, [define code_array ls] are declared the same as any other [define code_variable l].
+
+      [snippet code_list highlight:0,3]
+
+      [note] Remember, for simplicity sake, CodeLab only uses `let` for [define code_variable l] declarations, but you'll often see the [define javascript_keyword ls] `const` and `var` in other code examples outside of this site.
+
+- slide:
+    content: |
+      Next is the name of the [define code_variable l]. This follows the same rules as any other [define code_variable l] name that you've seen before.
+
+      [snippet code_list highlight:4,4]
+
+- slide:
+    content: |
+      Like with other [define code_variable l] declarations, you must use an `=` sign to identify the starting value for the [define code_variable l].
+
+      [snippet code_list highlight:9,1]
+
+- slide:
+    content: |
+      Next, the `[` and `]` are used to identify the start and end of the [define code_array l].
+
+      [snippet code_list highlight:11,1|57,1]
+
+      Like with most things in code, you must remember to close your [define code_array ls] with a `]`, otherwise the code will probably fail to run.
+
+- slide:
+    content: |
+      Each item in the [define code_array l] must be separated with a comma.
+
+      [snippet code_list highlight:19,1|27,1|36,1|45,1]
+
+- slide:
+    content: |
+      
+      The previous examples showed each value placed on a separate line, but you're also able to keep everything on the same line.
+
+      [snippet same_line]
+
+- slide:
+    content: |
+      If you don't want an [define code_array l] to start with any values in it, you can always create an empty [define code_array l].
+
+      [snippet empty_array]
+
+- slide:
+    content: |
+      [define code_array s] are not limited to holding only [define javascript_string sl] either.
+
+      [snippet complex_list]
+
+      You can store [define javascript_number ls], [define javascript_boolean ls], other [define code_array ls], and more.
+
+- slide:
+    content: |
+      In most cases, each type of value inside of an [define code_array l] will be the same as one another.
+
+      [snippet grade_list]
+
+      This example is an [define code_array l] of **grades**, so you'd expect it to contain [define javascript_number ls]. As we learned before, the name of a [define code_variable l] should help identify the data inside.
+
+- slide:
+    mode: popup
+    content: |
+      Great! Let's take a look at a few examples of using [define code_array ls].
+
+- slide:
+    waitForFile: /main.js
+
+- slide:
+    content: |
+      Let's use an [define code_array l] to create a shopping list.
+
+- slide:
+    controller: createArray
+    content: |
+      Start by declaring a new [define code_array l] named `list` and then using `console.log` to display it on the screen.
+
+      Make sure the [define code_array l] starts with the following items `bread`, `eggs`, then `apples`.
+
+- slide:
+    content: |
+      Using `console.log` with the `list` [define code_variable l] displayed all items in the [define code_array l].
+
+- slide:
+    content: |
+      However, in many cases we will need to be able to work with individual items in the [define code_array l].
+
+- slide:
+    title: Working with Individual Array Values
+    mode: overlay
+    content: |
+      Accessing specific items in an [define code_array l] uses a new [define syntax l] that you might not be familiar with yet.
+
+      [snippet access_array_value]
+
+- slide:
+    content: |
+      In order to access a specific position in an [define code_array l], you'll need to use the `[` and `]`.
+
+      [snippet access_array_value highlight:19,1|21,1]
+
+      These are placed after the [define code_variable l] and are used to surround a [define javascript_number l].
+
+- slide:
+    content: |
+      The number is the position in the [define code_array l] that we want to access.
+
+      [snippet access_array_value highlight:20,1]
+
+      Typically, the [define javascript_number numeric] position in an [define code_array l] is called the **[define code_array_index l]**.
+
+- slide:
+    content: |
+      An interesting thing about [define javascript] [define code_array ls] are that the [define code_array_index l] [define javascript_number ls] begin at zero.
+
+      [snippet access_array_value highlight:20,1]
+
+      This means that the **first value** in the [define code_array l] is accessed using the [define javascript_number l] **zero**!
+
+- slide:
+    content: |
+      This might seem a little weird, but it's actually fairly common in many programming languages for [define code_array l] [define code_array_index sl] to begin at zero.
+
+      [snippet access_array_value highlight:20,1]
+
+      Make sure to keep this in mind while you're writing code!
+
+- slide:
+    content: |
+      Replacing a value inside of an [define code_array l] uses a very similar approach. 
+
+      [snippet replace_array_value highlight:8,1]
+
+      Along with the `[`, `]`, and [define code_array_index l] [define javascript_number l], you must also use an `||=|equal sign||` to assign the new value to a specific [define code_array_index l].
+
+- slide:
+    content: |
+      Do not use the [define code_variable l] declaration [define javascript_keyword ls] when replacing a value inside of an [define code_array l].
+
+      [snippet replace_incorrect]
+
+      To replace a value in an [define code_array ls], simply use the `||=|equal sign||` to assign a new value.
+
+- slide:
+    mode: popup
+    content: |
+      Let's try working with specific [define code_array l] values.
+
+- slide:
+    controller: logFirstIndex
+    content: |
+      Follow along with the instructions and use `console.log` to display a single item from the [define code_array l].
+
+- slide:
+    controller: logLastIndex
+    content: |
+      Let's try that again, but this time use `console.log` at the end of the code file to display the **last** value in the [define code_array].
+
+      &&DISABLED_HINTS&&
+
+- slide:
+    content: |
+      Now, let's try to replace some values in the [define code_array l].
+
+- slide:
+    controller: replaceFirst
+    content: |
+      Follow along with the instructions and replace the first item in the [define code_array l] with the word `cheese`.
+
+- slide:
+    controller: replaceLast
+    content: |
+      Let's try that one more time! Replace the item in the array for `apples` with the word `cookies`.
+
+      &&DISABLED_HINTS&&
+
+- slide:
+    content: |
+      Let's go over one more interesting thing about [define code_array ls].
+
+- slide:
+    mode: overlay
+    content: |
+      In [define javascript], [define code_array ls] are also [define javascript_object ls]. You've been working with [define javascript_object ls] each time you use `console.log`.
+
+      [snippet console_log_example]
+
+- slide:
+    content: |
+      The [define javascript_object l] in this case is `console`. An [define javascript_object l] is a collection of [define javascript_property ls] such [define javascript_number sl], [define javascript_string ls], [define javascript_function ls], and other types of data.
+
+      [snippet console_log_example highlight:0,7]
+
+- slide:
+    content: |
+      Each [define javascript_property l] on an object is represented by a name. In the `console.log` example, the name of the property is `log`.
+
+      [snippet console_log_example highlight:0,7]
+
+      There's a few ways to work with [define javascript_property ls], but typically [define javascript_property ls] are accessed using a `||.|dot||` followed by the [define javascript_property l] name.
+
+- slide:
+    content: |
+      The `console` [define javascript_object l] has a [define javascript_property l] that's a [define javascript_function l] called `log`.
+
+      [snippet console_log_example highlight:8,3]
+
+      As you've seen already, the `log` [define javascript_function l] is used to print messages in the **Output Area**.
+
+- slide:
+    content: |
+      [define code_array s] in [define javascript] are also [define javascript_object ls], meaning there are [define javascript_property ls] that you can access.
+
+      [snippet array_props_example]
+
+- slide:
+    content: |
+      The [define javascript_property l] `push` is a [define javascript_function l] that will add a new item to the end of a [define code_array l].
+
+      [snippet array_props_example highlight:51,19]
+
+- slide:
+    content: |
+      The [define javascript_property l] `length` is a [define javascript_number l] that will tell you how many items are currently in the [define code_array l].
+
+      [snippet array_props_example highlight:108,12]
+
+- slide:
+    content: |
+      We'll learn more about [define javascript_object ls] in later lessons, but for now let's try working with these [define code_array l] [define javascript_property ls].
+
+- slide:
+    mode: popup
+    controller: addItem
+    content: |
+      Let's start by adding a value to the `list` [define code_array l].
+
+      Use the `push` [define javascript_function l] to add the word `milk` to the shopping list.
+
+- slide:
+    controller: logLength
+    content: |
+      Now let's try working with the `length` [define javascript_property] for the `list` [define code_array l].
+
+      Use `console.log` to display the current length of the shopping list.
+
+- slide:
+    content: |
+      Great work! We've learned a lot about [define code_array ls] so let's take some time to review!
+
+- question:
+    mode: overlay
+    title: What are Arrays useful for?
+
+    explain: |
+      [define code_array s] can be used for many things, but they're especially great for managing lists of data.
+
+    choices:
+      - Keeping track of many items of data
+      - Checking for an internet connection
+      - Convering strings to uppercase
+      - Checking for syntax errors in code
+
+- question:
+    title: What message would be printed using `console.log`?
+    content: |
+      [snippet question_1 size:xs]
+
+    explain: |
+      The item at the **first** [define code_array_index l] is actually the **second** item in the [define code_array l]. Don't forget that the [define code_array_index ls] in [define code_array ls] begin at **zero**!
+
+    choices:
+      - "`cat`"
+      - "`mouse`"
+      - "`dog`"
+      - Nothing, this code has an error!
+
+
+- question:
+    title: What is the [define javascript_function l] that **adds** an item to the end of an [define code_array l]?
+    inline: true
+    explain: |
+      There are many other [define javascript_property ls] that are part of a [define code_array l]. The `push` [define javascript_function l] is used to add another item to the end of an [define code_array l].
+
+    choices:
+      - "`push`"
+      - "`add`"
+      - "`shift`"
+      - "`pop`"
+
+- question:
+    title: What is the [define javascript_property l] that has the total number of items in an [define code_array l]?
+    inline: true
+    explain: |
+      The `length` [define javascript_property l] will return the current count of items inside of an [define code_array l]. Adding and removing items from an [define code_array l] will cause this number to change!
+
+    choices:
+      - "`length`"
+      - "`size`"
+      - "`total`"
+      - "`count`"
+
+- slide:
+    mode: popup
+    content: |
+      &&FINISH_LESSON&&
+

@@ -44,7 +44,8 @@ $(() => {
 		$busy = true;
 		
 		// get the code to send
-		const keycode = $input.join('');
+		let keycode = $input.join('');
+		keycode = keycode.replace(/clear/gi, '');
 		clearInput();
 
 		// request the login
@@ -77,6 +78,7 @@ $(() => {
 		// it worked, show the result
 		resetView();
 		$('.auth-code').text(result.authCode.code);
+		$('.name').text(result.first);
 		root.addClass('success');
 
 		// remove all classes

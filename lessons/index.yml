@@ -15,8 +15,9 @@ code:
   - code_if
   - code_functions_basics
   - code_project_1
-  - code_arrays
-  - code_for_loop_normal
+  - code_arrays_basic
+  - code_objects_basic
+  # - code_for_loop_normal
 
 sys:
   - demo

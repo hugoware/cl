@@ -14,11 +14,11 @@ html
 			.message
 
 		#dialogs
-			#manage-contacts.dialog
+			#update-user.dialog
 				.close
-				textarea(contact-list)
-				input(type='hidden' contact-id)
-				button(save-contacts) Save Contacts
+				textarea.as-code(user-update-data)
+				input(type='hidden' user-update-id)
+				button(apply-update) Update User
 
 		#manage-user.module
 			.title Manage User

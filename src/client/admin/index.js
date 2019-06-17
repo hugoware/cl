@@ -3,7 +3,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import manageUser from './manage-user';
 import createUser from './create-user';
-import manageContacts from './manage-contacts';
+import updateUser from './update-user';
 
 // common items
 $.fn.field = function(key) {
@@ -70,5 +70,5 @@ $(() => {
 	// initialize
 	manageUser();
 	createUser();
-	manageContacts();
+	updateUser();
 });

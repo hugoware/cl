@@ -5,6 +5,8 @@ export default [
 	'Arithmetic', 'a rithma tick',
 	'arithmetic', 'a rithma tick',
 	`console`, 'con soul',
+	'`[`', 'opening square bracket',
+	'`]`', 'closing square bracket',
 	'`,`', 'comma',
 	'`*`', 'asterisk',
 	'`+`', 'plus',
@@ -39,5 +41,5 @@ export default [
 	'`href`', 'h ref',
 	'`var`', 'varr',
 	'`\\\``', 'back tick',
-	'`×`', 'times',
+	'`×`', 'times'
 ];

@@ -173,3 +173,15 @@
   name: Order of Operations
   define: |
     The sequence that math is executed
+
+
+- id: code_array
+  name: Array
+  define: |
+    A list of data
+
+- id: code_array_index
+  plural: Indexes
+  name: Index
+  define: |
+    A numeric position within an array

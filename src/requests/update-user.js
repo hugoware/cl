@@ -1,16 +1,16 @@
 import _ from 'lodash';
-import manageContacts from '../actions/manage-contacts';
+import updateUser from '../actions/update-user';
 
 // config
-export const name = 'manage contacts';
-export const route = '/admin/manage-contacts';
+export const name = 'update user';
+export const route = '/admin/update-user';
 export const permissions = 'admin';
 export const acceptData = true;
 
 // sets the contacts for an account
 export async function handle(request, response) {
 	try {
-		const result = await manageContacts(request.body);
+		const result = await updateUser(request.body);
 		response.json(result);
 	}
 	catch (err) {

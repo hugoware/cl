@@ -7,15 +7,16 @@ export default function setup() {
 	const root = $('#manage-user');
 	const list = root.find('.results');
 
-	root.on('click', '.manage-contacts', async event => {
+	root.on('click', '.edit-user', async event => {
 		const record = getRecord(event);
 		const id = record.attr('user-id');
 		const data = _.find($records, { id });
 
 		// update the dialog
-		$('[contact-list]').val(JSON.stringify(data.contacts || { }, null, 2));
-		$('[contact-id]').val(data.id);
-		$.dialog('manage-contacts');
+		// $('[user-update-data]').val(JSON.stringify(data.contacts || { }, null, 2));
+		$('[user-update-data]').val(`{\n\n\n}`);
+		$('[user-update-id]').val(data.id);
+		$.dialog('update-user');
 	});
 
 	// manage the access
@@ -129,7 +130,7 @@ function createRecord(item) {
 		<div class="email size-3" ></div>
 		<div class="actions size-3" >
 			<button class="create-auth-code" >Auth Code</button>
-			<button class="manage-contacts" >Manage Contacts</button>
+			<button class="edit-user" >Edit User</button>
 			<button class="toggle-account-access" >
 				<span class="is-enabled" >Disable</span>
 				<span class="is-disabled" >Enable</span>

@@ -27,7 +27,7 @@ export function kioskLogin(data) {
 
 		// find the user
 		const users = await $database.users.find({ keycode })
-			.project({ id: 1, subscriptionId: 1 })
+			.project({ id: 1, first: 1, subscriptionId: 1 })
 			.toArray();
 
 		// not a barcode
@@ -67,7 +67,7 @@ export function kioskLogin(data) {
 
 					// generate the code for use
 					const authCode = await createAuthCode({ id: user.id });
-					resolve({ success: true, authCode, userId: user.id });
+					resolve({ success: true, first: user.first, authCode, userId: user.id });
 				});
 
 		}

@@ -1,6 +1,6 @@
-name: Title
-type: web
-description: Description
+name: Using Objects
+type: code
+description: How to use JavaScript Objects to track data
 
 lesson:
   - main

@@ -4,18 +4,17 @@ import $database from '../storage/database';
 
 /** creates a user for the system
  * @param {string} data.id the user's id
- * @param {string} data.contacts the contacts to use
+ * @param {string} data.update the data to use
  */
-export default async function manageContacts(data) {
-	console.log(data);
+export default async function updateUser(data) {
 	return new Promise(async (resolve, reject) => {
 		try {
 			// prepare
 			const id = _.trim(data.id);
-			const contacts = JSON.parse(data.contacts);
+			const update = JSON.parse(data.update);
 
 			// find the account
-			await $database.users.update({ id }, { $set: { contacts } });
+			await $database.users.update({ id }, { $set: update });
 			resolve({ success: true });
 		}
 		// handle errors

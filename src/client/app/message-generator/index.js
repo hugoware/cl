@@ -4,14 +4,24 @@ import STANDARD_REPLACEMENTS from './replacements';
 
 const converter = new Showdown.Converter();
 
+const TEMPLATES = {
+	'&&DISABLED_HINTS&&': "Code hints will be disabled for this exercise, but you can use the **Show Hints** button to turn them back on.",
+	'&&FINISH_LESSON&&': "Experimenting with code is a great way to learn more about how it works. You're encouraged to continue making changes to this file before moving on.\n\nGreat work, and I'll see you in the next lesson!"
+};
+
 /** creates a spoken message and display message from text */
 export default function generateMessage(message) {
 	message = _.toString(message);
 
+	// replace any default templates
+	_.each(TEMPLATES, (value, match) => {
+		message = message.replace(match, value);
+	});
+
 	// create categories
 	let speak = [ ];
 	let content = [ ];
-	
+
 	// start reading each line
 	const lines = _.trim(message).split(/\n/g);
 	for (let line of lines) {

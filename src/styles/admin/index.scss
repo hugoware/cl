@@ -1,6 +1,11 @@
 @import '../_reset.scss';
 @import '_fonts.scss';
 
+.as-code {
+	font-family: monospace;
+	font-size: 15px;
+}
+
 .dialog {
 	position: absolute;
 	padding: 30px;

@@ -181,10 +181,12 @@ export default class CodeValidator extends SyntaxValidator {
 				: match === 'Infinity' ? Infinity
 				: match === '-NaN' ? -NaN
 				: match === 'NaN' ? NaN
-				: parseFloat(match);
+				: _.some(match) ? parseFloat(match)
+				: null;
 
 			// check each arg
-			if (_.some(args) && !_.includes(strs, match))
+			const some = _.size(args) > 0;
+			if (some && !_.includes(strs, match))
 				return `Expected number: ${oxfordize(strs, 'or')}`;
 				
 			// check for custom validation
@@ -288,6 +290,11 @@ SyntaxValidator.createNext(CodeValidator, 'assign', {
 SyntaxValidator.createNext(CodeValidator, 'func', {
 	literal: true,
 	name: 'function call'
+});
+
+SyntaxValidator.createNext(CodeValidator, 'prop', {
+	literal: true,
+	name: 'property'
 });
 
 SyntaxValidator.createNext(CodeValidator, 'obj', {

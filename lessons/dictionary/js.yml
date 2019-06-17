@@ -28,3 +28,14 @@
   name: Argument
   define: |
     A parameter for functions
+
+- id: javascript_object
+  name: Object
+  define: |
+    A complex type that allows properties
+
+- id: javascript_property
+  name: Property
+  plural: Properties
+  define: |
+    A key/value pair of an JavaScript Object
