@@ -1,54 +1,81 @@
 extends _template
 include _header
 
+mixin info
+	.introduction
+		//- .title Class Selection
+		.instructions Select which class you'd like to enroll for. Selecting an #[strong Advanced] class may require an assessment of student skill before finalizing placement.
+
+	.things-to-know Things to know before enrolling
+	if isPreEnroll
+		p.future-billing !{content.preEnroll}
+		
+	for item in content.enrollment_notes
+		p(class=item.type) !{item.message}
+
+mixin add_session(session, dayOfWeek)
+	.timeslot(class='level-' + session.level.toLowerCase() id=session.id data-day=dayOfWeek data-level=session.level data-name=session.name data-time=session.time)
+		.level= session.level
+		.title= session.name
+		.time= session.time
+
 mixin timeslots
-	.time-slots
-		.step.first
-			.step-icon.icon-calendar
-			.about
-				.step-title Choose a Day
-				.step-action.signup Pick the day of the week that you'd like to visit
 
-				#selected-day.dropdown
-					.selection Select a day
-					.items
-						for day in schedule
-							.item(data-label=day.day data-value=day.day.toLowerCase())
-								.block= day.day
+	.time-slots#available-times
 
-		.step
-			.step-icon.icon-clock
-			.about
-				.step-title Choose a Time
-				.step-action.signup Find a open time that works best for your schedule
+		h3 Tuesdays
+		.time-slot-date
+			+add_session(schedule.schedule.web_tues_1700, 'Tuesdays')
+			+add_session(schedule.schedule.web_tues_1800, 'Tuesdays')
+			+add_session(schedule.schedule.web_tues_1900, 'Tuesdays')
+		
+		h3 Thursdays
+		.time-slot-date
+			+add_session(schedule.schedule.code_thur_1700, 'Thursdays')
+			+add_session(schedule.schedule.code_thur_1800, 'Thursdays')
+			+add_session(schedule.schedule.code_thur_1900, 'Thursdays')
 
-				.dropdown.inactive
-					.selection Select a time
+		//- .step.first
+		//- 	.step-icon.icon-calendar
+		//- 	.about
+		//- 		.step-title Choose a Day
+		//- 		.step-action.signup Pick the day of the week that you'd like to visit
 
-				for day in schedule
-					.dropdown(id='selected-' + day.day.toLowerCase())
-						.selection Select a time
-						.items
-							for session in day.slots
-								.item(data-value=session.index data-label=session.time + ' ' + session.meridem class=session.status)
-									.block.status(class='status-' + session.status)
-										.detail #{session.time} #{session.meridem}
-										if session.status === 'limited'
-											.note Limited space
+		//- 		#selected-day.dropdown
+		//- 			.selection Select a day
+		//- 			.items
+		//- 				for day in schedule
+		//- 					.item(data-label=day.day data-value=day.day.toLowerCase())
+		//- 						.block= day.day
 
-										if session.status === 'full'
-											.note Session full
+		//- .step
+		//- 	.step-icon.icon-clock
+		//- 	.about
+		//- 		.step-title Choose a Time
+		//- 		.step-action.signup Find a open time that works best for your schedule
+
+		//- 		.dropdown.inactive
+		//- 			.selection Select a time
+
+		//- 		for day in schedule
+		//- 			.dropdown(id='selected-' + day.day.toLowerCase())
+		//- 				.selection Select a time
+		//- 				.items
+		//- 					for session in day.slots
+		//- 						.item(data-value=session.index data-label=session.time + ' ' + session.meridem class=session.status)
+		//- 							.block.status(class='status-' + session.status)
+		//- 								.detail #{session.time} #{session.meridem}
+		//- 								if session.status === 'limited'
+		//- 									.note Limited space
+
+		//- 								if session.status === 'full'
+		//- 									.note Session full
 
 		.step.last
-			.step-icon.icon-start
-			.about
-				.step-title Complete Enrollment
-				.step-action.signup Fill out the enrollment form to get signed up!
-
-				.button.inactive#enroll-now Enroll now!
+				.button.inactive#enroll-now Register for Class
 
 block title
-	| Schedule / CodeLab
+	| Sign Up / CodeLab
 
 block head
 	link(rel='stylesheet' type='text/css' href='/__codelab__/site/index.css')
@@ -63,21 +90,15 @@ block content
 		#enrollment
 			.section.container
 				.row
-					.col-md-6.order-review#order
-						h2 Things to know before enrolling
-						if isPreEnroll
-							p.future-billing !{content.preEnroll}
-							
-						for item in content.enrollment_notes
-							p(class=item.type) !{item.message}
-						//- p.important Enrollment for CodeLab is #[strong $#{content.monthly_cost}] which is #[strong billed once per month].
-						//- p Enrollment gives you access to one weekly tutoring session at CodeLab as well as the computer systems.
-						//- p If a student misses class, they may attempt to make up the lesson that same week or contact us to activate lesson access from home.
-						//- p You're also able to access CodeLab from home to review lessons or to work on own project ideas	
-						//- p By enrolling at CodeLab, you're agreeing to the #[a(href="/policies") CodeLab policies].
 
-					.col-md-6
+					.col-md-6.order-review
+						+info
+
+					.col-md-1
+
+					.col-md-5#order
 						+timeslots
+
 
 	include _footer
 

@@ -194,25 +194,42 @@ var codeObjectsBasicLesson = function () {
 				"title": "Working With Objects",
 				"content": "Objects are a very important part of JavaScript\n"
 			}, {
-				"content": "an example -- a car\n"
+				"content": "JavaScript has many types of data such as strings, numbers, booleans.\n\nThese are primitive types, meaning they're simple\n"
 			}, {
-				"content": "car has a color, a model, number of doors, license plate\n\ncar:\n  color           : red\n  number of doors : 4\n  license plate   : C0DE-LA8\n"
+				"content": "Objects are used to start expressing more complex things\n"
 			}, {
-				"content": "keep all of that information together would be useful\n\nthis is where objects are useful\n"
+				"content": "For example, think about a person\n\nthey have a first name, last name, age\n"
 			}, {
-				"content": "here is what an object would look like\n\nconst car = { \n  color: 'red',\n  numberOfDoors: 4,\n  licensePlate: 'C0DE-LA8'\n};\n\nthe variable and object called `car` - each piece of data is a property\n"
+				"content": "All of this information is associated with one person and should be kept together\n"
 			}, {
-				"content": "you've actually been working with objects already by using things like `console.log`\n\n`console` is an object and `log` is a property on it that happens to be a function that does work\n"
+				"content": "JavaScript allows you to create objects that track that\n\n[snippet person_example]\n"
 			}, {
-				"content": "we will learn more about that later for now let's look at how we can work with an object\n"
+				"content": "You can probably understand what's happening in this example, but let's take a look at it\n\n[snippet person_example]\n"
 			}, {
-				"content": "you can also access properties by using the \"dot notation\" that you've used in previous lessons\n\nalert(car.color);\n\nthis example would pop up a message that says \"red\"\n"
+				"content": "Like any other variable, must be declared and using the equal sign\n\n[snippet person_example]\n"
 			}, {
-				"content": "you can edit and add new properties to an object by just assigning to is\n\ncar.fuel = 'full';    // adds a new value\n\ncar.color = 'blue';  // replaces a value\n\nalert(car.color);\n\nNow when the `alert` function is called, the value `blue` is printed instead of `red`\n"
+				"content": "An `{` and `}` are used to wrap the entire object\n\n[snippet person_example]\n\nMake sure to have a closing `}` or the code will fail\n"
 			}, {
-				"content": "objects are useful for keeping track of information that should be moved around together especially when that information is complicated\n\nconst student = {\n  firstName: 'Susan',\n  lastName: 'Smith',\n  age: 14,\n  school: 'Coppell Middle School',\n  grade: '7th',\n  scores: [ 90, 95, 100, 97, 92 ]\n};\n"
+				"content": "Each property is represented by a name and a value\n\n[snippet person_example]\n"
+			}, {
+				"content": "The name comes first\n\n[snippet person_example]\n"
+			}, {
+				"content": "then a :\n\n[snippet person_example]\n"
+			}, {
+				"content": "then the value - this can be strings, numbers, arrays, or even other objects\n\n[snippet person_example]\n"
+			}, {
+				"content": "if you're creating something with multiple properties, each one must be separated with a ,\n\n[snippet person_example]\n"
+			}, {
+				"content": "each one of these \n"
+			}, {
+				"content": ""
 			}],
-			"snippets": {},
+			"snippets": {
+				"person_example": {
+					"content": "let person = {\n  firstName: 'Ryan',\n  lastName: 'Smith',\n  age: 14\n};",
+					"type": "javascript"
+				}
+			},
 			"resources": [],
 			"definitions": {
 				"double_click": {

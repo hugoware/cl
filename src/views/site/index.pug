@@ -30,11 +30,11 @@ block content
 						| &nbsp;
 					.details !{content.header_introduction}
 					.actions
-						a.button.how-it-works(href='#demo' onclick="playDemo()") Watch a Video
-						a.button.try-demo(href='/demo' target='_demo') Try a Lesson Online
+						a.button.how-it-works(href='#about' onclick="playDemo()") Our Mission
 						a.button.view-schedule(href='#schedule') Schedule &amp; Pricing
+						a.button.try-demo(href='#showcase') Student Showcase
 
-		+starting_soon
+		+starting_soon(content)
 
 		a.jump(name='about')
 
@@ -49,9 +49,11 @@ block content
 						h3 !{content.about_title}
 						p !{content.about_content}
 
-						.action
-							a.button(href='/demo' target='_demo') Try a Demo Lesson
+						//- .action
+						//- 	a.button(href='/demo' target='_demo') Try a Demo Lesson
 		
+		a.jump(name='showcase')
+
 		.section.courses.container-fluid.light
 			.row.content
 				.col-md-5
@@ -69,7 +71,7 @@ block content
 								.details
 									.category-icon.code-icon
 									.info
-										.name Basic Coding
+										.name Coding
 										.about Learn basic programming skills in a variety of languages.
 
 							.course.web.col-md-6
@@ -78,8 +80,7 @@ block content
 									.info
 										.name Websites
 										.about Create public websites using HTML, CSS, and JavaScript.
-
-						.row
+										
 							.course.game.col-md-6
 								.details
 									.category-icon.game-icon
@@ -111,39 +112,26 @@ block content
 							p !{content.tutorials_content}
 
 							.action
-								a#demo-link.button(href='https://youtu.be/nqFSwtKNhy0') Watch a Demo
+								a.button(href='/demo' target='_demo') Try an Example Lesson
 
 		a.jump(name='schedule')
 
 		.section.schedule.container-fluid.light
 			.row.content
 				.col-md-6
-					+reserve_space
+					.description
+						h3 !{content.schedule_title}
+						//- p !{content.schedule_content}
 
+			.row.content
 				.col-md-6
 					+pricing_table
 
-				//- .col-md-12
-				//- 	.container-fluid
-				//- 		.row
-				//- 			.col-sm-6
+					.action
+						a#schedule-link.button(href='/signup') Sign Up For Class
 
-							//- for plan in content.plans
-							//- 	.col-sm-6
-							//- 		.pricing-table(class=plan.css + '-plan')
-							//- 			.price
-							//- 				.title= plan.title
-							//- 				.cost $!{plan.cost}
-							//- 				.term /mo
-
-							//- 			.summary= plan.summary
-
-							//- 			.features
-							//- 				for item in plan.features
-							//- 					.item
-							//- 						.icon(class=item.icon+'-icon')
-							//- 						.detail !{item.detail}
-
+				.col-md-6.schedule-listing
+					+class_options
 
 									
 
@@ -174,7 +162,7 @@ block content
 								.info !{content.phone_number}
 
 						.action
-							a.button(href='/signup') Reserve a Space
+							a.button(href='/signup') Sign Up For Class
 
 		
 		.section.faq.container-fluid.light
@@ -195,7 +183,7 @@ block content
 									.title !{item.question}
 									.answer !{item.answer}
 
-	+starting_soon
+	+starting_soon(content)
 	include _footer
 
 block scripts
@@ -225,13 +213,35 @@ mixin pricing_table
 
 				.item
 					.icon.tools-icon
-					.detail Use all CodeLab features from home
+					.detail Access CodeLab website from home
 
 				.item
 					.icon.share-icon
 					.detail Share creations online
 
 		.footnote For additional information, #[a(href='/policies') view the CodeLab policies]
+
+mixin class_sessions(type, title, desc, dayOfWeek)
+	.class-config(class=type + '-schedule')
+		.schedule
+			.details
+				.day-of-week= dayOfWeek
+				.title= title
+				.desc= desc
+			ul.row
+				li.col-md-4.col-sm-4.col-xs-4
+					.time 5:00 PM
+					.name Basics
+				li.col-md-4.col-sm-4.col-xs-4
+					.time 6:00 PM
+					.name Basics
+				li.col-md-4.col-sm-4.col-xs-4
+					.time 7:00PM
+					.name Advanced
+
+mixin class_options
+	+class_sessions('web', 'Building Websites', 'Creating web pages using HTML, CSS, and more!', 'Tuesdays')
+	+class_sessions('code', 'Computer Programming', 'Learn to write code using popular languages!', 'Thursdays')
 
 
 mixin time_slots
@@ -254,24 +264,17 @@ mixin time_slots
 				.step-title Get Started!
 				.step-action Choose a seat and jump right into programming!
 
-mixin reserve_space
-	.description
-		h3 !{content.schedule_title}
-		p !{content.schedule_content}
+//- mixin reserve_space
+	
 
-		+time_slots
-		
-		.action
-			a#schedule-link.button(href='/signup') Reserve a Space
-
-mixin starting_soon
+mixin starting_soon(content)
 	.section.starting-soon.container-fluid
 		.starting-soon-background
 			.row.content
 				.col-md-8
 					.start-icon
 						img(src='/__codelab__/site/images/icon-calendar.png')
-					.info Classes begin #[span.starting July 1st] in #[span.starting Coppell, Texas!]
+					.info Classes begin #[span.starting= content.start_date] in #[span.starting Coppell, Texas!]
 
 				.col-md-4.action
-					a.button(href='/signup') Reserve a Space
+					a.button(href='/signup') Sign Up For Class

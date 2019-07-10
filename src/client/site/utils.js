@@ -23,3 +23,22 @@ export function cancelEvent(event) {
 	if (event.preventDefault) event.preventDefault();
 	return false;
 }
+
+export function $cs(el, prop) {
+	let { className = '' } = el;
+	console.log('h', prop);
+
+	// remove existing
+	for (const id in prop) {
+		className = className.replace(id, '');
+	}
+
+	// add back required
+	for (const id in prop) {
+		if (!!prop[id])
+			className += ` ${id}`;
+	}
+
+	// clean up
+	el.className = className.replace(/\s+/, ' ');
+}

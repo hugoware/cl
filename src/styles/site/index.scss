@@ -176,12 +176,12 @@ html, body {
   background-size: cover;
   color: #fff;
 
-  &:before {
-    content: ' ';
-    display: block;
-    height: 10px;
-    background: $theme-color;
-  }
+  // &:before {
+  //   content: ' ';
+  //   display: block;
+  //   height: 10px;
+  //   background: $theme-color;
+  // }
 
   padding: 0 0 100px 0;
 
@@ -227,19 +227,24 @@ html, body {
   }
 
   .actions a {
-    @extend .button;
-
-    &.how-it-works:hover {
-      @include button_hover($default-action-color);
+		@extend .button;
+		
+		&:hover {
+      @include button_hover($theme-color);
     }
 
-    &.try-demo:hover {
-      @include button_hover($secondary-action-color);
-    }
 
-    &.view-schedule:hover {
-      @include button_hover($minor-action-color);
-    }
+    // &.how-it-works:hover {
+    //   @include button_hover($default-action-color);
+    // }
+
+    // &.try-demo:hover {
+    //   @include button_hover($secondary-action-color);
+    // }
+
+    // &.view-schedule:hover {
+    //   @include button_hover($minor-action-color);
+    // }
 
   }
 
@@ -372,7 +377,7 @@ html, body {
   .action {
     a.button {
       &:hover {
-        @include button_hover(#41B89D);
+        @include button_hover(#894890);
       }
     }
   }
@@ -548,7 +553,7 @@ html, body {
     padding: 60px 20px;
 
     h3 {
-      @include header_underline(#995DB4);
+      @include header_underline(#3AB99C);
     }
   }
 
@@ -607,7 +612,7 @@ html, body {
   .action {
     a.button {
       &:hover {
-        @include button_hover(#8C49AB);
+        @include button_hover(#3AB99C);
       }
     }
   }
@@ -644,7 +649,7 @@ html, body {
 
   .description {
     h3 {
-      @include header_underline(#34BA9C);
+      @include header_underline(#9763B0);
 		}
 		
 		padding-bottom: 30px;
@@ -894,8 +899,8 @@ html, body {
 
 .starting-soon {
 	background: #fff;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 	text-align: center;
 	$starting-background-color: #9A5FB3;
 
@@ -944,53 +949,126 @@ html, body {
 }
 
 .time-slots {
-
-	.step {
-		clear: both;
+	
+	.time-slot-date {
+		padding-bottom: 20px;
 	}
 
-	.about {
-		padding: 10px 0 15px 60px;
-		clear: both;
+	.button.is-enabled {
+		background: $default-action-color;
 	}
 
-	.step-title {
+	h3 {
 		margin: 0;
-		font-size: 22px;
-		font-weight: 600;
+		padding: 0 0 10px 0;
 	}
+	
+	.timeslot {
+		padding: 8px 14px;
+		border: 1px solid #ccc;
+		margin: 0 0 13px 0;
+		border-radius: 4px;
 
-	.step-action {
-		opacity: 0.6;
-		font-size: 15px;
-		font-style: italic;
+		.title {
+			font-size: 16px;
+		}
 
-		&.signup {
-			padding-bottom: 15px;
+		.level {
+			float: right;
+			// opacity: 0.8;
+			// font-style: italic;
+			font-size: 13.5px;
+		}
+
+		.time {
+			font-size: 20px;
+		}
+
+		cursor: pointer;
+		transition: all 0.1s;
+
+		&.level-beginner .level {
+			color: #2BAB5F;
+		}
+
+		&.level-advanced .level {
+			color: #E05A2D;
 		}
 	}
 
-	.step-icon {
-		$time-slot-icon-size: 50px;
-		width: $time-slot-icon-size;
-		height: $time-slot-icon-size;
-		background-size: auto 100%;
-		background-position: 50% 50%;
-		background-repeat: no-repeat;
-		position: absolute;
-		margin: 10px 0 0 0;
+	&.has-selection .timeslot {
+		opacity: 0.5;
 	}
 
-	.icon-clock { background-image: url(/__codelab__/site/images/icon-clock.png); }
-	.icon-calendar { background-image: url(/__codelab__/site/images/icon-calendar.png); }
-	.icon-start { background-image: url(/__codelab__/site/images/icon-start.png); }
+	.timeslot.is-selected {
+		color: #fff;
+		background: #208FF5;
+		opacity: 1;
+		border-color: darken(#208FF5, 20%);
+
+		.level {
+			color: #fff;
+		}
+	}
+
+	.timeslot:hover {
+		background: lighten(#208FF5, 40%);
+		transform: scale(1.025, 1.025);
+		border-color: lighten(#208FF5, 30%);
+		transition: all 0.2s;
+	}
+
+	.timeslot.is-selected:hover {
+		background: #208FF5;
+		border-color: darken(#208FF5, 20%);
+	}
+
+	// .step {
+	// 	clear: both;
+	// }
+
+	// .about {
+	// 	padding: 10px 0 15px 60px;
+	// 	clear: both;
+	// }
+
+	// .step-title {
+	// 	margin: 0;
+	// 	font-size: 22px;
+	// 	font-weight: 600;
+	// }
+
+	// .step-action {
+	// 	opacity: 0.6;
+	// 	font-size: 15px;
+	// 	font-style: italic;
+
+	// 	&.signup {
+	// 		padding-bottom: 15px;
+	// 	}
+	// }
+
+	// .step-icon {
+	// 	$time-slot-icon-size: 50px;
+	// 	width: $time-slot-icon-size;
+	// 	height: $time-slot-icon-size;
+	// 	background-size: auto 100%;
+	// 	background-position: 50% 50%;
+	// 	background-repeat: no-repeat;
+	// 	position: absolute;
+	// 	margin: 10px 0 0 0;
+	// }
+
+	// .icon-clock { background-image: url(/__codelab__/site/images/icon-clock.png); }
+	// .icon-calendar { background-image: url(/__codelab__/site/images/icon-calendar.png); }
+	// .icon-start { background-image: url(/__codelab__/site/images/icon-start.png); }
 
 }
 
 .pricing-table {
-	$standard-plan-color: #3AB99D;
+	$standard-plan-color: #894890;
   box-shadow: inset 0 0 0 2px $standard-plan-color;
-  margin-top: 0 0 0 0;
+  margin-top: 0;
 
   .price {
     background: $standard-plan-color;
@@ -1304,23 +1382,41 @@ html, body {
 
 .order-review {
 	padding: 0 0 50px 0;
+
+	.introduction {
+		.instructions {
+			font-size: 16px;
+			padding: 0 0 25px 0;
+		}
+	}
+
+	.things-to-know {
+		font-size: 18px;
+		font-weight: bold;
+		padding: 0 0 10px 0;
+	}
+
 	h2 {
 		padding: 0 0 10px 0;
 	}
+	
 	p {
-		padding : 10px 18px;
+		padding : 6px 12px;
 		font-size: 15px;
-		background: #eee;
-		box-shadow: inset 0 0 0 1px rgba(#000, 0.1);
-		border-radius: 4px;
+		// background: #eee;
+		// box-shadow: inset 0 0 0 1px rgba(#000, 0.1);
+		// border-radius: 4px;
+		margin: 0 0 13px 0;
+		border-left: 3px solid #ccc;
 
 		&.important {
-			font-size: 17.5px;
-			background: lighten(#ff0, 40%);
+			font-size: 16px;
+			border-color: lighten(#ff0, 10%);
 		}
 		&.future-billing {
-			font-size: 20px;
-			background: lighten(#0f0, 40%);
+			font-size: 16px;
+			border-color: lighten(#0f0, 10%);
+			background: lighten(#0f0, 45%);
 		}
 	}
 
@@ -1378,6 +1474,105 @@ html, body {
 		text-align: center;
 	}
 
+}
+
+.class-config {
+	margin: 0;
+	$class-config-padding: 15px;
+	$class-config-radius: 4px;
+	$class-config-color: #fff;
+	$class-config-dark-color: #887D89;
+	border-radius: $class-config-radius;
+	// $class-config-padding: 0;
+
+	.schedule {
+		padding: 0 0 8px 0;
+		border-radius: 3px;
+		margin-bottom: 25px;
+		border: 1px solid lighten($class-config-dark-color, 25%);
+		// box-shadow: 0 1px 8px rgba($class-config-dark-color, 0.3);
+	}
+
+	ul {
+		list-style: none;
+		margin: 0;
+		// padding: 0 14px;
+		background: lighten($class-config-dark-color, 42%);
+		padding: 10px 0;
+		margin: 9px $class-config-padding;
+		border-radius: $class-config-radius;
+	}
+
+	li {
+		color: darken($class-config-dark-color, 20%);
+		// margin: 0 0 15px 0;
+		// padding: 9px $class-config-padding;
+		// border: 1px solid #eee;
+		// box-shadow: 0 1px 8px rgba(0,0,0,0.2);
+		line-height: 1em;
+		text-align: center;
+	}
+
+	background: #fff;
+	color: darken($class-config-dark-color, 15%);
+
+	// $web-color: #894990;
+	// $code-color: #2C83B6;
+
+	// &.web-schedule {
+	// 	background: $web-color;
+	// 	li {
+	// 		color: darken($web-color, 10%);
+	// 	}
+	// }
+
+	// &.code-schedule {
+	// 	background: $code-color;
+	// 	li {
+	// 		color: darken($code-color, 10%);
+	// 	}
+	// }
+	
+	.details {
+		// text-shadow: 0 1px 3px rgba($class-config-dark-color, 0.1);
+		text-align: left;
+
+		.day-of-week {
+			font-size: 22px;
+			font-weight: bold;
+			padding: 7px $class-config-padding;
+			background: rgba($class-config-dark-color, 0.15);
+		}
+
+		.title {
+			font-size: 22px;
+			line-height: 1.1em;
+			padding: 13px $class-config-padding 4px $class-config-padding;
+		}
+		
+		.desc {
+			line-height: 1.3em;
+			opacity: 0.7;
+			margin: 0;
+			padding: 0 $class-config-padding 20px $class-config-padding;
+		}
+	}
+
+	.time {
+		font-size: 22px;
+		padding: 8px 0;
+	}
+
+	.name {
+		opacity: 0.5;
+		font-size: 16px;
+		padding: 0 0 5px 0;
+	}
+
+}
+
+.schedule-listing {
+	padding-top: 0;
 }
 
 

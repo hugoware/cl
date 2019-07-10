@@ -1,29 +1,30 @@
 monthly_cost: 125
 phone_number: 972-861-0189
+start_date: July 22nd
 
 header_introduction: |
-  We're helping young developers take their first steps into coding with real programming languages.
+  We're helping young developers begin learning skills and best practices that will carry with them into their adult careers.
 
 
-about_title: Our Teaching Approach
+about_title: Start Learning Professional Skills Today
 about_content: |
-  **CodeLab** uses **self-paced, interactive tutorials** to teach students the same programming languages **used by professionals**.
+  Our goal at **CodeLab** is to start introducing teenagers to the same programming languages and tools used by professional software developers.
 
-  Our learning system guides students by using a **Teaching Assistant** to walk through new concepts. An on-site **Code Coach** is also available to make sure students never get stuck.
-
-  Students creations are shareable online so they can **show off what they've learned** to friends and family.
-
+  **CodeLab** helps students get ahead by teaching them the same skills and best practices that will carry with them into their adult careers.
 
 courses_title: Learn Real Coding Skills
 courses_content: |
-  **CodeLab** offers a variety of teaching programs that introduce **programming fundementals** to students using the same languages and technologies used by professional developers.
+  **CodeLab** covers a wide variety of topics in order to introduce students to the same languages and technologies used by professional developers.
 
 
-tutorials_title: Assisted Learning Tutorials
+tutorials_title: Easy To Get Started
 tutorials_content: |
-  **CodeLab** tutorials use a **Teaching Assistant** that guides students by giving them the flexibility to try new things, but a safety net to prevent getting stuck.
+
+  New students don't need to have prior experience before attending **CodeLab**.
   
-  Additionally, an on-site **Code Coach** is available to help with any remaining questions.
+  We use specially designed self-paced, interactive tutorials with an included **Teaching Assistant** to help a new student get up to speed quickly, even when they're away from class.
+  
+  After a student has finished all introductory lessons, they'll be ready to join in classroom lectures.
 
 
 schedule_title: Schedule & Pricing
@@ -31,7 +32,7 @@ schedule_content: |
   **CodeLab** is self-paced, so we don't follow a strict schedule. Simply reserve a **60 minute session** on the date and time that works best for you and you're good to go!
 
 
-reserve_title: Reserve a Space
+reserve_title: Interested In Enrolling?
 reserve_content: |
   **CodeLab** is opening soon, so if you'd like to be notified when enrollment begins, make sure to **reserve a space**!
 
@@ -41,20 +42,25 @@ faq_content: |
   Still have questions about **CodeLab**? Feel free to contact us with any remaining questions you have and we'll get back to you as soon as possible.
 
 
-preEnroll: CodeLab sessions begin **July 1st, 2019**. You will not be charged until that date.
+preEnroll: CodeLab sessions begin **July 22nd, 2019**. You will not be charged until that date.
 
 enrollment_notes:
   - type: important
-    message: Enrollment for CodeLab **$125** which is **billed once per month**.
+    message: |
+      Enrollment for CodeLab **$125** which is **billed once per month**.
   
   - type: important
-    message: Each CodeLab session is one hour long, once per week, at the time you select.
+    message: |
+      Each CodeLab session is one hour long, once per week, at the time you select.
   
   - message: |
-      Students may access CodeLab from home to work on their own projects, but not to complete tutorials.
+      New students that are completing the self-paced tutorials may work on them from home.
   
   - message: |
-      If a student is unable to attend class online they can attempt to make it up later in the week, or perform their tutorials from home.
+      Students may access CodeLab from home to work on their own projects after requesting access.
+  
+  - message: |
+      If a student is unable to attend a class, no make up options will be available. 
   
   - message: |
       Enrolling at CodeLab means that you are agreeing to the [CodeLab Policies](/policies).
@@ -105,13 +111,18 @@ plans:
 
 faq:
   -
-    question: Why does CodeLab use self-paced tutorials and not classroom lectures?
+    question: What is the recommended age for CodeLab?
     answer: |
-      Programming is best taught by practice. Lectures provide all of their information at once and expect the student to try to remember everything they were just taught. A guided tutorial introduces a concept, and allows a student to immediately apply that knowledge.
+      Each student is different but we recommend that students be at least 10 years old before attending classes. **CodeLab** is intended to help young programmers to start learning the same technologies and best practices used by professional developers. 
 
-      Professional developers don't learn new technologies and languages by going to classes and lectures. Instead, most learning is done using tutorials and online resources.
+      If you're unsure your learner is ready for **CodeLab**, let them try out the [self-paced example lesson online](/demo) to see if they're ready for the topics that we cover.
 
-      Finally, one the our primary goals at **CodeLab** is to help students **learn to teach themselves new programming concepts**. Our guided tutorials are designed appeal to a variety of learning styles by being visual, auditory, and kinesthetic.
+  -
+    question: Why does CodeLab use self-paced tutorials?
+    answer: |
+      It's difficult to jump into something new, especially if you haven't had any prior experience with the topic at hand.
+
+      At **CodeLab**, we've created self-paced tutorials that will help a new student become familiar with the basic concepts of the class so they're able to get familar with the course material without being overwhelmed.
 
   -
     question: Do we need to bring a laptop to attend classes?
@@ -119,18 +130,21 @@ faq:
       You can, if you'd like, but workstations will be available for use. If you would like to bring a your own device, it should have a keyboard, USB port, and headphone jack available.
 
       iPads are **not** recommended.
+
   -
-    question: Can students show off their creations?
+    question: Can I see what my child is creating in class?
     answer: |
       Yes! We've discovered that being able to share work with friends and family is a great motivator for aspiring developers. Nearly every single lesson at **CodeLab** has a finished result can be shared with others when completed.
 
       You can also see the [Student Showcase](/showcase) to see some websites and apps created using CodeLab.
+
   -
     question: Do you teach programming with Minecraft or Scratch?
     answer: |
       We think that games like **Minecraft** and block based programming languages like **Scratch** are a fantastic way to get kids interested coding.
 
       However, our goal at **CodeLab** is to help students take their first steps into writing code with programming languages used by professional developers.
+      
   -
     question: Can we use CodeLab in our school district?
     answer: |

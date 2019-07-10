@@ -53,7 +53,7 @@
 	}
 	
 	.time-slots {
-		padding-top: 25px;
+		// padding-top: 25px;
 	}
 
 	#enrollment {
@@ -65,7 +65,12 @@
 	}
 
 	.sessions {
-		padding-top: 88px;
+		// padding-top: 15px;
+		padding: 0;
+	}
+
+	.class-config:first-child {
+		margin: -20px 0 0 0;
 	}
 
 }
@@ -106,7 +111,11 @@
     .course {
       padding: 10px;
     }
-  }
+	}
+	
+	.schedule .action {
+		padding: 0 0 40px 0;
+	}
 
   @include tutorial_assistant(160px);
 
@@ -328,6 +337,14 @@
 		display: none;
 	}
 
+	.class-config .time {
+		font-size: 17px;
+	}
+
+	.class-config .name {
+		font-size: 14px;
+	}
+
   .time-slots .slot {
     padding-left: 0;
     padding-right: 0;
@@ -383,7 +400,21 @@
 }
 
 @media(max-width: 400px) {
-  @include breakpoint(#0f7, '400px');
+	@include breakpoint(#0f7, '400px');
+	
+	.class-config li {
+		width: 100%;
+		display: block !important;
+		padding: 10px 0;
+	}
+
+	.class-config .time {
+		font-size: 21px;
+	}
+
+	.class-config .name {
+		font-size: 16px;
+	}
 
   .pricing-table .features .item {
     height: auto;

@@ -6,77 +6,87 @@
 
 - slide:
     content: |
-      an example -- a car
+      JavaScript has many types of data such as strings, numbers, booleans.
+
+      These are primitive types, meaning they're simple
 
 - slide:
     content: |
-      car has a color, a model, number of doors, license plate
-
-      car:
-        color           : red
-        number of doors : 4
-        license plate   : C0DE-LA8
+      Objects are used to start expressing more complex things
 
 - slide:
     content: |
-      keep all of that information together would be useful
+      For example, think about a person
 
-      this is where objects are useful
-
-- slide:
-    content: |
-      here is what an object would look like
-
-      const car = { 
-        color: 'red',
-        numberOfDoors: 4,
-        licensePlate: 'C0DE-LA8'
-      };
-
-      the variable and object called `car` - each piece of data is a property
+      they have a first name, last name, age
 
 - slide:
     content: |
-      you've actually been working with objects already by using things like `console.log`
-
-      `console` is an object and `log` is a property on it that happens to be a function that does work
+      All of this information is associated with one person and should be kept together
 
 - slide:
     content: |
-      we will learn more about that later for now let's look at how we can work with an object
+      JavaScript allows you to create objects that track that
+
+      [snippet person_example]
 
 - slide:
     content: |
-      you can also access properties by using the "dot notation" that you've used in previous lessons
+      You can probably understand what's happening in this example, but let's take a look at it
 
-      alert(car.color);
-
-      this example would pop up a message that says "red"
+      [snippet person_example]
 
 - slide:
     content: |
-      you can edit and add new properties to an object by just assigning to is
+      Like any other variable, must be declared and using the equal sign
 
-      car.fuel = 'full';    // adds a new value
-
-      car.color = 'blue';  // replaces a value
-
-      alert(car.color);
-
-      Now when the `alert` function is called, the value `blue` is printed instead of `red`
+      [snippet person_example]
 
 - slide:
     content: |
-      objects are useful for keeping track of information that should be moved around together especially when that information is complicated
+      An `{` and `}` are used to wrap the entire object
 
-      const student = {
-        firstName: 'Susan',
-        lastName: 'Smith',
-        age: 14,
-        school: 'Coppell Middle School',
-        grade: '7th',
-        scores: [ 90, 95, 100, 97, 92 ]
-      };
+      [snippet person_example]
+
+      Make sure to have a closing `}` or the code will fail
+
+- slide:
+    content: |
+      Each property is represented by a name and a value
+
+      [snippet person_example]
+
+- slide:
+    content: |
+      The name comes first
+
+      [snippet person_example]
+
+- slide:
+    content: |
+      then a :
+
+      [snippet person_example]
+
+- slide:
+    content: |
+      then the value - this can be strings, numbers, arrays, or even other objects
+
+      [snippet person_example]
+
+- slide:
+    content: |
+      if you're creating something with multiple properties, each one must be separated with a ,
+
+      [snippet person_example]
+
+- slide:
+    content: |
+      each one of these 
+
+
+- slide:
+    content: |
 
 
 
