@@ -4,10 +4,24 @@ import $fsx from 'fs-extra';
 
 export const name = 'serve project resource';
 export const route = '/*';
-export const priority = 0;
+export const priority = 1;
+
+const ALLOW = `User-agent: *
+Allow: /`;
+
+const DENY = `User-agent: *
+Disallow: /`;
+
 
 // determines the correct home view
 export async function handle(request, response, next) {
+
+	// skip robots
+	if (/^\/robots?\.txt/i.test(request.path)) {
+		const domains = _.reject(request.subdomains, 'www');
+		const deny = _.some(domains);
+		return response.end(deny ? DENY : ALLOW);
+	}
 
 	// must start with a version 
 	if (!/^\d+\-/.test(request.hostname))

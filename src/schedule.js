@@ -70,7 +70,10 @@ export default class Schedule {
 		return new Promise(async resolve => {
 
 			// compare the schedule
-			const timeslots = await $database.users.find({ [CLASS_ID]: { $exists: true } })
+			const timeslots = await $database.users.find({
+					[CLASS_ID]: { $exists: true },
+					disabled: { $ne: true }
+				})
 				.project({ _id: 0, [CLASS_ID]: 1 })
 				.toArray();
 			
@@ -82,10 +85,13 @@ export default class Schedule {
 			};
 
 			// save the current state
-			_.each(SESSIONS, session => {
+			_.each(SESSIONS, (session, i) => {
 				const reserved = _.filter(timeslots, slot => slot[CLASS_ID] === session.id);
 				const available = MAX_SEATS - reserved.length;
-				const data = Object.assign({ available }, session);
+				const full = available <= 0;
+				const limited = !full && available < (MAX_SEATS * 0.2);
+				const data = Object.assign({ available, limited, full }, session);
+
 				schedule[data.id] = data;
 			});
 

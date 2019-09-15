@@ -50,7 +50,8 @@ $(() => {
 
 		// request the login
 		try {
-			const result = await $.post('/kiosk', { keycode });
+			const { pathname = '', search = '' } = window.location;
+			const result = await $.post(pathname + search, { keycode });
 			displayResult(result);
 		}
 		catch (ex) {

@@ -6,7 +6,7 @@ export const event = 'create-file';
 export const authenticate = true;
 
 export async function handle(socket, session, data) {
-	const { user } = session;
+	const { user, isClassroom } = session;
 	const { projectId, path } = data;
 
 	try {
@@ -15,7 +15,7 @@ export async function handle(socket, session, data) {
 		if (!access.write)
 			throw 'access_denied';
 
-		const file = await createFile(projectId, path);
+		const file = await createFile(projectId, path, { isClassroom });
 		socket.ok(event, { success: true, file });
 	}
 	catch (err) {

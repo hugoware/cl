@@ -46,7 +46,7 @@ export default async function createFile(projectId, path, options = {}) {
 			await $fsx.writeFile(target, content);
 			
 			// since this worked, update the project
-			setProjectModified(projectId);
+			setProjectModified(projectId, options.isClassroom);
 
 			// finally, return the file information
 			resolve({ name: fileName, content });

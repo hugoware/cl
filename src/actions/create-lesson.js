@@ -4,6 +4,7 @@ import $fsx from 'fs-extra';
 import $database from '../storage/database';
 import $date from '../utils/date';
 import { resolveLesson, resolveProject } from '../path';
+import { PROJECT_TYPE_PERMANENT } from '../storage/database/index';
 
 /** handles creating a lesson project -- will overwrite an existing project if an ID is provided
  * @param {string} lessonId the lesson to create
@@ -48,7 +49,8 @@ export default async function createLesson(lessonId, userId) {
 			await $database.projects.update(query, {
 				$set: { 
 					done: false,
-					modifiedAt: $date.now()
+					modifiedAt: $date.now(),
+					status: PROJECT_TYPE_PERMANENT
 				}
 			});
 		}

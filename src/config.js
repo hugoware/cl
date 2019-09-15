@@ -28,6 +28,10 @@ class Config {
 		return true;
 	}
 
+	get DEMO_PROJECTS() {
+		return ['demo', 'web_demo', 'code_demo'];
+	}
+
 	/** @return {string} the SSL key */
 	get sslKey() { return this.data.ssl_key; }
 

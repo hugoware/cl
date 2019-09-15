@@ -83,7 +83,7 @@ function onContentChange(file) {
 	validate(this);
 }
 
-},{"./lib":12,"./validation":15}],3:[function(require,module,exports){
+},{"./lib":13,"./validation":16}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -132,7 +132,7 @@ function onEnter() {
 	});
 }
 
-},{"./lib":12}],4:[function(require,module,exports){
+},{"./lib":13}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -203,7 +203,7 @@ function onBeforeContentChange(file, change) {
 	return !change.hasNewline;
 }
 
-},{"./lib":12,"./utils":14}],5:[function(require,module,exports){
+},{"./lib":13,"./utils":15}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -281,7 +281,39 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":12}],7:[function(require,module,exports){
+},{"../lib":13}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			var waiting = this.events.listen('expand-objectives-list', function () {
+				_this.progress.next();
+				_this.events.clear();
+			});
+		},
+		onExit: function onExit() {
+			this.events.clear();
+		}
+	});
+}
+
+},{"../lib":13}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -329,7 +361,7 @@ function configure(obj, config) {
 	if (obj.init) obj.init(obj);
 }
 
-},{"../lib":12}],8:[function(require,module,exports){
+},{"../lib":13}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -397,7 +429,7 @@ function onContentChange(file) {
 	validate(this);
 }
 
-},{"./lib":12,"./validation":15}],9:[function(require,module,exports){
+},{"./lib":13,"./validation":16}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -456,7 +488,7 @@ function onContentChange(file) {
 	validate(this, file);
 }
 
-},{"./lib":12,"./validation":15}],10:[function(require,module,exports){
+},{"./lib":13,"./validation":16}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -474,7 +506,7 @@ function onEnter() {
 	this.screen.highlight.fileBrowser();
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -499,6 +531,10 @@ var _waitForFile2 = _interopRequireDefault(_waitForFile);
 var _waitForTab = require('./controllers/waitForTab');
 
 var _waitForTab2 = _interopRequireDefault(_waitForTab);
+
+var _waitForObjectivesList = require('./controllers/waitForObjectivesList');
+
+var _waitForObjectivesList2 = _interopRequireDefault(_waitForObjectivesList);
 
 var _aboutSaving = require('./aboutSaving');
 
@@ -637,41 +673,41 @@ var web1Lesson = function () {
         "controller": "previewAreaIntro",
         "content": "On the right side of the screen you can see the [define codelab_html_preview]. This shows what the [define html] for this file looks like when viewed in a [define web_browser browser].\n\nThis area will update automatically as you make changes.\n"
       }, {
-        "content": "Like with the previous example, this is a heading [define html_element Element]. You can see that it uses opening and closing [define html_tag tags] to surround the content.\n"
+        "controller": "highlightEditor",
+        "content": "The left side of the screen is the [define code_editor]. This has many of the same features as modern code editors.\n"
       }, {
-        "controller": "changeHeadingContent",
-        "content": "Let's start by changing the content of the [define html_element Element]. Replace the words \"Hello, World!\" with something different.\n"
+        "controller": "highlightPreviewArea",
+        "content": "The right side of the screen is the [define preview_area]. Students are able to see the results of the code as they work.\n"
       }, {
-        "content": "Now, let's try to type in an entirely new [define html_element]. This time we're going to create both the opening and closing [define html_tag tags] as well as the content inside.\n"
+        "controller": "addHeading",
+        "content": "Let's have you try writing some HTML for yourself. Follow along with the instructions to add a heading to the page.\n\n[snippet base_example]\n"
       }, {
-        "controller": "freeHeadingInsert",
-        "content": "Create the following [define html_element]\n\n[snippet free_heading_insert]\n"
+        "content": "Lessons will have multiple coding exercises that guide a student through writing code.\n"
       }, {
-        "content": "Practice makes perfect! Let's try that again with another [define html_element].\n"
+        "controller": "addImage",
+        "content": "Let's write some more HTML, but this time let's add an image to the page.\n\nThis example is a little more complicated, but if you follow along with the instructions then you shouldn't have a problem!\n\n[snippet void_example]\n"
       }, {
-        "controller": "freeButtonInsert",
-        "content": "Create the following [define html_element]\n\n[snippet free_button_insert]\n"
+        "content": "So far you've used [define html] to create a new heading and image. Maybe we need to use some [define css] to improve the visual appearance of the page!\n"
       }, {
+        "content": "In later web development lessons we'll begin teaching students how to apply visual styles to their web pages using [define css].\n"
+      }, {
+        "controller": "addStylesheet",
+        "content": "Let's see what kind of difference a little bit of [define css] can make to a web page.\n\nFollow the instructions in include a [define css] [define css_stylesheet stylesheet].\n\n[snippet css_stylesheet]\n"
+      }, {
+        "title": "About CodeLab",
         "mode": "overlay",
-        "content": "So far you've written a few simple [define html_element HTML Elements] that had some words inside.\n\nEach [define html_element] you created had a different effect on the contents.\n"
+        "content": "CodeLab works entirely from this website, so students can write code and share creations without having to install software on their own computers.\n"
       }, {
-        "content": "For example, the `h1` [define html_element Element] made the font large and bold.\n\nThe `button` [define html_element Element] created a clickable button.\n\nBasically, the type of [define html_element] used will have a different effect on the contents.\n"
+        "content": "CodeLab focuses on teaching languages that are actively used by professionals today, such as [define html], [define css], and [define javascript].\n\nCodeLab offers courses in both basic computer programming and web development.\n"
       }, {
-        "content": "This is where [define html] starts getting exciting!\nText isn't the only thing that you can put inside of an [define html_element]!"
+        "emote": "happy",
+        "content": "Students have **access to their completed lessons from home** so they can continue to work on programming even when they aren't in class.\n\nAdditionally, students can create their own projects and websites and then **share them with friends and family**! \n"
       }, {
-        "content": "Many [define html_element HTML Elements] allow for you to put even more Elements inside of them.\n\n[snippet list_example]\n\nIn fact, most websites you visit on the [define internet] are made up of hundreds, or even thousands, of individual [define html_element HTML Elements]!\n"
-      }, {
-        "content": "Let's review the [define html] code sample below.\n\n[snippet list_example highlight:0,4|48,5]\n\nLike with the previous examples, there are still opening and closing [define html_tag tags].\n"
-      }, {
-        "content": "Between the opening and closing [define html_tag tags] are more [define html_element HTML Elements].\n\n[snippet list_example highlight:6,12|20,12|34,13]\n\nOften times you'll hear these called [define html_child_elements] or \"nested\" Elements.\n"
-      }, {
-        "content": "These two [define html_element Element] types work together to create a list of numbers in the [define web_browser].\n\n[snippet list_example preview:45%]\n\nThe `ol` Element tells the [define web_browser] that each of the child `li` Elements should be displayed as a new **list item**.\n"
+        "emote": "happy",
+        "content": "If you have any questions about CodeLab, or if you're interested in reserving a space, use either of the links below to get started!\n\n[silent] <a class=\"assistant-button\" target=\"__ask_question\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSeYOBUeymVmQXG654BhiQF7_97_3Okn7vxrSNozqkXy23cZjg/viewform\" >Ask a Question</a> <a class=\"assistant-button\" href=\"/signup\" target=\"__reserve_space\" >Reserve a Space</a>\n"
       }, {
         "mode": "popup",
-        "content": "This might seem a little confusing at first, but it'll make much more sense once you try it out for yourself.\n"
-      }, {
-        "controller": "addListItems",
-        "content": "Create the list in the example below.\n\n[snippet list_example]\n"
+        "content": "I hope you enjoyed trying out CodeLab! You're free to continue experimenting with these files to see what kind of neat things you can make!\n\n**Create! Learn! And have fun writing code!**\n"
       }, {
         "mode": "overlay",
         "content": "Great work! There's still a lot to learn, but let's end this lesson by reviewing what we've covered so far.\n"
@@ -707,20 +743,8 @@ var web1Lesson = function () {
         "explain": "The `<` and `>` signs are special characters used by [define html] to identify where [define html_tag tags] begin and end.\n",
         "choices": ["Angle brackets", "Pointy blocks", "Arrow bytecodes", "Sharp codes"]
       }, {
-        "mode": "popup",
-        "content": "Way to go! You've finished this lesson!\n"
-      }, {
-        "content": "At this point all files are now unlocked and you're free to make changes to anything in this project. You can play with the [define html] you've learned, or just try out new things.\n"
-      }, {
-        "content": "If you'd like to try this lesson again, you can start over by using the \"Reset Lesson\" button from the home page of this site.\n\n[image reset-lesson.jpg]\n"
-      }, {
-        "content": "If you'd like to share what you've created with others, you can use the **Share** button and send them a link so they can try it out for themselves.\n\n[image share-project.jpg]\n\n[silent] _This button will appear after the lesson as been completed._\n"
-      }, {
-        "controller": "aboutSaving",
-        "content": "The changes you've made so far haven't been saved yet. Make sure to press the \"Save Changes\" button before you end this lesson.\n\nIf you forget to save your files and try and close a project, the website will display a message and give you a chance to save your work.\n"
-      }, {
         "emote": "happy",
-        "content": "Great work, and I'll see you again for **Lesson 2**\n"
+        "content": "Great work! I hope you learned a lot about creating web pages!\n"
       }],
       "snippets": {
         "complex_tag": {
@@ -815,7 +839,7 @@ var web1Lesson = function () {
           "id": "html",
           "name": "HTML",
           "aka": "Hyper Text Markup Language",
-          "define": "This is the full definition value"
+          "define": "Hypertext Markup Language, a standardized system for tagging text files to achieve font, color, graphic, and hyperlink effects on World Wide Web pages."
         },
         "css": {
           "id": "css",
@@ -848,10 +872,21 @@ var web1Lesson = function () {
           "name": "Preview Area",
           "define": "You can see your HTML as you type\n"
         },
-        "html_child_elements": {
-          "id": "html_child_elements",
-          "name": "Child Elements",
-          "define": "HTML Elements that are contained inside of other HTML Elements. Also commonly referred to as **nested Elements**.\n"
+        "code_editor": {
+          "id": "code_editor",
+          "name": "Code Editor",
+          "aka": "IDE",
+          "define": "A program that is designed to make it easier to modify code files by including features such as syntax highlighting, auto-complete, and code validation.\n"
+        },
+        "preview_area": {
+          "id": "preview_area",
+          "name": "Preview Area",
+          "define": "The right side of the screen that shows the current output of the project being worked on"
+        },
+        "css_stylesheet": {
+          "id": "css_stylesheet",
+          "name": "Stylesheet",
+          "define": "The name of a file with CSS rules"
         }
       }
     };
@@ -919,6 +954,12 @@ var web1Lesson = function () {
         (0, _waitForTab2.default)(_controller, {
           file: slide.waitForTab
         });
+      }
+
+      if (slide.waitForObjectivesList) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var _controller2 = this.controllers[slide.controller] = {};
+        (0, _waitForObjectivesList2.default)(_controller2, {});
       }
 
       if (slide.onActivate) {
@@ -1056,7 +1097,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('web_1', web1Lesson);
 
-},{"./aboutSaving":1,"./addListItems":2,"./browserType":3,"./changeHeadingContent":4,"./codeEditorIntro":5,"./controllers/waitForFile":6,"./controllers/waitForTab":7,"./freeButtonInsert":8,"./freeHeadingInsert":9,"./highlightFileBrowser":10,"./lib":12,"./previewAreaIntro":13,"./validation":15,"./waitForIndexHtml":16}],12:[function(require,module,exports){
+},{"./aboutSaving":1,"./addListItems":2,"./browserType":3,"./changeHeadingContent":4,"./codeEditorIntro":5,"./controllers/waitForFile":6,"./controllers/waitForObjectivesList":7,"./controllers/waitForTab":8,"./freeButtonInsert":9,"./freeHeadingInsert":10,"./highlightFileBrowser":11,"./lib":13,"./previewAreaIntro":14,"./validation":16,"./waitForIndexHtml":17}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1069,7 +1110,9 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var createTestRunner = exports.createTestRunner = lib.createTestRunner;
 var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+var runTests = exports.runTests = lib.runTests;
 
 $.preview = function () {
 	return $('#preview .output').contents();
@@ -1080,10 +1123,12 @@ exports.default = {
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
 	CssValidator: CssValidator,
+	createTestRunner: createTestRunner,
+	runTests: runTests,
 	validateHtmlDocument: validateHtmlDocument
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1101,12 +1146,14 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.randomString = randomString;
+exports.randomNumber = randomNumber;
 exports.findBoundary = findBoundary;
 exports.simplify = simplify;
 exports.stringRange = stringRange;
@@ -1115,6 +1162,36 @@ exports.pluralize = pluralize;
 exports.similarity = similarity;
 
 var _lib = require('./lib');
+
+var CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+var TOTAL_CHARACTERS = CHARACTERS.length;
+function randomString() {
+	var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 8;
+	var prefix = arguments[1];
+
+	var result = '';
+	for (var i = 0; i < length; i++) {
+		result += CHARACTERS.charAt(Math.floor(Math.random() * TOTAL_CHARACTERS));
+	}
+	return (prefix || '') + result;
+}
+
+function randomNumber() {
+	var min = void 0;
+	var max = void 0;
+
+	if (arguments.length === 1) {
+		min = 0;
+		max = arguments.length <= 0 ? undefined : arguments[0];
+	} else {
+		min = arguments.length <= 0 ? undefined : arguments[0];
+		max = arguments.length <= 1 ? undefined : arguments[1];
+	}
+
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // finds a trimmed code boundary
 function findBoundary(code, options) {
@@ -1248,7 +1325,7 @@ function editDistance(s1, s2) {
 	return costs[s2.length];
 }
 
-},{"./lib":12}],15:[function(require,module,exports){
+},{"./lib":13}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1288,7 +1365,7 @@ var validate_list = exports.validate_list = function validate_list(test) {
 
 // export const validate_button = test => test
 
-},{"./lib":12}],16:[function(require,module,exports){
+},{"./lib":13}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1326,4 +1403,4 @@ function onExit() {
 	this.screen.highlight.clear();
 }
 
-},{}]},{},[11]);
+},{}]},{},[12]);

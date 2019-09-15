@@ -16,7 +16,7 @@ export const acceptData = true;
 export async function handle(request, response, next) {
 
 	// not configured as the kiosk
-	if (request.cookies[KIOSK_KEY] !== KIOSK_VALUE)
+	if (request.query[KIOSK_KEY] !== KIOSK_VALUE)
 		return next();
 
   // this is showing the login page

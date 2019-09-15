@@ -18,6 +18,7 @@ export function handle(request, response) {
 	const isPreEnroll = +start > +now;
 
 	const schedule = Schedule.getAvailability();
+
 	response.render('site/signup', {
 		content: content.site,
 		schedule,

@@ -1,6 +1,8 @@
 
+import _ from 'lodash';
 import log from '../log';
 import $database from '../storage/database';
+import $config from '../config';
 
 /** Access levels for a project
  * @typedef {Object} ProjectAccess
@@ -20,7 +22,7 @@ export default function getProjectAccess(id, userId) {
 		let project;
 		
 		// no edit access for demos
-		if (id === 'demo')
+		if (_.includes($config.DEMO_PROJECTS, id))
 			return resolve({ write: false, view: true, remove: false });
 
 		try {

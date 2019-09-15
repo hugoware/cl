@@ -21,3 +21,5 @@ code:
 
 sys:
   - demo
+  - web_demo
+  - code_demo

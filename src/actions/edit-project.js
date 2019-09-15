@@ -4,6 +4,7 @@ import $database from '../storage/database';
 import format from '../formatters';
 import $cache from '../cache';
 import projectValidator from '../validators/project';
+import { PROJECT_TYPE_PERMANENT } from '../storage/database/index';
 
 /** handles updating the progress for a lesson
  * @param {string} id the project ID to find
@@ -46,7 +47,7 @@ export default async function editProject(id, data) {
 
 		// update the data
 		await $database.projects.update({ id }, {
-			$set: { name, description, domain }
+			$set: { name, description, domain, status: PROJECT_TYPE_PERMANENT }
 		});
 
 		resolve({ success: true });

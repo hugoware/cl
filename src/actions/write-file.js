@@ -40,7 +40,7 @@ export default async function writeFile(projectId, path, data, options = { }) {
 		await $fsx.outputFile(target, data);
 
 		// finalize
-		setProjectModified(projectId);
+		setProjectModified(projectId, options.isClassroom);
 		clearProjectCache(projectId);
 	}
 	catch (err) {

@@ -48,8 +48,8 @@ function reload() {
 		_.each(lessons, lesson => {
 			
 			// special lesson
-			if (lesson === 'demo')
-				group = $lessons.sys = { };
+			if (_.includes($config.DEMO_PROJECTS, lesson))
+				group = $lessons.sys = $lessons.sys || { };
 
 			// save the template
 			group[lesson] = new LessonTemplate(lesson);
@@ -77,7 +77,7 @@ function evaluateLessonCategory(category, result, allowUnlock) {
 	// limit the categories
 	const lessons = _.filter(result.lessons, { type: category });
 	const allowed = _($sequence[category])
-		.filter(id => id !== 'demo' && !_.find(lessons, { lesson: id }))
+		.filter(id => !_.includes($config.DEMO_PROJECTS, id) && !_.find(lessons, { lesson: id }))
 		.value();
 
 	// if all lessons are 'completed' then the next lesson

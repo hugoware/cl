@@ -10,7 +10,7 @@ import clearProjectCache from '../actions/clear-project-cache';
  * @param {string} projectId The project that the files should be removed from
  * @param {string|string[]} items The items that should be removed
  */
-export default async function renameItem(projectId, source, target) {
+export default async function renameItem(projectId, source, target, options = { }) {
 	return new Promise(async (resolve, reject) => {
 		try {
 			source = $path.resolveProject(projectId, source);
@@ -52,7 +52,7 @@ export default async function renameItem(projectId, source, target) {
 			await $fsx.move(source, target);
 
 			// since this worked, update the project
-			setProjectModified(projectId);
+			setProjectModified(projectId, options.isClassroom);
 			clearProjectCache(projectId);
 			
 			// since it moved, finalize the info

@@ -6,9 +6,10 @@ export const authenticate = true;
 // handles creating an entirely new project
 export async function handle(socket, session, data = { }) {
 	data.ownerId = session.user;
+	const { inClassroom } = session;
 
 	try {
-		const result = await createProject(data);
+		const result = await createProject(data, { inClassroom });
 		socket.ok(event, result);
 	}
 	catch (err) {

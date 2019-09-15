@@ -3,6 +3,7 @@ import _ from 'lodash';
 import $database from '../storage/database';
 import $lessons from '../storage/lessons';
 import $date from '../utils/date';
+import $moment from 'moment';
 
 /** Handles getting summary information for a user
  * @param {string} id the user ID to find
@@ -48,7 +49,8 @@ export default async function get(id, isClassroom) {
 				.toArray();
 
 			// order in sequence
-			results = _.sortBy(results, 'modifiedAt');
+			results = _.sortBy(results, result => $moment(result.modifiedAt).valueOf());
+			results.reverse();
 
 			// adjust categories
 			const projects = [ ];

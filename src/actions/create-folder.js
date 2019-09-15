@@ -11,7 +11,7 @@ import setProjectModified from './set-project-modified'
  * @param {string} path the local path to the folder to create
  * @returns {string} the created path
  */
-export default async function createFolder(projectId, name, relativeTo) {
+export default async function createFolder(projectId, name, relativeTo, options = { }) {
 	return new Promise(async (resolve, reject) => {
 		const path = $path.sanitizePath(`${relativeTo || '/'}/${name}`);
 
@@ -47,7 +47,7 @@ export default async function createFolder(projectId, name, relativeTo) {
 			await $fsx.mkdirp(target);
 
 			// since this worked, update the project
-			setProjectModified(projectId);
+			setProjectModified(projectId, options.isClassroom);
 
 			// get the name
 			const name = $npath.basename(path);

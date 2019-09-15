@@ -1,0 +1,137 @@
+
+- slide:
+    mode: overlay
+    title: Let's Write Some Code!
+    content: |
+      Welcome to the CodeLab Learning system demo!
+
+      CodeLab uses self-paced, interactive tutorials that are a mix of explanations, coding exercises, and review questions.
+
+- slide:
+    content: |
+      This demo tutorial will give you a brief introduction to using [define html] to create web pages.
+
+      **However, the primary purpose of this demo is to experience a CodeLab lesson from start to finish.**
+
+- slide:
+    content: |
+      Lessons typically begin by introducing a new concept by examining code examples and highlighting relevant parts.
+
+      [snippet base_example]
+
+      In this case, we're looking at a code example of an [define html_element], the most basic building block when creating a webpage.
+
+- slide:
+    content: |
+      [define html] code is written using [define html_element s]. Many websites have hundreds, or even thousands, of individual [define html_element Elements]
+
+      [snippet base_example highlight:0,4|17,5]
+      
+      Many [define html_element Elements] are made up of a starting and ending [define html_tag tag] which are used to mark where an [define html_element] begins and ends.
+
+- slide:
+    content: |
+      Anything between the starting and ending [define html_tag tags] is the content.
+
+      [snippet base_example highlight:4,13 preview:45%]
+
+      This particular [define html_element] would display the phrase _"Hello, World!"_ in a large and bold font.
+
+- slide:
+    mode: popup
+    content: |
+      After learning a new concept, students are immediately given a chance to try out what they've learned.
+
+- slide:
+    content: |
+      CodeLab lessons are built directly into a [define code_editor] that closely resembles what professional developers use on a regular basis.
+
+- slide:
+    controller: highlightFileBrowser
+    content: |
+      Files for a project are found in the [define file_browser] located on the left side of the screen.
+
+- slide:
+    waitForFile: /index.html
+    content: |
+      Open the file named `index.html` by [define double_click double clicking] on the file in the [define file_browser].
+
+- slide:
+    controller: highlightEditor
+    content: |
+      The left side of the screen is the [define code_editor]. This has many of the same features as modern code editors.
+
+- slide:
+    controller: highlightPreviewArea
+    content: |
+      The right side of the screen is the [define preview_area]. Students are able to see the results of the code as they work.
+
+- slide:
+    controller: addHeading
+    content: |
+      Let's have you try writing some HTML for yourself. Follow along with the instructions to add a heading to the page.
+
+      [snippet base_example]
+
+- slide:
+    content: |
+      Lessons will have multiple coding exercises that guide a student through writing code.
+
+- slide:
+    controller: addImage
+    content: |
+      Let's write some more HTML, but this time let's add an image to the page.
+
+      This example is a little more complicated, but if you follow along with the instructions then you shouldn't have a problem!
+
+      [snippet void_example]
+
+- slide:
+    content: |
+      So far you've used [define html] to create a new heading and image. Maybe we need to use some [define css] to improve the visual appearance of the page!
+
+- slide:
+    content: |
+      In later web development lessons we'll begin teaching students how to apply visual styles to their web pages using [define css].
+
+- slide:
+    controller: addStylesheet
+    content: |
+      Let's see what kind of difference a little bit of [define css] can make to a web page.
+
+      Follow the instructions in include a [define css] [define css_stylesheet stylesheet].
+
+      [snippet css_stylesheet]
+
+- slide:
+    title: About CodeLab
+    mode: overlay
+    content: |
+      CodeLab works entirely from this website, so students can write code and share creations without having to install software on their own computers.
+
+- slide:
+    content: |
+      CodeLab focuses on teaching languages that are actively used by professionals today, such as [define html], [define css], and [define javascript].
+
+      CodeLab offers courses in both basic computer programming and web development.
+
+- slide:
+    emote: happy
+    content: |
+      Students have **access to their completed lessons from home** so they can continue to work on programming even when they aren't in class.
+
+      Additionally, students can create their own projects and websites and then **share them with friends and family**! 
+
+- slide:
+    emote: happy
+    content: |
+      If you have any questions about CodeLab, or if you're interested in reserving a space, use either of the links below to get started!
+
+      [silent] <a class="assistant-button" target="__ask_question" href="https://docs.google.com/forms/d/e/1FAIpQLSeYOBUeymVmQXG654BhiQF7_97_3Okn7vxrSNozqkXy23cZjg/viewform" >Ask a Question</a> <a class="assistant-button" href="/signup" target="__reserve_space" >Reserve a Space</a>
+
+- slide:
+    mode: popup
+    content: |
+      I hope you enjoyed trying out CodeLab! You're free to continue experimenting with these files to see what kind of neat things you can make!
+
+      **Create! Learn! And have fun writing code!**

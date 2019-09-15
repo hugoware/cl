@@ -6,7 +6,7 @@ export const event = 'create-folder';
 export const authenticate = true;
 
 export async function handle(socket, session, data) {
-	const { user } = session;
+	const { user, isClassroom } = session;
 	const { projectId, name, relativeTo } = data;
 
 	try {
@@ -15,7 +15,7 @@ export async function handle(socket, session, data) {
 		if (!access.write)
 			throw 'access_denied';
 
-		const folder = await createFolder(projectId, name, relativeTo);
+		const folder = await createFolder(projectId, name, relativeTo, { isClassroom });
 		socket.ok(event, { success: true, folder });
 	}
 	catch (err) {

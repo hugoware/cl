@@ -168,6 +168,11 @@ export default function initSignup() {
 	// setup each handler
 	for (const item of slots)
 		(slot => {
+
+			// make sure this can be selected
+			if (!/is\-available/.test(slot.className))
+				return;
+
 			// check for selection
 			slot.addEventListener('click', () => {
 				const isSelected = /selected/.test(slot.className);

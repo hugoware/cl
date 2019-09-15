@@ -2,7 +2,7 @@
 - id: html
   name: HTML
   aka: Hyper Text Markup Language
-  define: This is the full definition value
+  define: Hypertext Markup Language, a standardized system for tagging text files to achieve font, color, graphic, and hyperlink effects on World Wide Web pages.
 
 - id: html_element
   name: HTML Element

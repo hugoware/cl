@@ -85,6 +85,7 @@ body, html {
 }
 
 #login-button {
+	color: #fff;
 	float: right;
 	font-size: 20px;
 	padding: 8px 27px;
@@ -92,10 +93,12 @@ body, html {
 	border-radius: 100px;
 	cursor: pointer;
 	font-weight: 600;
+	text-decoration: none;
 
 	transition: background 0.3s;
 	&:hover {
 		background: rgba(#fff, 0.3);
+		color: #fff;
 	}
 }
 
@@ -173,7 +176,8 @@ html, body {
 
 .header {
   background: 50% 60% no-repeat url(/__codelab__/site/images/header-background.jpg);
-  background-size: cover;
+	background-size: cover;
+	background-position: 50% 25%;
   color: #fff;
 
   // &:before {
@@ -192,7 +196,12 @@ html, body {
   .intro {
     padding: 60px 20px;
     text-shadow: 0 1px 3px #000;
-    font-size: 32px;
+		font-size: 32px;
+		
+		h1 {
+			position: absolute;
+			top: -999px;
+		}
   }
 
   .learn-to {
@@ -969,12 +978,35 @@ html, body {
 		margin: 0 0 13px 0;
 		border-radius: 4px;
 
+		.is-full, .is-limited {
+			display: none;
+		}
+
+		&.is-full {
+			background: #f0f0f0;
+		}
+
+		&.is-full .details,
+		&.is-full .level {
+			// opacity: 0.4;
+			color: #808E8F !important;
+		}
+
+		&.is-full .is-full {
+			display: block;
+			font-weight: bold;
+			color: #808E8F;
+		}
+
 		.title {
 			font-size: 16px;
 		}
 
-		.level {
+		.meta {
 			float: right;
+		}
+
+		.level {
 			// opacity: 0.8;
 			// font-style: italic;
 			font-size: 13.5px;
@@ -1011,7 +1043,7 @@ html, body {
 		}
 	}
 
-	.timeslot:hover {
+	.timeslot.is-available:hover {
 		background: lighten(#208FF5, 40%);
 		transform: scale(1.025, 1.025);
 		border-color: lighten(#208FF5, 30%);
@@ -1156,7 +1188,7 @@ html, body {
   text-align: center;
 
   .content {
-    opacity: 0.5;
+    opacity: 0.8;
     width: 80%;
     padding: 50px 0 0 0;
     margin: 0 auto;
@@ -1165,11 +1197,16 @@ html, body {
 
     &, a {
       color: #fff;
-    }
+		}
+		
+		a {
+			cursor: pointer;
+		}
 
     .separator {
       display: inline-block;
-      padding: 0 20px;
+			padding: 0 20px;
+			opacity: 0.2;
     }
 
     // span {
@@ -1497,10 +1534,9 @@ html, body {
 		list-style: none;
 		margin: 0;
 		// padding: 0 14px;
-		background: lighten($class-config-dark-color, 42%);
-		padding: 10px 0;
+		// background: lighten($class-config-dark-color, 42%);
+		padding: 0;
 		margin: 9px $class-config-padding;
-		border-radius: $class-config-radius;
 	}
 
 	li {
@@ -1511,6 +1547,14 @@ html, body {
 		// box-shadow: 0 1px 8px rgba(0,0,0,0.2);
 		line-height: 1em;
 		text-align: center;
+		padding: 0;
+
+		.timeslot-detail {
+			margin: 0 10px;
+			background: lighten($class-config-dark-color, 42%);
+			padding: 10px 0;
+			border-radius: $class-config-radius;
+		}
 	}
 
 	background: #fff;

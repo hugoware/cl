@@ -20,7 +20,7 @@ const MAX_FILE_SIZE_KB = 1024 * 1024 * 10;
 // determines the correct home view
 export async function handle(request, response) {
 	const { session } = request;
-	const { user } = session;
+	const { user, isClassroom } = session;
 
 	try {
 		// get each part of required data
@@ -75,7 +75,7 @@ export async function handle(request, response) {
 		await $fsx.move(file.path, target, { overwrite: true });
 
 		// since this worked, update the project
-		setProjectModified(projectId);
+		setProjectModified(projectId, isClassroom);
 
 		// ready to go
 		response.status(200);

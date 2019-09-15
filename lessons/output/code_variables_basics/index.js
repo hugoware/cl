@@ -46,7 +46,7 @@ var $color = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":11,"./utils":13,"./validation":14}],2:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":12,"./utils":14,"./validation":15}],2:[function(require,module,exports){
 "use strict";
 
 },{}],3:[function(require,module,exports){
@@ -103,7 +103,39 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":11}],5:[function(require,module,exports){
+},{"../lib":12}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			var waiting = this.events.listen('expand-objectives-list', function () {
+				_this.progress.next();
+				_this.events.clear();
+			});
+		},
+		onExit: function onExit() {
+			this.events.clear();
+		}
+	});
+}
+
+},{"../lib":12}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -151,7 +183,7 @@ function configure(obj, config) {
 	if (obj.init) obj.init(obj);
 }
 
-},{"../lib":11}],6:[function(require,module,exports){
+},{"../lib":12}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -250,6 +282,27 @@ function waitForValidation(obj, config) {
 
 			validate(this);
 		},
+		onActivate: function onActivate() {
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			if (config.onActivate) return config.onActivate.apply(this, args);
+		},
+		onRunCode: function onRunCode() {
+			for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+				args[_key3] = arguments[_key3];
+			}
+
+			if (config.onRunCode) return config.onRunCode.apply(this, args);
+		},
+		onRunCodeEnd: function onRunCodeEnd() {
+			for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+				args[_key4] = arguments[_key4];
+			}
+
+			if (config.onRunCodeEnd) return config.onRunCodeEnd.apply(this, args);
+		},
 		onReset: function onReset() {
 			validate(this);
 
@@ -268,8 +321,8 @@ function waitForValidation(obj, config) {
 			this.file.readOnly({ path: config.file });
 			this.editor.hint.enable();
 
-			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-				args[_key2] = arguments[_key2];
+			for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+				args[_key5] = arguments[_key5];
 			}
 
 			if (config.onExit) config.onExit.apply(this, args);
@@ -280,7 +333,7 @@ function waitForValidation(obj, config) {
 	if (config.init) config.init.call(obj, obj);
 }
 
-},{"../lib":11}],7:[function(require,module,exports){
+},{"../lib":12}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -329,7 +382,7 @@ var $value = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":11,"./utils":13,"./validation":14}],8:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":12,"./utils":14,"./validation":15}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -378,7 +431,7 @@ var $color = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":11,"./utils":13,"./validation":14}],9:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":12,"./utils":14,"./validation":15}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -426,7 +479,7 @@ function onRunCodeAlert(runner) {
 	}
 }
 
-},{"./lib":11}],10:[function(require,module,exports){
+},{"./lib":12}],11:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -451,6 +504,10 @@ var _waitForFile2 = _interopRequireDefault(_waitForFile);
 var _waitForTab = require('./controllers/waitForTab');
 
 var _waitForTab2 = _interopRequireDefault(_waitForTab);
+
+var _waitForObjectivesList = require('./controllers/waitForObjectivesList');
+
+var _waitForObjectivesList2 = _interopRequireDefault(_waitForObjectivesList);
 
 var _alertMessages = require('./alertMessages');
 
@@ -772,6 +829,12 @@ var codeVariablesBasicsLesson = function () {
         });
       }
 
+      if (slide.waitForObjectivesList) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var _controller2 = this.controllers[slide.controller] = {};
+        (0, _waitForObjectivesList2.default)(_controller2, {});
+      }
+
       if (slide.onActivate) {
         slide.onActivate.call(this, slide);
       }
@@ -907,7 +970,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('code_variables_basics', codeVariablesBasicsLesson);
 
-},{"./alertMessages":1,"./alertNumber":2,"./assignExisting":3,"./controllers/waitForFile":4,"./controllers/waitForTab":5,"./declareNumber":7,"./declareString":8,"./displayAlerts":9,"./lib":11,"./updateAlerts":12,"./validation":14}],11:[function(require,module,exports){
+},{"./alertMessages":1,"./alertNumber":2,"./assignExisting":3,"./controllers/waitForFile":4,"./controllers/waitForObjectivesList":5,"./controllers/waitForTab":6,"./declareNumber":8,"./declareString":9,"./displayAlerts":10,"./lib":12,"./updateAlerts":13,"./validation":15}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -920,7 +983,9 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var createTestRunner = exports.createTestRunner = lib.createTestRunner;
 var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+var runTests = exports.runTests = lib.runTests;
 
 $.preview = function () {
 	return $('#preview .output').contents();
@@ -931,10 +996,12 @@ exports.default = {
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
 	CssValidator: CssValidator,
+	createTestRunner: createTestRunner,
+	runTests: runTests,
 	validateHtmlDocument: validateHtmlDocument
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1015,12 +1082,14 @@ var $age = void 0;
 
 });
 
-},{"./controllers/waitForValidation":6,"./lib":11,"./utils":13,"./validation":14}],13:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":12,"./utils":14,"./validation":15}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.randomString = randomString;
+exports.randomNumber = randomNumber;
 exports.findBoundary = findBoundary;
 exports.simplify = simplify;
 exports.stringRange = stringRange;
@@ -1029,6 +1098,36 @@ exports.pluralize = pluralize;
 exports.similarity = similarity;
 
 var _lib = require('./lib');
+
+var CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+var TOTAL_CHARACTERS = CHARACTERS.length;
+function randomString() {
+	var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 8;
+	var prefix = arguments[1];
+
+	var result = '';
+	for (var i = 0; i < length; i++) {
+		result += CHARACTERS.charAt(Math.floor(Math.random() * TOTAL_CHARACTERS));
+	}
+	return (prefix || '') + result;
+}
+
+function randomNumber() {
+	var min = void 0;
+	var max = void 0;
+
+	if (arguments.length === 1) {
+		min = 0;
+		max = arguments.length <= 0 ? undefined : arguments[0];
+	} else {
+		min = arguments.length <= 0 ? undefined : arguments[0];
+		max = arguments.length <= 1 ? undefined : arguments[1];
+	}
+
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // finds a trimmed code boundary
 function findBoundary(code, options) {
@@ -1162,7 +1261,7 @@ function editDistance(s1, s2) {
 	return costs[s2.length];
 }
 
-},{"./lib":11}],14:[function(require,module,exports){
+},{"./lib":12}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1205,4 +1304,4 @@ var alert_messages = exports.alert_messages = function alert_messages(test) {
 	test.func('alert').symbol('(').id(requires).symbol(')').symbol(';')._n.__b;
 };
 
-},{"./lib":11}]},{},[10]);
+},{"./lib":12}]},{},[11]);

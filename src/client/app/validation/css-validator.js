@@ -301,6 +301,12 @@ SyntaxValidator.createNext(CssValidator, 'num', {
 	name: 'number'
 });
 
+SyntaxValidator.createNext(CssValidator, 'text', {
+	literal: true,
+	matchCase: true,
+	name: 'text'
+});
+
 // SyntaxValidator.createNext(CssValidator, 'prop', {
 // 	literal: true,
 // 	matchCase: true,
@@ -325,5 +331,12 @@ SyntaxValidator.createNext(CssValidator, 'quote', {
 	defaultArgs: ['"'],
 	after: (match, test) => test.__previous__quote__ = match
 });
+
+// SyntaxValidator.createNext(CssValidator, 'pseudo', {
+// 	name: 'pseudo',
+// 	match: /^("|')/,
+// 	defaultArgs: ['"'],
+// 	after: (match, test) => test.__previous__quote__ = match
+// });
 
 SyntaxValidator.setup(CssValidator);

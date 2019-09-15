@@ -92,7 +92,7 @@ const isAppLogin = /__login__/.test(window.location.href);
 	let $pendingError;
 	function initLogin() {
 		let isLoggingIn;
-		const btn = document.getElementById('login-button');
+		const btn = document.getElementById('handle-login');
 		if (!btn) return;
 		
 		// create the login

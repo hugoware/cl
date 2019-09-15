@@ -10,7 +10,7 @@ import clearProjectCache from './clear-project-cache';
  * @param {string} projectId The project that the files should be removed from
  * @param {string|string[]} items The items that should be removed
  */
-export default async function removeItems(projectId, items) {
+export default async function removeItems(projectId, items, options = { }) {
 
 	// get the simple form of objects to remove - this
 	// should clean up nested removals as well
@@ -27,7 +27,7 @@ export default async function removeItems(projectId, items) {
 		}
 
 		// since this worked, update the project
-		setProjectModified(projectId);
+		setProjectModified(projectId, options.isClassroom);
 		clearProjectCache(projectId);
 
 		return { success: true };

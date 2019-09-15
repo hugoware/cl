@@ -6,6 +6,7 @@ import $date from '../utils/date';
 import $audit from '../audit';
 import projectValidator from '../validators/project';
 import { resolveProject, resolveResource } from '../path';
+import { PROJECT_TYPE_TEMP, PROJECT_TYPE_PERMANENT } from '../storage/database/index';
 
 /** expected params for a project
  * @typedef CreateProjectData
@@ -25,7 +26,7 @@ import { resolveProject, resolveResource } from '../path';
  * @param {CreateProjectData} data project data
  * @returns {CreateProjectResult}
  */
-export default async function createProject(data) {
+export default async function createProject(data, options = { }) {
 	return new Promise(async (resolve, reject) => {
 
 		// format the data first
@@ -60,7 +61,17 @@ export default async function createProject(data) {
 			// get a new ID for this project
 			const id = await $database.generateId($database.projects, 6);
 			const now = $date.now();
-			const project = { id, ownerId, name, description, type, modifiedAt: now };
+			const project = {
+				id,
+				ownerId,
+				name,
+				description,
+				type,
+				modifiedAt: now,
+				status: options.inClassroom ? PROJECT_TYPE_TEMP : PROJECT_TYPE_PERMANENT
+			};
+
+
 			if (!!language) project.language = language;
 
 			// try and save the record

@@ -1,10 +1,12 @@
 extends _template
 
 block title
-	| CodeLab
+	| CodeLab - Real Programming for Kids and Teens
 
 block head
 	link(rel='stylesheet' type='text/css' href='/__codelab__/site/index.css')
+	meta(name='description' content='Computer programming for kids and teens to learn modern programming (ages 12+)')
+	meta(name='robots' content='index, follow')
 
 block content
 
@@ -20,10 +22,11 @@ block content
 			.container
 
 				.row.bar
-					#login-button Login
+					a#login-button(href='/signup') Enroll Now
 					a.logo(href='/') CodeLab
 
 				.row.intro
+					h1 Learn Real Computer Programming for Kids and Teens
 					.learn-to Learn To...
 					.feature
 						#feature-display Write Real Code
@@ -32,7 +35,7 @@ block content
 					.actions
 						a.button.how-it-works(href='#about' onclick="playDemo()") Our Mission
 						a.button.view-schedule(href='#schedule') Schedule &amp; Pricing
-						a.button.try-demo(href='#showcase') Student Showcase
+						//- a.button.try-demo(href='#showcase') Student Showcase
 
 		+starting_soon(content)
 
@@ -49,6 +52,9 @@ block content
 						h3 !{content.about_title}
 						p !{content.about_content}
 
+						.action
+								a.button(href='/signup') Sign Up For Class
+
 						//- .action
 						//- 	a.button(href='/demo' target='_demo') Try a Demo Lesson
 		
@@ -61,8 +67,8 @@ block content
 						h3 !{content.courses_title}
 						p !{content.courses_content}
 
-						.action
-							a.button(href='/showcase') View Student Showcase
+						//- .action
+						//- 	a.button(href='/showcase') View Student Showcase
 				
 				.course-list.col-md-7
 					.container-fluid
@@ -112,7 +118,7 @@ block content
 							p !{content.tutorials_content}
 
 							.action
-								a.button(href='/demo' target='_demo') Try an Example Lesson
+								a.button(href='/demo' target='_demo' rel='nofollow') Try an Example Lesson
 
 		a.jump(name='schedule')
 
@@ -135,6 +141,7 @@ block content
 
 									
 
+		a.jump(name='contact-us')
 
 		.section.location.container-fluid
 			#map
@@ -150,13 +157,13 @@ block content
 							li.where
 								.icon.map-icon
 								.info.address
-									.street 275 Denton Tap Road
+									.street 275 S Denton Tap Road
 									.suite Suite 106
 									.csz Coppell, TX 75019
 							li.email
 								.icon.email-icon
 								.info
-									a(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2') hello@codelabschool.com
+									a(href='mailto:hello@codelabschool.com') hello@codelabschool.com
 							li.phone
 								.icon.phone-icon
 								.info !{content.phone_number}
@@ -173,7 +180,7 @@ block content
 						p !{content.faq_content}
 
 						.action
-							a.button(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2') Ask a Question
+							a.button(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2' rel='nofollow') Ask a Question
 
 				.sessions.col-md-6
 					.question-list.container-fluid
@@ -230,14 +237,17 @@ mixin class_sessions(type, title, desc, dayOfWeek)
 				.desc= desc
 			ul.row
 				li.col-md-4.col-sm-4.col-xs-4
-					.time 5:00 PM
-					.name Basics
+					.timeslot-detail
+						.time 5:00 PM
+						.name Basics
 				li.col-md-4.col-sm-4.col-xs-4
-					.time 6:00 PM
-					.name Basics
+					.timeslot-detail
+						.time 6:00 PM
+						.name Basics
 				li.col-md-4.col-sm-4.col-xs-4
-					.time 7:00PM
-					.name Advanced
+					.timeslot-detail
+						.time 7:00PM
+						.name Advanced
 
 mixin class_options
 	+class_sessions('web', 'Building Websites', 'Creating web pages using HTML, CSS, and more!', 'Tuesdays')
@@ -274,7 +284,7 @@ mixin starting_soon(content)
 				.col-md-8
 					.start-icon
 						img(src='/__codelab__/site/images/icon-calendar.png')
-					.info Classes begin #[span.starting= content.start_date] in #[span.starting Coppell, Texas!]
+					.info Sign up for a free class at our #[span.starting Coppell, Texas] location!
 
 				.col-md-4.action
-					a.button(href='/signup') Sign Up For Class
+					a.button(href='#contact-us') Contact Us

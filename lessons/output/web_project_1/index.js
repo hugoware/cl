@@ -47,6 +47,7 @@ var Task = function () {
 		key: 'validateTasks',
 		value: function validateTasks() {
 			this.project.validateTasks();
+			setTimeout(this.project.update);
 		}
 
 		// get the current state

@@ -1,0 +1,25 @@
+
+body {
+	background: tomato;
+	font-family: sans-serif;
+	text-align: center;
+}
+
+h1 {
+	color: white;
+	font-size: 90px;
+	font-family: cursive;
+}
+
+p {
+	color: white;
+}
+
+img {
+	transition: all 2s;
+	transform: rotate(-15deg) scale(0.8, 0.6);
+}
+
+img:hover {
+	transform: rotate(-395deg) scale(1.5, 2.2);
+}

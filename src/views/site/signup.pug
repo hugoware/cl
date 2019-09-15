@@ -1,23 +1,31 @@
 extends _template
 include _header
 
+mixin head
+	meta(name='description' content='Sign up for CodeLab classes online')
+	meta(name='robots' content='index, follow')
+
 mixin info
 	.introduction
 		//- .title Class Selection
 		.instructions Select which class you'd like to enroll for. Selecting an #[strong Advanced] class may require an assessment of student skill before finalizing placement.
 
 	.things-to-know Things to know before enrolling
-	if isPreEnroll
-		p.future-billing !{content.preEnroll}
+	//- if isPreEnroll
+	//- 	p.future-billing !{content.preEnroll}
 		
 	for item in content.enrollment_notes
 		p(class=item.type) !{item.message}
 
 mixin add_session(session, dayOfWeek)
-	.timeslot(class='level-' + session.level.toLowerCase() id=session.id data-day=dayOfWeek data-level=session.level data-name=session.name data-time=session.time)
-		.level= session.level
-		.title= session.name
-		.time= session.time
+	.timeslot(class='level-' + session.level.toLowerCase() + (session.available > 0 ? ' is-available' : '') + (session.limited ? ' is-limited' : '') + (session.full ? ' is-full' : '') id=session.id data-day=dayOfWeek data-level=session.level data-name=session.name data-time=session.time)
+		.meta
+			.level= session.level
+			.is-full Session Full
+			.is-limited Space is limited
+		.details
+			.title= session.name
+			.time= session.time
 
 mixin timeslots
 

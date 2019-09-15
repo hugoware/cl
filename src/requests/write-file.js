@@ -8,7 +8,7 @@ export const event = 'write-file';
 export const authenticate = true;
 
 export async function handle(socket, session, data) {	
-	const { user } = session;
+	const { user, isClassroom } = session;
 	const { projectId, path, content } = data;
 	const doNotCreateIfMissing = true;
 
@@ -20,7 +20,7 @@ export async function handle(socket, session, data) {
 			throw 'access_denied';
 
 		// try and write the file content
-		await writeFile(projectId, path, content, { doNotCreateIfMissing });
+		await writeFile(projectId, path, content, { doNotCreateIfMissing, isClassroom });
 
 		// this was successful
 		socket.ok(event, { success: true });

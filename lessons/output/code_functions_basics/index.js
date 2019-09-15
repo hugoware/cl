@@ -107,7 +107,7 @@ var $hasInsertedNewline = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],2:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -198,7 +198,7 @@ var $isValid = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],3:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -287,7 +287,7 @@ var $isValid = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],4:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -339,7 +339,39 @@ function configure(obj, config) {
 	}, config.extend);
 }
 
-},{"../lib":15}],5:[function(require,module,exports){
+},{"../lib":16}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = configure;
+
+var _lib = require('../lib');
+
+function configure(obj, config) {
+
+	_lib._.assign(obj, {
+
+		controller: true,
+
+		onEnter: function onEnter() {
+			var _this = this;
+
+			this.progress.block();
+
+			var waiting = this.events.listen('expand-objectives-list', function () {
+				_this.progress.next();
+				_this.events.clear();
+			});
+		},
+		onExit: function onExit() {
+			this.events.clear();
+		}
+	});
+}
+
+},{"../lib":16}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -387,7 +419,7 @@ function configure(obj, config) {
 	if (obj.init) obj.init(obj);
 }
 
-},{"../lib":15}],6:[function(require,module,exports){
+},{"../lib":16}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -537,7 +569,7 @@ function waitForValidation(obj, config) {
 	if (config.init) config.init.call(obj, obj);
 }
 
-},{"../lib":15}],7:[function(require,module,exports){
+},{"../lib":16}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -596,10 +628,10 @@ var $isValid = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],8:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],9:[function(require,module,exports){
 "use strict";
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -651,7 +683,7 @@ var controller = exports.controller = true;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],10:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -734,7 +766,7 @@ var $isValid = void 0;
 
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],11:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],12:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () {
@@ -759,6 +791,10 @@ var _waitForFile2 = _interopRequireDefault(_waitForFile);
 var _waitForTab = require('./controllers/waitForTab');
 
 var _waitForTab2 = _interopRequireDefault(_waitForTab);
+
+var _waitForObjectivesList = require('./controllers/waitForObjectivesList');
+
+var _waitForObjectivesList2 = _interopRequireDefault(_waitForObjectivesList);
 
 var _addBirdSound = require('./addBirdSound');
 
@@ -1162,6 +1198,12 @@ var codeFunctionsBasicsLesson = function () {
         });
       }
 
+      if (slide.waitForObjectivesList) {
+        slide.controller = _lib._.uniqueId('controller_');
+        var _controller2 = this.controllers[slide.controller] = {};
+        (0, _waitForObjectivesList2.default)(_controller2, {});
+      }
+
       if (slide.onActivate) {
         slide.onActivate.call(this, slide);
       }
@@ -1297,7 +1339,7 @@ function toActionName(name) {
 // register the lesson for use
 window.registerLesson('code_functions_basics', codeFunctionsBasicsLesson);
 
-},{"./addBirdSound":1,"./addInvoke":2,"./changeDogSound":3,"./controllers/waitForFile":4,"./controllers/waitForTab":5,"./convertToFunction":7,"./createFunctionDef":8,"./createIfStatements":9,"./declareAnimalVar":10,"./invokeFunctionNoArg":12,"./invokeFunctionWithBird":13,"./invokeFunctionWithDog":14,"./lib":15,"./removeInlineVar":16,"./repeatExample":17,"./validation":19}],12:[function(require,module,exports){
+},{"./addBirdSound":1,"./addInvoke":2,"./changeDogSound":3,"./controllers/waitForFile":4,"./controllers/waitForObjectivesList":5,"./controllers/waitForTab":6,"./convertToFunction":8,"./createFunctionDef":9,"./createIfStatements":10,"./declareAnimalVar":11,"./invokeFunctionNoArg":13,"./invokeFunctionWithBird":14,"./invokeFunctionWithDog":15,"./lib":16,"./removeInlineVar":17,"./repeatExample":18,"./validation":20}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1384,7 +1426,7 @@ var $isValid = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],13:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1475,7 +1517,7 @@ var $isValid = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],14:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1562,7 +1604,7 @@ var $isValid = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],15:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1575,7 +1617,9 @@ var $ = exports.$ = lib.$;
 var CodeValidator = exports.CodeValidator = lib.CodeValidator;
 var HtmlValidator = exports.HtmlValidator = lib.HtmlValidator;
 var CssValidator = exports.CssValidator = lib.CssValidator;
+var createTestRunner = exports.createTestRunner = lib.createTestRunner;
 var validateHtmlDocument = exports.validateHtmlDocument = lib.HtmlValidationHelper.validate;
+var runTests = exports.runTests = lib.runTests;
 
 $.preview = function () {
 	return $('#preview .output').contents();
@@ -1586,10 +1630,12 @@ exports.default = {
 	CodeValidator: CodeValidator,
 	HtmlValidator: HtmlValidator,
 	CssValidator: CssValidator,
+	createTestRunner: createTestRunner,
+	runTests: runTests,
 	validateHtmlDocument: validateHtmlDocument
 };
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1657,7 +1703,7 @@ var $isValid = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],17:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1715,12 +1761,14 @@ var $isValid = void 0;
 	}
 });
 
-},{"./controllers/waitForValidation":6,"./lib":15,"./utils":18,"./validation":19}],18:[function(require,module,exports){
+},{"./controllers/waitForValidation":7,"./lib":16,"./utils":19,"./validation":20}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.randomString = randomString;
+exports.randomNumber = randomNumber;
 exports.findBoundary = findBoundary;
 exports.simplify = simplify;
 exports.stringRange = stringRange;
@@ -1729,6 +1777,36 @@ exports.pluralize = pluralize;
 exports.similarity = similarity;
 
 var _lib = require('./lib');
+
+var CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+var TOTAL_CHARACTERS = CHARACTERS.length;
+function randomString() {
+	var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 8;
+	var prefix = arguments[1];
+
+	var result = '';
+	for (var i = 0; i < length; i++) {
+		result += CHARACTERS.charAt(Math.floor(Math.random() * TOTAL_CHARACTERS));
+	}
+	return (prefix || '') + result;
+}
+
+function randomNumber() {
+	var min = void 0;
+	var max = void 0;
+
+	if (arguments.length === 1) {
+		min = 0;
+		max = arguments.length <= 0 ? undefined : arguments[0];
+	} else {
+		min = arguments.length <= 0 ? undefined : arguments[0];
+		max = arguments.length <= 1 ? undefined : arguments[1];
+	}
+
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // finds a trimmed code boundary
 function findBoundary(code, options) {
@@ -1862,7 +1940,7 @@ function editDistance(s1, s2) {
 	return costs[s2.length];
 }
 
-},{"./lib":15}],19:[function(require,module,exports){
+},{"./lib":16}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2002,4 +2080,4 @@ var validate_list = exports.validate_list = function validate_list(test, options
 	test.symbol('}');
 };
 
-},{"./lib":15}]},{},[11]);
+},{"./lib":16}]},{},[12]);

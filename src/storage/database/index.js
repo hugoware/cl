@@ -7,6 +7,9 @@ import { uniqueId } from '../../utils';
 const DEFAULT_PORT = 27017;
 const MAX_ID_GENERATION_ATTEMPTS = 10;
 
+export const PROJECT_TYPE_PERMANENT = 1;
+export const PROJECT_TYPE_TEMP = 2;
+
 class Database {
 
 	// handles loading the database
@@ -70,6 +73,14 @@ class Database {
 		// failed to create
 		log.exception('storage/database.js', 'id_generation_error');
 		throw 'id_generation_error';
+	}
+
+	// handles closing the database connection
+	async disconnect(force) {
+		return new Promise(resolve => {
+			this.connection.close(force);
+			resolve();
+		})
 	}
 
 }

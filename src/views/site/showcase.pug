@@ -6,11 +6,13 @@ block title
 
 block head
 	link(rel='stylesheet', type='text/css', href='/__codelab__/site/index.css')
+	meta(name='description' content='Examples of programs and websites created by our students')
+	meta(name='robots' content='index, follow')
 
 mixin showcase_item(item)
 	.col-md-4.col-sm-6.col-xs-10.col-xs-offset-1.col-sm-offset-0
 		.item(class='type-'+ item.type)
-			a(href='//' + item.id + '.codelabschool.com/' target='_app_'+ item.id)
+			a(href='//' + item.id + '.codelabschool.com/' target='_app_'+ item.id rel='nofollow')
 				.thumbnail(style='background-image: url(/__codelab__/showcase/'+ item.id +'.jpg)')
 				.title= item.title
 				.created-by Made by #{item.created_by}

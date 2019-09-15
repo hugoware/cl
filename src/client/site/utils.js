@@ -26,7 +26,6 @@ export function cancelEvent(event) {
 
 export function $cs(el, prop) {
 	let { className = '' } = el;
-	console.log('h', prop);
 
 	// remove existing
 	for (const id in prop) {

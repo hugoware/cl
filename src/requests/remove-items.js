@@ -8,7 +8,7 @@ export const event = 'remove-items';
 export const authenticate = true;
 
 export async function handle(socket, session, data) {
-	const { user } = session;
+	const { user, isClassroom } = session;
 	const { projectId, items } = data;
 
 	try {
@@ -19,7 +19,7 @@ export async function handle(socket, session, data) {
 			throw 'access_denied';
 
 		// try and write the file content
-		await removeItems(projectId, items);
+		await removeItems(projectId, items, { isClassroom });
 
 		// this was successful
 		socket.ok(event, { success: true });

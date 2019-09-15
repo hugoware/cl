@@ -133,7 +133,7 @@ class App extends Component {
 
 		// set initial navigation
 		if ($state.isDemoMode) {
-			$nav.go(`project/demo`);
+			$nav.go(`project/${$state.demoLessonId}`);
 			$nav.go = () => { };
 		}
 	}

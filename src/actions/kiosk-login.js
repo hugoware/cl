@@ -27,13 +27,16 @@ export function kioskLogin(data) {
 
 		// find the user
 		const users = await $database.users.find({ keycode })
-			.project({ id: 1, first: 1, subscriptionId: 1 })
+			.project({ id: 1, type: 1, first: 1, subscriptionId: 1, keycode: 1 })
 			.toArray();
 
 		// not a barcode
 		const [ user ] = users;
 		if (!user)
 			return resolve({ status: 'no_user' });
+
+		if (user.type === 'admin')
+			return authorize(user, resolve);
 
 		// next, check the subscription status
 		try  {
@@ -66,8 +69,7 @@ export function kioskLogin(data) {
 					}
 
 					// generate the code for use
-					const authCode = await createAuthCode({ id: user.id });
-					resolve({ success: true, first: user.first, authCode, userId: user.id });
+					authorize(user, resolve);
 				});
 
 		}
@@ -78,6 +80,13 @@ export function kioskLogin(data) {
 		}
 
 	});
+}
+
+// performs the auth
+async function authorize(user, resolve) {
+	// generate the code for use
+	const authCode = await createAuthCode({ id: user.id });
+	resolve({ success: true, first: user.first, authCode, userId: user.id });
 }
 
 function notifyExpiredAccount(account) {

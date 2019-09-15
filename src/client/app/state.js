@@ -24,9 +24,18 @@ const SPEECH_DISABLED = 'off';
 
 const isProd = !/localhost/gi.test(window.location.host);
 
+// check if this is a demo file
+const path = window.location.pathname;
+const demo = /^\/code_demo\/?$/.test(path) ? 'code_demo'
+	: /^\/web_demo\/?$/.test(path) ? 'web_demo'
+	: /^\/demo\/?$/.test(path) ? 'demo'
+	: null;
+
 const $state = {
 
-	isDemoMode: /^\/demo/i.test(window.location.pathname),
+	// checking for 
+	isDemoMode: !!demo,
+	demoLessonId: demo,
 
 	// some helpers
 	isProd,

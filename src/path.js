@@ -114,8 +114,8 @@ export function resolveData(path) {
 export function resolveProject(id, path = '', fromCache) {
 
 	// demo projects always resolve to the same spot
-	if (id === 'demo') {
-		path = resolveLesson('demo/files/', path);
+	if (_.includes($config.DEMO_PROJECTS, id)) {
+		path = resolveLesson(`${id}/files/`, path);
 		path = sanitizePath(path);
 		return path;
 	}
