@@ -33,162 +33,25 @@ block content
 						| &nbsp;
 					.details !{content.header_introduction}
 					.actions
-						a.button.how-it-works(href='#about' onclick="playDemo()") Our Mission
+						//- a.button.how-it-works(href='#about' onclick="playDemo()") Our Mission
 						a.button.view-schedule(href='#schedule') Schedule &amp; Pricing
+						a.button.how-it-works(href='https://docs.google.com/forms/d/e/1FAIpQLSfsEnaJ3sbBiAcoTB5JiCXbVioHrpYCmY1ggfVfL1yKI8wI3A/viewform') Request a Trial Class
+						a.button.try-demo(href='/signup') Enroll for Class
 						//- a.button.try-demo(href='#showcase') Student Showcase
 
 		+starting_soon(content)
 
-		a.jump(name='about')
-
-		.section.about.container-fluid
-			.concept
-			.row.content
-				.col-md-5
-					//-   img(src='/site/images/concept.jpg')
-
-				.details.col-md-7
-					.description
-						h3 !{content.about_title}
-						p !{content.about_content}
-
-						.action
-								a.button(href='/signup') Sign Up For Class
-
-						//- .action
-						//- 	a.button(href='/demo' target='_demo') Try a Demo Lesson
+		+section_about
 		
-		a.jump(name='showcase')
+		+section_schedule
 
-		.section.courses.container-fluid.light
-			.row.content
-				.col-md-5
-					.description
-						h3 !{content.courses_title}
-						p !{content.courses_content}
+		+section_demo
 
-						//- .action
-						//- 	a.button(href='/showcase') View Student Showcase
-				
-				.course-list.col-md-7
-					.container-fluid
-						.row
-							.course.code.col-md-6
-								.details
-									.category-icon.code-icon
-									.info
-										.name Coding
-										.about Learn basic programming skills in a variety of languages.
+		+section_showcase
 
-							.course.web.col-md-6
-								.details
-									.category-icon.web-icon
-									.info
-										.name Websites
-										.about Create public websites using HTML, CSS, and JavaScript.
-										
-							.course.game.col-md-6
-								.details
-									.category-icon.game-icon
-									.info
-										.name Games
-										.about Build games for phones, tablets, or desktop computers
+		+section_contact
 
-							.course.mobile.col-md-6
-								.details
-									.category-icon.mobile-icon
-									.info
-										.name Mobile Apps
-										.about Make apps that run on iPhone or Android devices
-
-
-		a.jump(name='demo')
-
-		.wrapper.tutorials
-			.section.tutorials.container-fluid
-				.row.content
-					.col-md-6
-
-					.details.col-md-6
-						.screenshot
-							img(src='/__codelab__/site/images/assistant.png')
-
-						.description
-							h3 !{content.tutorials_title}
-							p !{content.tutorials_content}
-
-							.action
-								a.button(href='/demo' target='_demo' rel='nofollow') Try an Example Lesson
-
-		a.jump(name='schedule')
-
-		.section.schedule.container-fluid.light
-			.row.content
-				.col-md-6
-					.description
-						h3 !{content.schedule_title}
-						//- p !{content.schedule_content}
-
-			.row.content
-				.col-md-6
-					+pricing_table
-
-					.action
-						a#schedule-link.button(href='/signup') Sign Up For Class
-
-				.col-md-6.schedule-listing
-					+class_options
-
-									
-
-		a.jump(name='contact-us')
-
-		.section.location.container-fluid
-			#map
-			.row.content
-				.col-md-6
-				
-				.form.col-md-6
-					.description
-						h3 !{content.reserve_title}
-						p !{content.reserve_content}
-
-						ul
-							li.where
-								.icon.map-icon
-								.info.address
-									.street 275 S Denton Tap Road
-									.suite Suite 106
-									.csz Coppell, TX 75019
-							li.email
-								.icon.email-icon
-								.info
-									a(href='mailto:hello@codelabschool.com') hello@codelabschool.com
-							li.phone
-								.icon.phone-icon
-								.info !{content.phone_number}
-
-						.action
-							a.button(href='/signup') Sign Up For Class
-
-		
-		.section.faq.container-fluid.light
-			.row.content
-				.col-md-6
-					.description
-						h3 !{content.faq_title}
-						p !{content.faq_content}
-
-						.action
-							a.button(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2' rel='nofollow') Ask a Question
-
-				.sessions.col-md-6
-					.question-list.container-fluid
-						for item, i in content.faq
-							.row
-								.question(id='question-' + (i+1))
-									.title !{item.question}
-									.answer !{item.answer}
+		+section_faq
 
 	+starting_soon(content)
 	include _footer
@@ -210,9 +73,14 @@ mixin pricing_table
 			.summary On-site access to CodeLab with provided computers and a Code Coach
 
 			.features
+
+				.item
+					.icon.session-icon
+					.detail One class session per week
+
 				.item
 					.icon.clock-icon
-					.detail One 60 minute session per week
+					.detail 60 minute session per class
 
 				.item
 					.icon.coach-icon
@@ -227,6 +95,8 @@ mixin pricing_table
 					.detail Share creations online
 
 		.footnote For additional information, #[a(href='/policies') view the CodeLab policies]
+
+
 
 mixin class_sessions(type, title, desc, dayOfWeek)
 	.class-config(class=type + '-schedule')
@@ -288,3 +158,174 @@ mixin starting_soon(content)
 
 				.col-md-4.action
 					a.button(href='#contact-us') Contact Us
+
+
+
+mixin section_showcase
+	a.jump(name='showcase')
+
+	.section.courses.container-fluid.light
+		.row.content
+			.col-md-5
+				.description
+					h3 !{content.courses_title}
+					p !{content.courses_content}
+
+					//- .action
+					//- 	a.button(href='/showcase') View Student Showcase
+			
+			.course-list.col-md-7
+				.container-fluid
+					.row
+						.course.code.col-md-6
+							.details
+								.category-icon.code-icon
+								.info
+									.name Coding
+									.about Learn basic programming skills in a variety of languages.
+
+						.course.web.col-md-6
+							.details
+								.category-icon.web-icon
+								.info
+									.name Websites
+									.about Create public websites using HTML, CSS, and JavaScript.
+									
+						.course.game.col-md-6
+							.details
+								.category-icon.game-icon
+								.info
+									.name Games
+									.about Build games for phones, tablets, or desktop computers
+
+						.course.mobile.col-md-6
+							.details
+								.category-icon.mobile-icon
+								.info
+									.name Mobile Apps
+									.about Make apps that run on iPhone or Android devices
+
+
+
+mixin section_demo
+	a.jump(name='demo')
+
+	.wrapper.tutorials
+		.section.tutorials.container-fluid
+			.row.content
+				.col-md-6
+
+				.details.col-md-6
+					.screenshot
+						img(src='/__codelab__/site/images/assistant.png')
+
+					.description
+						h3 !{content.tutorials_title}
+						p !{content.tutorials_content}
+
+						.action
+							a.button(href='/demo' target='_demo' rel='nofollow') Try an Example Lesson
+
+
+
+mixin section_schedule
+	a.jump(name='schedule')
+
+	.section.schedule.container-fluid.light
+		.row.content
+			.col-md-6
+				.description
+					h3 !{content.schedule_title}
+					//- p !{content.schedule_content}
+
+		.row.content
+			.col-md-6
+				+pricing_table
+
+				.action
+					+trial_and_enroll
+
+			.col-md-6.schedule-listing
+				+class_options
+
+
+
+mixin section_contact
+	a.jump(name='contact-us')
+
+	.section.location.container-fluid
+		#map
+		.row.content
+			.col-md-6
+			
+			.form.col-md-6
+				.description
+					h3 !{content.reserve_title}
+					p !{content.reserve_content}
+
+					ul
+						li.where
+							.icon.map-icon
+							.info.address
+								.street 275 S Denton Tap Road
+								.suite Suite 106
+								.csz Coppell, TX 75019
+						li.email
+							.icon.email-icon
+							.info
+								a(href='mailto:hello@codelabschool.com') hello@codelabschool.com
+						li.phone
+							.icon.phone-icon
+							.info !{content.phone_number}
+
+					.action
+						+trial_and_enroll
+
+
+
+mixin section_faq
+	a.jump(name='faq')
+
+	.section.faq.container-fluid.light
+		.row.content
+			.col-md-6
+				.description
+					h3 !{content.faq_title}
+					p !{content.faq_content}
+
+					.action
+						a.button(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2' rel='nofollow') Ask a Question
+
+			.sessions.col-md-6
+				.question-list.container-fluid
+					for item, i in content.faq
+						.row
+							.question(id='question-' + (i+1))
+								.title !{item.question}
+								.answer !{item.answer}
+
+
+
+mixin section_about
+	a.jump(name='about')
+
+	.section.about.container-fluid
+		.concept
+		.row.content
+			.col-md-5
+				//-   img(src='/site/images/concept.jpg')
+
+			.details.col-md-7
+				.description
+					h3 !{content.about_title}
+					p !{content.about_content}
+
+					.action
+						+trial_and_enroll
+
+					//- .action
+					//- 	a.button(href='/demo' target='_demo') Try a Demo Lesson
+
+mixin trial_and_enroll
+	a.button(href='https://docs.google.com/forms/d/e/1FAIpQLSfsEnaJ3sbBiAcoTB5JiCXbVioHrpYCmY1ggfVfL1yKI8wI3A/viewform') Request a Trial
+	a.button(href='/signup') Enroll for Class
