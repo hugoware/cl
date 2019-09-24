@@ -2,6 +2,7 @@ import { $e, $cs } from './utils';
 // import Dropdown from './dropdown';
 
 const INVALIDATE_CHECKOUT_TIMEOUT = 900000 * 2;
+const BILLING_TARGET = window.CHARGEBEE_BILLING_TARGET;
 
 let $signup;
 let $classId;
@@ -65,7 +66,7 @@ function showCheckout() {
 
 	// update the checkout
 	$product.setCustomData(data);
-	$signup.openCheckout('codelab-test');
+	$signup.openCheckout(BILLING_TARGET);
 }
 
 // prepare for the checkout process

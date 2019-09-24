@@ -1,5 +1,6 @@
 import Login from './login';
 import initSignup from './signup';
+import initTutorSignup from './tutor-signup';
 import Typed from './typed';
 
 // not sure why
@@ -82,6 +83,7 @@ const isAppLogin = /__login__/.test(window.location.href);
 
 		new google.maps.Marker({
 			map,
+			label: 'CodeLab',
 			position: {
 				lat: 32.963658, lng: -96.993903
 			}
@@ -173,7 +175,15 @@ const isAppLogin = /__login__/.test(window.location.href);
 	window.addEventListener('load', initQuestions);
 	window.addEventListener('load', initTyped);
 	window.addEventListener('load', initVideo);
-	window.addEventListener('load', initSignup);
 	// window.addEventListener('load', initMap);
+	window.addEventListener('load', () => {
+		if (typeof Chargebee === 'undefined') return;
+		
+		// check if we need to show the view
+		const { href } = window.location;
+		if (/tutor/i.test(href)) initTutorSignup();
+		else if (/signup/i.test(href)) initSignup();
+
+	});
 
 })();

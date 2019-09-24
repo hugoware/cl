@@ -1,0 +1,13 @@
+
+doctype
+html
+	head
+		title CodeLab Tutoring (Private)
+		meta(name='robots' content='noindex, nofollow')
+		
+	body(style='background: #109AF0')
+
+		script(type='text/javascript').
+				window.CHARGEBEE_BILLING_TARGET = "#{billingTarget}";
+		script(src='https://js.chargebee.com/v2/chargebee.js' data-cb-site=billingTarget)
+		script(src='/__codelab__/site.js')

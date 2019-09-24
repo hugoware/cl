@@ -111,6 +111,8 @@ block content
 	include _footer
 
 block scripts
+	script(type='text/javascript').
+		window.CHARGEBEE_BILLING_TARGET = "#{billingTarget}";
 	script(src='https://js.chargebee.com/v2/chargebee.js' data-cb-site=billingTarget)
 	script(type='text/javascript' src='/__codelab__/site.js')
 	
