@@ -26,7 +26,12 @@ export default class CreateProjectDialog extends Dialog {
 		this.errorMessage = new ErrorMessage({
 			$: this.ui.errorMessage,
 			errors: {
-
+				'name_too_short': 'Enter a longer project name',
+				'name_too_long': 'Enter a shorter project name',
+				'description_too_long': 'Enter a shorter project description',
+				'name_already_exists': 'The project name provided is already in use',
+				'type_invalid': 'Select the type of project to create!',
+				'name_invalid': 'The project name provided is invalid'
 			}
 		});
 

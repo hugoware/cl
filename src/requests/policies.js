@@ -1,6 +1,6 @@
 
 export const name = 'policies';
-export const route = '/policies';
+export const route = /^\/?(policies|policy|terms?)/i;
 
 import content from '../content';
 

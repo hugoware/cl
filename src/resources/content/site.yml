@@ -3,7 +3,7 @@ phone_number: 972-861-0189
 start_date: July 22nd
 
 header_introduction: |
-  We're helping people who are interested in learning programming take their first steps 
+  We're helping teens begin learning modern computer programming skills that will benefit them in their careers
 
 
 about_title: Get a Head Start Learning Real Programming Skills
@@ -253,6 +253,10 @@ policies:
 
   
   - title: Intellectual Property and Student Creations
+    content: |
+      CodeLab owns all intellectual property related to the CodeLab site and the means in which Students can create projects, however Students retain full ownership of anything that they have created. Students are free to host their creations on the CodeLab website for up to 6 months after their last day of class.
+
+      CodeLab may sometimes post Student projects in the [Student Showcase](/showcase) but will ask for Parent/Guardian permission before doing so.
     summary: |
       Your student owns their creations and may to download them and keep them for themselves.
       
@@ -261,18 +265,21 @@ policies:
 
   - title: Session Make Up Policy
     summary: |
-      You may try and find an open slot to take a make up session
+      If a student cannot make it to class then you may try and find an open slot to take a make up session
 
-      if not, the lesson can be enabled and completed from home
+    content: |
+      CodeLab will announce any changes to schedule, closures, or delays with as much advance notice as possible. CodeLab will use Email broadcasts as the primary means of notifying of schedule changes.
 
-  - title: Refund Policy
-    summary: |
-      Refunds are available 
+      If a student is unable to attend class, we will work to help them find a makeup class that they can attend. If arrangements are made in advance, Students can also access the CodeLab site from home to work on assignments.
 
-      Customer is responsible for any processing fees
+  # - title: Refund Policy
+  #   summary: |
+  #     Refunds are available 
 
-  - title: Discounts
-    summary: |
-      Discounts are available
+  #     Customer is responsible for any processing fees
 
-      Discounts may be discontinued at any time
+  # - title: Discounts
+  #   summary: |
+  #     Discounts are available
+
+  #     Discounts may be discontinued at any time

@@ -47,6 +47,10 @@ export function kioskLogin(data) {
 					// failed for another reason
 					if (error) {
 
+						// allows trial accounts
+						if (user.type === 'trial')
+							return authorize(user, resolve);
+
 						// all other errors
 						if (error.http_status_code === 404) {
 							return resolve({ status: 'missing' });

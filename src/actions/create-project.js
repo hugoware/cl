@@ -1,4 +1,4 @@
-
+import _ from 'lodash';
 import $database from '../storage/database';
 import format from '../formatters';
 import $fsx from 'fs-extra';
@@ -6,7 +6,7 @@ import $date from '../utils/date';
 import $audit from '../audit';
 import projectValidator from '../validators/project';
 import { resolveProject, resolveResource } from '../path';
-import { PROJECT_TYPE_TEMP, PROJECT_TYPE_PERMANENT } from '../storage/database/index';
+import database, { PROJECT_TYPE_TEMP, PROJECT_TYPE_PERMANENT } from '../storage/database/index';
 
 /** expected params for a project
  * @typedef CreateProjectData
@@ -37,25 +37,33 @@ export default async function createProject(data, options = { }) {
 		const language = format.toAlias(data.language);
 		
 		// perform basic validation
+		// todo: get rid of this someday
 		const errors = { };
-		projectValidator.validateName(name, errors);
-		projectValidator.validateDescription(description, errors);
-		projectValidator.validateType(type, errors);
-		projectValidator.validateLanguage(language, type, errors);
+		let error = projectValidator.validateName(name, errors);
+		error = error || projectValidator.validateDescription(description, errors);
+		error = error || projectValidator.validateType(type, errors);
+		// error = error || projectValidator.validateLanguage(language, type, errors);
 
 		// if there were any data errors, stop now
-		if (errors.hasErrors)
-			return resolve({ success: false, errors });
+		if (!!error)
+			return resolve({ success: false, error });
 
 		// check for the user
 		const userExists = await $database.exists($database.users, { id: ownerId });
 		if (!userExists)
-			return reject('user_not_found');
+			return resolve({ success: false, error: 'user_not_found' });
 
 		// make sure this name isn't already in use
-		const nameExists = await $database.exists($database.projects, { name, ownerId });
-		if (nameExists)
-			return reject('name_already_exists');
+		const projects = await $database.projects.find({ ownerId })
+			.project({ name: 1 })
+			.toArray();
+			
+		// check if any of the names are too similar
+		let tooSimilar;
+		const simpleName = simplifyName(name);
+		_.each(projects, project => tooSimilar = tooSimilar || (simplifyName(project.name) === simpleName));
+		if (tooSimilar)
+			return resolve({ success: false, error: 'name_already_exists' });
 
 		try {
 			// get a new ID for this project
@@ -92,5 +100,9 @@ export default async function createProject(data, options = { }) {
 			reject('database_error');
 		}
 	});
+}
 
+// creates a simple name
+function simplifyName(name) {
+	return _.trim(name).toLowerCase().replace(/[^a-z0-9\-\_]/gi, '');
 }

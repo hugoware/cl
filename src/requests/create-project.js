@@ -1,3 +1,4 @@
+import { resolveError } from '../utils';
 import createProject from '../actions/create-project';
 
 export const event = 'create-project';
