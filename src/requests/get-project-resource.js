@@ -18,8 +18,7 @@ export async function handle(request, response, next) {
 
 	// skip robots
 	if (/^\/robots?\.txt/i.test(request.path)) {
-		// const domains = _.reject(request.subdomains, 'www');
-		const domains = _.filter(request.subdomains, sub => sub !== 'www');
+		const domains = _.filter(request.subdomains, sub => sub !== 'www' && sub !== 'codelabschool');
 		const deny = _.some(domains);
 		return response.end(deny ? DENY : ALLOW);
 	}
