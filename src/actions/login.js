@@ -5,6 +5,7 @@ import { OAuth2Client } from 'google-auth-library';
 import $config from '../config';
 import $database from '../storage/database';
 import $date from '../utils/date';
+import audit from '../audit';
 
 /** @typedef {Object} LoginResult
  * @prop {string} user The id for the logged in user
@@ -36,7 +37,7 @@ export default async function login(data = { }) {
 		throw 'account_invalid';
 
 	// try and find the account
-	const results = await $database.users
+	let results = await $database.users
 		.find({ email })
 		.project({
 			systemAccessUntil: 1,
@@ -45,6 +46,10 @@ export default async function login(data = { }) {
 			id: 1
 		})
 		.toArray();
+
+	// make sure there's something to work with
+	if (!_.isArray(results))
+		results = [ ];
 
 	// make sure something was found
 	if (results.length === 0)

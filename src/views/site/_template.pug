@@ -51,10 +51,6 @@ html(lang='en')
 			gtag('js', new Date());
 			gtag('config', 'UA-144156235-1');
 
-		//- script(id='ze-snippet' src='https://static.zdassets.com/ekr/snippet.js?key=6a8f5d17-94a6-411b-bdd2-d899510b506a')
-		script(type='text/javascript' data-cfasync='false').
-			window.purechatApi = { l: [], t: [], on: function () { this.l.push(arguments); } }; (function () { var done = false; var script = document.createElement('script'); script.async = true; script.type = 'text/javascript'; script.src = 'https://app.purechat.com/VisitorWidget/WidgetScript'; document.getElementsByTagName('HEAD').item(0).appendChild(script); script.onreadystatechange = script.onload = function (e) { if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) { var w = new PCWidget({c: 'f7b6cfac-ec76-4e36-b434-2b5482da01df', f: true }); done = true; } }; })();
-		
 		if !production
 			script(type='text/javascript' src='http://localhost:35729/livereload.js?snipver=1')
 

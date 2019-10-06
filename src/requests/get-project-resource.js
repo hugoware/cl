@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import $path from '../path';
 import $fsx from 'fs-extra';
+import { handle as handleEcho } from './echo';
 
 export const name = 'serve project resource';
 export const route = '/*';
@@ -22,6 +23,10 @@ export async function handle(request, response, next) {
 		const deny = _.some(domains);
 		return response.end(deny ? DENY : ALLOW);
 	}
+
+	// posting to echo
+	if (/^\/?echo/i.test(request.path))
+		return handleEcho(request, response, next);
 
 	// must start with a version 
 	if (!/^\d+\-/.test(request.hostname))

@@ -684,18 +684,17 @@ var webHyperlinksLesson = function () {
           "type": "html"
         }
       },
-      "resources": [],
       "definitions": {
         "html_element": {
           "id": "html_element",
           "name": "HTML Element",
-          "define": "This is about HTML elements\n"
+          "define": "An HTML element is an individual component of an HTML (Hypertext Markup Language) document or web page. HTML is composed of a tree of HTML nodes, such as text nodes. Each node can have HTML attributes specified. Nodes can also have content, including other nodes and text.\n"
         },
         "hyperlink": {
           "id": "hyperlink",
           "name": "Hyperlink",
           "aka": "Link",
-          "define": "An HTML Element that's used to link from one page to another resource using a URL.\n"
+          "define": "A webpage can contain various links that take you directly to other pages and even specific parts of a given page. These links are known as hyperlinks. Hyperlinks allow visitors to navigate between Web sites by clicking on words, phrases, and images.\n"
         },
         "double_click": {
           "id": "double_click",
@@ -710,18 +709,18 @@ var webHyperlinksLesson = function () {
         "internet": {
           "id": "internet",
           "name": "Internet",
-          "define": "A world wide network of computers\n"
+          "define": "A network of networks in which users at any one computer can, if they have permission, get information from any other computer (and sometimes talk directly to users at other computers)\n"
         },
         "html_attribute": {
           "id": "html_attribute",
           "name": "HTML Attribute",
-          "define": "Something different for html stuff\n\n`<img src=\"something\" />`\n"
+          "define": "HTML attributes are a modifier of an HTML element type. An attribute either modifies the default functionality of an element type or provides functionality to certain element types unable to function correctly without them. In HTML syntax, an attribute is added to an HTML start tag.\n\n`<img src=\"something\" />`\n"
         },
         "url": {
           "id": "url",
           "name": "URL",
           "aka": "Universal Resource Locator",
-          "define": "A location of a resource, such as a webpage or a file, somewhere on the Internet\n"
+          "define": "A uniform resource locator (URL) is the address of a resource on the Internet. ... A URL contains the following information: The protocol used to a access the resource. The the location of the server (whether by IP address or domain name)\n"
         }
       }
     };

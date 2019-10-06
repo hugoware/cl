@@ -581,7 +581,6 @@ var codeProject1Lesson = function () {
 				"showObjectiveList": false,
 				"content": "Great work! You've completed all of the objectives!\n\nYou're well on your way to becoming a great computer programmer!\n"
 			}],
-			"snippets": {},
 			"resources": [{
 				"width": 1300,
 				"height": 600,

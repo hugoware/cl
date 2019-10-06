@@ -106,8 +106,12 @@ for (const file of $fsx.readdirSync(scriptDirectory)) {
 
 
 // process each category in order
-processSnippets(state, manifest, snippets, [ ], $fsx.readdirSync(snippets));
-processResources(state, manifest, root);
+if ($fsx.existsSync(snippets))
+	processSnippets(state, manifest, snippets, [ ], $fsx.readdirSync(snippets));
+
+if ($fsx.existsSync(`${root}/resources`))
+	processResources(state, manifest, root);
+	
 processSlides(state, manifest, slides);
 processDefinitions(state, manifest, definitions);
 
@@ -175,7 +179,6 @@ $fsx.writeFileSync(`${dist}/data.json`, JSON.stringify({
   type: manifest.type,
 }));
 
-
 $browserify('.compile/index.js')
   .transform('babelify', {
   	presets: ['es2015'],
@@ -183,10 +186,12 @@ $browserify('.compile/index.js')
   })
   .bundle()
   .on('end', () => {
-		console.log(`generated: ${deployTo}`);
-		$fsx.moveSync(dist, deployTo, { overwrite: true });
+		setTimeout(() => {
+			console.log(`generated: ${deployTo}`);
+			$fsx.moveSync(dist, deployTo, { overwrite: true });
+		}, 3000);
   })
-  .pipe($fsx.createWriteStream(`${dist}/index.js`))
+  .pipe($fsx.createWriteStream(`${dist}/index.js`));
 
   
 // notify this is done

@@ -677,12 +677,11 @@ var webIntroCssLesson = function () {
           "type": "css"
         }
       },
-      "resources": [],
       "definitions": {
         "html_element": {
           "id": "html_element",
           "name": "HTML Element",
-          "define": "This is about HTML elements\n"
+          "define": "An HTML element is an individual component of an HTML (Hypertext Markup Language) document or web page. HTML is composed of a tree of HTML nodes, such as text nodes. Each node can have HTML attributes specified. Nodes can also have content, including other nodes and text.\n"
         },
         "css_declaration_block": {
           "id": "css_declaration_block",

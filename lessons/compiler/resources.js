@@ -6,6 +6,10 @@ import $image from 'image-size';
 export default function processResources(state, manifest, root) {
 	root = $path.resolve(root, 'resources');
 
+	// it's okay without resources
+	// if (!$fsx.existsSync(root))
+	// 	return;
+
 	const resources = [ ];
 
 	// gathers items

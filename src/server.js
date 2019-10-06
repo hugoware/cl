@@ -223,8 +223,12 @@ async function gatherRequests() {
 			file = file.replace(/^\/+/, '');
 			return file.substr(0, file.length - 3);
 		})
-		.map(module => require(`./requests/${module}`))
-		.sortBy(config => 'priority' in config ? 0 | config.priority : 100)
+		.map(module => {
+			const mod = `./requests/${module}`;
+			console.log('[module]', mod);
+			return require(mod);
+		})
+		.sortBy(config => 'priority' in config ? (0 | config.priority) : 100)
 		.each(config => {
 
 			// notify when a handler was missing (possibly accidental)

@@ -1,0 +1,77 @@
+extends _template
+
+block head
+	link(rel='stylesheet' type='text/css' href='/__codelab__/echo.css')
+
+block content
+
+	.title HTTP Echo
+
+	.section
+		h3 Request
+		table.fields
+			tr
+				td.key Method
+				td.values
+					.item
+						.value= method
+			tr
+				td.key Content Type
+				td.values
+					.item
+						.value= type
+
+	.section
+		h3 Fields
+
+		if hasFields
+			table.fields
+				for field in fields
+					tr.field
+						td.key= field.key
+						td.values
+							.collection
+								for item in field.values
+									.item
+										.type= item.type
+
+										if item.isColor
+											.value.is-color(style=`background: ${item.value}; color: ${item.textColor}`)= item.value
+
+										else
+											pre.value(class=`is-${item.type}`)= item.value
+										
+		else
+			.nothing No fields were received
+
+
+	.section
+		h3 Files
+
+		if hasFiles
+			table.files
+				for file in files
+					tr.file
+						td.key= file.key
+						td.values
+							.collection
+								for item in file.values
+									.item
+										if item.hasFile
+											.type= item.type
+											.value= item.name
+
+											.meta
+												.size #{item.size} bytes
+
+												if item.isImage
+													.preview
+														a(href=item.path target='_blank')
+															img(src=item.path)
+										else
+											.empty No file provided
+											
+
+
+		else
+			.nothing No files were received

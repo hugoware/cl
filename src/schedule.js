@@ -34,7 +34,7 @@ const SESSIONS = [
 		type: 'code',
 		id: 'code_thur_1700',
 		time: '5:00 PM',
-		name: 'Basic Coding',
+		name: 'Programming Fundamentals',
 		level: 'Beginner'
 	},
 
@@ -42,7 +42,7 @@ const SESSIONS = [
 		type: 'code',
 		id: 'code_thur_1800',
 		time: '6:00 PM',
-		name: 'Basic Coding',
+		name: 'Programming Fundamentals',
 		level: 'Beginner'
 	},
 

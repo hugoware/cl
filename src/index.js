@@ -15,6 +15,12 @@ async function init() {
 		// load the configuration
 		const path = $path.resolve(process.argv[2]);
 		await $config.init(path);
+
+		// config help
+		console.log(`[resolve] audit log @ ${$path.resolveLog()}`);
+		console.log(`[resolve] data storage @ ${$path.resolveData()}`);
+		console.log(`[resolve] lessons @ ${$path.resolveLesson()}`);
+		console.log(`[resolve] database @ :${$config.databasePort || 'default port'}`);
 		
 		// starts the database
 		await $database.init();

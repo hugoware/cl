@@ -1,0 +1,123 @@
+@import './_reset';
+@import './app/fonts';
+
+html, body {
+	font-family: $default-font;
+	font-size: 16px;
+}
+
+.title {
+	background: #ffc;
+	font-size: 26px;
+	padding: 25px;
+	margin: 0 0 25px 0;
+	font-weight: bold;
+	// font-family: $code-font;
+	border-bottom: 1px solid #cc9;
+	border-top: 1px solid #cc9;
+}
+
+.meta {
+	padding: 2px 0 5px 0;
+	color: #888;
+	clear: both;
+}
+
+.section {
+	padding: 10px 15px 35px 15px;
+
+	h3 {
+		font-size: 22px;
+		padding: 0 10px 10px 10px;
+		margin: 0 0 15px 0;
+		border-bottom: 1px solid #eee;
+		font-weight: bold;
+		color: #38F;
+	}
+}
+
+table {
+
+	.key {
+		padding: 8px 15px 8px 20px;
+		text-align: right; 
+		font-weight: bold;
+		vertical-align: top;
+		white-space: nowrap;
+	}
+
+	.item:nth-child(even) {
+		background: #f5f5f5;
+	}
+
+	.collection {
+		border-left: 1px solid #ccc;
+		margin: 0 0 20px 0;
+	}
+
+	.values .item {
+		padding: 8px 15px;
+	}
+
+	.value, .type {
+		display: inline-block;
+	}
+
+	.value {
+		font-family: $code-font;
+		vertical-align: top;
+	}
+
+	.type {
+		float: right;
+		font-style: italic;
+		color: #bbb;
+		font-size: 13px;
+		margin-left: 50px;
+		position: relative;
+		top: 2px;
+	}
+
+	.type:before {
+		content: 'as ';
+		margin: 0 0 0 16px;
+		font-style: italic;
+	}
+
+	.is-boolean, .is-color, .is-number {
+		font-family: $code-font;
+	}
+
+	.is-boolean {
+		color: #f36;
+	}
+
+	.is-number {
+		color: darken(#ab53c1, 10%);
+	}
+
+	.is-string {
+		color: #444;
+	}
+
+	.is-color {
+		font-size: 15px;
+		padding: 4px 8px;
+		border-radius: 4px;
+		box-shadow: inset 0 0 0 1px rgba(black, 0.2);
+	}
+
+	.preview {
+		clear: both;
+		padding: 7px 0 0 0;
+		img {
+			max-width: 300px;
+			max-height: 120px;
+		}
+	}
+
+	.empty {
+		color: #888;
+		font-style: italic;
+	}
+}
