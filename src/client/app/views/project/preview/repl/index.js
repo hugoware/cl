@@ -34,6 +34,7 @@ export default class ReplMode extends Component {
 		// create the runner
 		this.runner = CodeRunner.create(ConsoleRunner);
 		setTimeout(() => this.runner.init({
+			projectUrl: $state.getProjectDomain(),
 			containerSelector: '#repl',
 			outputSelector: '#repl #output',
 			inputSelector: '#repl #input',

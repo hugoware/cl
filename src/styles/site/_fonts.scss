@@ -158,6 +158,7 @@
 }
 
 
-$basic-font: Poppins, sans-serif;
+$default-font: Poppins, sans-serif;
+$basic-font: $default-font;
 $title-font: Poppins, sans-serif;
 $icon-font: icons;

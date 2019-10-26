@@ -152,6 +152,36 @@ const $state = {
 		localStorage.setItem(SPEECH_ENABLEMENT_CONFIG, enabled ? SPEECH_ENABLED : SPEECH_DISABLED);
 	},
 
+	/** creates a hash for a temp file */
+	getTransientFileHash(path) {
+		return `transient::${$state.project.id}::${path}`;
+	},
+
+	/** checks if a transient file exists */
+	hasTransientFile(path) {
+		const content = $state.getTransientFile(path);
+		return _.isString(content);
+	},
+
+	/** saves content for a transient file */
+	setTransientFile(path, content) {
+		const hash = $state.getTransientFileHash(path);
+		if (!_.isString(content)) $state.clearTransientFile(path);
+		else localStorage.setItem(hash, content);
+	},
+
+	/** finds the content of a transient file */
+	getTransientFile(path) {
+		const hash = $state.getTransientFileHash(path);
+		return localStorage.getItem(hash);
+	},
+
+	/** completely removes a transient file */
+	clearTransientFile(path) {
+		const hash = $state.getTransientFileHash(path);
+		localStorage.removeItem(hash);
+	},
+
 	// creates an in-memory restore point for files
 	createRestorePoint: () => {
 
@@ -365,6 +395,13 @@ const $state = {
 		const file = $state.findItemByPath(path);
 		if (!file) return;
 
+		// check for transient content
+		const transient = $state.getTransientFile(file.path);
+		if (transient) {
+			file.content = transient;
+			file.modified = true;
+		}
+
 		// mark the file as open
 		if (!file.isOpen || forceRefresh)
 			await $lfs.write(file.path, file.content);
@@ -447,6 +484,9 @@ const $state = {
 		const file = $state.findItemByPath(path);
 		file.content = content;
 		file.modified = false;
+
+		// remove any temp files
+		$state.clearTransientFile(file.path);
 
 		// saving file content
 		if ($state.lesson)
@@ -851,6 +891,9 @@ listen('open-file', file => {
 listen('close-file', file => {
 	file.isOpen = false;
 	file.isActive = false;
+	
+	// if closed directy, clear the transient value
+	$state.clearTransientFile(file.path);
 });
 
 // handle lesson setup

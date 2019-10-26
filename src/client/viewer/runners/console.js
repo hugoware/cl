@@ -39,6 +39,9 @@ export default class ConsoleRunner {
 			alertMessage: $(`${options.alertSelector} .message`),
 			alertConfirm: $(`${options.alertSelector} .handle-confirm`),
 		};
+
+		// where resources can be accessed
+		this.projectUrl = options.projectUrl;
 		
 		// link up inputs
 		this.ui.input.on('keyup', this.onInput);
@@ -426,7 +429,7 @@ export default class ConsoleRunner {
 				const lead = i > 0 ? ' ' : '';
 				const item = document.createElement('span');
 				item.className = 'item';
-				writeTo.innerText = `${lead}${content}`;
+				writeTo.innerHTML = escape(`${lead}${content}`).replace(/\n/, '<br />');
 			}
 			// anything else, assume DOM element?
 			else writeTo.appendChild(content);

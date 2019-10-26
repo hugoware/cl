@@ -7,57 +7,115 @@ block head
 	link(rel='stylesheet' type='text/css' href='/__codelab__/site/index.css')
 	meta(name='description' content='Computer programming for kids and teens to learn modern programming (ages 12+)')
 	meta(name='robots' content='index, follow')
+	
 
 block content
 
-	#error(style='display: none;') 
+	#error(style='display: none;')
 		strong Login error:
 		#reason Unable to log into CodeLab
 
-	#demo-overlay(style='display: none')
+	#hero.section
+		.container
+			#header
+				a.logo(href='/') CodeLab
+				.nav
+					a(href='#schedule') Schedule
+					a(href='#instructor') Instructor
+					a.primary(href='/enroll') Enroll for Class
 
-	.main.content
+			#intro
+				.details
+					h1 Coding Classes in Coppell, Texas
+					h3 For Teens and Adults
+					p Start learning how to build websites, create apps and games using modern programming languages. #[em No prior experience is required.]
+					
+				.actions
+					a(href='/enroll') Enroll for Class
+					a(href='#contact') Contact Us
 
-		.header
-			.container
 
-				.row.bar
-					//- a#login-button(href='/signup') Enroll Now
-					a.logo(href='/') CodeLab
-					.call
-						.icon.phone-icon
-						.number !{content.phone_number}
+	#benefits.section
+		.container
+			.details
+				h2 Coding Skills That Prepare For The Future
+				p Did you know that computer programming will grow by 26% in the next 10 years. Even many traditional jobs require telling computers instructions. Programming can help
+				.actions
+					a(href='/enroll') Enroll for Class
+					a(href='#contact') Contact Us
 
-				.row.intro
-					h1 Learn Real Computer Programming for Kids and Teens
-					.learn-to Learn To...
-					.feature
-						#feature-display Write Real Code
-						| &nbsp;
-					.details !{content.header_introduction}
-					.actions
-						//- a.button.how-it-works(href='#about' onclick="playDemo()") Our Mission
-						a.button.view-schedule(href='#schedule') Schedule &amp; Pricing
-						a.button.how-it-works(href='https://docs.google.com/forms/d/e/1FAIpQLSfsEnaJ3sbBiAcoTB5JiCXbVioHrpYCmY1ggfVfL1yKI8wI3A/viewform') Request a Trial Class
-						a.button.try-demo(href='/signup') Enroll for Class
-						//- a.button.try-demo(href='#showcase') Student Showcase
+	#importance.section
+		.container
+			.details
+				h2 Move Beyond Toys and Online Tutorials
+				p Languages like Scratch or toys like TOY are a great way to introduce programming concepts, but does little to help transision into writing real code.
+				p CodeLab start kids learning code they can use to create real websites, apps, games, and more.
+				p We're teaching top 3
+				a(href='https://insights.stackoverflow.com/survey/2019#most-popular-technologies') URL
+				.actions
+					a(href='/enroll') Enroll for Class
+					a(href='#contact') Contact Us
 
-		+starting_soon(content)
+	#instructor.section
+		.container
+			.details
+				h2 Learn Skills that Prepare for the Future
+				p Did you know that computer programming will grow by 26% in the next 10 years.
+				p Even many traditional jobs require telling computers instructions. Programming can help
+				.actions
+					a(href='/enroll') Enroll for Class
+					a(href='#contact') Contact Us
 
-		+section_about
+
+
+//- 	#error(style='display: none;') 
+//- 		strong Login error:
+//- 		#reason Unable to log into CodeLab
+
+//- 	#demo-overlay(style='display: none')
+
+//- 	.main.content
+
+//- 		.header
+//- 			.container
+
+//- 				.row.bar
+//- 					//- a#login-button(href='/signup') Enroll Now
+//- 					a.logo(href='/') CodeLab
+//- 					.call
+//- 						.icon.phone-icon
+//- 						.number !{content.phone_number}
+
+//- 				.row.intro
+//- 					h1 Learn Real Computer Programming for Kids and Teens
+//- 					.learn-to Learn To...
+//- 					.feature
+//- 						#feature-display Write Real Code
+//- 						| &nbsp;
+//- 					.details !{content.header_introduction}
+//- 					.actions
+//- 						//- a.button.how-it-works(href='#about' onclick="playDemo()") Our Mission
+//- 						a.button.view-schedule(href='#schedule') Schedule &amp; Pricing
+//- 						a.button.how-it-works(href='https://docs.google.com/forms/d/e/1FAIpQLSfsEnaJ3sbBiAcoTB5JiCXbVioHrpYCmY1ggfVfL1yKI8wI3A/viewform') Request a Trial Class
+//- 						a.button.try-demo(href='/signup') Enroll for Class
+//- 						//- a.button.try-demo(href='#showcase') Student Showcase
+
+//- 		+starting_soon(content)
+
+//- 		+section_about
 		
-		+section_schedule
+//- 		+section_schedule
 
-		+section_demo
+//- 		+section_demo
 
-		+section_showcase
+//- 		+section_showcase
 
-		+section_contact
+//- 		+section_contact
 
-		+section_faq
+//- 		+section_faq
 
-	+starting_soon(content)
-	include _footer
+//- 	+starting_soon(content)
+//- 	include _footer
 
 block scripts
 	//- script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyALR3vJM7iMzRxUeVLHIZMWGgc8qB8FLb8')
@@ -67,270 +125,270 @@ block scripts
 	include _chat
 
 
-mixin pricing_table
-	.sessions
-		.pricing-table
-			.price
-				.title Enrollment Fee
-				.cost $125
-				.term /mo
+//- mixin pricing_table
+//- 	.sessions
+//- 		.pricing-table
+//- 			.price
+//- 				.title Enrollment Fee
+//- 				.cost $125
+//- 				.term /mo
 
-			.summary On-site access to CodeLab with provided computers and a Code Coach
+//- 			.summary On-site access to CodeLab with provided computers and a Code Coach
 
-			.features
+//- 			.features
 
-				.item
-					.icon.session-icon
-					.detail One class session per week
+//- 				.item
+//- 					.icon.session-icon
+//- 					.detail One class session per week
 
-				.item
-					.icon.clock-icon
-					.detail 60 minute session per class
+//- 				.item
+//- 					.icon.clock-icon
+//- 					.detail 60 minute session per class
 
-				.item
-					.icon.coach-icon
-					.detail On-site Code Coach
+//- 				.item
+//- 					.icon.coach-icon
+//- 					.detail On-site Code Coach
 
-				.item
-					.icon.tools-icon
-					.detail Access CodeLab website from home
+//- 				.item
+//- 					.icon.tools-icon
+//- 					.detail Access CodeLab website from home
 
-				.item
-					.icon.share-icon
-					.detail Share creations online
+//- 				.item
+//- 					.icon.share-icon
+//- 					.detail Share creations online
 
-		.footnote For additional information, #[a(href='/policies') view the CodeLab policies]
-
-
-
-mixin class_sessions(type, title, desc, dayOfWeek)
-	.class-config(class=type + '-schedule')
-		.schedule
-			.details
-				.day-of-week= dayOfWeek
-				.title= title
-				.desc= desc
-			ul.row
-				li.col-md-4.col-sm-4.col-xs-4
-					.timeslot-detail
-						.time 5:00 PM
-						.name Basics
-				li.col-md-4.col-sm-4.col-xs-4
-					.timeslot-detail
-						.time 6:00 PM
-						.name Basics
-				li.col-md-4.col-sm-4.col-xs-4
-					.timeslot-detail
-						.time 7:00PM
-						.name Advanced
-
-mixin class_options
-	+class_sessions('web', 'Building Websites', 'Creating web pages using HTML, CSS, and more!', 'Tuesdays')
-	+class_sessions('code', 'Computer Programming', 'Learn to write code using popular languages!', 'Thursdays')
+//- 		.footnote For additional information, #[a(href='/policies') view the CodeLab policies]
 
 
-mixin time_slots
-	.time-slots
-		.step.first
-			.step-icon.icon-calendar
-			.about
-				.step-title Choose a Day
-				.step-action Pick the day of the week that you'd like to visit
 
-		.step
-			.step-icon.icon-clock
-			.about
-				.step-title Choose a Time
-				.step-action Find a open time that works best for your schedule
+//- mixin class_sessions(type, title, desc, dayOfWeek)
+//- 	.class-config(class=type + '-schedule')
+//- 		.schedule
+//- 			.details
+//- 				.day-of-week= dayOfWeek
+//- 				.title= title
+//- 				.desc= desc
+//- 			ul.row
+//- 				li.col-md-4.col-sm-4.col-xs-4
+//- 					.timeslot-detail
+//- 						.time 5:00 PM
+//- 						.name Basics
+//- 				li.col-md-4.col-sm-4.col-xs-4
+//- 					.timeslot-detail
+//- 						.time 6:00 PM
+//- 						.name Basics
+//- 				li.col-md-4.col-sm-4.col-xs-4
+//- 					.timeslot-detail
+//- 						.time 7:00PM
+//- 						.name Advanced
 
-		.step.last
-			.step-icon.icon-start
-			.about
-				.step-title Get Started!
-				.step-action Choose a seat and jump right into programming!
+//- mixin class_options
+//- 	+class_sessions('web', 'Building Websites', 'Creating web pages using HTML, CSS, and more!', 'Tuesdays')
+//- 	+class_sessions('code', 'Computer Programming', 'Learn to write code using popular languages!', 'Thursdays')
 
-//- mixin reserve_space
+
+//- mixin time_slots
+//- 	.time-slots
+//- 		.step.first
+//- 			.step-icon.icon-calendar
+//- 			.about
+//- 				.step-title Choose a Day
+//- 				.step-action Pick the day of the week that you'd like to visit
+
+//- 		.step
+//- 			.step-icon.icon-clock
+//- 			.about
+//- 				.step-title Choose a Time
+//- 				.step-action Find a open time that works best for your schedule
+
+//- 		.step.last
+//- 			.step-icon.icon-start
+//- 			.about
+//- 				.step-title Get Started!
+//- 				.step-action Choose a seat and jump right into programming!
+
+//- //- mixin reserve_space
 	
 
-mixin starting_soon(content)
-	.section.starting-soon.container-fluid
-		.starting-soon-background
-			.row.content
-				.col-md-8
-					.start-icon
-						img(src='/__codelab__/site/images/icon-calendar.png')
-					.info Sign up for a free class at our #[span.starting Coppell, Texas] location!
+//- mixin starting_soon(content)
+//- 	.section.starting-soon.container-fluid
+//- 		.starting-soon-background
+//- 			.row.content
+//- 				.col-md-8
+//- 					.start-icon
+//- 						img(src='/__codelab__/site/images/icon-calendar.png')
+//- 					.info Sign up for a free class at our #[span.starting Coppell, Texas] location!
 
-				.col-md-4.action
-					a.button(href='#contact-us') Contact Us
+//- 				.col-md-4.action
+//- 					a.button(href='#contact-us') Contact Us
 
 
 
-mixin section_showcase
-	a.jump(name='showcase')
+//- mixin section_showcase
+//- 	a.jump(name='showcase')
 
-	.section.courses.container-fluid.light
-		.row.content
-			.col-md-5
-				.description
-					h3 !{content.courses_title}
-					p !{content.courses_content}
+//- 	.section.courses.container-fluid.light
+//- 		.row.content
+//- 			.col-md-5
+//- 				.description
+//- 					h3 !{content.courses_title}
+//- 					p !{content.courses_content}
 
-					//- .action
-					//- 	a.button(href='/showcase') View Student Showcase
+//- 					//- .action
+//- 					//- 	a.button(href='/showcase') View Student Showcase
 			
-			.course-list.col-md-7
-				.container-fluid
-					.row
-						.course.code.col-md-6
-							.details
-								.category-icon.code-icon
-								.info
-									.name Coding
-									.about Learn basic programming skills in a variety of languages.
+//- 			.course-list.col-md-7
+//- 				.container-fluid
+//- 					.row
+//- 						.course.code.col-md-6
+//- 							.details
+//- 								.category-icon.code-icon
+//- 								.info
+//- 									.name Coding
+//- 									.about Learn basic programming skills in a variety of languages.
 
-						.course.web.col-md-6
-							.details
-								.category-icon.web-icon
-								.info
-									.name Websites
-									.about Create public websites using HTML, CSS, and JavaScript.
+//- 						.course.web.col-md-6
+//- 							.details
+//- 								.category-icon.web-icon
+//- 								.info
+//- 									.name Websites
+//- 									.about Create public websites using HTML, CSS, and JavaScript.
 									
-						.course.game.col-md-6
-							.details
-								.category-icon.game-icon
-								.info
-									.name Games
-									.about Build games for phones, tablets, or desktop computers
+//- 						.course.game.col-md-6
+//- 							.details
+//- 								.category-icon.game-icon
+//- 								.info
+//- 									.name Games
+//- 									.about Build games for phones, tablets, or desktop computers
 
-						.course.mobile.col-md-6
-							.details
-								.category-icon.mobile-icon
-								.info
-									.name Mobile Apps
-									.about Make apps that run on iPhone or Android devices
-
-
-
-mixin section_demo
-	a.jump(name='demo')
-
-	.wrapper.tutorials
-		.section.tutorials.container-fluid
-			.row.content
-				.col-md-6
-
-				.details.col-md-6
-					.screenshot
-						img(src='/__codelab__/site/images/assistant.png')
-
-					.description
-						h3 !{content.tutorials_title}
-						p !{content.tutorials_content}
-
-						.action
-							a.button(href='/demo' target='_demo' rel='nofollow') Try an Example Lesson
+//- 						.course.mobile.col-md-6
+//- 							.details
+//- 								.category-icon.mobile-icon
+//- 								.info
+//- 									.name Mobile Apps
+//- 									.about Make apps that run on iPhone or Android devices
 
 
 
-mixin section_schedule
-	a.jump(name='schedule')
+//- mixin section_demo
+//- 	a.jump(name='demo')
 
-	.section.schedule.container-fluid.light
-		.row.content
-			.col-md-6
-				.description
-					h3 !{content.schedule_title}
-					//- p !{content.schedule_content}
+//- 	.wrapper.tutorials
+//- 		.section.tutorials.container-fluid
+//- 			.row.content
+//- 				.col-md-6
 
-		.row.content
-			.col-md-6
-				+pricing_table
+//- 				.details.col-md-6
+//- 					.screenshot
+//- 						img(src='/__codelab__/site/images/assistant.png')
 
-				.action
-					+trial_and_enroll
+//- 					.description
+//- 						h3 !{content.tutorials_title}
+//- 						p !{content.tutorials_content}
 
-			.col-md-6.schedule-listing
-				+class_options
-
+//- 						.action
+//- 							a.button(href='/demo' target='_demo' rel='nofollow') Try an Example Lesson
 
 
-mixin section_contact
-	a.jump(name='contact-us')
 
-	.section.location.container-fluid
-		#map
-		.row.content
-			.col-md-6
+//- mixin section_schedule
+//- 	a.jump(name='schedule')
+
+//- 	.section.schedule.container-fluid.light
+//- 		.row.content
+//- 			.col-md-6
+//- 				.description
+//- 					h3 !{content.schedule_title}
+//- 					//- p !{content.schedule_content}
+
+//- 		.row.content
+//- 			.col-md-6
+//- 				+pricing_table
+
+//- 				.action
+//- 					+trial_and_enroll
+
+//- 			.col-md-6.schedule-listing
+//- 				+class_options
+
+
+
+//- mixin section_contact
+//- 	a.jump(name='contact-us')
+
+//- 	.section.location.container-fluid
+//- 		#map
+//- 		.row.content
+//- 			.col-md-6
 			
-			.form.col-md-6
-				.description
-					h3 !{content.reserve_title}
-					p !{content.reserve_content}
+//- 			.form.col-md-6
+//- 				.description
+//- 					h3 !{content.reserve_title}
+//- 					p !{content.reserve_content}
 
-					ul
-						li.where
-							.icon.map-icon
-							.info.address
-								.street 275 S Denton Tap Road
-								.suite Suite 106
-								.csz Coppell, TX 75019
-						li.email
-							.icon.email-icon
-							.info
-								a(href='mailto:hello@codelabschool.com') hello@codelabschool.com
-						li.phone
-							.icon.phone-icon
-							.info !{content.phone_number}
+//- 					ul
+//- 						li.where
+//- 							.icon.map-icon
+//- 							.info.address
+//- 								.street 275 S Denton Tap Road
+//- 								.suite Suite 106
+//- 								.csz Coppell, TX 75019
+//- 						li.email
+//- 							.icon.email-icon
+//- 							.info
+//- 								a(href='mailto:hello@codelabschool.com') hello@codelabschool.com
+//- 						li.phone
+//- 							.icon.phone-icon
+//- 							.info !{content.phone_number}
 
-					.action
-						+trial_and_enroll
-
-
-
-mixin section_faq
-	a.jump(name='faq')
-
-	.section.faq.container-fluid.light
-		.row.content
-			.col-md-6
-				.description
-					h3 !{content.faq_title}
-					p !{content.faq_content}
-
-					.action
-						a.button(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2' rel='nofollow') Ask a Question
-
-			.sessions.col-md-6
-				.question-list.container-fluid
-					for item, i in content.faq
-						.row
-							.question(id='question-' + (i+1))
-								.title !{item.question}
-								.answer !{item.answer}
+//- 					.action
+//- 						+trial_and_enroll
 
 
 
-mixin section_about
-	a.jump(name='about')
+//- mixin section_faq
+//- 	a.jump(name='faq')
 
-	.section.about.container-fluid
-		.concept
-		.row.content
-			.col-md-5
-				//-   img(src='/site/images/concept.jpg')
+//- 	.section.faq.container-fluid.light
+//- 		.row.content
+//- 			.col-md-6
+//- 				.description
+//- 					h3 !{content.faq_title}
+//- 					p !{content.faq_content}
 
-			.details.col-md-7
-				.description
-					h3 !{content.about_title}
-					p !{content.about_content}
+//- 					.action
+//- 						a.button(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2' rel='nofollow') Ask a Question
 
-					.action
-						+trial_and_enroll
+//- 			.sessions.col-md-6
+//- 				.question-list.container-fluid
+//- 					for item, i in content.faq
+//- 						.row
+//- 							.question(id='question-' + (i+1))
+//- 								.title !{item.question}
+//- 								.answer !{item.answer}
 
-					//- .action
-					//- 	a.button(href='/demo' target='_demo') Try a Demo Lesson
 
-mixin trial_and_enroll
-	a.button(href='https://docs.google.com/forms/d/e/1FAIpQLSfsEnaJ3sbBiAcoTB5JiCXbVioHrpYCmY1ggfVfL1yKI8wI3A/viewform') Request a Trial
-	a.button(href='/signup') Enroll for Class
+
+//- mixin section_about
+//- 	a.jump(name='about')
+
+//- 	.section.about.container-fluid
+//- 		.concept
+//- 		.row.content
+//- 			.col-md-5
+//- 				//-   img(src='/site/images/concept.jpg')
+
+//- 			.details.col-md-7
+//- 				.description
+//- 					h3 !{content.about_title}
+//- 					p !{content.about_content}
+
+//- 					.action
+//- 						+trial_and_enroll
+
+//- 					//- .action
+//- 					//- 	a.button(href='/demo' target='_demo') Try a Demo Lesson
+
+//- mixin trial_and_enroll
+//- 	a.button(href='https://docs.google.com/forms/d/e/1FAIpQLSfsEnaJ3sbBiAcoTB5JiCXbVioHrpYCmY1ggfVfL1yKI8wI3A/viewform') Request a Trial
+//- 	a.button(href='/signup') Enroll for Class

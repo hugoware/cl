@@ -392,6 +392,9 @@ export default class CodeEditor extends Component {
 			path
 		};
 
+		// file is being modified, save the changes
+		$state.setTransientFile(instance.file.path, content);
+
 		// update the content
 		instance.file.modified = true;
 		this.broadcast('modify-file', instance.file);
