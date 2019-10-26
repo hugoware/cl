@@ -22,6 +22,10 @@ export default class Tab extends Component {
 		 * @type {ProjectItem} */
 		this.file = file;
 
+		// if already modified when opening (restoring a file)
+		if (file.modified)
+			this.addClass('is-modified');
+
 		// setup events
 		this.listen('modify-file', this.onModifyFile);
 		this.listen('save-file', this.onSaveFile);

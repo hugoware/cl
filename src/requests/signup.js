@@ -1,6 +1,6 @@
 
 export const name = 'sign up';
-export const route = '/signup';
+export const route = /^\/(signup|enroll|schedule)\/?/i;
 
 import content from '../content';
 import Schedule from '../schedule'
