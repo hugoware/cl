@@ -25,6 +25,7 @@ class Config {
 
 		// save a few extra values
 		this.root = $path.resolve('./');
+		console.log(`[config] active root @ ${this.root}`);
 		return true;
 	}
 

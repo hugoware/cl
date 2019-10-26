@@ -2,32 +2,34 @@
 - id: javascript
   name: JavaScript
   define: |
-    Programming language
+    JavaScript, often abbreviated as JS, is a high-level, interpreted scripting language that conforms to the ECMAScript specification. JavaScript has curly-bracket syntax, dynamic typing, prototype-based object-orientation, and first-class functions.
+
+    Alongside HTML and CSS, JavaScript is one of the core technologies of the World Wide Web.[9] JavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it, and major web browsers have a dedicated JavaScript engine to execute it.
 
 - id: javascript_keyword
   name: Keyword
   define: |
-    A reserved word in JavaScript that has a purpose
+    Keywords are tokens that have special meaning in JavaScript: break , case , catch , continue , debugger , default , delete , do , else , finally , for , function , if , in , instanceof , new , return , switch , this , throw , try , typeof , var , void , while , and with 
 
 - id: javascript_function
   name: Function
   define: |
-    A block of executed code
+    A JavaScript function is a block of code designed to perform a particular task and is executed when "something" invokes it (calls it).
 
 - id: javascript_expression
   name: Expression
   define: |
-    A sequence of numbers, string, variables, and operators that evaluate to a single value
+    Expressions are Javascript code snippets that result in a single value. Expressions can be as long as you want them to be, but they would always result in a single value.
 
 - id: javascript_literal
   name: Literal
   define: |
-    Literal values like strings, numbers, booleans
+    A JavaScript object literal is a comma-separated list of name-value pairs wrapped in curly braces. Object literals encapsulate data, enclosing it in a tidy package. This minimizes the use of global variables which can cause problems when combining code.
 
 - id: javascript_argument
   name: Argument
   define: |
-    A parameter for functions
+    The parameters, in a function call, are the function's arguments. JavaScript arguments are passed by value: The function only gets to know the values, not the argument's locations. If a function changes an argument's value, it does not change the parameter's original value.
 
 - id: javascript_object
   name: Object

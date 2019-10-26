@@ -22,8 +22,11 @@ block content
 			.container
 
 				.row.bar
-					a#login-button(href='/signup') Enroll Now
+					//- a#login-button(href='/signup') Enroll Now
 					a.logo(href='/') CodeLab
+					.call
+						.icon.phone-icon
+						.number !{content.phone_number}
 
 				.row.intro
 					h1 Learn Real Computer Programming for Kids and Teens
@@ -60,6 +63,8 @@ block scripts
 	//- script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyALR3vJM7iMzRxUeVLHIZMWGgc8qB8FLb8')
 	//- script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBwfXCRmEHqkM1d_E7GYPOd-a290gnQxrM')
 	script(type='text/javascript' src='/__codelab__/site.js')
+
+	include _chat
 
 
 mixin pricing_table

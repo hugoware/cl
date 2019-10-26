@@ -743,7 +743,6 @@ var codeMathBasicsLesson = function () {
           "type": "javascript"
         }
       },
-      "resources": [],
       "definitions": {
         "codelab_code_output": {
           "id": "codelab_code_output",
@@ -753,7 +752,7 @@ var codeMathBasicsLesson = function () {
         "javascript_expression": {
           "id": "javascript_expression",
           "name": "Expression",
-          "define": "A sequence of numbers, string, variables, and operators that evaluate to a single value\n"
+          "define": "Expressions are Javascript code snippets that result in a single value. Expressions can be as long as you want them to be, but they would always result in a single value.\n"
         },
         "code_variable": {
           "id": "code_variable",
@@ -773,7 +772,7 @@ var codeMathBasicsLesson = function () {
         "javascript": {
           "id": "javascript",
           "name": "JavaScript",
-          "define": "Programming language\n"
+          "define": "JavaScript, often abbreviated as JS, is a high-level, interpreted scripting language that conforms to the ECMAScript specification. JavaScript has curly-bracket syntax, dynamic typing, prototype-based object-orientation, and first-class functions.\n\nAlongside HTML and CSS, JavaScript is one of the core technologies of the World Wide Web.[9] JavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it, and major web browsers have a dedicated JavaScript engine to execute it.\n"
         },
         "code_operator": {
           "id": "code_operator",
@@ -784,7 +783,7 @@ var codeMathBasicsLesson = function () {
           "id": "javascript_string",
           "name": "String",
           "plural": "Strings",
-          "define": "Series of characters\n"
+          "define": "Strings are useful for holding data that can be represented in text form. Some of the most-used operations on strings are to check their length, to build and concatenate them using the `+` and `+=` string operators, checking for the existence or location of substrings with the `indexOf() method`, or extracting substrings with the `substring()` method.\n"
         },
         "order_of_operations": {
           "id": "order_of_operations",

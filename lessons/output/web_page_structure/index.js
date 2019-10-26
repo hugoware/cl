@@ -815,12 +815,11 @@ var webPageStructureLesson = function () {
           "type": "html"
         }
       },
-      "resources": [],
       "definitions": {
         "html_element": {
           "id": "html_element",
           "name": "HTML Element",
-          "define": "This is about HTML elements\n"
+          "define": "An HTML element is an individual component of an HTML (Hypertext Markup Language) document or web page. HTML is composed of a tree of HTML nodes, such as text nodes. Each node can have HTML attributes specified. Nodes can also have content, including other nodes and text.\n"
         },
         "preview_area": {
           "id": "preview_area",
@@ -842,7 +841,7 @@ var webPageStructureLesson = function () {
         "search_engine": {
           "id": "search_engine",
           "name": "Search Engine",
-          "define": "Search Engines will index web pages to make them easier to find by using **robots**. This includes reading the HTML on a web page to better understand the page content.\n"
+          "define": "A search engine is a web-based tool that enables users to locate information on the World Wide Web. Popular examples of search engines are Google and Bing.\n"
         },
         "double_click": {
           "id": "double_click",
@@ -857,7 +856,7 @@ var webPageStructureLesson = function () {
         "web_page": {
           "id": "web_page",
           "name": "Web Page",
-          "define": "An individual view of a web site.\n"
+          "define": "The difference between a website and a web page is that a website is a collection of web pages with information on a subject, and a web page is a smaller part of a larger website usually containing more specific information. If a website were a book, then a webpage would be a chapter in that book\n"
         },
         "codelab_html_preview": {
           "id": "codelab_html_preview",

@@ -80,7 +80,7 @@ export default async function get(id, isClassroom) {
 			const result = { user, projects };
 
 			// for lessons, capture data
-			const allowUnlock = !!isClassroom;
+			const allowUnlock = true; // !!isClassroom;
 			const state = $lessons.getLessonState(id, lessons, allowUnlock);
 			_.assign(result, state, { isClassroom });
 

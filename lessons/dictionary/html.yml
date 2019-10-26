@@ -7,61 +7,61 @@
 - id: html_element
   name: HTML Element
   define: |
-    This is about HTML elements
+    An HTML element is an individual component of an HTML (Hypertext Markup Language) document or web page. HTML is composed of a tree of HTML nodes, such as text nodes. Each node can have HTML attributes specified. Nodes can also have content, including other nodes and text.
 
 - id: html_tag
   name: HTML Tag
   define: |
-    This is about HTML elements - this is `<` or `>`
+    HTML tags are the hidden keywords within a web page that define how your web browser must format and display the content. Most tags must have two parts, an opening and a closing part. For example, <html> is the opening tag and </html> is the closing tag.
 
 - id: html_file
   name: HTML File
   define: |
-    A bunch of instructions
+    An HTML file is a webpage coded in HTML that can be displayed in a web browser. It is used to format text, tables, images, and other content that is displayed on a webpage. HTML files are widely used on the web as most pages within static websites have an ".html" extension.
 
 - id: html_attribute
   name: HTML Attribute
   define: |
-    Something different for html stuff
+    HTML attributes are a modifier of an HTML element type. An attribute either modifies the default functionality of an element type or provides functionality to certain element types unable to function correctly without them. In HTML syntax, an attribute is added to an HTML start tag.
 
     `<img src="something" />`
 
 - id: html_child_elements
   name: Child Elements
   define: |
-    HTML Elements that are contained inside of other HTML Elements. Also commonly referred to as **nested Elements**.
+    Child nodes (or children) – elements that are direct children. In other words, they are nested exactly in the given one. For instance, <head> and <body> are children of <html> element. Descendants – all elements that are nested in the given one, including children, their children and so on.
 
 - id: void_element
   name: Void Element
   define: |
-    An HTML Element that does not have a separate closing tag. Also does not contain content.    
+    A void element is an element whose content model never allows it to have contents under any circumstances. Void elements can have attributes. The following is a complete list of the void elements in HTML : area , base , br , col , command , embed , hr , img , input , keygen , link , meta , param , source , track , wbr.
 
 - id: hyperlink
   name: Hyperlink
   aka: Link
   define: |
-    An HTML Element that's used to link from one page to another resource using a URL.
+    A webpage can contain various links that take you directly to other pages and even specific parts of a given page. These links are known as hyperlinks. Hyperlinks allow visitors to navigate between Web sites by clicking on words, phrases, and images.
 
 - id: search_engine
   name: Search Engine
   define: |
-    Search Engines will index web pages to make them easier to find by using **robots**. This includes reading the HTML on a web page to better understand the page content.
+    A search engine is a web-based tool that enables users to locate information on the World Wide Web. Popular examples of search engines are Google and Bing.
 
 - id: url
   name: URL
   aka: Universal Resource Locator
   define: |
-    A location of a resource, such as a webpage or a file, somewhere on the Internet
+    A uniform resource locator (URL) is the address of a resource on the Internet. ... A URL contains the following information: The protocol used to a access the resource. The the location of the server (whether by IP address or domain name)
 
 - id: boolean_attribute
   name: Boolean Attribute
   define: |
-    An HTML Attribute that's generally written without a value. When interpreted by the browser, it treats the attribute as if it is *true*. For example, in the snippet below the `readonly` Attribute prevents users from editing the input field.
+    The presence of a boolean attribute on an element represents the true value, and the absence of the attribute represents the false value.
 
     `<input readonly />`
 
 - id: root_relative_url
   name: Root Relative URL
   define: |
-    A URL that resolves to the root of a website. These urls start `/`
+    Root-relative hyperlinks are a subset of relative hyperlinks in which all the links are assumed to start from the root folder (domain name) of the site. They differ from the relative hyperlinks in that the address is prefixed by a forward slash (for example, /default.html).
     

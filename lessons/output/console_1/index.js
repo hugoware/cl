@@ -1034,18 +1034,18 @@ var console1Lesson = function () {
         "execute": {
           "id": "execute",
           "name": "Execute",
-          "define": "Another way to say when code is being run.\n"
+          "define": "Execution is the process of running a program or the carrying out of the operation called for by an instruction\n"
         },
         "javascript_string": {
           "id": "javascript_string",
           "name": "String",
           "plural": "Strings",
-          "define": "Series of characters\n"
+          "define": "Strings are useful for holding data that can be represented in text form. Some of the most-used operations on strings are to check their length, to build and concatenate them using the `+` and `+=` string operators, checking for the existence or location of substrings with the `indexOf() method`, or extracting substrings with the `substring()` method.\n"
         },
         "exception_message": {
           "id": "exception_message",
           "name": "Exception Message",
-          "define": "An unrecoverable error\n"
+          "define": "An error message that normally represents a serious error in code and prevents it from finishing it's task.\n"
         },
         "codelab_code_output": {
           "id": "codelab_code_output",
@@ -1075,7 +1075,7 @@ var console1Lesson = function () {
         "javascript": {
           "id": "javascript",
           "name": "JavaScript",
-          "define": "Programming language\n"
+          "define": "JavaScript, often abbreviated as JS, is a high-level, interpreted scripting language that conforms to the ECMAScript specification. JavaScript has curly-bracket syntax, dynamic typing, prototype-based object-orientation, and first-class functions.\n\nAlongside HTML and CSS, JavaScript is one of the core technologies of the World Wide Web.[9] JavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it, and major web browsers have a dedicated JavaScript engine to execute it.\n"
         },
         "syntax": {
           "id": "syntax",
@@ -1097,7 +1097,7 @@ var console1Lesson = function () {
           "id": "javascript_number",
           "name": "Number",
           "plural": "Numbers",
-          "define": "Number value\n"
+          "define": "JavaScript has a single type for all numbers: it treats all of them as floating-point numbers.\n"
         },
         "javascript_single_quote": {
           "id": "javascript_single_quote",

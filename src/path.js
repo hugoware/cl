@@ -3,6 +3,21 @@ import _ from 'lodash';
 import $path from 'path';
 import $config from './config';
 
+// temporary tracking of temp files
+const $temp = { };
+
+// saves a temp path
+export function setTempPath(temp) {
+	const key = $path.basename(temp);
+	$temp[key] = temp;
+	return key;
+}
+
+// finds a temp path
+export function getTempPath(filename) {
+	return $temp[filename];
+}
+
 /**
  * Resolves a path
  * @param {...string[]} args 
@@ -185,6 +200,8 @@ export default {
 	resolve,
 	extalias,
 	getPathInfo,
+	getTempPath,
+	setTempPath,
 	removeLeadingSlash,
 	resolveRoot,
 	resolveModule,

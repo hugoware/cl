@@ -1004,7 +1004,6 @@ var codeIfLesson = function () {
           "type": "javascript"
         }
       },
-      "resources": [],
       "definitions": {
         "codelab_code_output": {
           "id": "codelab_code_output",
@@ -1034,7 +1033,7 @@ var codeIfLesson = function () {
         "javascript_literal": {
           "id": "javascript_literal",
           "name": "Literal",
-          "define": "Literal values like strings, numbers, booleans\n"
+          "define": "A JavaScript object literal is a comma-separated list of name-value pairs wrapped in curly braces. Object literals encapsulate data, enclosing it in a tidy package. This minimizes the use of global variables which can cause problems when combining code.\n"
         },
         "code_operator": {
           "id": "code_operator",
@@ -1044,12 +1043,12 @@ var codeIfLesson = function () {
         "javascript_expression": {
           "id": "javascript_expression",
           "name": "Expression",
-          "define": "A sequence of numbers, string, variables, and operators that evaluate to a single value\n"
+          "define": "Expressions are Javascript code snippets that result in a single value. Expressions can be as long as you want them to be, but they would always result in a single value.\n"
         },
         "javascript": {
           "id": "javascript",
           "name": "JavaScript",
-          "define": "Programming language\n"
+          "define": "JavaScript, often abbreviated as JS, is a high-level, interpreted scripting language that conforms to the ECMAScript specification. JavaScript has curly-bracket syntax, dynamic typing, prototype-based object-orientation, and first-class functions.\n\nAlongside HTML and CSS, JavaScript is one of the core technologies of the World Wide Web.[9] JavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it, and major web browsers have a dedicated JavaScript engine to execute it.\n"
         }
       }
     };

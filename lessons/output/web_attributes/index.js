@@ -526,17 +526,16 @@ var webAttributesLesson = function () {
           "type": "html"
         }
       },
-      "resources": [],
       "definitions": {
         "html_attribute": {
           "id": "html_attribute",
           "name": "HTML Attribute",
-          "define": "Something different for html stuff\n\n`<img src=\"something\" />`\n"
+          "define": "HTML attributes are a modifier of an HTML element type. An attribute either modifies the default functionality of an element type or provides functionality to certain element types unable to function correctly without them. In HTML syntax, an attribute is added to an HTML start tag.\n\n`<img src=\"something\" />`\n"
         },
         "html_element": {
           "id": "html_element",
           "name": "HTML Element",
-          "define": "This is about HTML elements\n"
+          "define": "An HTML element is an individual component of an HTML (Hypertext Markup Language) document or web page. HTML is composed of a tree of HTML nodes, such as text nodes. Each node can have HTML attributes specified. Nodes can also have content, including other nodes and text.\n"
         },
         "preview_area": {
           "id": "preview_area",
@@ -556,7 +555,7 @@ var webAttributesLesson = function () {
         "void_element": {
           "id": "void_element",
           "name": "Void Element",
-          "define": "An HTML Element that does not have a separate closing tag. Also does not contain content.    \n"
+          "define": "A void element is an element whose content model never allows it to have contents under any circumstances. Void elements can have attributes. The following is a complete list of the void elements in HTML : area , base , br , col , command , embed , hr , img , input , keygen , link , meta , param , source , track , wbr.\n"
         },
         "web_browser": {
           "id": "web_browser",
@@ -573,12 +572,12 @@ var webAttributesLesson = function () {
           "id": "url",
           "name": "URL",
           "aka": "Universal Resource Locator",
-          "define": "A location of a resource, such as a webpage or a file, somewhere on the Internet\n"
+          "define": "A uniform resource locator (URL) is the address of a resource on the Internet. ... A URL contains the following information: The protocol used to a access the resource. The the location of the server (whether by IP address or domain name)\n"
         },
         "boolean_attribute": {
           "id": "boolean_attribute",
           "name": "Boolean Attribute",
-          "define": "An HTML Attribute that's generally written without a value. When interpreted by the browser, it treats the attribute as if it is *true*. For example, in the snippet below the `readonly` Attribute prevents users from editing the input field.\n\n`<input readonly />`\n"
+          "define": "The presence of a boolean attribute on an element represents the true value, and the absence of the attribute represents the false value.\n\n`<input readonly />`\n"
         }
       }
     };

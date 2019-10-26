@@ -331,7 +331,18 @@
   @include breakpoint(#0f0, '600px');
 	$header-font-size: 18px;
 
-	@include video_size(320px);
+  @include video_size(320px);
+  
+  .logo {
+    float: none !important;
+  }
+
+  .call {
+    float: none;
+    text-align: left;
+    padding: 20px 0 0 0;
+    // background: #f00;
+  }
 	
 	#login-button {
 		display: none;
@@ -400,7 +411,7 @@
 }
 
 @media(max-width: 400px) {
-	@include breakpoint(#0f7, '400px');
+  @include breakpoint(#0f7, '400px');
 	
 	.class-config li {
 		width: 100%;

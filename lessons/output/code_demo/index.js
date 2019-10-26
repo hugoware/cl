@@ -650,7 +650,6 @@ var codeDemoLesson = function () {
           "type": "html"
         }
       },
-      "resources": [],
       "definitions": {
         "html": {
           "id": "html",
@@ -677,12 +676,12 @@ var codeDemoLesson = function () {
         "html_element": {
           "id": "html_element",
           "name": "HTML Element",
-          "define": "This is about HTML elements\n"
+          "define": "An HTML element is an individual component of an HTML (Hypertext Markup Language) document or web page. HTML is composed of a tree of HTML nodes, such as text nodes. Each node can have HTML attributes specified. Nodes can also have content, including other nodes and text.\n"
         },
         "html_tag": {
           "id": "html_tag",
           "name": "HTML Tag",
-          "define": "This is about HTML elements - this is `<` or `>`\n"
+          "define": "HTML tags are the hidden keywords within a web page that define how your web browser must format and display the content. Most tags must have two parts, an opening and a closing part. For example, <html> is the opening tag and </html> is the closing tag.\n"
         },
         "code_editor": {
           "id": "code_editor",
@@ -703,7 +702,7 @@ var codeDemoLesson = function () {
         "javascript": {
           "id": "javascript",
           "name": "JavaScript",
-          "define": "Programming language\n"
+          "define": "JavaScript, often abbreviated as JS, is a high-level, interpreted scripting language that conforms to the ECMAScript specification. JavaScript has curly-bracket syntax, dynamic typing, prototype-based object-orientation, and first-class functions.\n\nAlongside HTML and CSS, JavaScript is one of the core technologies of the World Wide Web.[9] JavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it, and major web browsers have a dedicated JavaScript engine to execute it.\n"
         }
       }
     };

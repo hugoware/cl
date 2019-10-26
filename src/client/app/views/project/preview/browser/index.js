@@ -81,6 +81,19 @@ export default class BrowserMode extends Component {
 		this.ui.title.text(value);
 	}
 
+	// replaces the current iframe if it can't be accessed
+	_replaceFrame() {
+		console.log('wants to replace iframe');
+
+		// replace the element
+		const replacement = $('<iframe />');
+		replacement.addClass('output');
+		this.ui.output.replaceWith(replacement);
+
+		// replace the element
+		this.ui.output = replacement;
+	}
+
 	/** access to the output window
 	 * @type {HTMLElement} the preview DOM element
 	 */
@@ -323,13 +336,17 @@ export default class BrowserMode extends Component {
 		const doc = this.context.document;
 		doc.open();
 		doc.write(html);
-		setTimeout(() => { doc.close(); }, 10);
+		setTimeout(() => {
+			this._viewIsActive = true;
+			doc.close(); 
+		}, 10);
 	}
 
 	/** displays the most current template result 
 	 * @param {boolean} shouldRunScripts should the render also eval scripts
 	*/
 	render = (view, shouldRunScripts) => {
+		this._replaceFrame();
 
 		// clear any scripting errors
 		this.clearPageError();

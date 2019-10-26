@@ -3,11 +3,13 @@
 - id: json
   name: JSON
   aka: JavaScript Object Notation
-  define: This is the defined result
+  define: |
+    JSON, or JavaScript Object Notation, is a minimal, readable format for structuring data. It is used primarily to transmit data between a server and web application, as an alternative to XML.
 
 - id: output
   name: Output
-  define: The results from a computer program based on input
+  define: |
+    Input and output, or I/O is the communication between an information processing system, such as a computer, and the outside world, possibly a human or another information processing system. Inputs are the signals or data received by the system and outputs are the signals or data sent from it.
 
 - id: preview_area
   name: Preview Area
@@ -19,7 +21,8 @@
 
 - id: website
   name: Website
-  define: A point on the Internet that serves web pages
+  define: |
+    A website or web site is a collection of related network web resources, such as web pages, multimedia content, which are typically identified with a common domain name, and published on at least one web server.
 
 - id: file_browser
   name: File Browser
@@ -33,12 +36,12 @@
 - id: web_page
   name: Web Page
   define: |
-    An individual view of a web site.
+    The difference between a website and a web page is that a website is a collection of web pages with information on a subject, and a web page is a smaller part of a larger website usually containing more specific information. If a website were a book, then a webpage would be a chapter in that book
 
 - id: internet
   name: Internet
   define: |
-    A world wide network of computers
+    A network of networks in which users at any one computer can, if they have permission, get information from any other computer (and sometimes talk directly to users at other computers)
 
 - id: codelab_code_output
   name: Code Output
@@ -58,7 +61,7 @@
 - id: execute
   name: Execute
   define: |
-    Another way to say when code is being run.
+    Execution is the process of running a program or the carrying out of the operation called for by an instruction
 
 - id: sequentially
   name: Sequentially
@@ -68,7 +71,7 @@
 - id: exception_message
   name: Exception Message
   define: |
-    An unrecoverable error
+    An error message that normally represents a serious error in code and prevents it from finishing it's task.
 
 - id: syntax_error
   name: Syntax Error
@@ -101,35 +104,35 @@
 - id: curly_brace
   name: Curly Brace
   define: |
-    Creates scope
+    Curly braces (also referred to as just "braces" or as "curly brackets") are a major part of many programming languages. They are used in several different constructs. An opening curly brace `{` must always be eventually followed by a closing curly brace `}`
 
 - id: semi_colon
   name: Semi-Colon
   define: |
-    Terminates commands
+    In computer programming, the semicolon is often used to separate multiple statements and in some languages, semicolons are called terminators and are required after every statement
 
 - id: paren
   name: Parentheses
   define: |
-    Groups code and operators
+    A parenthesis is a punctuation mark used to enclose information, similar to a bracket. The open parenthesis, which looks like (, is used to begin parenthetical text. The close parenthesis, ), denotes the end of parenthetical text. The plural of parenthesis is parentheses.
 
 - id: javascript_string
   name: String
   plural: Strings
   define: |
-    Series of characters
+    Strings are useful for holding data that can be represented in text form. Some of the most-used operations on strings are to check their length, to build and concatenate them using the `+` and `+=` string operators, checking for the existence or location of substrings with the `indexOf() method`, or extracting substrings with the `substring()` method.
 
 - id: javascript_number
   name: Number
   plural: Numbers
   define: |
-    Number value
+    JavaScript has a single type for all numbers: it treats all of them as floating-point numbers.
 
 - id: javascript_boolean
   name: Boolean
   plural: Booleans
   define: |
-    True/false value
+    The Boolean object represents two values, either "true" or "false". If value parameter is omitted or is 0, -0, null, false, NaN, undefined, or the empty string (""), the object has an initial value of false.
 
 - id: javascript_single_quote
   name: Single Quote

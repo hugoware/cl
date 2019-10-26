@@ -734,7 +734,7 @@ var codeVariablesBasicsLesson = function () {
           "id": "javascript_string",
           "name": "String",
           "plural": "Strings",
-          "define": "Series of characters\n"
+          "define": "Strings are useful for holding data that can be represented in text form. Some of the most-used operations on strings are to check their length, to build and concatenate them using the `+` and `+=` string operators, checking for the existence or location of substrings with the `indexOf() method`, or extracting substrings with the `substring()` method.\n"
         },
         "double_click": {
           "id": "double_click",
@@ -749,17 +749,17 @@ var codeVariablesBasicsLesson = function () {
         "javascript": {
           "id": "javascript",
           "name": "JavaScript",
-          "define": "Programming language\n"
+          "define": "JavaScript, often abbreviated as JS, is a high-level, interpreted scripting language that conforms to the ECMAScript specification. JavaScript has curly-bracket syntax, dynamic typing, prototype-based object-orientation, and first-class functions.\n\nAlongside HTML and CSS, JavaScript is one of the core technologies of the World Wide Web.[9] JavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it, and major web browsers have a dedicated JavaScript engine to execute it.\n"
         },
         "javascript_keyword": {
           "id": "javascript_keyword",
           "name": "Keyword",
-          "define": "A reserved word in JavaScript that has a purpose\n"
+          "define": "Keywords are tokens that have special meaning in JavaScript: break , case , catch , continue , debugger , default , delete , do , else , finally , for , function , if , in , instanceof , new , return , switch , this , throw , try , typeof , var , void , while , and with \n"
         },
         "javascript_function": {
           "id": "javascript_function",
           "name": "Function",
-          "define": "A block of executed code\n"
+          "define": "A JavaScript function is a block of code designed to perform a particular task and is executed when \"something\" invokes it (calls it).\n"
         }
       }
     };

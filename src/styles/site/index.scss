@@ -143,6 +143,10 @@ body, html {
   text-decoration: none;
 }
 
+.header .button {
+	background: rgba(0, 0, 0, 0.3);
+}
+
 @mixin header_underline($color) {
   border-bottom: 8px solid $color;
 }
@@ -268,7 +272,8 @@ html, body {
     background-size: $logo-width $logo-height;
     display: block;
     overflow: hidden;
-    text-indent: -100%;
+		text-indent: -100%;
+		float: left;
 	}
 	
 	&.partial {
@@ -1625,6 +1630,19 @@ html, body {
 	padding-top: 0;
 }
 
+.call {
+	text-align: right;
+	float: right;
+	.icon, .number {
+		display: inline-block;
+		font-size: 23px;
+		font-weight: bold;
+		text-shadow: 0 1px 4px #000;
+	}
+	.icon {
+		margin-right: 5px;
+	}
+}
 #tutoring-form {
 	position: absolute;
 	left: 50%;
@@ -1649,5 +1667,6 @@ html, body {
 	}
 }
 	
+
 
 @import '_responsive';

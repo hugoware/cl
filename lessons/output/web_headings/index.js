@@ -501,12 +501,11 @@ var webHeadingsLesson = function () {
           "type": "html"
         }
       },
-      "resources": [],
       "definitions": {
         "html_element": {
           "id": "html_element",
           "name": "HTML Element",
-          "define": "This is about HTML elements\n"
+          "define": "An HTML element is an individual component of an HTML (Hypertext Markup Language) document or web page. HTML is composed of a tree of HTML nodes, such as text nodes. Each node can have HTML attributes specified. Nodes can also have content, including other nodes and text.\n"
         },
         "preview_area": {
           "id": "preview_area",
@@ -537,7 +536,7 @@ var webHeadingsLesson = function () {
         "search_engine": {
           "id": "search_engine",
           "name": "Search Engine",
-          "define": "Search Engines will index web pages to make them easier to find by using **robots**. This includes reading the HTML on a web page to better understand the page content.\n"
+          "define": "A search engine is a web-based tool that enables users to locate information on the World Wide Web. Popular examples of search engines are Google and Bing.\n"
         },
         "codelab_html_preview": {
           "id": "codelab_html_preview",
@@ -547,7 +546,7 @@ var webHeadingsLesson = function () {
         "void_element": {
           "id": "void_element",
           "name": "Void Element",
-          "define": "An HTML Element that does not have a separate closing tag. Also does not contain content.    \n"
+          "define": "A void element is an element whose content model never allows it to have contents under any circumstances. Void elements can have attributes. The following is a complete list of the void elements in HTML : area , base , br , col , command , embed , hr , img , input , keygen , link , meta , param , source , track , wbr.\n"
         },
         "css": {
           "id": "css",
