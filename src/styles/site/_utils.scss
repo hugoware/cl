@@ -28,7 +28,10 @@
     left: 0;
     right: 0;
     background-color: $color;
-    padding: 5px;
+		height: 5px;
+		padding: 0 5px;
+		font-weight: bold;
+		text-shadow: 0 0 10px white;
   }
 }
 

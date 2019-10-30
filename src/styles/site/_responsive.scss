@@ -9,7 +9,96 @@
 @include breakpoint(orange, 1000px) {
   .container {
     max-width: 700px;
-  }
+	}
+	
+	.examples {
+		.example {
+			margin-bottom: 25px;
+			img {
+				width: 250px !important;
+			}
+		}
+	}
+}
+
+@include breakpoint(#0f0, 800px) {
+
+	html, body {
+		font-size: 11px;
+	}
+	
+	.container {
+		max-width: 600px;
+		padding: 0 25px;
+		text-align: center;
+
+		h1, h2 {
+			max-width: 100%;
+			padding-left: 15%;
+			padding-right: 15%;
+		}
+	}
+
+	#header {
+		position: absolute;
+		left: 15px;
+		right: 15px;
+	}
+	
+	#intro {
+		padding-top: 8vh;
+		.details, .actions {
+			padding-right: 0;
+			padding-left: 0;
+		}
+	}
+
+}
+
+@include breakpoint(#ff0, 640px) {
+
+	#header {
+		position: relative;
+		left: 0;
+		right: 0;
+
+		.logo {
+			display: inline-block;
+			float: none;
+			margin: 20px 0 0 0;
+		}
+
+		.nav {
+			display: none;
+		}
+	}
+
+	#intro {
+		padding-top: 0;
+		.details {
+			padding-top: 7vh;
+			padding-bottom: 7vh;
+		}
+	}
+
+}
+
+@include breakpoint(#f0f, 320px) {
+	html, body {
+		font-size: 10px;
+	}
+
+	#hero h1 {
+		font-size: 400%;
+	}
+
+	#hero h3 {
+		font-size: 250%;
+	}
+
+	.section h2 {
+		font-size: 300%;
+	}
 }
 
 

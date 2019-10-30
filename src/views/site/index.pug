@@ -7,7 +7,7 @@ block head
 	link(rel='stylesheet' type='text/css' href='/__codelab__/site/index.css')
 	meta(name='description' content='Computer programming for kids and teens to learn modern programming (ages 12+)')
 	meta(name='robots' content='index, follow')
-	
+
 
 block content
 
@@ -15,56 +15,84 @@ block content
 		strong Login error:
 		#reason Unable to log into CodeLab
 
-	#hero.section
+	section#hero
 		.container
 			#header
 				a.logo(href='/') CodeLab
 				.nav
-					a(href='#schedule') Schedule
-					a(href='#instructor') Instructor
+					//- a(href='#schedule') Schedule
+					//- a(href='#instructor') Instructor
 					a.primary(href='/enroll') Enroll for Class
 
 			#intro
 				.details
-					h1 Coding Classes in Coppell, Texas
+					h1 Coding Classes #[.line in Coppell, Texas]
 					h3 For Teens and Adults
 					p Start learning how to build websites, create apps and games using modern programming languages. #[em No prior experience is required.]
 					
-				.actions
-					a(href='/enroll') Enroll for Class
-					a(href='#contact') Contact Us
+					.actions
+						a.primary(href='/enroll') Enroll for Class
+						a.secondary(href='#contact') Contact Us
 
 
-	#benefits.section
+	section#benefits
 		.container
 			.details
-				h2 Coding Skills That Prepare For The Future
-				p Did you know that computer programming will grow by 26% in the next 10 years. Even many traditional jobs require telling computers instructions. Programming can help
+				h2 Learn Skills That #[.line Prepare For The Future]
+				p Did you know that #[strong computer programming jobs will grow by 26% in the next 10 years]. Even many non-programming jobs are beginning integrate more computers into their workflows that require an understanding of logic and instructions - #[em skills best learned by programming!]
+				//- p Get a head start learning modern programming tools and techniques to get a head start on the skills of tomorrow!
+				.actions
+					a.primary(href='/enroll') Enroll for Class
+					a.secondary(href='#contact') Contact Us
+
+	section#importance
+		.container
+			.details
+				h2 The Next Step Beyond #[.line Toys and Online Tutorials]
+				p Toys and online tutorials are a great way to get an introduction to programming! #[strong CodeLab] helps you start taking the next steps to develop your skills and start seeing real results!
+				
 				.actions
 					a(href='/enroll') Enroll for Class
 					a(href='#contact') Contact Us
 
-	#importance.section
+	section#instructor
 		.container
 			.details
-				h2 Move Beyond Toys and Online Tutorials
-				p Languages like Scratch or toys like TOY are a great way to introduce programming concepts, but does little to help transision into writing real code.
-				p CodeLab start kids learning code they can use to create real websites, apps, games, and more.
-				p We're teaching top 3
-				a(href='https://insights.stackoverflow.com/survey/2019#most-popular-technologies') URL
+				h2 Start Learning the World's Most Popular Programming Languages
+				p Students get a head start learning the #[a(href='https://insights.stackoverflow.com/survey/2019#most-popular-technologies') most popular and flexible programming languages] at #[strong CodeLab].
 				.actions
-					a(href='/enroll') Enroll for Class
-					a(href='#contact') Contact Us
+					a.primary(href='/enroll') Enroll for Class
+					a.secondary(href='#contact') Contact Us
+	
+	section#graphic
+		.container
+			.details
+				h2 Interested in #[.line Graphic Design?]
+				p We also teach graphic design and illustration using modern programs such as Photoshop, Sketch, InVision Studio and more!
 
-	#instructor.section
-		.container
-			.details
-				h2 Learn Skills that Prepare for the Future
-				p Did you know that computer programming will grow by 26% in the next 10 years.
-				p Even many traditional jobs require telling computers instructions. Programming can help
+				.examples
+					.example
+						img(src='/__codelab__/site/images/example-2.jpg')
+						div Illustration
+
+					.example
+						img(src='/__codelab__/site/images/example-1.jpg')
+						div Logo Design
+
+					.example
+						img(src='/__codelab__/site/images/example-3.jpg')
+						div Graphic Design
+
+					.example
+						img(src='/__codelab__/site/images/example-4.jpg')
+						div Typography
+
 				.actions
-					a(href='/enroll') Enroll for Class
-					a(href='#contact') Contact Us
+					a.alt(href='#contact') Contact Us
+
+	//- #footer.section
+
+	include _footer
 
 
 
@@ -115,7 +143,6 @@ block content
 //- 		+section_faq
 
 //- 	+starting_soon(content)
-//- 	include _footer
 
 block scripts
 	//- script(type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyALR3vJM7iMzRxUeVLHIZMWGgc8qB8FLb8')
