@@ -18,14 +18,14 @@ block content
 		+standard_header('CodeLab Policies', true)
 			| Rules, Terms, and Conditions for CodeLab
 
-	.doc
-		.section.policies.container
+	section#policies
+		.container
 			for policy in content.policies
-				.row.content
-					.col-md-8.explanation
-							h3.title= policy.title
-							div !{policy.content}
-					.col-md-4.summary
+				.item
+					.policy
+						h4= policy.title
+						p !{policy.content}
+					.summary
 						h4 Basically, we're saying...
 						.simple !{policy.summary}
 

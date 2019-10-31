@@ -10,19 +10,19 @@ import $config from '../config';
 export function handle(request, response) {
 
 	// create the start date -- for now July 1
-	const start = new Date();
-	start.setMonth(7);
-	start.setDate(21);
-	start.setFullYear(2019);
-	const now = new Date();
-	const isPreEnroll = +start > +now;
+	// const start = new Date();
+	// start.setMonth(7);
+	// start.setDate(21);
+	// start.setFullYear(2019);
+	// const now = new Date();
+	// const isPreEnroll = +start > +now;
 
-	const schedule = Schedule.getAvailability();
+	// const schedule = Schedule.getAvailability();
 
 	response.render('site/signup', {
 		content: content.site,
-		schedule,
-		isPreEnroll,
+		// schedule,
+		// isPreEnroll,
 		billingTarget: $config.chargebeeApiTarget
 	});
 }

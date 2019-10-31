@@ -11,16 +11,19 @@ mixin info
 		
 			//- p Select which class you'd like to enroll for. Selecting an #[strong Advanced] class may require an assessment of student skill before finalizing placement.
 
-			h3 Things to know before enrolling
+			h3 Important Things to Know
 
 			#rules
 				for item in content.enrollment_notes
 					p(class=item.type) !{item.message}
 
 
-mixin add_session(id, dayOfWeek, name, time)
+mixin add_session(id, dayOfWeek, name, time, isAvailable)
 
-	.timeslot(id=id data-day=dayOfWeek data-level='Beginner' data-name=name data-time=time)
+	.timeslot(id=id data-day=dayOfWeek data-level='Beginner' data-name=name data-time=time class=`${isAvailable ? 'is-available' : 'is-full'}`)
+
+		if !isAvailable
+			.full Session Full
 		.name= name
 		.time= time
 	//- .timeslot(class='level-' + session.level.toLowerCase() + (session.available > 0 ? ' is-available' : '') + (session.limited ? ' is-limited' : '') + (session.full ? ' is-full' : '') id=session.id data-day=dayOfWeek data-level=session.level data-name=session.name data-time=session.time)
@@ -37,62 +40,28 @@ mixin timeslots
 	section#timeslots
 		.container
 
-			h3 Select a Session
-			p Ready to sign up? Select the session you'd like to join then press #[strong Register for Class]
+			h3 Enrollment Form
+			p #[strong Are you ready to sign up?] Select the class session you'd like to join then press #[strong Register for Class]
+			p.alt Want to try a class first? #[a(href='https://forms.gle/58g5eHGbNv5eA1pE6') Schedule a free trial class]!
 
 			#enrollment
 				.date
-					h4 Tuesdays
+					h4 Tuesday
 					.list
-						+add_session('session_tues_1700', 'Tuesday', '12-19 Years', '5:00PM')
-						+add_session('session_tues_1800', 'Tuesday', '12-19 Years', '6:00PM')
-						+add_session('session_tues_1900', 'Tuesday', 'Adults', '7:00PM')
+						+add_session('session_tues_1700', 'Tuesday', 'Ages 12 - 19', '5:00PM', true)
+						+add_session('session_tues_1800', 'Tuesday', 'Ages 12 - 19', '6:00PM', true)
+						+add_session('session_tues_1900', 'Tuesday', 'Adults', '7:00PM', true)
 				
 				.date
-					h4 Thursdays
+					h4 Thursday
 					.list
-						+add_session('session_thur_1700', 'Thursday', '12-19 Years', '5:00PM')
-						+add_session('session_thur_1800', 'Thursday', '12-19 Years', '6:00PM')
-						+add_session('session_thur_1900', 'Thursday', 'Adults', '7:00PM')
+						+add_session('session_thur_1700', 'Thursday', 'Ages 12 - 19', '5:00PM', true)
+						+add_session('session_thur_1800', 'Thursday', 'Ages 12 - 19', '6:00PM', true)
+						+add_session('session_thur_1900', 'Thursday', 'Adults', '7:00PM', true)
 
-		//- .step.first
-		//- 	.step-icon.icon-calendar
-		//- 	.about
-		//- 		.step-title Choose a Day
-		//- 		.step-action.signup Pick the day of the week that you'd like to visit
 
-		//- 		#selected-day.dropdown
-		//- 			.selection Select a day
-		//- 			.items
-		//- 				for day in schedule
-		//- 					.item(data-label=day.day data-value=day.day.toLowerCase())
-		//- 						.block= day.day
-
-		//- .step
-		//- 	.step-icon.icon-clock
-		//- 	.about
-		//- 		.step-title Choose a Time
-		//- 		.step-action.signup Find a open time that works best for your schedule
-
-		//- 		.dropdown.inactive
-		//- 			.selection Select a time
-
-		//- 		for day in schedule
-		//- 			.dropdown(id='selected-' + day.day.toLowerCase())
-		//- 				.selection Select a time
-		//- 				.items
-		//- 					for session in day.slots
-		//- 						.item(data-value=session.index data-label=session.time + ' ' + session.meridem class=session.status)
-		//- 							.block.status(class='status-' + session.status)
-		//- 								.detail #{session.time} #{session.meridem}
-		//- 								if session.status === 'limited'
-		//- 									.note Limited space
-
-		//- 								if session.status === 'full'
-		//- 									.note Session full
-
-		.step.last
-				.button.inactive#enroll-now Register for Class
+				.actions
+					.button.inactive#enroll-now Register for Class
 
 block title
 	| Sign Up / CodeLab
@@ -106,9 +75,9 @@ block content
 		+standard_header('Enroll Online', true)
 			| Sign up now for CodeLab weekly sessions
 
+	+timeslots
 	+info
 
-	+timeslots
 
 
 	include _footer

@@ -10,31 +10,29 @@ block head
 	meta(name='robots' content='index, follow')
 
 mixin showcase_item(item)
-	.col-md-4.col-sm-6.col-xs-10.col-xs-offset-1.col-sm-offset-0
-		.item(class='type-'+ item.type)
-			a(href='//' + item.id + '.codelabschool.com/' target='_app_'+ item.id rel='nofollow')
-				.thumbnail(style='background-image: url(/__codelab__/showcase/'+ item.id +'.jpg)')
+	.item(class='type-'+ item.type)
+		a(href='//' + item.id + '.codelabschool.com/' target='_app_'+ item.id rel='nofollow')
+			.thumbnail(style='background-image: url(/__codelab__/showcase/'+ item.id +'.jpg)')
+			.info
 				.title= item.title
 				.created-by Made by #{item.created_by}
 				.description= item.description
 
 block content
-	script(type='text/javascript').
-		document.body.className = 'loading';
+	//- script(type='text/javascript').
+	//- 	document.body.className = 'loading';
 
-	.loading
-		h1 Loading
+	//- .loading
+	//- 	h1 Loading
 
-	.main.content
+	//- .main.content
 
-		+standard_header('Student Showcase')
-			| Check out some of the creations made using CodeLab
+	+standard_header('Student Showcase')
+		| Check out some of the creations made using CodeLab
 
-	.doc
-		.section.showcase.container-fluid
-			.row.content
-
-				for item in showcase
-					+showcase_item(item)
+	section#showcase
+		.container
+			for item in showcase
+				+showcase_item(item)
 
 	include _footer

@@ -55,7 +55,7 @@ function showCheckout() {
 	// create the data
 	const data = {
 		cf_class_id: $classId,
-		cf_class_name: $name,
+		cf_class_name: `${$day} @ ${$time} (${$name})`,
 		cf_session_time: $time,
 		cf_day_of_week: $day,
 	};
@@ -101,20 +101,20 @@ function setupCheckout() {
 }
 
 // updates UI for future billing
-function checkForFutureBilling() {
-	const start = new Date();
-	start.setMonth(7);
-	start.setDate(21);
-	start.setFullYear(2019);
+// function checkForFutureBilling() {
+// 	const start = new Date();
+// 	start.setMonth(7);
+// 	start.setDate(21);
+// 	start.setFullYear(2019);
 
-	// check timestamps
-	const startAt = getTimestamp(start);
-	const now = getTimestamp(new Date());
-	const isFuture = startAt > now;
-	if (!isFuture) return;
+// 	// check timestamps
+// 	const startAt = getTimestamp(start);
+// 	const now = getTimestamp(new Date());
+// 	const isFuture = startAt > now;
+// 	if (!isFuture) return;
 
-	$startAt = startAt;
-}
+// 	$startAt = startAt;
+// }
 
 // // handles a new day selection
 // function onSelectDay(value, option) {
@@ -151,25 +151,25 @@ function checkForFutureBilling() {
 
 export default function initSignup() {
 	setupCheckout();
-	checkForFutureBilling();
+	// checkForFutureBilling();
 
-	const container = $e('available-times');
+	// const container = $e('available-times');
 	const registerButton = $e('enroll-now');
 
 	// gather all
 	const slots = [ 
-		$e('web_tues_1700'),
-		$e('web_tues_1800'),
-		$e('web_tues_1900'),
-		$e('code_thur_1700'),
-		$e('code_thur_1800'),
-		$e('code_thur_1900'),
+		$e('session_tues_1700'),
+		$e('session_tues_1800'),
+		$e('session_tues_1900'),
+		$e('session_thur_1700'),
+		$e('session_thur_1800'),
+		$e('session_thur_1900'),
 	];
 
 	// setup each handler
 	for (const item of slots)
 		(slot => {
-
+			console.log('cl')
 			// make sure this can be selected
 			if (!/is\-available/.test(slot.className))
 				return;
