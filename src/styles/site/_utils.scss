@@ -19,19 +19,21 @@
 
 
 @mixin __break__($color, $label) {
-  body:before {
-    content: '#{$label}';
-    display: block;
-    position: fixed;
-    z-index: 999;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: $color;
-		height: 5px;
-		padding: 0 5px;
-		font-weight: bold;
-		text-shadow: 0 0 10px white;
+  @if $debug {
+    body:before {
+      content: '#{$label}';
+      display: block;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: $color;
+      height: 5px;
+      padding: 0 5px;
+      font-weight: bold;
+      text-shadow: 0 0 10px white;
+    }
   }
 }
 

@@ -1,5 +1,11 @@
 extends _template
 
+mixin enroll_link
+	a.primary(href='/enroll') Enroll for Class
+
+mixin contact_link(type)
+	a(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2' class=`${type || 'secondary'}`) Contact Us
+
 block title
 	| CodeLab - Real Programming for Kids and Teens
 
@@ -22,7 +28,7 @@ block content
 				.nav
 					//- a(href='#schedule') Schedule
 					//- a(href='#instructor') Instructor
-					a.primary(href='/enroll') Enroll for Class
+					+enroll_link
 
 			#intro
 				.details
@@ -31,8 +37,8 @@ block content
 					p Start learning how to build websites, create apps and games using modern programming languages. #[em No prior experience is required.]
 					
 					.actions
-						a.primary(href='/enroll') Enroll for Class
-						a.secondary(href='#contact') Contact Us
+						+enroll_link
+						+contact_link
 
 
 	section#benefits
@@ -42,8 +48,8 @@ block content
 				p Did you know that #[strong computer programming jobs will grow by 26% in the next 10 years]. Even many non-programming jobs are beginning integrate more computers into their workflows that require an understanding of logic and instructions - #[em skills best learned by programming!]
 				//- p Get a head start learning modern programming tools and techniques to get a head start on the skills of tomorrow!
 				.actions
-					a.primary(href='/enroll') Enroll for Class
-					a.secondary(href='#contact') Contact Us
+					+enroll_link
+					+contact_link
 
 	section#importance
 		.container
@@ -61,8 +67,8 @@ block content
 				h2 Start Learning the World's Most Popular Programming Languages
 				p Students get a head start learning the #[a(href='https://insights.stackoverflow.com/survey/2019#most-popular-technologies') most popular and flexible programming languages] at #[strong CodeLab].
 				.actions
-					a.primary(href='/enroll') Enroll for Class
-					a.secondary(href='#contact') Contact Us
+					+enroll_link
+					+contact_link
 	
 	section#graphic
 		.container
@@ -88,7 +94,7 @@ block content
 						div Typography
 
 				.actions
-					a.alt(href='#contact') Contact Us
+					+contact_link('alt')
 
 	//- #footer.section
 

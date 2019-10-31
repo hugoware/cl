@@ -6,42 +6,54 @@ mixin head
 	meta(name='robots' content='index, follow')
 
 mixin info
-	.introduction
-		//- .title Class Selection
-		.instructions Select which class you'd like to enroll for. Selecting an #[strong Advanced] class may require an assessment of student skill before finalizing placement.
-
-	.things-to-know Things to know before enrolling
-	//- if isPreEnroll
-	//- 	p.future-billing !{content.preEnroll}
+	section#info
+		.container
 		
-	for item in content.enrollment_notes
-		p(class=item.type) !{item.message}
+			//- p Select which class you'd like to enroll for. Selecting an #[strong Advanced] class may require an assessment of student skill before finalizing placement.
 
-mixin add_session(session, dayOfWeek)
-	.timeslot(class='level-' + session.level.toLowerCase() + (session.available > 0 ? ' is-available' : '') + (session.limited ? ' is-limited' : '') + (session.full ? ' is-full' : '') id=session.id data-day=dayOfWeek data-level=session.level data-name=session.name data-time=session.time)
-		.meta
-			.level= session.level
-			.is-full Session Full
-			.is-limited Space is limited
-		.details
-			.title= session.name
-			.time= session.time
+			h3 Things to know before enrolling
+
+			#rules
+				for item in content.enrollment_notes
+					p(class=item.type) !{item.message}
+
+
+mixin add_session(id, dayOfWeek, name, time)
+
+	.timeslot(id=id data-day=dayOfWeek data-level='Beginner' data-name=name data-time=time)
+		.name= name
+		.time= time
+	//- .timeslot(class='level-' + session.level.toLowerCase() + (session.available > 0 ? ' is-available' : '') + (session.limited ? ' is-limited' : '') + (session.full ? ' is-full' : '') id=session.id data-day=dayOfWeek data-level=session.level data-name=session.name data-time=session.time)
+	//- 	.meta
+	//- 		.level= session.level
+	//- 		.is-full Session Full
+	//- 		.is-limited Space is limited
+	//- 	.details
+	//- 		.title= name
+	//- 		.time= time
 
 mixin timeslots
 
-	.time-slots#available-times
+	section#timeslots
+		.container
 
-		h3 Tuesdays
-		.time-slot-date
-			+add_session(schedule.schedule.web_tues_1700, 'Tuesdays')
-			+add_session(schedule.schedule.web_tues_1800, 'Tuesdays')
-			+add_session(schedule.schedule.web_tues_1900, 'Tuesdays')
-		
-		h3 Thursdays
-		.time-slot-date
-			+add_session(schedule.schedule.code_thur_1700, 'Thursdays')
-			+add_session(schedule.schedule.code_thur_1800, 'Thursdays')
-			+add_session(schedule.schedule.code_thur_1900, 'Thursdays')
+			h3 Select a Session
+			p Ready to sign up? Select the session you'd like to join then press #[strong Register for Class]
+
+			#enrollment
+				.date
+					h4 Tuesdays
+					.list
+						+add_session('session_tues_1700', 'Tuesday', '12-19 Years', '5:00PM')
+						+add_session('session_tues_1800', 'Tuesday', '12-19 Years', '6:00PM')
+						+add_session('session_tues_1900', 'Tuesday', 'Adults', '7:00PM')
+				
+				.date
+					h4 Thursdays
+					.list
+						+add_session('session_thur_1700', 'Thursday', '12-19 Years', '5:00PM')
+						+add_session('session_thur_1800', 'Thursday', '12-19 Years', '6:00PM')
+						+add_session('session_thur_1900', 'Thursday', 'Adults', '7:00PM')
 
 		//- .step.first
 		//- 	.step-icon.icon-calendar
@@ -94,18 +106,9 @@ block content
 		+standard_header('Enroll Online', true)
 			| Sign up now for CodeLab weekly sessions
 
-	.doc
-		#enrollment
-			.section.container
-				.row
+	+info
 
-					.col-md-6.order-review
-						+info
-
-					.col-md-1
-
-					.col-md-5#order
-						+timeslots
+	+timeslots
 
 
 	include _footer
