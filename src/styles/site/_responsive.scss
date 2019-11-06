@@ -124,6 +124,20 @@
 		background-position: 40% 50%;
 	}
 
+	#location {
+
+		padding: 3vh 0;
+
+		#map {
+			// background-image: none;
+			background-position: 0% 50%;
+		}
+
+		.details {
+			float: none;
+		}
+	}
+
 }
 
 @include breakpoint(#f0f, 320px) {

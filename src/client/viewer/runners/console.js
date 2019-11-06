@@ -429,7 +429,8 @@ export default class ConsoleRunner {
 				const lead = i > 0 ? ' ' : '';
 				const item = document.createElement('span');
 				item.className = 'item';
-				writeTo.innerHTML = escape(`${lead}${content}`).replace(/\n/, '<br />');
+				// writeTo.innerHTML = escape(`${lead}${content}`).replace(/\n/, '<br />');
+				writeTo.innerHTML = `${lead}${content}`.replace(/\n/, '<br />');
 			}
 			// anything else, assume DOM element?
 			else writeTo.appendChild(content);

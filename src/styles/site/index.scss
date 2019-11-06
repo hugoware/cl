@@ -43,7 +43,7 @@ section {
 
 #hero {
 	background: $theme-color;
-	min-height: 60vh;
+	min-height: 50vh;
 
 	&.partial {
 		min-height: 200px;
@@ -86,6 +86,14 @@ section {
 
 	.nav {
 		float: right;
+
+		.phone {
+			display: inline-block;
+			color: #fff;
+			font-size: 20px;
+			font-weight: bold;
+			margin: 15px 25px 0 0;
+		}
 
 		a {
 			display: inline-block;
@@ -2196,7 +2204,57 @@ section#hero {
 		text-decoration: none;
 	}
 }
+
+#location {
+	position: relative;
+	background: #EBEEF0;
+
+	#map {
+		position: absolute;
+		width: 100%;
+		max-width: 1200px;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%, 0);
+		background: #EBEEF0 url(/__codelab__/site/images/map.jpg);
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: 50% 50%;
+	}
+
+	border-bottom: 1px solid darken(#EBEEF0, 10%);
+
+	@include clearfix;
+
+	.container {
+		max-width: 1000px;
+		position: relative;
+		z-index: 1;
+	}
 	
+	.details {
+		float: right;
+		padding: 45px;
+		background: rgba(white, 0.7);
+		box-shadow: 1px 2px 14px rgba(black, 0.2);
+		border-radius: 4px;
+
+		h3 {
+			font-family: $default-font !important;
+			padding: 25px 0 0 0;
+		}
+
+		.actions a {
+			margin: 0;
+		}
+
+		address {
+			font-size: 24px;
+			line-height: 1.4em;
+		}
+	}
+}
 
 
 @import '_responsive';
