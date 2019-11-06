@@ -6,29 +6,14 @@ mixin enroll_link
 mixin contact_link(type)
 	a(href='https://goo.gl/forms/75vK0KcmIDAO2cBV2' class=`${type || 'secondary'}`) Contact Us
 
-
-mixin location
-	section#location
-		#map
-		.container
-			.details
-				//- h2 CodeLab
-				address
-					| 275 S. Denton Tap Rd.
-					br
-					| Coppell, TX 75019
-				h3 (972) 861-0189
-
-				.actions
-					+contact_link
-
 block title
-	| CodeLab - Real Programming for Teens and Adults
+	| CodeLab - Real Programming for Kids and Teens
 
 block head
 	link(rel='stylesheet' type='text/css' href='/__codelab__/site/index.css')
-	meta(name='description' content='Computer programming for teens and adults to learn modern programming (ages 12+)')
+	meta(name='description' content='Computer programming for kids and teens to learn modern programming (ages 12+)')
 	meta(name='robots' content='index, follow')
+
 
 block content
 
@@ -43,7 +28,6 @@ block content
 				.nav
 					//- a(href='#schedule') Schedule
 					//- a(href='#instructor') Instructor
-					.phone (972) 861-0189
 					+enroll_link
 
 			#intro
@@ -56,13 +40,12 @@ block content
 						+enroll_link
 						+contact_link
 
-	+location
 
 	section#benefits
 		.container
 			.details
 				h2 Learn Skills That #[.line Prepare For The Future]
-				p Did you know that #[strong computer programming jobs will grow by 26% in the next 10 years]. Even many non-programming jobs are beginning integrate more computers into their workflows that require an understanding of computer logic - #[em a skill best learned by programming!]
+				p Did you know that #[strong computer programming jobs will grow by 26% in the next 10 years]. Even many non-programming jobs are beginning integrate more computers into their workflows that require an understanding of logic and instructions - #[em skills best learned by programming!]
 				//- p Get a head start learning modern programming tools and techniques to get a head start on the skills of tomorrow!
 				.actions
 					+enroll_link
@@ -81,8 +64,8 @@ block content
 	section#instructor
 		.container
 			.details
-				h2 Learn Programming Languages That You Can Use
-				p Start learning some of the #[a(href='https://insights.stackoverflow.com/survey/2019#most-popular-technologies') most popular and flexible programming languages] in the world so you can begin building real apps, websites, and more!
+				h2 Start Learning the World's Most Popular Programming Languages
+				p Students get a head start learning the #[a(href='https://insights.stackoverflow.com/survey/2019#most-popular-technologies') most popular and flexible programming languages] at #[strong CodeLab].
 				.actions
 					+enroll_link
 					+contact_link

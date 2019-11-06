@@ -19,11 +19,6 @@
 			}
 		}
 	}
-
-	#graphic {
-		background-size: auto 100%;
-		background-position: 80% 50%;
-	}
 }
 
 @include breakpoint(#0f0, 800px) {
@@ -58,18 +53,6 @@
 		}
 	}
 
-	#enrollment {
-
-		.timeslot {
-			text-align: center;
-		}
-	}
-
-
-	#graphic {
-		background-position: 15% 50%;
-	}
-
 }
 
 @include breakpoint(#ff0, 640px) {
@@ -95,46 +78,6 @@
 		.details {
 			padding-top: 7vh;
 			padding-bottom: 7vh;
-		}
-	}
-
-	#enrollment {
-		.date {
-			width: 100%;
-		}
-
-		.date:nth-child(2) {
-			padding-top: 30px;
-		}
-
-		.timeslot {
-			text-align: left;
-		}
-	}
-
-	#showcase {
-		.item {
-			width: 100%;
-			float: none !important;
-		}
-	}
-
-
-	#graphic {
-		background-position: 40% 50%;
-	}
-
-	#location {
-
-		padding: 3vh 0;
-
-		#map {
-			// background-image: none;
-			background-position: 0% 50%;
-		}
-
-		.details {
-			float: none;
 		}
 	}
 

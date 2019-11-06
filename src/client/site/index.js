@@ -182,7 +182,7 @@ const isAppLogin = /__login__/.test(window.location.href);
 		// check if we need to show the view
 		const { href } = window.location;
 		if (/tutor/i.test(href)) initTutorSignup();
-		else if (/(signup|enroll|schedule)/i.test(href)) initSignup();
+		else if (/signup/i.test(href)) initSignup();
 
 	});
 

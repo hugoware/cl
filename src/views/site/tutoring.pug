@@ -32,12 +32,12 @@ html
 		meta(name='msapplication-TileImage' content='/__codelab__/site/icons/ms-icon-144x144.png')
 		meta(name='theme-color' content='#e24d49')
 		
-	body#tutoring
+	body#tutoring-enrollment
 
 		script(type='text/javascript').
 				window.CHARGEBEE_BILLING_TARGET = "#{billingTarget}";
 		script(src='https://js.chargebee.com/v2/chargebee.js' data-cb-site=billingTarget)
 		
-		.form
+		#tutoring-form
 			h1 CodeLab Tutoring
 			a(href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="codelab-tutoring-private") Enroll Online
