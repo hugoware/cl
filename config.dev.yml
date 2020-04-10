@@ -7,6 +7,8 @@ ssl_key: ~/../ssl/key
 ssl_cert: ~/../ssl/cert
 ssl_ca: ~/../ssl/ca
 
+allow_free_accounts: true
+
 clicksend_username: hugoware
 clicksend_api_key: 2672F340-46B7-5226-69A1-90C6D77B4E07
 

@@ -3,7 +3,7 @@ game:
   txt: ''
   xml: ''
   json: ''
-  
+
 mobile:
   html: |
     <ons-page id="">
@@ -42,11 +42,15 @@ code:
 
 web:
   json: ''
-  
+
+  md: |
+    ### Hello!
+
   js: |
-    window.addEventListener('load', function() {
-      console.log('Hello, world!');
-    });
+    console.log('javascript ready');
+
+  ts: |
+    console.log('typescript ready');
 
   html: |
     <!DOCTYPE html>
@@ -69,7 +73,14 @@ web:
     <data>
       <hello>World</hello>
     </data>
-  
+
+  scss: |
+    $default-size: 16px;
+
+    * {
+      font-size: $default-size;
+    }
+
   css: |
     * {
       font-size: 16px;

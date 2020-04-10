@@ -1,743 +1,749 @@
-
 $home-sidebar-width: 230px;
 $home-content-padding: 40px;
 $project-item-accent-height: 6px;
 $project-item-accent-gap: 3px;
 
 .preload {
-	color: rgba(0,0,0,0);
-	opacity: 0;
-	position: absolute;
-	top: 0;
-	left: 0;
-	font-size: 1px;
-	left: -100px;
+  color: rgba(0, 0, 0, 0);
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1px;
+  left: -100px;
 
-	.b {
-		font-weight: bold;
-		font-family: $default-font;
-	}
-	.i {
-		font-style: italic;
-		font-family: $default-font;
-	}
+  .b {
+    font-weight: bold;
+    font-family: $default-font;
+  }
+  .i {
+    font-style: italic;
+    font-family: $default-font;
+  }
 }
 
 @mixin __create_action_button {
-	@include align_vertical(40px);
-	color: #fff;
-	background: #29BB9C;
-	padding: 0 20px;
-	cursor: pointer;
-	border-radius: 3px;
-	box-shadow: inset 0 0 0 1px rgba(#fff, 0.3), 0 1px 3px #000;
-	white-space: nowrap;
+  @include align_vertical(40px);
+  color: #fff;
+  background: #29bb9c;
+  padding: 0 20px;
+  cursor: pointer;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(#fff, 0.3), 0 1px 3px #000;
+  white-space: nowrap;
 
-	@include animate('background, transform', 0.2s);
-	
-	&:hover {
-		background: lighten(#29BB9C, 10%);
-		transform: scale(1.1, 1.1);
-	}
+  @include animate('background, transform', 0.2s);
+
+  &:hover {
+    background: lighten(#29bb9c, 10%);
+    transform: scale(1.1, 1.1);
+  }
 }
 
 #home {
-	$sidebar-item-hover-background: lighten($sidebar-background, 20%);
-	$sidebar-item-selected-background: lighten($sidebar-background, 10%);
-	
-	&.is-empty .empty {
-		display: block;
-	}
+  $sidebar-item-hover-background: lighten($sidebar-background, 20%);
+  $sidebar-item-selected-background: lighten($sidebar-background, 10%);
 
-	.no-lessons {
-		display: none;
-		clear: both;
-		// text-align: center;
-		background: lighten(#2F3238, 10%);
-		margin-right: 5%;
-		margin-bottom: 40px;
-		padding: 20px;
-		font-size: 14px;
-		color: lighten(#2F3238, 70%);
-		text-shadow: 0 1px 2px rgba(#000, 0.6);
-		border-radius: 5px;
-		@include clearfix;
+  &.is-empty .empty {
+    display: block;
+  }
 
-		.icon {
-			position: absolute;
-			margin : 0 15px 0 0;
-			opacity: 0.3;
-			svg {
-				@include uniform_size(40px);
-			}
-		}
+  .no-lessons {
+    display: none;
+    clear: both;
+    // text-align: center;
+    background: lighten(#2f3238, 10%);
+    margin-right: 5%;
+    margin-bottom: 40px;
+    padding: 20px;
+    font-size: 14px;
+    color: lighten(#2f3238, 70%);
+    text-shadow: 0 1px 2px rgba(#000, 0.6);
+    border-radius: 5px;
+    @include clearfix;
 
-		.message {
-			display: block;
-			padding: 0 0 0 60px;
-		}
+    .icon {
+      position: absolute;
+      margin: 0 15px 0 0;
+      opacity: 0.3;
+      svg {
+        @include uniform_size(40px);
+      }
+    }
 
-		h3 {
-			font-size: 18px;
-			margin: 0 0 10px 0;
-		}
+    .message {
+      display: block;
+      padding: 0 0 0 60px;
+    }
 
-		p {
-			font-size: 14px;
-			line-height: 1.4em;
-			color: lighten(#2F3238, 50%);
-		}
+    h3 {
+      font-size: 18px;
+      margin: 0 0 10px 0;
+    }
 
-	}
+    p {
+      font-size: 14px;
+      line-height: 1.4em;
+      color: lighten(#2f3238, 50%);
+    }
+  }
 
-	&.is-classroom.no-lessons .no-lessons {
-		display: block;
-	}
+  &.is-classroom.no-lessons .no-lessons {
+    display: block;
+  }
 
-	// &.has-pending-lessons .section.lessons .count {
-	// 	background: #F0C330;
-	// 	text-shadow: 0 1px 2px #000;
-	// 	display: inline-block;
+  // &.has-pending-lessons .section.lessons .count {
+  // 	background: #F0C330;
+  // 	text-shadow: 0 1px 2px #000;
+  // 	display: inline-block;
 
-	// 	&:before {
-	// 		position: absolute;
-	// 		@include animation(indicator-ring 3s infinite);
-	// 		// margin: -2px 0 0 -2px;
-	// 		content: ' ';
-	// 		top: 0;
-	// 		left: 2px;
-	// 		right: 2px;
-	// 		bottom: 0;
-	// 		border-radius: 100px;
-	// 		border: 5px solid $tab-bar-modified-indicator-highlight-color;
-	// 	}
-	// }
+  // 	&:before {
+  // 		position: absolute;
+  // 		@include animation(indicator-ring 3s infinite);
+  // 		// margin: -2px 0 0 -2px;
+  // 		content: ' ';
+  // 		top: 0;
+  // 		left: 2px;
+  // 		right: 2px;
+  // 		bottom: 0;
+  // 		border-radius: 100px;
+  // 		border: 5px solid $tab-bar-modified-indicator-highlight-color;
+  // 	}
+  // }
 
-	.empty .for-project,
-	.empty .for-lesson {
-		display: none;
-	}
-	
-	.empty {
-		display: none;
-		color: #ccc;
-		text-shadow: 0 1px 3px #000;
+  .empty .for-project,
+  .empty .for-lesson {
+    display: none;
+  }
 
-		margin: 0 40px 0 0;
-		padding: 35px;
-		border: 1px solid $footer-background;
-		background: rgba(#000, 0.1);
-		border-radius: 4px;
+  .empty {
+    display: none;
+    color: #ccc;
+    text-shadow: 0 1px 3px #000;
 
-		h2 {
-			font-size: 28px;
-			padding: 0 0 15px 0;
-		}
+    margin: 0 40px 0 0;
+    padding: 35px;
+    border: 1px solid $footer-background;
+    background: rgba(#000, 0.1);
+    border-radius: 4px;
 
-		p {
-			font-size: 18px;
-			line-height: 1.4em;
-			color: #999;
-		}
+    h2 {
+      font-size: 28px;
+      padding: 0 0 15px 0;
+    }
 
-		.actions {
-			padding: 45px 0 0 0;
-		}
-		
-		.create-project {
-			@include __create_action_button();
-			text-shadow: none;
-		}
-	}
+    p {
+      font-size: 18px;
+      line-height: 1.4em;
+      color: #999;
+    }
 
-	&.is-projects .empty .for-project,
-	&.is-lessons .empty .for-lesson {
-		display: inline-block;
-	}
+    .actions {
+      padding: 45px 0 0 0;
+    }
 
-	&.is-ready .content {
-		opacity: 1;
-	}
+    .create-project {
+      @include __create_action_button();
+      text-shadow: none;
+    }
+  }
 
-	.about {
-		@include clearfix();
-		padding: 20px 10px;
-		margin-bottom: 5px;
+  &.is-projects .empty .for-project,
+  &.is-lessons .empty .for-lesson {
+    display: inline-block;
+  }
 
-		@include gradient(rgba(#000, 0.1), rgba(#000, 0), 0deg);
-		border-bottom: 1px solid lighten($sidebar-background, 15%);
+  &.is-ready .content {
+    opacity: 1;
+  }
 
-		.avatar {
-			position: relative;
-			float: left;
-		}
+  .about {
+    @include clearfix();
+    padding: 20px 10px;
+    margin-bottom: 5px;
 
-		.icon {
-			background: rgba(#000, 0.2);
-			box-shadow: inset 0 0 0 2px rgba(#fff, 0.2);
-			border-radius: 100px;
+    @include gradient(rgba(#000, 0.1), rgba(#000, 0), 0deg);
+    border-bottom: 1px solid lighten($sidebar-background, 15%);
 
-			cursor: pointer;
-			svg {
-				@include uniform_size(60px);
-			}
-		}
+    .avatar {
+      position: relative;
+      float: left;
+    }
 
-		.tooltip {
-			@include animate('opacity', 0.2s);
-			opacity: 0;
-			pointer-events: none;
-			background: rgba(#000, 0.6);
-			color: #fff;
-			position: absolute;
-			white-space: nowrap;
-			bottom: -10px;
-			padding: 7px;
-			border-radius: 100px;
-			font-size: 13px;
-		}
+    .icon {
+      background: rgba(#000, 0.2);
+      box-shadow: inset 0 0 0 2px rgba(#fff, 0.2);
+      border-radius: 100px;
 
-		.avatar:hover .tooltip {
-			opacity: 1;
-		}
-		
-		.welcome {
-			width: 120px;
-			float: left;
-			margin-left: 15px;
-			color: #fff;
-			padding: 10px 0 0 0;
+      cursor: pointer;
+      svg {
+        @include uniform_size(60px);
+      }
+    }
 
-			.greet {
-				font-size: 17px;
-				opacity: 0.6;
-			}
+    .tooltip {
+      @include animate('opacity', 0.2s);
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(#000, 0.6);
+      color: #fff;
+      position: absolute;
+      white-space: nowrap;
+      bottom: -10px;
+      padding: 7px;
+      border-radius: 100px;
+      font-size: 13px;
+    }
 
-			.name {
-				font-size: 22px;
-				width: 100%;
-				height: 33px;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-		}
+    .avatar:hover .tooltip {
+      opacity: 1;
+    }
 
+    .welcome {
+      width: 120px;
+      float: left;
+      margin-left: 15px;
+      color: #fff;
+      padding: 10px 0 0 0;
 
-	}
+      .greet {
+        font-size: 17px;
+        opacity: 0.6;
+      }
 
-	.nav {
-		text-shadow: 0 1px 3px rgba(#000, 0.4);
-		width: $home-sidebar-width;
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		background: $sidebar-background;
+      .name {
+        font-size: 22px;
+        width: 100%;
+        height: 33px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
 
-		.section {
-			padding: 15px;
-			font-size: 18px;
-			color: #fff;
-			cursor: pointer;
+  .nav {
+    text-shadow: 0 1px 3px rgba(#000, 0.4);
+    width: $home-sidebar-width;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: $sidebar-background;
 
-			&:hover {
-				background: $sidebar-item-hover-background;
-			}
-		}
-	}
+    .section {
+      padding: 15px;
+      font-size: 18px;
+      color: #fff;
+      cursor: pointer;
 
-	.filter {
-		clear: left;
-		float: left;
-		padding: 25px 0 0 0;
-		@include clearfix();
+      &:hover {
+        background: $sidebar-item-hover-background;
+      }
+    }
+  }
 
-		.item {
-			cursor: pointer;
-			display: inline-block;
-			@include align_vertical(38px);
-			font-size: 16px;
-			background: rgba(#000, 0.4);
-			color: #888;
-			padding: 0 20px;
-			border-radius: 4px;
-			margin-right: 10px;
-			
-			@include animate('background-color, color, transform');
-			
-			&:hover {
-				background: rgba(#000, 0.8);
-				color: #fff;
-				transform: scale(1.1, 1.1);
-			}
-			
-			&.selected, &.selected:hover {
-				box-shadow: inset 0 0 0 1px rgba(#fff, 0.3);
-				color: #fff;
-				background: $header-background;
-			}
-		}
-	}
+  &.is-free .nav .lessons {
+    display: none;
+  }
 
-	// list of project items
-	.content {
-		@include animate('opacity', 200ms);
-		opacity: 0;
+  .filter {
+    clear: left;
+    float: left;
+    padding: 25px 0 0 0;
+    @include clearfix();
 
-		position: absolute;
-		top: $home-content-padding;
-		left: $home-sidebar-width;
-		right: 0;
-		bottom: 0;
-		overflow: auto;
-		padding: 0 0 ($home-content-padding * 2) $home-content-padding;
+    .item {
+      cursor: pointer;
+      display: inline-block;
+      @include align_vertical(38px);
+      font-size: 16px;
+      background: rgba(#000, 0.4);
+      color: #888;
+      padding: 0 20px;
+      border-radius: 4px;
+      margin-right: 10px;
 
-		.heading {
-			padding: 0 0 40px 0;
-			@include clearfix;
-			min-width: 450px;
-			
-			h2 {
-				float: left;
-				font-size: 46px;
-				color: #fff;
-				opacity: 0.9;
-				text-shadow: 0 2px 8px rgba(#000, 0.5);
-				padding: 0 0 19px 0;
-			}
+      @include animate('background-color, color, transform');
 
-			p {
-				clear: left;
-				float: left;
-				padding: 0 0 15px 0;
-				color: #888;
-				font-size: 18.5px
-			}
+      &:hover {
+        background: rgba(#000, 0.8);
+        color: #fff;
+        transform: scale(1.1, 1.1);
+      }
 
-			h2, p {
-				text-shadow: 0 1px 2px #000;
-			}
-	
-			.actions {
-				float: right;
-				padding: 8px 5% 0 100px;
-			}
-	
-			.action {
-				@include __create_action_button;
-			}
-		}
+      &.selected,
+      &.selected:hover {
+        box-shadow: inset 0 0 0 1px rgba(#fff, 0.3);
+        color: #fff;
+        background: $header-background;
+      }
+    }
+  }
 
+  // list of project items
+  .content {
+    @include animate('opacity', 200ms);
+    opacity: 0;
 
-	}
+    position: absolute;
+    top: $home-content-padding;
+    left: $home-sidebar-width;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    padding: 0 0 ($home-content-padding * 2) $home-content-padding;
 
-	.sections {
-		.section {
-			@include clearfix();
+    .heading {
+      padding: 0 0 40px 0;
+      @include clearfix;
+      min-width: 450px;
 
-			.name {
-				float: left;
-				font-size: 18px;
-			}
+      h2 {
+        float: left;
+        font-size: 46px;
+        color: #fff;
+        opacity: 0.9;
+        text-shadow: 0 2px 8px rgba(#000, 0.5);
+        padding: 0 0 19px 0;
+      }
 
-			.count {
-				position: relative;
-				font-size: 12.5px;
-				font-weight: bold;
-				float: right;
-				padding: 4px 12px;
-				border-radius: 100px;
-				background: rgba(#fff, 0.2)
-			}
-		}
-	}
+      p {
+        clear: left;
+        float: left;
+        padding: 0 0 15px 0;
+        color: #888;
+        font-size: 18.5px;
+      }
 
-	&.is-projects .sections .projects,
-	&.is-lessons .sections .lessons {
-		background: $sidebar-item-selected-background;
-	}
+      h2,
+      p {
+        text-shadow: 0 1px 2px #000;
+      }
 
-	&.is-lessons .heading .actions,
-	&.is-lessons .projects-only {
-		display: none;
-	}
+      .actions {
+        float: right;
+        padding: 8px 5% 0 100px;
+      }
 
-	&.is-projects .content .projects,
-	&.is-lessons .content .lessons {
-		opacity: 1;
-		display: block;
-	}
+      .action {
+        @include __create_action_button;
+      }
+    }
+  }
 
+  .sections {
+    .section {
+      @include clearfix();
+
+      .name {
+        float: left;
+        font-size: 18px;
+      }
+
+      .count {
+        position: relative;
+        font-size: 12.5px;
+        font-weight: bold;
+        float: right;
+        padding: 4px 12px;
+        border-radius: 100px;
+        background: rgba(#fff, 0.2);
+      }
+    }
+  }
+
+  &.is-projects .sections .projects,
+  &.is-lessons .sections .lessons {
+    background: $sidebar-item-selected-background;
+  }
+
+  &.is-lessons .heading .actions,
+  &.is-lessons .projects-only {
+    display: none;
+  }
+
+  &.is-projects .content .projects,
+  &.is-lessons .content .lessons {
+    opacity: 1;
+    display: block;
+  }
 }
 
 .project-item {
-	$project-item-padding: 18px;
-	$project-item-icon-margin: 15px;
+  $project-item-padding: 18px;
+  $project-item-icon-margin: 15px;
 
-	&.removed {
-		display: none;
-	}
+  &.removed {
+    display: none;
+  }
 
-	.is-new, .is-finished, .in-progress, .is-redo {
-		display: none;
-		float: right;
-		padding: 4px 12px;
-		margin-bottom: 8px;
-		font-size: 11.5px;
-		color: #fff;
-		border-radius: 30px;
-		font-weight: normal;
-	}
+  .is-new,
+  .is-finished,
+  .in-progress,
+  .is-redo {
+    display: none;
+    float: right;
+    padding: 4px 12px;
+    margin-bottom: 8px;
+    font-size: 11.5px;
+    color: #fff;
+    border-radius: 30px;
+    font-weight: normal;
+  }
 
-	&.is-lesson.is-new .actions {
-		display: none;
-	}
+  &.is-lesson.is-new .actions {
+    display: none;
+  }
 
-	&.is-lesson.is-new .is-new,
-	&.is-lesson.is-finished .is-finished,
-	&.is-lesson.is-redo .is-redo,
-	&.is-lesson.in-progress .in-progress {
-		display: block,
-	}
+  &.is-lesson.is-new .is-new,
+  &.is-lesson.is-finished .is-finished,
+  &.is-lesson.is-redo .is-redo,
+  &.is-lesson.in-progress .in-progress {
+    display: block;
+  }
 
-	&.is-lesson.is-new .is-new {
-		background: #F0C330;
-	}
+  &.is-lesson.is-new .is-new {
+    background: #f0c330;
+  }
 
-	&.is-lesson.is-finished .is-finished {
-		background: #39CA74;
-	}
+  &.is-lesson.is-finished .is-finished {
+    background: #39ca74;
+  }
 
-	&.is-lesson.is-redo .is-redo {
-		background: #3A99D8;
-	}
+  &.is-lesson.is-redo .is-redo {
+    background: #3a99d8;
+  }
 
-	cursor: pointer;
-	float: left;
-	width: 30%;
-	min-width: 330px;
-	border-radius: 5px;
-	position: relative;
-	margin: 0 3% 40px 0;
-	height: 180px;
+  cursor: pointer;
+  float: left;
+  width: 30%;
+  min-width: 330px;
+  border-radius: 5px;
+  position: relative;
+  margin: 0 3% 40px 0;
+  height: 180px;
 
-	@media screen and (max-width: 1500px) {
-		width: 46%;
-	}
+  @media screen and (max-width: 1500px) {
+    width: 46%;
+  }
 
-	@media screen and (max-width: 1100px) {
-		width: 95%;
-	}
+  @media screen and (max-width: 1100px) {
+    width: 95%;
+  }
 
-	background: #fff;
-	
-	.bar {
-		display: block;
-		position: absolute;
-		left: $project-item-accent-gap;
-		right: $project-item-accent-gap;
-		top: $project-item-accent-gap;
-		height: $project-item-accent-height;
-		border-radius: 3px 3px 0 0;
-	}
-	
-	&.type-web .bar { background: #E64B3F; }
-	&.type-code .bar { background: #9A5DB4; }
-	&.type-game .bar { background: #26BB9D; }
-	&.type-mobile .bar { background: #F1C631; }
+  background: #fff;
 
-	&.is-project .reset,
-	&.is-redo .reset,
-	&.is-lesson .remove,
-	&.is-lesson .edit,
-	&.is-lesson .open,
-	&.is-lesson.is-new .reset,
-	&.is-lesson .publish {
-		display: none;
-	}
+  .bar {
+    display: block;
+    position: absolute;
+    left: $project-item-accent-gap;
+    right: $project-item-accent-gap;
+    top: $project-item-accent-gap;
+    height: $project-item-accent-height;
+    border-radius: 3px 3px 0 0;
+  }
 
+  &.type-web .bar {
+    background: #e64b3f;
+  }
+  &.type-code .bar {
+    background: #9a5db4;
+  }
+  &.type-game .bar {
+    background: #26bb9d;
+  }
+  &.type-mobile .bar {
+    background: #f1c631;
+  }
 
-	@at-root .local .is-lesson .reset {
-		display: block !important;
-		&:hover:after {
-			content: 'forced enabled on local development';
-			color: #f00;
-			position: absolute;
-			display: block;
-			width: 300px;
-		}
-	}
+  &.is-project .reset,
+  &.is-redo .reset,
+  &.is-lesson .remove,
+  &.is-lesson .edit,
+  &.is-lesson .open,
+  &.is-lesson.is-new .reset,
+  &.is-lesson .publish {
+    display: none;
+  }
 
-	&.is-lesson.is-finished .publish,
-	&.is-lesson.is-finished .open {
-		display: block;
-	}
+  @at-root .local .is-lesson .reset {
+    display: block !important;
+    &:hover:after {
+      content: 'forced enabled on local development';
+      color: #f00;
+      position: absolute;
+      display: block;
+      width: 300px;
+    }
+  }
 
-	@include animate('transform, opacity', 0.2s);
+  &.is-lesson.is-finished .publish,
+  &.is-lesson.is-finished .open {
+    display: block;
+  }
 
-	&:hover {
-		transform: scale(1.025, 1.025);
-	}
+  @include animate('transform, opacity', 0.2s);
 
-	.type div {
-		float: right;
-		display: none;
-		position: relative;
-		top: $project-item-icon-margin;
-		left: -$project-item-icon-margin;
-		svg {
-			@include uniform_size(40px);
-		}
-	}
+  &:hover {
+    transform: scale(1.025, 1.025);
+  }
 
-	&.type-web .web,
-	&.type-code .code,
-	&.type-game .game,
-	&.type-mobile .mobile {
-		display: block;
-	}
+  .type div {
+    float: right;
+    display: none;
+    position: relative;
+    top: $project-item-icon-margin;
+    left: -$project-item-icon-margin;
+    svg {
+      @include uniform_size(40px);
+    }
+  }
 
-	.name {
-		font-size: 23px;
-		padding: 6px 0 9px 0;
-		text-overflow: ellipsis;
-		word-wrap: none;
-		white-space: nowrap;
-		width: 80%;
-		overflow: hidden;
-	}
+  &.type-web .web,
+  &.type-code .code,
+  &.type-game .game,
+  &.type-mobile .mobile {
+    display: block;
+  }
 
-	.description {
-		$description-font-size: 15px;
-		padding: 0 0 5px 0;
-		margin-bottom: 15px;
-		font-size: $description-font-size;
-		opacity: 0.6;
-		position: absolute;
-		line-height: 1.3em;
-		height: $description-font-size * 3.4;
-		width: 80%;
-		text-overflow: ellipsis;
-		overflow: hidden;
+  .name {
+    font-size: 23px;
+    padding: 6px 0 9px 0;
+    text-overflow: ellipsis;
+    word-wrap: none;
+    white-space: nowrap;
+    width: 80%;
+    overflow: hidden;
+  }
 
-		&:before {
-			content: ' ';
-			position: absolute;
-			left: 0;
-			right: 0;
-			height: $description-font-size * 0.8;
-			bottom: 0;
-			@include gradient(#fff, rgba(#fff, 0), 0deg);
-		}
-	}
+  .description {
+    $description-font-size: 15px;
+    padding: 0 0 5px 0;
+    margin-bottom: 15px;
+    font-size: $description-font-size;
+    opacity: 0.6;
+    position: absolute;
+    line-height: 1.3em;
+    height: $description-font-size * 3.4;
+    width: 80%;
+    text-overflow: ellipsis;
+    overflow: hidden;
 
+    &:before {
+      content: ' ';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: $description-font-size * 0.8;
+      bottom: 0;
+      @include gradient(#fff, rgba(#fff, 0), 0deg);
+    }
+  }
 
-	&.is-lesson .description {
-		margin-bottom: 2px;
-	}
+  &.is-lesson .description {
+    margin-bottom: 2px;
+  }
 
-	// adjustments for lesson items
-	.lesson, .locked {
-		display: none;
-	}
+  // adjustments for lesson items
+  .lesson,
+  .locked {
+    display: none;
+  }
 
-	.locked {
-		display: none;
-		position: absolute;
-		left: 0px;
-		right: 0px;
-		top: 0px;
-		bottom: 0px;
-		border-radius: 4px;
-		background: rgba(#2F3238, 0.95);
-		box-shadow: inset 0 0 0 2px rgba(#fff, 0.3);
+  .locked {
+    display: none;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    border-radius: 4px;
+    background: rgba(#2f3238, 0.95);
+    box-shadow: inset 0 0 0 2px rgba(#fff, 0.3);
 
-		color: #fff;
-		text-shadow: 0 1px 15px #000;
-		z-index: 10;
+    color: #fff;
+    text-shadow: 0 1px 15px #000;
+    z-index: 10;
 
-		h2 {
-			font-size: 20px; 
-			padding: 0 0 10px 0;
-			font-weight: bold;
-		}
+    h2 {
+      font-size: 20px;
+      padding: 0 0 10px 0;
+      font-weight: bold;
+    }
 
-		strong {
-			font-weight: bold;
-			background: rgba(#000, 0.4);
-			display: inline-block;
-			padding: 3px 4px;
-			border-radius: 4px;
-		}
+    strong {
+      font-weight: bold;
+      background: rgba(#000, 0.4);
+      display: inline-block;
+      padding: 3px 4px;
+      border-radius: 4px;
+    }
 
-		p {
-			font-size: 15px;
-			opacity: 0.8;
-			line-height: 1.3em;
-		}
+    p {
+      font-size: 15px;
+      opacity: 0.8;
+      line-height: 1.3em;
+    }
 
-		.info {
-			position: relative;
-			transform: translate(0, -55%);
-			padding: 0 50px;
-			top: 50%;
-		}
-	}
+    .info {
+      position: relative;
+      transform: translate(0, -55%);
+      padding: 0 50px;
+      top: 50%;
+    }
+  }
 
-	&.is-placeholder .time {
-		display: none;
-	}
+  &.is-placeholder .time {
+    display: none;
+  }
 
-	&.is-locked {
-		opacity: 0.5;
+  &.is-locked {
+    opacity: 0.5;
 
-		.locked {
-			@include animate('opacity');
-			display: block;
-			opacity: 0;
-		}
-	
-		&:hover, &:hover .locked {
-			opacity: 1;
-		}
-	}
-	
+    .locked {
+      @include animate('opacity');
+      display: block;
+      opacity: 0;
+    }
 
-	&.is-lesson {
-		.lesson {
-			display: block;
-			font-size: 16px;
-			padding: 0 0 6px 0;
-			font-weight: bold;
-			opacity: 0.4;
-		}
-		.name {
-			padding-top: 0px;
-			padding-bottom: 8px;
-		}
+    &:hover,
+    &:hover .locked {
+      opacity: 1;
+    }
+  }
 
-		.description &:before {
-			display: none !important;
-		}
-	}
+  &.is-lesson {
+    .lesson {
+      display: block;
+      font-size: 16px;
+      padding: 0 0 6px 0;
+      font-weight: bold;
+      opacity: 0.4;
+    }
+    .name {
+      padding-top: 0px;
+      padding-bottom: 8px;
+    }
 
-	.modified-at {
-		position: absolute;
-		font-size: 12.5px;
-		font-weight: bold;
-		right: 0;
-		bottom: 17px;
-		padding: 0 $project-item-padding 0 0;
-		
-		.time {
-			opacity: 0.3;
-			clear: both;
-		}
-	}
+    .description &:before {
+      display: none !important;
+    }
+  }
 
-	&.is-locked {
-		.actions, .modified-at {
-			display: none;
-		}
-	}
+  .modified-at {
+    position: absolute;
+    font-size: 12.5px;
+    font-weight: bold;
+    right: 0;
+    bottom: 17px;
+    padding: 0 $project-item-padding 0 0;
 
-	.details {
-		padding: $project-item-padding;
+    .time {
+      opacity: 0.3;
+      clear: both;
+    }
+  }
 
-		.name, .description {
-			code {
-				font-family: $code-font;
-				background: #eee;
-				border-radius: 4px;
-			}
-		}
-		
-		.description code {
-			margin: 0 1px;
-			padding: 2px 3px;
-			box-shadow: inset 0 0 0 1px rgba(#000, 0.15);
-		}
-		
-		.name code {
-			margin: 0 2px;
-			padding: 4px 7px;
-		}
-	}
+  &.is-locked {
+    .actions,
+    .modified-at {
+      display: none;
+    }
+  }
 
-	.actions {
-		$project-item-action-size: 26px;
-		$project-item-action-icon-size: 15px;
-		$project-item-action-tooltip-gap: 6px;
+  .details {
+    padding: $project-item-padding;
 
-		height: $project-item-action-size;
-		padding: 0 $project-item-padding $project-item-padding $project-item-padding;
-		position: absolute;
-		bottom: 0;
+    .name,
+    .description {
+      code {
+        font-family: $code-font;
+        background: #eee;
+        border-radius: 4px;
+      }
+    }
 
-		.action {
-			position: relative;
-			float: left;
-			z-index: 0;
-			width: 30px;
-			margin-right: $project-item-action-tooltip-gap;
-			cursor: pointer;
+    .description code {
+      margin: 0 1px;
+      padding: 2px 3px;
+      box-shadow: inset 0 0 0 1px rgba(#000, 0.15);
+    }
 
-			.icon {
-				@include uniform_size($project-item-action-size);
-				background: #000;
-				border-radius: 4px;
-				position: relative;
-				opacity: 0.25;
-				@include animate('opacity');
+    .name code {
+      margin: 0 2px;
+      padding: 4px 7px;
+    }
+  }
 
-				&:hover {
-					opacity: 0.8 !important;
-				}
+  .actions {
+    $project-item-action-size: 26px;
+    $project-item-action-icon-size: 15px;
+    $project-item-action-tooltip-gap: 6px;
 
-				svg {
-					@include uniform_size($project-item-action-icon-size);
-					position: absolute;
-					left: 50%;
-					top: 50%;
-					transform: translate(-50%, -50%);
-				}
+    height: $project-item-action-size;
+    padding: 0 $project-item-padding $project-item-padding $project-item-padding;
+    position: absolute;
+    bottom: 0;
 
-			}
+    .action {
+      position: relative;
+      float: left;
+      z-index: 0;
+      width: 30px;
+      margin-right: $project-item-action-tooltip-gap;
+      cursor: pointer;
 
-			.label {
-				opacity: 0;
-				pointer-events: none;
-				background: rgba(#000, 0.7);
-				color: #fff;
-				border-radius: 5px;
-				font-size: 14px;
+      .icon {
+        @include uniform_size($project-item-action-size);
+        background: #000;
+        border-radius: 4px;
+        position: relative;
+        opacity: 0.25;
+        @include animate('opacity');
 
-				padding: 10px;
-				position: absolute;
-				left: 50%;
-				transform: translate(-50%, 0);
-				white-space: nowrap;
-				z-index: 1;
+        &:hover {
+          opacity: 0.8 !important;
+        }
 
-				top: $project-item-action-size;
-				@include animate('opacity, top', 0.2s);
-			}
+        svg {
+          @include uniform_size($project-item-action-icon-size);
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
 
-			&:hover .label {
-				opacity: 1;
-				top: $project-item-action-size + $project-item-action-tooltip-gap;
-			}
+      .label {
+        opacity: 0;
+        pointer-events: none;
+        background: rgba(#000, 0.7);
+        color: #fff;
+        border-radius: 5px;
+        font-size: 14px;
 
-		}
+        padding: 10px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 0);
+        white-space: nowrap;
+        z-index: 1;
 
+        top: $project-item-action-size;
+        @include animate('opacity, top', 0.2s);
+      }
 
-		.action.remove {
-			margin-left: 35px;
-			
-			.icon {
-				opacity: 0.1;
-			}
-		}
+      &:hover .label {
+        opacity: 1;
+        top: $project-item-action-size + $project-item-action-tooltip-gap;
+      }
+    }
 
-	}
-	
+    .action.remove {
+      margin-left: 35px;
+
+      .icon {
+        opacity: 0.1;
+      }
+    }
+  }
 }

@@ -1,7 +1,7 @@
 
-mixin file_type(type, name, category, description)
+mixin file_type(type, name, category, preferredName)
 	div(class='allow-file-type-'+ type)
-		div(class='file-type file-type-'+ type + ' file-category-' + category category=category file-type=type)
+		div(class='file-type file-type-'+ type + ' file-category-' + category category=category file-type=type file-name=preferredName)
 			.icon(icon=type)
 			.detail
 				.name= name
@@ -31,16 +31,16 @@ mixin category_type(category, name)
 	//- file types
 	.file-types
 		+file_type('css', 'CSS', 'style')
-		+file_type('html', 'HTML', 'markup')
-		+file_type('js', 'JavaScript', 'code')
+		+file_type('html', 'HTML', 'markup', 'index')
+		+file_type('js', 'JavaScript', 'code', 'app')
 		+file_type('txt', 'Text', 'data')
 		+file_type('xml', 'XML', 'data')
 		+file_type('json', 'JSON', 'data')
 		//- +file_type('coffee', 'CoffeeScript', 'code')
-		//- +file_type('md', 'Markdown', 'markup')
-		+file_type('pug', 'Pug', 'markup')
+		//- +file_type('md', 'Markdown', 'markup', 'doc')
+		+file_type('pug', 'Pug', 'markup', 'index')
 		+file_type('scss', 'SCSS', 'style')
-		+file_type('ts', 'TypeScript', 'code')
+		//- +file_type('ts', 'TypeScript', 'code', 'app')
 
 //- displaying the selected type
 .selected-file-type

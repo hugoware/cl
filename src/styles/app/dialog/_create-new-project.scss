@@ -1,95 +1,91 @@
-
 .create-new-project {
-	$project-icon-size: 50px;
-	$project-type-active-background-color: #8C9E9F;
+  $project-icon-size: 50px;
+  $project-type-active-background-color: #8c9e9f;
 
-	// handle selections
-	&.has-selection {
-		.project-type { opacity: 0.3 }
-		.project-type.selected,
-		.project-type.selected:hover {
-			background: #359BD9;
-			color: #fff;
-			opacity: 1;
-			box-shadow: inset 0 0 0 1px rgba(#000, 0.3);
-			text-shadow: 0 1px 3px rgba(#000, 0.4);
+  // handle selections
+  &.has-selection {
+    .project-type {
+      opacity: 0.3;
+    }
+    .project-type.selected,
+    .project-type.selected:hover {
+      background: #359bd9;
+      color: #fff;
+      opacity: 1;
+      box-shadow: inset 0 0 0 1px rgba(#000, 0.3);
+      text-shadow: 0 1px 3px rgba(#000, 0.4);
 
-			.description {
-				opacity: 0.8;
-			}
-		}
-	}
-	
+      .description {
+        opacity: 0.8;
+      }
+    }
+  }
 
-	.project-types {
-		@include clearfix;
-		margin: 10px 0;
-		padding: 8px;
-		border: 1px solid #bbb;
-		border-radius: 10px;
+  .project-types {
+    @include clearfix;
+    margin: 10px 0;
+    padding: 8px 8px 0 8px;
+    border: 1px solid #bbb;
+    border-radius: 10px;
 
+    .project-type {
+      position: relative;
+      border-radius: 4px;
+      cursor: pointer;
+      float: left;
+      width: 48%;
 
-		.project-type {
-			position: relative;
-			border-radius: 10px;
-			cursor: pointer;
-			float: left;
-			width: 48%;
+      display: block;
+      @include clearfix;
+      @include animate('background, opacity, color');
+      margin: 0 0 5px 0;
+      height: 80px;
 
-			display: block;
-			@include clearfix;
-			@include animate('background, opacity, color');
-			margin: 0 0 10px 0;
-			height: 100px;
+      &:hover {
+        opacity: 1 !important;
+        background: lighten($project-type-active-background-color, 33%);
+        color: #000;
+      }
 
-			&:hover {
-				opacity: 1 !important;
-				background: lighten($project-type-active-background-color, 33%);
-				color: #000;
-			}
+      &.alt {
+        float: right;
+      }
+    }
 
-			&.alt {
-				float: right;
-			}
-		}
-		
-		.icon {
-			padding: 12px 9px;
-			float: right;
-			svg {
-				@include uniform_size($project-icon-size);
-			}
-		}
+    .icon {
+      padding: 9px;
+      float: right;
+      svg {
+        @include uniform_size($project-icon-size);
+      }
+    }
 
-		.project-type-game {
-			svg {
-				transform: scale(1.15, 1.15);
-			}
-		}
+    .project-type-game {
+      svg {
+        transform: scale(1.15, 1.15);
+      }
+    }
 
-		.project-type-mobile {
-			svg {
-				transform: translate(7px, 0);
-			}
-		}
+    .project-type-mobile {
+      svg {
+        transform: translate(7px, 0);
+      }
+    }
 
-		.detail {
-			padding: 15px 10px 15px 15px;
-		}
+    .detail {
+      padding: 10px 10px 10px 15px;
+    }
 
-		.label {
-			font-size: 20px;
-			font-weight: 600;
-			padding: 0 0 10px 0;
-		}
+    .label {
+      font-size: 20px;
+      font-weight: 600;
+      padding: 0 0 5px 0;
+    }
 
-		.description {
-			font-size: 15px;
-			opacity: 0.6;
-			line-height: 1.1em;
-		}
-		
-	}
-
-
+    .description {
+      font-size: 12px;
+      opacity: 0.6;
+      line-height: 1.1em;
+    }
+  }
 }
