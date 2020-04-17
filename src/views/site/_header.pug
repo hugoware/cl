@@ -1,13 +1,14 @@
 mixin standard_header(section, isPartial)
-	.header(class=(isPartial ? 'partial' : ''))
+	section#hero.partial
 		.container
 
-			.row.bar
+			#header
 				a.logo(href='/') CodeLab
+				.nav
+					a(href='/') Return to Home
 
-			.row.intro
-				.feature #{section}
+			#intro
 				.details
-					block
-				.actions
-					a.button.how-it-works(href='/') Return to Home
+					h1 #{section}
+					p
+						block

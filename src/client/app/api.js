@@ -1,4 +1,3 @@
-
 import { _, Promise, SocketIO } from './lib';
 
 // globalize
@@ -8,27 +7,26 @@ window.Promise = Promise;
 const DEFAULT_TIMEOUT = 5000;
 
 let $socket;
-const $listening = { }
+const $listening = {};
 
 /** Handles initializing the local API
  * @param {string} namespace The namespace to monitor
- * @param {object} options The options for configuring 
-*/
+ * @param {object} options The options for configuring
+ */
 export async function init(namespace, args) {
   return new Promise((resolve, reject) => {
-		const secure = window.location.protocol === 'https:';
-		const init = Object.assign({ }, args, { secure });
-		$socket = SocketIO(namespace, init);
+    const secure = window.location.protocol === 'https:';
+    const init = Object.assign({}, args, { secure });
+    $socket = SocketIO(namespace, init);
     $socket.on('connect', async () => {
       try {
         const connect = await request('authenticate');
         resolve(connect);
-      }
-      catch (err) {
+      } catch (err) {
         reject(err);
       }
     });
-  })
+  });
 }
 
 /** Handles listening for an event
@@ -42,7 +40,6 @@ export function listen(event, handle) {
   return id;
 }
 
-
 /** Disables listening for an event
  * @param {string} id The ID of the event to ignore
  */
@@ -52,53 +49,51 @@ export function ignore(id) {
   delete $listening[id];
 }
 
-
 /** performs a request that expects a response
  * @param {string} event The name of the request event to send
  * @param {...args} args Remaining arguments for the request
  */
 export async function request(event, ...args) {
-  
   // if the first argument is a complex object then
   // it's for extra params
   let timeout = DEFAULT_TIMEOUT;
   if (_.isObject(event)) {
     timeout = _.isNumber(event.timeout) ? event.timeout : timeout;
     event = event.event;
-	}
-	
+  }
+
   // send back the promise
   return new Promise((resolve, reject) => {
-    const process = { };
+    const process = {};
     const successEvent = `${event}:ok`;
     const errorEvent = `${event}:err`;
-		
-		// the request is rejected
-		process.reject = (...args) => {
-			if (process.handled) return;
-			process.dispose();
-			reject(...args);
-		};
 
-		// handle resolution
-    process.resolve = (...args) => {			
-			if (process.handled) return;
-			process.dispose();
-			resolve(...args);
-		};
+    // the request is rejected
+    process.reject = (...args) => {
+      if (process.handled) return;
+      process.dispose();
+      reject(...args);
+    };
 
-		// handle timeouts
-		process.timeout = setTimeout(() => {
-			process.reject({ err: 'timeout' });
-		}, timeout);
+    // handle resolution
+    process.resolve = (...args) => {
+      if (process.handled) return;
+      process.dispose();
+      resolve(...args);
+    };
 
-		// clears the request
-		process.dispose = () => {
-			process.handled = true;
-			clearTimeout(process.timeout);
-			$socket.off(successEvent, process.resolve);
-			$socket.off(errorEvent, process.reject);
-		};
+    // handle timeouts
+    process.timeout = setTimeout(() => {
+      process.reject({ err: 'timeout' });
+    }, timeout);
+
+    // clears the request
+    process.dispose = () => {
+      process.handled = true;
+      clearTimeout(process.timeout);
+      $socket.off(successEvent, process.resolve);
+      $socket.off(errorEvent, process.reject);
+    };
 
     // listen for the responses
     $socket.on(successEvent, process.resolve);
@@ -114,105 +109,92 @@ export async function request(event, ...args) {
  * @param {any[]} args the arguments to include
  */
 export async function transaction(event, ...args) {
-	const options = args.pop();
+  const options = args.pop();
 
-	// perform the request
-	try {
-		const result = await request(event, ...args);
-		if (_.isFunction(options.success))
-			options.success(result);
-	}
-	// handle errors
-	catch(ex) {
-		// process the error : ex = ''
-		if (_.isFunction(options.error))
-			options.error(ex);
-	}
-	// finalize the request
-	finally {
-		if (_.isFunction(options.always))
-			options.always();
-	}
+  // perform the request
+  try {
+    const result = await request(event, ...args);
+    if (_.isFunction(options.success)) options.success(result);
+  } catch (ex) {
+    // handle errors
+    // process the error : ex = ''
+    if (_.isFunction(options.error)) options.error(ex);
+  } finally {
+    // finalize the request
+    if (_.isFunction(options.always)) options.always();
+  }
 }
 
 /** handles sending a file to the server
  * @param {string} projectId the project to add the file to
  * @param {string} path the full path to write the file to
  * @param {File} file the file to upload
- * @param {function<number>} onProgress an optional function to track progress 
+ * @param {function<number>} onProgress an optional function to track progress
  */
 export async function uploadFile(projectId, path, file, onProgress = _.noop) {
-	return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    // creat the file upload
+    const data = new FormData();
+    data.append('projectId', projectId);
+    data.append('path', path);
+    data.append('file', file);
 
-		// creat the file upload
-		const data = new FormData();
-		data.append('projectId', projectId);
-		data.append('path', path);
-		data.append('file', file);
+    // prepare the url
+    try {
+      let handled;
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/__codelab__/upload', true);
 
-		// prepare the url
-		try {
-			let handled;
-			const xhr = new XMLHttpRequest();
-			xhr.open('POST', '/__codelab__/upload', true);
+      // listen for progress
+      if (xhr.upload)
+        xhr.upload.onprogress = ({ total, loaded }) => {
+          onProgress(loaded / total);
+        };
 
-			// listen for progress
-			if (xhr.upload)
-				xhr.upload.onprogress = ({ total, loaded }) => {
-					console.log('progress', loaded, total);
-					onProgress(loaded / total);
-				};
+      // simple handler for single pass
+      function attempt(action) {
+        return () => {
+          if (handled) return;
+          handled = true;
+          action();
+        };
+      }
 
-			// simple handler for single pass
-			function attempt(action) {
-				return () => {
-					if (handled) return;
-					handled = true;
-					action();
-				}
-			}
+      // handle cancels
+      xhr.onabort = attempt(() => reject('file_upload_abort'));
+      xhr.onerror = attempt(() => reject('file_upload_error'));
+      xhr.ontimeout = attempt(() => reject('file_upload_timeout'));
+      xhr.onreadystatechange = () => {
+        const { status, readyState } = xhr;
+        if (readyState !== 4 || handled) return;
+        handled = true;
 
-			// handle cancels
-			xhr.onabort = attempt(() => reject('file_upload_abort'));
-			xhr.onerror = attempt(() => reject('file_upload_error'));
-			xhr.ontimeout = attempt(() => reject('file_upload_timeout'));
-			xhr.onreadystatechange = () => {
-				const { status, readyState } = xhr;
-				if (readyState !== 4 || handled) return;
-				handled = true;
+        // fully loaded
+        onProgress(1);
 
-				// fully loaded
-				onProgress(1);
+        // all finished
+        if (status === 200) resolve({ success: true });
+        // something went wrong
+        else {
+          console.log('file upload failed', status);
+          reject('file_upload_error');
+        }
+      };
 
-				// all finished
-				if (status === 200)
-					resolve({ success: true });
-
-				// something went wrong
-				else {
-					console.log('file upload failed', status)
-					reject('file_upload_error');
-				}
-			};
-
-			// kick off the request
-			xhr.send(data);
-
-		}
-		catch (err) {
-			reject('file_upload_error');
-		}
-
-	});
-
+      // kick off the request
+      xhr.send(data);
+    } catch (err) {
+      reject('file_upload_error');
+    }
+  });
 }
 
 // share helpers
 export default {
-	init,
-	uploadFile,
+  init,
+  uploadFile,
   transaction,
   request,
   listen,
-  ignore
+  ignore,
 };

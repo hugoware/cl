@@ -1,185 +1,200 @@
-
 .is-demo-mode #header .actions {
-	display: none !important;
+  display: none !important;
 }
 
 #header {
-	white-space: nowrap;
+  white-space: nowrap;
 
-	// icons
-	&.is-type-web .web,
-	&.is-type-game .game,
-	&.is-type-code .code,
-	&.is-type-mobile .mobile {
-		display: block !important;
-	}
+  // icons
+  &.is-type-web .web,
+  &.is-type-game .game,
+  &.is-type-code .code,
+  &.is-type-mobile .mobile {
+    display: block !important;
+  }
 
-	.actions .action {
-		display: none;
-	}
+  .actions .action {
+    display: none;
+  }
 
-	@at-root {
-		.is-home #header .actions .sign-out {
-			display: block;
-		}
+  @at-root {
+    .is-home #header .actions .sign-out {
+      display: block;
+    }
 
-		.is-project #header.has-project .actions {
-			.open-in-window, .settings, .share-project {
-				display: block;
-			}
-		}
-	}
+    .is-project #header.has-project .actions {
+      .open-in-window,
+      .settings,
+      .share-project {
+        display: block;
+      }
+    }
+  }
 
-	// option access
-	&.is-lesson {
-		.open-in-window, .settings, .share-project {
-			display: none !important;
-		}
-	}
+  // option access
+  &.is-lesson {
+    .open-in-window,
+    .settings,
+    .share-project {
+      display: none !important;
+    }
+  }
 
-	&.is-lesson.is-finished {
-		.open-in-window, .share-project {
-			display: block !important;
-		}
-	}
+  &.is-lesson.is-finished {
+    .open-in-window,
+    .share-project {
+      display: block !important;
+    }
+  }
 
-	.project-data {
-		display: none;
-	}
+  &.disable-sharing .share-project {
+    display: none !important;
+  }
 
-	&.has-project {
-		.actions, .project-data {
-			display: block;
-		}
-	}
+  .project-data {
+    display: none;
+  }
 
-	&.is-lesson .lesson {
-		display: inline-block;
-	}
+  &.has-project {
+    .actions,
+    .project-data {
+      display: block;
+    }
+  }
 
-	.type div {
-		display: none;
-	}
+  &.is-lesson .lesson {
+    display: inline-block;
+  }
 
-	.type {
-		svg {
-			@include uniform_size($header-height * 0.6);
-		}
-	}
+  .type div {
+    display: none;
+  }
 
-	.actions {
-		float: right;
-		padding: 13px 25px 0;
+  .type {
+    svg {
+      @include uniform_size($header-height * 0.6);
+    }
+  }
 
-		.action {
-			float: left;
-			margin-left: 25px;
-			cursor: pointer;
+  .actions {
+    float: right;
+    padding: 13px 25px 0;
 
-			&:hover {
-				svg {
-					transform: scale(1.2, 1.2);
-				}
+    .action {
+      float: left;
+      margin-left: 25px;
+      cursor: pointer;
 
-				.tip {
-					transform: translate(0, 0);
-					opacity: 1;
-				}
-			}
-		}
+      &:hover {
+        svg {
+          transform: scale(1.2, 1.2);
+        }
 
-		svg {
-			@include uniform_size($header-height * 0.43);
-		}
-	}
+        .tip {
+          transform: translate(0, 0);
+          opacity: 1;
+        }
+      }
+    }
 
-	.tip, .detail {
-		position: absolute;
-		top: $header-height;
-		background: rgba(#000, 0.8);
-		padding: 11px;
-		color: #fff;
-		font-size: 15px;
-		border-radius: 4px;
-		white-space: nowrap;
-		pointer-events: none;
+    svg {
+      @include uniform_size($header-height * 0.43);
+    }
+  }
 
-		@include animate('opacity, transform');
-		transform: translate(0, -7px);
-		opacity: 0;
-	}
+  .tip,
+  .detail {
+    position: absolute;
+    top: $header-height;
+    background: rgba(#000, 0.8);
+    padding: 11px;
+    color: #fff;
+    font-size: 15px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
 
-	.info {
-		float: left;
-		@include clearfix;
-		cursor: pointer;
-		&:hover .detail {
-			transform: translate(0, 0);
-			opacity: 1;
-		}
-	}
+    @include animate('opacity, transform');
+    transform: translate(0, -7px);
+    opacity: 0;
+  }
 
-	.detail {
-		padding: 22px;
+  .info {
+    float: left;
+    @include clearfix;
+    cursor: pointer;
+    &:hover .detail {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+  }
 
-		.type {
-			font-size: 15px;
-			padding: 0 0 8px 0;
-			opacity: 0.6;
-		}
+  .detail {
+    padding: 22px;
 
-		.description {
-			font-size: 18px;
-			min-width: 300px;
-			max-width: 400px;
-			white-space: normal;
-			line-height: 1.2em;
-		}
-	}
+    .type {
+      font-size: 15px;
+      padding: 0 0 8px 0;
+      opacity: 0.6;
+    }
 
-	.tip {
-		right: 0;
-	}
+    .description {
+      font-size: 18px;
+      min-width: 300px;
+      max-width: 400px;
+      white-space: normal;
+      line-height: 1.2em;
+    }
+  }
 
-	.share-project .tip { right: 10px; }
-	.open-in-window .tip { right: 10px; }
-	.settings .tip { right: 60px; }
+  .tip {
+    right: 0;
+  }
 
-	.lesson {
-		// float: left;
-		@include align_vertical($header-height * 0.5);
-		margin: (($header-height * 0.5) / 2) 0 0 40px;
-		padding: 0 15px;
-		font-size: 15px;
-		font-weight: 600;
-		color: $header-background;
-		border-radius: 100px;
-		background: rgba(#fff, 0.5);
-		display: none;
-	}
-	
-	.icon {
-		// float: left;
-		display: inline-block;
-		position: relative;
-		top: ($header-height * 0.4) / 2;
-	}
+  .share-project .tip {
+    right: 10px;
+  }
+  .open-in-window .tip {
+    right: 10px;
+  }
+  .settings .tip {
+    right: 60px;
+  }
 
-	.project-data {
-		position: absolute;
-		left: 230px;
-		right: 200px;
-		color: #fff;
-	}
+  .lesson {
+    // float: left;
+    @include align_vertical($header-height * 0.5);
+    margin: (($header-height * 0.5) / 2) 0 0 40px;
+    padding: 0 15px;
+    font-size: 15px;
+    font-weight: 600;
+    color: $header-background;
+    border-radius: 100px;
+    background: rgba(#fff, 0.5);
+    display: none;
+  }
 
-	.name {
-		@include align_vertical($header-height);
-		font-size: 18px;
-		font-weight: 600;
-		position: relative;
-		left: 15px;
-		display: inline-block;
-		// float: left;
-	}
+  .icon {
+    // float: left;
+    display: inline-block;
+    position: relative;
+    top: ($header-height * 0.4) / 2;
+  }
 
+  .project-data {
+    position: absolute;
+    left: 230px;
+    right: 200px;
+    color: #fff;
+  }
+
+  .name {
+    @include align_vertical($header-height);
+    font-size: 18px;
+    font-weight: 600;
+    position: relative;
+    left: 15px;
+    display: inline-block;
+    // float: left;
+  }
 }

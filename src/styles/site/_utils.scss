@@ -16,3 +16,38 @@
     clear: both;
  }
 }
+
+
+@mixin __break__($color, $label) {
+  @if $debug {
+    body:before {
+      content: '#{$label}';
+      display: block;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: $color;
+      height: 5px;
+      padding: 0 5px;
+      font-weight: bold;
+      text-shadow: 0 0 10px white;
+    }
+  }
+}
+
+@mixin breakpoint($color, $size) {
+  
+  @if $size == 'default' {
+    @include __break__($color, 'default');
+    @content;
+  }
+  @else {
+    @media (max-width: $size) {
+      @include __break__($color, $size);
+      @content;
+    }
+  }
+
+}

@@ -40,6 +40,18 @@ html
 					button(create-user) Create User
 
 
+		#activity.module
+			.title Activity #[em= `(${Object.keys(activity).length})`]
+			.content
+				for person in activity
+					.activity
+						.name= person.name
+						ul.projects
+							for project in person.projects
+								li
+									a(href=`https://${project.id}.codelabschool.com` target=person.id) #[span= project.name] #[em= `(${project.type})`]
+
+
 	script(type='text/javascript' src='/__codelab__/admin.js')
 
 	//- live reload access
