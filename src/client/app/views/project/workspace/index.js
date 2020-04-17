@@ -61,7 +61,6 @@ export default class Workspace extends Component {
 
   // activates the correct workspace
   onActivateFile = (file) => {
-    console.log('activate', file);
     const type = file.type || 'not-supported';
     this.setWorkspace(type);
   };

@@ -9,7 +9,7 @@ import { requirePermission } from '../views/project/prevent';
 const ALLOWED_FILE_TYPES = {
   game: ['js', 'txt', 'xml', 'json'],
   code: ['js', 'txt', 'xml', 'json'],
-  web: ['html', 'css', 'js', 'scss', 'ts', 'md', 'txt', 'xml', 'json'],
+  web: ['html', 'css', 'js', 'scss', 'ts', 'md', 'pug', 'txt', 'xml', 'json'],
   mobile: ['html', 'css', 'js', 'scss', 'txt', 'xml', 'json'],
 };
 

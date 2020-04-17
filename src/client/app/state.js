@@ -13,7 +13,17 @@ import Preview from './views/project/preview/index';
 import ManagedEditor from './editor/managed';
 
 const ROOT = { path: '/' };
-const CODE_FILES = ['html', 'js', 'css', 'txt', 'json', 'ts', 'scss', 'md'];
+const CODE_FILES = [
+  'html',
+  'js',
+  'css',
+  'txt',
+  'json',
+  'ts',
+  'scss',
+  'pug',
+  'md',
+];
 const IMAGE_FILES = ['jpg', 'jpeg', 'bmp', 'png', 'gif'];
 const MEDIA_FILES = ['mp3', 'mp4', 'mpeg'];
 
@@ -279,7 +289,6 @@ const $state = {
    * @param {Project} project the data to replace
    */
   updateProject: async (project) => {
-    console.log('did update project');
     $state.project = project;
     $state.paths = {};
     $state.items = {};

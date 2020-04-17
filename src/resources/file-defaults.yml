@@ -65,6 +65,15 @@ web:
       </body>
     </html>
 
+  pug: |
+    doctype html
+    html
+      head
+        title New Page
+
+      body
+        h1 Hello, world!
+
   txt: |
     Hello, world!
 

@@ -5,7 +5,7 @@ import { stringify, resolveError } from './utils';
 const MIN_NAME_LENGTH = 1;
 const MAX_NAME_LENGTH = 50;
 const PROJECT_FILE_TYPES = {
-  web: ['html', 'js', 'css', 'json', 'ts', 'scss', 'xml', 'txt'],
+  web: ['html', 'js', 'css', 'json', 'ts', 'scss', 'xml', 'txt', 'pug'],
   mobile: ['html', 'js', 'css', 'scss', 'json', 'xml', 'txt'],
   code: ['js', 'json', 'txt', 'xml'],
   game: ['js', 'json', 'txt', 'xml'],
